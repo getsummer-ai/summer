@@ -1,0 +1,12 @@
+<% if content_for? :logo %>
+  <%= yield(:logo) %>
+  <mj-spacer height="20px"></mj-spacer>
+<% else %>
+  <mj-column width="100%">
+    <mj-text css-class="sans-serif">
+      <div class="logo"><%=t('layouts.main.header.name')%></div>
+      <div class="under-logo"><%=t('layouts.main.header.description')%></div>
+    </mj-text>
+    <mj-spacer height="20px"></mj-spacer>
+  </mj-column>
+<% end %>

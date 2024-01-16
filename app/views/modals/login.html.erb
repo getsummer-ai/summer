@@ -1,0 +1,27 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModalComponent.new(title: t('.sign_in')) do %>
+    <%= render 'devise/sessions/login_form' %>
+    <div class="mt-5 text-center font-bold underline">
+      <%=
+        link_to t('.sign_up'),
+                sign_up_modals_path,
+                class: 'link link-hover',
+                rel: 'nofollow',
+                data: {
+                  'turbo-frame': 'modal',
+                }
+      %>
+    </div>
+    <div class="mt-2 text-center opacity-50 text-sm underline">
+      <%=
+        link_to t('.restore_password'),
+                restore_password_modals_path,
+                class: 'link link-hover',
+                rel: 'nofollow',
+                data: {
+                  'turbo-frame': 'modal',
+                }
+      %>
+    </div>
+  <% end %>
+<% end %>

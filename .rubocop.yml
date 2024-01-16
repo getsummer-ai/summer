@@ -1,0 +1,57 @@
+inherit_from:
+  - node_modules/@prettier/plugin-ruby/rubocop.yml
+
+require:
+  - rubocop-performance
+  - rubocop-rails
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.1
+  NewCops: enable
+  Include:
+    - "spec/**/*"
+  Exclude:
+    - "lib/**/*"
+    - "bin/**/*"
+    - "db/schema.rb"
+
+Metrics/BlockLength:
+  AllowedMethods:
+    - context
+    - describe
+    - it
+    - shared_examples
+    - shared_examples_for
+    - namespace
+    - draw
+    - configure
+    - group
+
+Style/Documentation:
+  Enabled: false
+
+Rails/EnumHash:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/AbcSize:
+  Max: 22
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
+
+# Disables "Too many expectations."
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+Style/OpenStructUse:
+  Enabled: false

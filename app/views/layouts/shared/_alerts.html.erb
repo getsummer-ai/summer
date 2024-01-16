@@ -1,0 +1,11 @@
+<% if flash[:notice] %>
+  <div class="mt-2 mb-2">
+    <%= render 'shared/alert', message: flash[:notice] %>
+  </div>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="mt-2 mb-2">
+    <%= render 'shared/alert', message: flash[:alert], type: 'warning' %>
+  </div>
+<% end %>

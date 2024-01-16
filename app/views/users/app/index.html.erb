@@ -1,0 +1,7 @@
+<div class="mx-auto">
+  <% props = {
+    photos: @user_photos,
+    images: @images
+  } %>
+  <div id="main-app" data-props="<%= props.to_json %>"></div>
+</div>

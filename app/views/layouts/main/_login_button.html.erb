@@ -1,0 +1,21 @@
+<% if user_signed_in? %>
+  <%= button_to t('.logout'),
+                destroy_user_session_path,
+                method: :delete,
+                form: { 'data-turbo' => "false" },
+                form_class: 'trigger-submit-form m-0 -mb-1 py-0.5 px-2 rounded-xl border-2 sm:border-4 font-semibold tracking-tight border-gray-200 text-xs sm:text-lg dark:hidden'
+  %>
+<% else %>
+  <a
+    class="p-0 sm:p-1 sm:pr-3 rounded-lg tracking-tight font-bold opacity-90 text-xs sm:text-lg"
+    href="<%= login_modals_path %>"
+    rel="nofollow"
+    data-turbo-frame="modal"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 -mt-1 mr-0.5 inline-block">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+    </svg>
+
+    <%= t('.sign_in') %>
+  </a>
+<% end %>

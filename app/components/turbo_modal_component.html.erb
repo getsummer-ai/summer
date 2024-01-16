@@ -1,0 +1,54 @@
+<div
+  data-controller="turbo-modal"
+  data-turbo-modal-allow-redirect-value="<%= @redirect_following %>"
+  data-action="turbo:submit-end->turbo-modal#submitEnd keyup@window->turbo-modal#closeOnEscape click@window->turbo-modal#closeOnClickOutside"
+  class="relative z-10"
+  aria-labelledby="modal-title"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="fixed inset-0 bg-black bg-opacity-75"></div>
+  <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+    <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+      <div
+        data-turbo-modal-target="modal"
+        class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 w-full sm:max-w-md lg:max-w-sm"
+      >
+        <div class="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+          <% if @go_back_path.present? %>
+            <div class="mb-1.5 -mt-3 text-xs opacity-50">
+              <%=
+                link_to t('modals.shared.go_back'),
+                        @go_back_path,
+                        class: 'link link-hover',
+                        rel: 'nofollow',
+                        data: {
+                          'turbo-frame': 'modal',
+                        }
+              %>
+            </div>
+          <% end %>
+          <h3 class="text-base font-semibold leading-4 text-gray-900" id="modal-title">
+            <%= @title %>
+          </h3>
+          <div class="mt-5">
+            <%= content %>
+          </div>
+        </div>
+        <% if @show_buttons %>
+          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <button
+              data-action="turbo-modal#closeModal"
+              type="button"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            >
+              Cancel
+            </button>
+          </div>
+        <% else %>
+          <div class="p-2"></div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

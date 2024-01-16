@@ -1,0 +1,16 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModalComponent.new(title: t('.sign_up'), go_back_path: login_modals_path) do %>
+    <%= render 'devise/registrations/sign_up_form' %>
+    <div class="mt-5 text-center font-bold underline">
+      <%=
+        link_to t('.sign_in'),
+                login_modals_path,
+                rel: 'nofollow',
+                class: 'link link-hover',
+                data: {
+                  'turbo-frame': 'modal',
+                }
+      %>
+    </div>
+  <% end %>
+<% end %>

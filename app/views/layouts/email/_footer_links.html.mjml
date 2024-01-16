@@ -1,0 +1,9 @@
+<% if content_for? :footer_links %>
+  <%= yield(:footer_links) %>
+<% else %>
+  <mj-text align="center" color="#777777" font-size="14px">
+     <a class="link-footer" href="#">Terms of Use</a>
+      · 
+     <a class="link-footer" href="#">Privacy Policy</a>
+  </mj-text>
+<% end %>

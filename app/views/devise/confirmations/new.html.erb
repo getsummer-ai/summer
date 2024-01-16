@@ -1,0 +1,33 @@
+<div class="card mt-8 bg-base-100 drop-shadow-xl">
+  <div class="card-body">
+    <h2 class="card-title mb-4">
+      <span class="border-b-8 border-secondary">Resend confirmation instructions</span>
+    </h2>
+
+    <%= form_for resource,
+                 as: resource_name,
+                 url: confirmation_path(resource_name),
+                 html: { method: :post },
+                 builder: DaisyBuilder do |f| %>
+      <div class="form-control">
+        <%= f.label :email %>
+        <%=
+          f.email_field(
+            :email,
+            autofocus: true,
+            autocomplete: 'email',
+            value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email),
+          )
+        %>
+      </div>
+
+      <div class="form-control mt-6">
+        <%= f.submit 'Resend confirmation instructions' %>
+      </div>
+    <% end %>
+
+    <div class="form-control">
+      <%= render 'devise/shared/error_messages', resource: resource %>
+    </div>
+  </div>
+</div>

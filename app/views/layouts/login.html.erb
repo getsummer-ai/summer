@@ -1,0 +1,17 @@
+<% content_for :js do %>
+  <%= vite_typescript_tag 'login' %>
+<% end %>
+
+<% content_for :content do %>
+  <div class="w-96 mt-16 mx-auto">
+    <%= yield %>
+    <div class="mt-4">
+      <%= render 'layouts/shared/alerts' %>
+    </div>
+    <div class="mt-6 px-1">
+      <%= render 'devise/shared/links' %>
+    </div>
+  </div>
+<% end %>
+
+<%= render template: 'layouts/application' %>

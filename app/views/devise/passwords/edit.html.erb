@@ -1,0 +1,41 @@
+<div class="card mt-8 bg-base-100 drop-shadow-xl">
+  <div class="card-body">
+    <h2 class="card-title mb-4">
+      <span class="border-b-8 border-accent"><%= t('.change_your_password') %></span>
+    </h2>
+    <% is_turbo = turbo_frame_request_id.present? %>
+    <%= form_for resource,
+                 as: resource_name,
+                 url: password_path(resource_name),
+                 html: { method: :put },
+                 data: { turbo: is_turbo },
+                 builder: DaisyBuilder do |f| %>
+      <%= f.hidden_field :reset_password_token %>
+
+      <div class="form-control">
+        <%= f.label :password, class: 'label pb-1' do %>
+          <%= content_tag(:span, t('.new_password'), class: 'label-text') %>
+          <% if @minimum_password_length %>
+            <span class="label-text-alt">
+              <%= t('devise.shared.minimum_password_length', count: @minimum_password_length) %>
+            </span>
+          <% end %>
+        <% end %>
+        <%= f.password_field :password, autocomplete: 'new-password' %>
+      </div>
+
+      <div class="form-control mt-2">
+        <%= f.label :password_confirmation, t('.confirm_new_password') %>
+        <%= f.password_field :password_confirmation, autocomplete: 'new-password' %>
+      </div>
+
+      <div class="form-control mt-8">
+        <%= f.submit t('.change_my_password') %>
+      </div>
+    <% end %>
+
+    <div class="form-control">
+      <%= render 'devise/shared/error_messages', resource: resource %>
+    </div>
+  </div>
+</div>

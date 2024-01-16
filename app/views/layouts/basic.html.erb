@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html data-theme="cupcake" >
+  <head>
+    <title>Resumen</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen" rel="stylesheet">
+    <%= vite_stylesheet_tag "global" %>
+    <%= vite_client_tag %>
+    <%= vite_typescript_tag 'main' %>
+    <% if content_for?(:js) %>
+      <%= yield(:js) %>
+    <% end %>
+    <%#= vite_stylesheet_tag "main.scss", preload_links_header: true %>
+    <%= vite_stylesheet_tag "main.scss" %>
+  </head>
+  <% environment_hash = { environment: Rails.env, locale: I18n.locale } %>
+  <body class="light" data-init="<%= environment_hash.to_json %>">
+    <div class="min-h-screen flex flex-col justify-between dark:bg-black">
+      <div class="container mx-auto pt-5 sm:pt-10 px-2">
+        <% if content_for?(:header) %>
+          <%= yield(:header) %>
+        <% end %>
+      </div>
+      <div class="mb-auto">
+        <%= content_for?(:content) ? yield(:content) : yield %>
+      </div>
+      <%= render 'layouts/shared/footer_small' %>
+    </div>
+    <%= turbo_frame_tag "modal"%>
+  </body>
+</html>
+
+

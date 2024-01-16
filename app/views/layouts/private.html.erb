@@ -1,0 +1,20 @@
+<% content_for :js do %>
+  <%= vite_typescript_tag 'application' %>
+<% end %>
+
+<% content_for :content do %>
+  <div class="container mx-auto max-w-[800px]">
+    <%= render 'layouts/shared/header' %>
+  </div>
+  <% if content_for?(:breadcrumbs) %>
+    <div class="mt-2"><%= yield(:breadcrumbs) %></div>
+  <% end %>
+  <div class="mt-4"><%= render 'layouts/shared/alerts' %></div>
+  <div class="mt-8"><%= yield %></div>
+<% end %>
+
+<% content_for :footer do %>
+  <%= render 'layouts/shared/footer_small' %>
+<% end %>
+
+<%= render template: 'layouts/application' %>

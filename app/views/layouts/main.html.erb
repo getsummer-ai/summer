@@ -1,0 +1,12 @@
+<% content_for :header do %>
+  <%=render "layouts/main/header" %>
+  <%=render "layouts/main/menu" %>
+<% end %>
+
+<% content_for :content do %>
+  <%= yield %>
+<% end %>
+
+<%= render template: 'layouts/basic' %>
+
+
