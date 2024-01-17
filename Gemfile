@@ -35,6 +35,7 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'bootsnap', require: false
 gem 'haml'
 gem 'js-routes'
+gem 'simple_form'
 
 gem 'devise', git: 'https://github.com/heartcombo/devise.git', branch: '4-stable'
 gem 'omniauth'
