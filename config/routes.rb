@@ -29,8 +29,9 @@ Rails.application.routes.draw do
       end
     end
 
-    scope '/app', module: 'users' do
+    scope '/app', module: 'private' do
       get '/', to: 'app#index', as: 'user_app'
+      resources :projects
     end
   end
 

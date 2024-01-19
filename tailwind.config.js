@@ -6,6 +6,7 @@ module.exports = {
     './app/builders/**/*.rb',
     './app/components/**/*.erb',
     './app/frontend/**/*.{js,vue,ts}',
+    './config/initializers/simple_form.rb',
     './app/views/**/*',
   ],
   theme: {

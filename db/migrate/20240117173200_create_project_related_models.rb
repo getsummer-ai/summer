@@ -8,7 +8,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     create_enum "user_project_status", %w[active suspended deleted]
     create_enum "user_project_type", %w[free paid]
     create_table :projects, id: :uuid do |t|
-      t.references :user, null: false, index: true, foreign_key: true
+      t.references :user, null: false, foreign_key: true
       t.string :name, default: "", null: false
       t.string :domain, null: false
       t.enum :plan, default: "free", null: false, enum_type: "user_project_type"
@@ -18,6 +18,8 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.datetime :deleted_at
     end
     add_index :projects, :created_at
+    add_index :projects, [:user_id, :name], unique: true
+    add_index :projects, [:user_id, :domain], unique: true
 
 
     #   	+ project_urls (id: int, project_id, hash:string, url: string, created_at)

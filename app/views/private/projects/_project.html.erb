@@ -1,0 +1,17 @@
+<div class="border-2 p-2 border-accent" id="<%= dom_id project %>">
+  <h2 class="text-xl font-extrabold"><%= project.name %></h2>
+  <p><span class="badge badge-accent"> <%= project.domain%> </span></p>
+
+  <% if rand(2) == 1 %>
+    <p class="underline text-xs">Last button calling: 20 minutes ago</p>
+  <% end %>
+
+  <p><span class="badge mt-4 badge-ghost">Plan: <%= project.plan %> </span></p>
+  <p><span class="badge mt-4 badge-ghost">Created: <%= project.created_at %> </span></p>
+
+  <p><span class="badge mt-4">Articles amount: <%= rand(10) %> </span></p>
+  <p><span class="badge">Button showed: <%= rand(1000) %> </span></p>
+  <p><span class="badge">Button clicks: <%= rand(100) %> </span></p>
+
+
+</div>

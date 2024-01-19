@@ -1,0 +1,26 @@
+<!--<p style="color: green"><%#= notice %></p>-->
+
+<div class="mb-8">
+  <%= link_to "Edit this project", edit_project_path(@project) %> |
+  <%= link_to "Back to projects", projects_path %>
+
+  <%= button_to "Destroy this project", @project, method: :delete %>
+</div>
+
+<%= render @project %>
+
+
+
+
+<div class="mt-4">
+  <h3 class="text-xl mb-2">Copy this code and install it on your site (html -> header)</h3>
+  <div class="bg-white border-2 p-5 text-xl font-extralight text-wrap">
+    https://myaccount.google.com/?hl=ru&utm_source=OGB&utm_medium=act&pli=1&code=<%= @project.id %>
+  </div>
+</div>
+
+
+
+<div class="mt-5">
+  <%= render 'articles' %>
+</div>

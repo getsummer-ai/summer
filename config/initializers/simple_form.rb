@@ -13,7 +13,7 @@ SimpleForm.setup do |config|
   # wrapper, change the order or even add your own to the
   # stack. The options given below are used to wrap the
   # whole input.
-  config.wrappers :default, class: 'form-control',
+  config.wrappers :default, class: 'form-control mt-2',
     # class: :input,
     hint_class: :field_with_hint, error_class: :field_with_errors, valid_class: :field_without_errors do |b|
     ## Extensions enabled by default
@@ -53,14 +53,15 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     ## Inputs
+    b.use :label, class: 'label-text py-1'
     b.use :input,
-          class: 'input input-bordered input-sm input-ghost rounded-none',
-          error_class: 'is-invalid',
+          class: 'input input-bordered input-sm',
+          error_class: 'input-error',
           valid_class: 'is-valid'
 
-    b.use :label_input
+    # b.use :label_input
     b.use :hint,  wrap_with: { tag: :span, class: :hint }
-    b.use :error, wrap_with: { tag: :span, class: :error }
+    b.use :error, wrap_with: { tag: :div, class: 'label-text' }
 
     ## full_messages_for
     # If you want to display the full error message for the attribute, you can
@@ -79,7 +80,7 @@ SimpleForm.setup do |config|
   config.boolean_style = :nested
 
   # Default class for buttons
-  config.button_class = 'btn'
+  config.button_class = 'btn btn-sm btn-primary'
 
   # Method used to tidy up errors. Specify any Rails Array method.
   # :first lists the first message for each field.

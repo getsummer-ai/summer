@@ -155,6 +155,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"
     t.index ["created_at"], name: "index_projects_on_created_at"
+    t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true
+    t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_projects_on_user_id"
   end
 

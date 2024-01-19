@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Users::AppController < PrivateController
+class Private::AppController < PrivateController
   include ActiveStorage::SetCurrent
 
   def index

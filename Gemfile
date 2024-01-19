@@ -32,9 +32,11 @@ gem 'redis', '~> 4.0'
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
+gem 'addressable'
 gem 'bootsnap', require: false
 gem 'haml'
 gem 'js-routes'
+gem 'public_suffix'
 gem 'simple_form'
 
 gem 'devise', git: 'https://github.com/heartcombo/devise.git', branch: '4-stable'
