@@ -1,7 +1,7 @@
 import '@hotwired/turbo-rails';
 
-import { initApps } from '@/init-vue';
-import '@/init-stimulus';
+import { initApps } from '@/vue/apps/init-vue';
+import '@/stimulus/init-stimulus';
 initApps();
 console.log('Vite ⚡️ Rails ⚡️ MAIN');
 

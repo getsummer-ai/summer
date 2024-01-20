@@ -1,0 +1,3 @@
+{
+  "entrypoints/*.ts": "eslint -c './../../.eslintrc.cjs'"
+}

@@ -4,7 +4,7 @@ import { Notivue, Notifications } from 'notivue';
 import { onBeforeMount } from 'vue';
 // import { useUserStore } from '@/stores/userStore';
 
-const props = defineProps<{ photos: []; images: [] }>();
+defineProps<{ photos: []; images: [] }>();
 // const userStore = useUserStore();
 
 onBeforeMount(() => {
@@ -50,9 +50,7 @@ onBeforeMount(() => {
       </li>
     </ul>
   </div>
-  <KeepAlive>
-    <router-view v-slot="{ Component }">
-      <component :is="Component" />
-    </router-view>
-  </KeepAlive>
+  <router-view v-slot="{ Component }">
+    <component :is="Component" />
+  </router-view>
 </template>

@@ -1,9 +1,11 @@
-import { App, createApp } from 'vue';
-import { Router } from 'vue-router';
+import { App, Component, createApp, defineAsyncComponent as asyncComp } from 'vue';
+import { createRouter, createWebHashHistory, Router } from 'vue-router';
 import { createNotivue } from 'notivue';
 import { VueQueryPlugin } from 'vue-query';
-import { appSourceMap } from './source-map';
-import '@/assets/css/style.scss';
+import { pinia } from './stores';
+import { useUserStore } from './stores/userStore';
+import { useSessionStore } from './stores/sessionStore';
+import ResultsPage from '@/vue/apps/main-app/ResultsPage.vue';
 
 // eslint-disable-next-line import/no-unresolved
 import 'notivue/notifications.css';
@@ -11,10 +13,37 @@ import 'notivue/notifications.css';
 import 'notivue/animations.css';
 import 'vue3-side-panel/dist/vue3-side-panel.css';
 
-import { pinia } from '@/stores';
-import { useUserStore } from '@/stores/userStore';
-import { useSessionStore } from '@/stores/sessionStore';
 const globalProperties = {};
+
+interface VueAppSourceMap {
+  [key: string]: {
+    component: Component;
+    router?: () => Router;
+  };
+}
+
+const appSourceMap: VueAppSourceMap = {
+  'main-app': {
+    component: asyncComp(() => import('./MainApp.vue')),
+    router: () =>
+      createRouter({
+        linkActiveClass: 'active',
+        linkExactActiveClass: 'exact-active',
+        history: createWebHashHistory(),
+        routes: [
+          {
+            path: '/',
+            component: { render: () => null },
+          },
+          {
+            path: '/results',
+            component: ResultsPage,
+            meta: { transition: 'slide-right' },
+          },
+        ],
+      }),
+  },
+};
 
 const setupApp = (app: App<Element>, router: Router | null, id = '#app') => {
   if (router) app.use(router);

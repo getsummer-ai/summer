@@ -1,31 +1,37 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "allowJs": true,
-    "checkJs": true,
     "outDir": "./public",
-    "noImplicitAny": true,
-    "strict": true,
-    "declaration": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "module": "esnext",
-    "lib": ["es6", "dom", "es2015.promise", "es2017", "es2020"],
     "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "verbatimModuleSyntax": false,
     "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
+    "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "allowSyntheticDefaultImports": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "target": "es6",
     "jsx": "preserve",
     "downlevelIteration": true,
-    "forceConsistentCasingInFileNames": true,
     "typeRoots": ["node_modules/@types", "app/frontend/types", "./node_modules"],
-    "types": ["vite/client"],
+    "types": ["svelte", "vite/client"],
     "paths": {
       "@/*": ["app/frontend/*"]
     }
   },
   "include": ["app/frontend/**/*"],
+  //  "include": [
+  //    "app/frontend/types/**/*.d.ts",
+  //    "app/frontend/**/*.d.ts",
+  //    "app/frontend/**/*.ts",
+  //    "app/frontend/svelte/**/*.svelte",
+  //    "app/frontend/vue/apps/**/*.vue",
+  //    "app/frontend/**/*"
+  //  ],
   "exclude": ["app/frontend/api/routes.js", "app/frontend/api/routes.d.ts"]
 }

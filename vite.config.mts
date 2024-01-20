@@ -1,13 +1,15 @@
 import { defineConfig } from 'vite';
 import RubyPlugin from 'vite-plugin-ruby';
 import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
+// import * as svelte from "svelte";
+import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
+// import { resolve } from 'path';
 
 export default defineConfig({
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
-  plugins: [vue(), RubyPlugin()],
+  plugins: [vue(), svelte({ preprocess: [vitePreprocess()] }), RubyPlugin()],
   // css: {
   //   preprocessorOptions: {
   //     scss: {

@@ -1,5 +1,5 @@
 import { KeyValueType } from '@/types';
-import { useUserStore } from '@/stores/userStore';
+import { useUserStore } from '@/vue/apps/stores/userStore';
 
 type MessagesType<T extends KeyValueType> = {
   en: T;

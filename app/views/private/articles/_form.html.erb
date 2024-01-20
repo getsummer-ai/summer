@@ -1,0 +1,26 @@
+
+<%= simple_form_for @article, url: project_article_path(@project, @article) do |f| %>
+  <%= f.error_notification class: 'text-sm font-bold' %>
+  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
+
+  <% if @article.errors.any? %>
+    <div class="mt-1 border-l-2 border-accent pl-2">
+      <ul>
+        <% @article.errors.full_messages.each do |message| %>
+          <li class="pb-1 text-sm"><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+  <div class="mt-2">
+    <%= f.input :title %>
+    <%= f.input :article %>
+    <%= f.input :summary %>
+  </div>
+
+  <div class="form-actions mt-2">
+    <%= f.button :submit %>
+  </div>
+<% end %>

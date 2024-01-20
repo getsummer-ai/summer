@@ -1,6 +1,3 @@
-// import Alpine from 'alpinejs';
 import '@hotwired/turbo-rails';
-import '@/init-stimulus';
-
-// Alpine.start();
+import '@/stimulus/init-stimulus';
 // console.log('Vite ⚡️ Rails ⚡️ Login');

@@ -3,5 +3,5 @@ node_modules/
 public/vite
 public/vite-dev
 public/vite-test
-vite.config.ts
+vite.config.mts
 app/frontend/api/routes.*

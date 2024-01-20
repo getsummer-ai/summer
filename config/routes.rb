@@ -31,7 +31,9 @@ Rails.application.routes.draw do
 
     scope '/app', module: 'private' do
       get '/', to: 'app#index', as: 'user_app'
-      resources :projects
+      resources :projects do
+        resources :articles, only: %i[index show edit update]
+      end
     end
   end
 

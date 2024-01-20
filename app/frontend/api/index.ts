@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useSessionStore } from '@/stores/sessionStore';
+import { useSessionStore } from '@/vue/apps/stores/sessionStore';
 
 const instance = axios.create();
 instance.interceptors.request.use(function (config) {

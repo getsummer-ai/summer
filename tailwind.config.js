@@ -5,7 +5,7 @@ module.exports = {
     './app/helpers/**/*.rb',
     './app/builders/**/*.rb',
     './app/components/**/*.erb',
-    './app/frontend/**/*.{js,vue,ts}',
+    './app/frontend/**/*.{js,vue,ts,svelte}',
     './config/initializers/simple_form.rb',
     './app/views/**/*',
   ],
