@@ -1,4 +1,5 @@
 import App from '@/svelte/apps/App.svelte';
+import Summer from '@/svelte/apps/Summer.svelte';
 import type { ComponentType, SvelteComponent } from 'svelte';
 
 interface AppSourceMap {
@@ -6,7 +7,8 @@ interface AppSourceMap {
 }
 
 const appSourceMap: AppSourceMap = {
-  summerBtn: App,
+  app: App,
+  summer: Summer,
 };
 const initializedApps: { [key: string]: SvelteComponent } = {};
 

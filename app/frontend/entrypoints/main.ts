@@ -1,11 +1,11 @@
 import '@hotwired/turbo-rails';
 
-import { initApps } from '@/vue/apps/init-vue';
+import { initSvelteApps } from '@/svelte/apps/init-svelte';
 import '@/stimulus/init-stimulus';
-initApps();
-console.log('Vite ⚡️ Rails ⚡️ MAIN');
+console.log('Vite ⚡️ Rails ⚡️ MAIN ⚡️ SVELTE');
 
 // window.addEventListener('DOMContentLoaded', animateSlider);
 window.addEventListener('turbo:load', () => {
+  initSvelteApps();
   console.log('turbo-load');
 });

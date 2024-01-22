@@ -15,6 +15,7 @@ gem 'pg', '~> 1.1'
 gem 'puma', '~> 6.0'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
+gem 'boilerpipe-ruby', require: 'boilerpipe'
 gem 'turbo-rails'
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]

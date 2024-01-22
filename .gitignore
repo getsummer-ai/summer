@@ -30,7 +30,7 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 .idea
-
+.vscode
 # Vite Ruby
 /public/vite*
 node_modules
