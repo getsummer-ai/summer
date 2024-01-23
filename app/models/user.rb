@@ -23,6 +23,8 @@ class User < ApplicationRecord
       where(email: auth.info.email).first_or_create do |u|
         u.provider = auth.provider
         u.uid = auth.uid
+        u.avatar_url = auth.info.image
+        u.name = auth.info.name
         u.password = Devise.friendly_token[0, 20]
         u.locale = locale if User.locales.value?(locale.to_s)
       end

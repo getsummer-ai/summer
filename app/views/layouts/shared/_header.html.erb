@@ -22,9 +22,9 @@
         class="menu menu-sm dropdown-content mt-4 z-[1] p-2 shadow bg-base-200 rounded [&_li>*]:rounded w-52"
       >
         <li>
-          <%= link_to 'Homepage', root_path, 'data-turbo' => "false" %>
+          <%= link_to 'Homepage', root_path, 'data-turbo' => 'false' %>
         </li>
-        <li><%= link_to 'About', about_path, 'data-turbo' => "false" %></li>
+        <li><%= link_to 'About', about_path, 'data-turbo' => 'false' %></li>
       </ul>
     </div>
   </div>
@@ -33,30 +33,13 @@
       link_to(
         'SUMMER',
         user_app_path,
-        class: 'normal-case font-silkscreen text-3xl border-b-4 tracking-tight border-accent-focus font-extrabold',
+        class:
+          'normal-case font-silkscreen text-3xl border-b-4 tracking-tight border-accent-focus font-extrabold',
       )
     %>
   </div>
   <div class="navbar-end">
-    <button class="btn btn-ghost btn-circle">
-      <span class="indicator block">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-          />
-        </svg>
-        <span class="badge badge-xs badge-primary indicator-item"></span>
-      </span>
-    </button>
+    <span class="text-sm mr-2"><%= current_user.name %></span>
     <div class="dropdown dropdown-end">
       <label tabindex="0" class="btn btn-ghost btn-circle avatar">
         <span
@@ -64,7 +47,13 @@
           bg-gradient-to-r from-orange-600 to-orange-500
           justify-center items-center"
         >
-          <%= current_user.email[0] %>
+          <%=
+            if current_user.avatar_url.present?
+              image_tag current_user.avatar_url, class: 'rounded-full'
+            else
+              current_user.email[0].upcase
+            end
+          %>
         </span>
       </label>
       <ul
