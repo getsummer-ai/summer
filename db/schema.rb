@@ -182,6 +182,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
+    t.string "name"
+    t.text "avatar_url"
     t.enum "locale", default: "en", null: false, enum_type: "user_locale"
     t.boolean "is_admin", default: false, null: false
     t.datetime "deleted_at"

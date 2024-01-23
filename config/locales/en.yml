@@ -38,7 +38,7 @@ en:
   layouts:
     main:
       header:
-        name: Resumen
+        name: Summer
         description: Let users get an article summary.
       menu:
         about: About

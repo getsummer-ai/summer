@@ -6,6 +6,8 @@ class AddExtraColumnsToUsers < ActiveRecord::Migration[7.1]
     change_table :users, bulk: true do |t|
       t.string :provider
       t.string :uid
+      t.string :name
+      t.text :avatar_url
       t.enum :locale, default: "en", null: false, enum_type: "user_locale"
       t.boolean :is_admin, default: false, null: false
       t.datetime :deleted_at

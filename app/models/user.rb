@@ -68,6 +68,7 @@ end
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  avatar_url             :text
 #  confirmation_sent_at   :datetime
 #  confirmation_token     :string
 #  confirmed_at           :datetime
@@ -82,6 +83,7 @@ end
 #  last_sign_in_ip        :string
 #  locale                 :enum             default("en"), not null
 #  locked_at              :datetime
+#  name                   :string
 #  provider               :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
