@@ -37,6 +37,12 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      resources :projects, only: %i[show]
+    end
+  end
+
   authenticate :user, ->(user) { user&.is_admin? } do
     mount GoodJob::Engine => 'good_jobs'
     # mount Avo::Engine, at: '/avo'

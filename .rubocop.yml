@@ -44,7 +44,7 @@ Metrics/AbcSize:
   Max: 22
 
 Style/ClassAndModuleChildren:
-  EnforcedStyle: compact
+  EnforcedStyle: nested
 
 # Disables "Too many expectations."
 RSpec/MultipleExpectations:
@@ -55,3 +55,4 @@ RSpec/ExampleLength:
 
 Style/OpenStructUse:
   Enabled: false
+

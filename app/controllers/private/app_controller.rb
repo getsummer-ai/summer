@@ -1,8 +1,10 @@
 # frozen_string_literal: true
-class Private::AppController < PrivateController
-  include ActiveStorage::SetCurrent
+module Private
+  class AppController < PrivateController
+    include ActiveStorage::SetCurrent
 
-  def index
-    # render formats: :html
+    def index
+      # render formats: :html
+    end
   end
 end

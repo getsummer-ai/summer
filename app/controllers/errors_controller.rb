@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 class ErrorsController < ApplicationController
-  skip_before_action :authenticate_user!, :set_locale
+  skip_before_action :authenticate_user!, :update_user_locale!
   layout 'basic'
 
   # Overloading the default switch_locale
