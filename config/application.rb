@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 require_relative 'boot'
+require 'boilerpipe'
 require 'rails'
+
 
 %w[
   active_record/railtie

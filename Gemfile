@@ -16,8 +16,10 @@ gem 'puma', '~> 6.0'
 
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'boilerpipe-ruby', require: 'boilerpipe'
+gem 'faraday'
+gem 'nokogiri'
 gem 'turbo-rails'
-
+gem 'validate_url'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'draper'
 gem 'jbuilder'

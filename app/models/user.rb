@@ -25,7 +25,7 @@ class User < ApplicationRecord
         u.uid = auth.uid
         u.avatar_url = auth.info.image
         u.name = auth.info.name
-        u.password = Devise.friendly_token[0, 20]
+        u.password = Devise.friendly_token
         u.locale = locale if User.locales.value?(locale.to_s)
       end
     user.update(provider: auth.provider, uid: auth.uid) if user.provider.empty?

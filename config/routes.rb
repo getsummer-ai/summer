@@ -39,6 +39,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      get 'button/init', to: 'button#init'
       resources :projects, only: %i[show]
     end
   end

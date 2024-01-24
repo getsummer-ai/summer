@@ -4,6 +4,8 @@ class Project < ApplicationRecord
   enum plan: { free: 'free', paid: 'paid' }
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }
 
+  store :settings, accessors: [ :color, :font_size ], coder: JSON, prefix: true
+
   belongs_to :user
   has_many :project_urls, dependent: :destroy
   has_many :project_articles, dependent: :destroy
@@ -33,9 +35,13 @@ class Project < ApplicationRecord
   def normalize_domain
     return if domain.nil? || !domain_changed?
     # self.domain = PublicSuffix.domain(domain) and return if PublicSuffix.valid?(domain)
+    self.domain = retrieve_host_from_url(domain)
+  end
+
+  def retrieve_host_from_url(url)
     prefix = 'http://'
-    prefix = '' if domain.start_with?('http')
-    self.domain = Addressable::URI.parse([prefix, domain].join).host
+    prefix = '' if url.start_with?('http')
+    Addressable::URI.parse([prefix, url].join).host
   end
 end
 

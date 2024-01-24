@@ -12,14 +12,14 @@ module Api
 
       private
 
-      # @return [Project, nil]
+      # @return [Project]
       def current_project
         @current_project ||= Project.find_by(id: request.headers[:HTTP_API_TOKEN])
       end
 
       def request_validation
         return if request.headers[:HTTP_API_TOKEN].present? && current_project.present?
-        render json: { message: 'Invalid API token' }, status: :forbidden
+        render json: { message: 'Invalid api_token' }, status: :forbidden
       end
     end
   end
