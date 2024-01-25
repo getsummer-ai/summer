@@ -10,8 +10,10 @@ class ProjectArticle < ApplicationRecord
   has_many :project_urls, through: :project_article_urls
   has_many :project_article_statistics, dependent: :destroy
 
-  REQUIRED_COLUMNS = %w[id title article_hash].freeze
-  scope :only_required_columns, -> { select(REQUIRED_COLUMNS) }
+  MINIMAL_COLUMNS = %w[id title article_hash].freeze
+  SUMMARY_COLUMNS = %w[id project_id title article_hash summary is_summarized].freeze
+  scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
+  scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 end
 
 # == Schema Information

@@ -18,7 +18,7 @@ class Project < ApplicationRecord
               message: 'You already have a project with this name',
             }
   validates :domain,
-            url: true,
+            domain_url: true,
             presence: true,
             uniqueness: {
               scope: :user_id,
@@ -30,18 +30,18 @@ class Project < ApplicationRecord
 
   before_save :normalize_domain
 
+  def self.host_from_url(url)
+    prefix = 'http://'
+    prefix = '' if url.start_with?('http')
+    Addressable::URI.parse([prefix, url].join).host
+  end
+
   private
 
   def normalize_domain
     return if domain.nil? || !domain_changed?
     # self.domain = PublicSuffix.domain(domain) and return if PublicSuffix.valid?(domain)
-    self.domain = retrieve_host_from_url(domain)
-  end
-
-  def retrieve_host_from_url(url)
-    prefix = 'http://'
-    prefix = '' if url.start_with?('http')
-    Addressable::URI.parse([prefix, url].join).host
+    self.domain = self.class.host_from_url(domain)
   end
 end
 

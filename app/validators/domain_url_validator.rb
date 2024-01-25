@@ -1,8 +1,8 @@
 # frozen_string_literal: true
-class UrlValidator < ActiveModel::EachValidator
+class DomainUrlValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if url_valid?(value)
-    record.errors.add(attribute, (options[:message] || 'must be a valid URL'))
+    record.errors.add(attribute, (options[:message] || 'must be a valid domain name'))
   end
 
   def url_valid?(url)
