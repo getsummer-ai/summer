@@ -56,3 +56,6 @@ RSpec/ExampleLength:
 Style/OpenStructUse:
   Enabled: false
 
+Style/IfUnlessModifier:
+  Enabled: false
+

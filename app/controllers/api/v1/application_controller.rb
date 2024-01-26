@@ -25,10 +25,8 @@ module Api
       end
 
       def validate_origin
-        origin_domain = Project.host_from_url(request.origin)
-        return if origin_domain == current_project.domain
-
-        send_incorrect_domain_response!
+        form = CheckProjectRequestForm.new(current_project, request.origin, request.referer)
+        send_incorrect_domain_response! if form.invalid?
       end
 
       def send_incorrect_domain_response!
