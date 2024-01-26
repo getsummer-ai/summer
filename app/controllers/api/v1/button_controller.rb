@@ -27,7 +27,7 @@ module Api
         article_url_domain = Project.host_from_url(article_url)
         return if article_url_domain == current_project.domain
 
-        render json: { code: :wrong_domain, message: 'Incorrect domain' }, status: :forbidden
+        send_incorrect_domain_response!
       end
 
       # @return [String]

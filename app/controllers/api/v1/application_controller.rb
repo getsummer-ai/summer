@@ -28,6 +28,10 @@ module Api
         origin_domain = Project.host_from_url(request.origin)
         return if origin_domain == current_project.domain
 
+        send_incorrect_domain_response!
+      end
+
+      def send_incorrect_domain_response!
         render json: { code: :wrong_domain, message: 'Incorrect domain' }, status: :forbidden
       end
     end
