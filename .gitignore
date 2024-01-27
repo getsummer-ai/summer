@@ -38,6 +38,7 @@ node_modules
 # https://vitejs.dev/guide/env-and-mode.html#env-files
 *.local
 .env
+.env.*
 
 # Ignore automatically generated js-routes files.
 /app/frontend/api/routes.js

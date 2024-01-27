@@ -1,4 +1,12 @@
 # frozen_string_literal: true
+#
+# You only need require calls for two use cases:
+# To load files under the lib directory.
+# To load gem dependencies that have require: false in the Gemfile .
+#
+# require 'boilerpipe'
+# require 'nokogiri'
+
 class ArticleScrapperService
   attr_reader :content, :title, :image_url
 

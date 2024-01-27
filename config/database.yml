@@ -82,5 +82,5 @@ test:
 #
 production:
   <<: *default
-  username: summer_production
-  password: <%= ENV["SUMMER_DATABASE_PASSWORD"] %>
+  database: summer_production
+#  password: <%#= ENV["SUMMER_DATABASE_PASSWORD"] %>

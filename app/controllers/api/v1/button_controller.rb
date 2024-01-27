@@ -18,8 +18,8 @@ module Api
       def summary
         @article =
           current_project.project_articles.summary_columns.find_by!(article_hash: permitted_params[:id])
-        @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(filter_html: true))
-        @html_summary = Base64.encode64(@markdown.render(@article&.summary || ''))
+        summary_html = MarkdownLib.render(@article&.summary || '')
+        @html_summary = summary_html ? Base64.encode64(summary_html) : ''
       end
 
       private

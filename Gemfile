@@ -58,12 +58,12 @@ gem 'vite_rails'
 gem 'avo', '>= 3.0.1.beta9', source: 'https://packager.dev/avo-hq/'
 # Use Sass to process CSS
 # gem "sassc-rails"
+gem 'dotenv-rails'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'annotate'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
-  gem 'dotenv-rails'
   gem 'prettier'
   gem 'rspec-rails', '~> 6.0.3'
 
