@@ -64,6 +64,8 @@ Rails.application.configure do
   config.active_job.verbose_enqueue_logs = true
 
   config.hosts << /.*\.ngrok-free\.app/
+  config.hosts << 'summer-api.local'
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

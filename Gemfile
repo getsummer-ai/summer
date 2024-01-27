@@ -18,11 +18,14 @@ gem 'puma', '~> 6.0'
 gem 'boilerpipe-ruby', require: 'boilerpipe'
 gem 'faraday'
 gem 'nokogiri'
+gem 'redcarpet'
+
 gem 'turbo-rails'
 gem 'validate_url'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'draper'
 gem 'jbuilder'
+
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]

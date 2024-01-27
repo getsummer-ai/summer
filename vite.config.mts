@@ -9,7 +9,23 @@ export default defineConfig({
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
   },
-  plugins: [vue(), svelte({ preprocess: [vitePreprocess()] }), RubyPlugin()],
+  plugins: [
+    vue(),
+    svelte({
+      emitCss: false,
+      preprocess: [vitePreprocess()]
+    }),
+    RubyPlugin()
+  ],
+  build: {
+    minify: false,
+    sourcemap: true,
+    // rollupOptions: {
+    //   output: {
+    //     manualChunks: {}
+    //   }
+    // }
+  }
   // css: {
   //   preprocessorOptions: {
   //     scss: {

@@ -2,6 +2,7 @@
 
 require_relative 'boot'
 require 'boilerpipe'
+require 'redcarpet'
 require 'rails'
 
 

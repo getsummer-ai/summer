@@ -14,6 +14,7 @@ class PagesController < ApplicationController
   end
 
   def about
+    @project_id = current_user&.projects&.pick(:id)
   end
 
 end

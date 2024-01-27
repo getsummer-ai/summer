@@ -7,6 +7,7 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_origin
       before_action :validate_init_request, only: :init
+      wrap_parameters false
 
       def init
         @article = ProjectArticleForm.new(current_project, article_url).find_or_create
@@ -16,7 +17,9 @@ module Api
 
       def summary
         @article =
-          current_project.project_articles.summary_columns.find_by!(article_hash: params[:id])
+          current_project.project_articles.summary_columns.find_by!(article_hash: permitted_params[:id])
+        @markdown = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(filter_html: true))
+        @html_summary = Base64.encode64(@markdown.render(@article&.summary || ''))
       end
 
       private
@@ -32,7 +35,11 @@ module Api
 
       # @return [String]
       def article_url
-        @article_url ||= params.permit(:s)['s'].to_s
+        @article_url ||= permitted_params['s'].to_s
+      end
+
+      def permitted_params
+        params.permit(:s, :id)
       end
     end
   end

@@ -3,5 +3,5 @@
 json.article do
   json.id @article.article_hash
   json.title @article.title
-  json.summary @article.summary
+  json.summary @html_summary
 end
