@@ -6,9 +6,7 @@
     </ul>
   </div>
 <% end %>
-<% if @project_id.present? %>
-  <div id="summer" data-props="<%= { project: @project_id }.to_json %>"></div>
-<% end %>
+<%=render 'button_example' %>
 <article class="prose mx-auto">
   <h1>Garlic bread with cheese: What the science tells us</h1>
   <p>

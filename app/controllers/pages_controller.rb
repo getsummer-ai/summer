@@ -2,6 +2,7 @@
 
 class PagesController < ApplicationController
   skip_before_action :authenticate_user!
+  before_action :example_project_id, only: [:about, :new_year_celebration]
 
   layout :custom_layout
 
@@ -15,7 +16,13 @@ class PagesController < ApplicationController
   end
 
   def about
-    @project_id = current_user&.projects&.pick(:id)
+  end
+
+  def new_year_celebration
+  end
+
+  def example_project_id
+    @example_project_id ||= current_user&.projects&.pick(:id)
   end
 
 end

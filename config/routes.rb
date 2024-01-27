@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     root 'pages#about'
     get '/about', to: 'pages#about', as: 'about'
     get '/homepage', to: 'pages#homepage', as: 'homepage'
+    get '/new-year-celebrations', to: 'pages#new_year_celebration', as: 'new_year_celebrations'
 
     resources :modals, only: [] do
       collection do
