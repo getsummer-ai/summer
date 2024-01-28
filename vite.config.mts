@@ -20,6 +20,18 @@ export default defineConfig({
   build: {
     minify: false,
     sourcemap: true,
+    rollupOptions: {
+      output: {
+
+        entryFileNames: function (file) {
+          console.log(file.name, file.type)
+          return file.name && ['pixels/init.ts', 'pixels/init.ts'].includes(file.name)
+            ? `assets/[name].js`
+            : `assets/[name]-[hash].js`;
+        },
+      }
+    }
+
     // rollupOptions: {
     //   output: {
     //     manualChunks: {}

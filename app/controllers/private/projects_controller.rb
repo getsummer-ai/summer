@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Private
   class ProjectsController < PrivateController
     before_action :set_project, only: %i[show edit update destroy]
@@ -71,7 +72,7 @@ module Private
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.fetch(:project, {}).permit(:name, :domain, :description, :status, :user_id)
+      params.fetch(:project, {}).permit(:name, :domain, :settings_container_id, :settings_url_filter)
     end
   end
 end

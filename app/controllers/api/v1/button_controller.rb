@@ -9,6 +9,10 @@ module Api
       before_action :validate_init_request, only: :init
       wrap_parameters false
 
+      def version
+        head :ok
+      end
+
       def init
         @article = ProjectArticleForm.new(current_project, article_url).find_or_create
         return head :bad_request if @article.blank?

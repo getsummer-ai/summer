@@ -1,6 +1,7 @@
 {
   "all": {
-    "watchAdditionalPaths": []
+    "watchAdditionalPaths": [],
+    "additionalEntrypoints": ["app/frontend/pixels/*.ts"]
   },
   "development": {
     "autoBuild": true,

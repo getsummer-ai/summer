@@ -4,7 +4,12 @@ class Project < ApplicationRecord
   enum plan: { free: 'free', paid: 'paid' }
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }
 
-  store :settings, accessors: [ :color, :font_size ], coder: JSON, prefix: true
+  # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
+  # store_accessor :settings, %i[color font_size url_filter container_id], prefix: true
+  store :settings,
+        accessors: %i[color font_size url_filter container_id],
+        coder: JsonbSerializer,
+        prefix: true
 
   belongs_to :user
   has_many :project_urls, dependent: :destroy
@@ -24,9 +29,23 @@ class Project < ApplicationRecord
               scope: :user_id,
               message: 'You already have a project with this domain',
             }
+  validates :settings_container_id,
+            allow_blank: true,
+            format: {
+              with: /\A[a-zA-Z][\w:.-]*\z/,
+              message: "Only html ID name is allowed. Example: 'article-container'",
+            }
+  validates :settings_url_filter,
+            allow_blank: true,
+            format: {
+              with: %r{\A/[\w-]*/\z},
+              message: "Only url path is allowed. Example: '/blog/'",
+            }
 
   normalizes :name, with: ->(name) { name.strip }
-  # normalizes :domain, with: -> (v) { URI.join(v, "").to_s }
+  # normalizes :settings_container_id, with: ->(container_id) { container_id.to_s.downcase }
+  # normalizes :settings_container_id, apply_to_nil: true, with: ->(v) { v }
+  # normalizes :settings_url_filter, apply_to_nil: true, with: ->(v) { v }
 
   before_save :normalize_domain
 

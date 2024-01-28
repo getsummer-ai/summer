@@ -1,6 +1,16 @@
 <div class="border-2 p-2 border-accent" id="<%= dom_id project %>">
   <h2 class="text-2xl font-extrabold"><%= project.name.upcase %></h2>
-  <p><span class="badge badge-accent"> <%= project.domain %> </span></p>
+  <p>
+    <span class="badge badge-accent"> <%= project.domain %> </span>
+    <% if project.settings_url_filter.present? %>
+
+      <span class="badge">
+        *
+        <%= project.settings_url_filter %>
+        *
+      </span>
+    <% end %>
+  </p>
 
   <% if rand(2) == 1 %>
     <p class="underline text-xs mt-4">Last button calling: 20 minutes ago</p>
