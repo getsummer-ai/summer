@@ -21,7 +21,7 @@ export const settings = writable<SettingsInfo>();
 const getFetch = async <T>(url: string, project_id: string): Promise<T> => {
   const requestHeaders: HeadersInit = new Headers();
   requestHeaders.set('Content-Type', 'application/json');
-  requestHeaders.set('Api-Token', project_id);
+  requestHeaders.set('Api-Key', project_id);
   const response = await fetch(url, {
     mode: 'cors',
     headers: requestHeaders,

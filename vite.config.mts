@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import RubyPlugin from 'vite-plugin-ruby';
 import vue from '@vitejs/plugin-vue';
+// const path = require('path');
 // import * as svelte from "svelte";
 import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 // import { resolve } from 'path';
@@ -22,21 +23,24 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       output: {
-
         entryFileNames: function (file) {
-          console.log(file.name, file.type)
-          return file.name && ['pixels/init.ts', 'pixels/init.ts'].includes(file.name)
-            ? `assets/[name].js`
-            : `assets/[name]-[hash].js`;
+          // console.log(file.name, file.type)
+          // let name = file.name.split('.')[0]
+          // if (!file.name.startsWith('pixels')) {
+          //   name = name.split('/')[1]
+          // }
+          const name = file.name.split('.')[0]
+          if (file.name.startsWith('pixels')) {
+            if (file.name === 'pixels/init.ts') return `pixels/init.js`
+            return `${name}-[hash].js`;
+          }
+          return `assets/${name}-[hash].js`;
         },
       }
+    },
+    commonjsOptions: {
+      strictRequires: true
     }
-
-    // rollupOptions: {
-    //   output: {
-    //     manualChunks: {}
-    //   }
-    // }
   }
   // css: {
   //   preprocessorOptions: {

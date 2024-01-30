@@ -20,9 +20,25 @@
 Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins '*'
-    resource '*',
+    resource '/api/v1/*',
+             headers: 'Api-Key',
+             methods: %i[get post options head]
+    resource 'dist*/pixels/*',
              headers: :any,
-             expose: %w[Authorization Api-Token],
              methods: %i[get post put patch delete options head]
   end
+
+  # allow do
+  #   origins '*'
+  #   resource '/public/*', headers: :any, methods: :get
+  #     # origins 'vite*/assets/pixels' do |source, env|
+  #     #   Project.exists?(['domain  ~* ?', "^#{source}"])
+  #     # end
+  #
+  #   # Only allow a request for a specific host
+  #   resource '/api/v1/*',
+  #            headers: :any,
+  #            methods: :get,
+  #            if: proc { |env| env['HTTP_HOST'] == 'api.example.com' }
+  # end
 end

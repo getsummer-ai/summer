@@ -5,12 +5,13 @@ module Api
     # Controller with common logic for user API
     #
     class ButtonController < Api::V1::ApplicationController
-      before_action :validate_origin
       before_action :validate_init_request, only: :init
       wrap_parameters false
 
       def version
-        head :ok
+        render json: {
+          path: helpers.vite_asset_path('pixels/summer.ts')
+        }
       end
 
       def init

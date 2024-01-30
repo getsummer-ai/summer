@@ -5,7 +5,7 @@ module Api
     # Controller with common logic for user API
     #
     class ApplicationController < ActionController::API
-      before_action :validate_api_token
+      before_action :validate_api_key
       before_action :validate_origin
 
       helper_method :current_project
@@ -16,12 +16,12 @@ module Api
 
       # @return [Project]
       def current_project
-        @current_project ||= Project.find_by(id: request.headers[:HTTP_API_TOKEN])
+        @current_project ||= Project.find_by(id: request.headers[:HTTP_API_KEY])
       end
 
-      def validate_api_token
-        return if request.headers[:HTTP_API_TOKEN].present? && current_project.present?
-        render json: { message: 'Invalid api_token' }, status: :forbidden
+      def validate_api_key
+        return if request.headers[:HTTP_API_KEY].present? && current_project.present?
+        render json: { message: 'Invalid Api-Key' }, status: :forbidden
       end
 
       def validate_origin

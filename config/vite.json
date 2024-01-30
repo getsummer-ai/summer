@@ -1,16 +1,19 @@
 {
   "all": {
-    "watchAdditionalPaths": [],
+    "watchAdditionalPaths": ["app/frontend/pixels"],
     "additionalEntrypoints": ["app/frontend/pixels/*.ts"]
+  },
+  "production": {
+    "publicOutputDir": "dist"
   },
   "development": {
     "autoBuild": true,
-    "publicOutputDir": "vite-dev",
+    "publicOutputDir": "dist-dev",
     "port": 3036
   },
   "test": {
     "autoBuild": true,
-    "publicOutputDir": "vite-test",
+    "publicOutputDir": "dist-test",
     "port": 3037
   }
 }
