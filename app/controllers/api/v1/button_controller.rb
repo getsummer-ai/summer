@@ -10,7 +10,7 @@ module Api
 
       def version
         render json: {
-          path: helpers.vite_asset_path('pixels/summer.ts')
+          path: "/libs/app.umd.js"
         }
       end
 

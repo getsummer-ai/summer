@@ -1,7 +1,7 @@
 <script type="text/javascript" charset="utf-8">
   window.GetSummer = window.GetSummer || { key: '<%=@example_project_id %>' }
 </script>
-<%= vite_typescript_tag 'pixels/init' %>
+<script type="module" src="<%=ENV['VITE_API_URL']%>/libs/init.umd.js" async></script>
 <%= render 'button_example' %>
 <div class="container mx-auto">
   <article class="prose">

@@ -1,15 +1,15 @@
 import { writable } from 'svelte/store';
 
-type ArticleInitInfo = {
+export type ArticleInitInfo = {
   id: string;
   title: string;
 };
 
-type ArticleInfo = ArticleInitInfo & {
+export type ArticleInfo = ArticleInitInfo & {
   summary: string;
 }
 
-type SettingsInfo = {
+export type SettingsInfo = {
   color: string | null;
   size: string | null;
 };

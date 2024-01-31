@@ -1,0 +1,18 @@
+import {initApp} from "@/svelte/apps/init-button";
+// const appId = (import.meta.url.split('/').pop() || 'getsummer-app').split('.')[0];
+const projectId = window.GetSummer.key;
+let previousUrl = location.href;
+
+const observer = new MutationObserver(function() {
+  console.log('mutation', location.href)
+  if (location.href !== previousUrl) {
+    previousUrl = location.href;
+    initApp(projectId, previousUrl);
+  }
+});
+
+// Mutation observer setup
+const config = {subtree: true, childList: true};
+observer.observe(document, config);
+
+

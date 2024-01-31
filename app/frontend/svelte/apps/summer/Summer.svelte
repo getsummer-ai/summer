@@ -1,18 +1,21 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import {getSummary, initButton} from './store';
-  import Counter from '@/svelte/apps/lib/Counter.svelte';
+  import { getSummary } from './store';
+  import type { ArticleInitInfo, SettingsInfo } from './store';
+  import Counter from '../lib/Counter.svelte';
   import Modal from './Modal.svelte';
+
   /* eslint svelte/no-at-html-tags: 0 */
   let showModal = false;
   export let project: string;
+  export let settings: SettingsInfo;
+  export let article: ArticleInitInfo;
   let summary: string;
 
   onMount(async () => {
     try {
-      const info = await initButton(project, window.location.href);
-      console.log(info);
-      const summaryInfo = await getSummary(project, info.article.id);
+      console.log(settings)
+      const summaryInfo = await getSummary(project, article.id);
       summary = atob(summaryInfo.article.summary);
       console.log(summary);
     } catch (error) {

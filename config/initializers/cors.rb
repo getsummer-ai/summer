@@ -23,7 +23,7 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     resource '/api/v1/*',
              headers: 'Api-Key',
              methods: %i[get post options head]
-    resource '/dist*/pixels/*',
+    resource '/libs/*',
              headers: :any,
              methods: %i[get post put patch delete options head]
   end

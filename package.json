@@ -9,7 +9,9 @@
     "lint-staged": "lint-staged",
     "test-specs": "bundle exec rspec spec",
     "dev": "./bin/vite dev",
-    "build": "./bin/vite build"
+    "build": "./bin/vite build",
+    "build-button-init-app": "vite build --config vite.config.init.lib.mts",
+    "build-button-app": " vite build --config vite.config.app.lib.mts"
   },
   "dependencies": {
     "@babel/types": "^7.23.6",
@@ -38,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "@vitejs/plugin-vue": "^5.0.3",
+    "vite-tsconfig-paths": "^4.3.1",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^12.0.0",
     "autoprefixer": "^10.4.16",

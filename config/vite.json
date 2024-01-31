@@ -1,7 +1,6 @@
 {
   "all": {
-    "watchAdditionalPaths": ["app/frontend/pixels"],
-    "additionalEntrypoints": ["app/frontend/pixels/*.ts"]
+    "watchAdditionalPaths": []
   },
   "production": {
     "publicOutputDir": "dist"
