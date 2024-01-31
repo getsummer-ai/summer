@@ -1,3 +1,8 @@
-<%# if @example_project_id.present? %>
-<!--  <div id="summer" data-props="<%#= { project: @example_project_id }.to_json %>"></div>-->
-<%# end %>
+<script type="text/javascript">
+  window.GetSummer = window.GetSummer || { key: '<%=@example_project_id %>' }
+</script>
+<% if Rails.env.production? %>
+  <script type="module" src="<%=ENV['VITE_API_URL']%>/libs/init.umd.js" async></script>
+<% else %>
+  <%= vite_typescript_tag 'libs/init.ts' %>
+<% end %>

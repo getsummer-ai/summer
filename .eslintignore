@@ -1,8 +1,9 @@
 yarn.lock
 node_modules/
-public/vite
-public/vite-dev
-public/vite-test
+public/build
+public/build-dev
+public/build-test
+public/libs
 vite.config.mts
 vite.config.init.lib.mts
 vite.config.app.lib.mts

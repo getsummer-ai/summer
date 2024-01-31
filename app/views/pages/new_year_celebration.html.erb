@@ -1,7 +1,6 @@
-<script type="text/javascript" charset="utf-8">
-  window.GetSummer = window.GetSummer || { key: '<%=@example_project_id %>' }
-</script>
-<script type="module" src="<%=ENV['VITE_API_URL']%>/libs/init.umd.js" async></script>
+<% content_for :meta do %>
+  <meta property="og:title" content="New Year celebrations">
+<% end %>
 <%= render 'button_example' %>
 <div class="container mx-auto">
   <article class="prose">

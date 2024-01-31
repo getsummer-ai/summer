@@ -9,9 +9,8 @@ module Api
       wrap_parameters false
 
       def version
-        render json: {
-          path: "/libs/app.umd.js"
-        }
+        app_path = Rails.env.production? ? "/libs/app.umd.js" : helpers.vite_asset_path('libs/summer.ts')
+        render json: { path: app_path }
       end
 
       def init

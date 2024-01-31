@@ -2,7 +2,8 @@ import {initApp} from "@/svelte/apps/init-button";
 // const appId = (import.meta.url.split('/').pop() || 'getsummer-app').split('.')[0];
 const projectId = window.GetSummer.key;
 let previousUrl = location.href;
-
+initApp(projectId, previousUrl);
+// const a = 1;
 const observer = new MutationObserver(function() {
   console.log('mutation', location.href)
   if (location.href !== previousUrl) {

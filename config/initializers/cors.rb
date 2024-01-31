@@ -26,6 +26,12 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
     resource '/libs/*',
              headers: :any,
              methods: %i[get post put patch delete options head]
+
+    if Rails.env.development?
+      resource '/dist-dev/assets/*',
+               headers: :any,
+               methods: %i[get post put patch delete options head]
+    end
   end
 
   # allow do

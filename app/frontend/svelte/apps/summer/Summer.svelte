@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onMount } from 'svelte';
   import { getSummary } from './store';
   import type { ArticleInitInfo, SettingsInfo } from './store';
   import Counter from '../lib/Counter.svelte';
@@ -11,44 +11,69 @@
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string;
+  let button: HTMLButtonElement;
+  let modalTitle: HTMLHeadingElement;
+  let loading = false;
+  let showButton = false;
+  let styles = {
+    left: 0,
+    top: 0,
+    display: 'none',
+    position: 'fixed',
+  };
 
   onMount(async () => {
+    document.querySelectorAll('h1, h2, h3').forEach((el) => {
+      if (modalTitle === el) return;
+      if (showButton || !el.innerHTML.includes(article.title)) return;
+      const rect = el.getBoundingClientRect();
+      styles = {
+        left: rect.left + window.scrollX - (button.getBoundingClientRect().width + 10),
+        top: rect.top + window.scrollY,
+        display: 'inline-block',
+        position: 'absolute',
+      };
+      console.log(styles, article.title, el.innerHTML, el, modalTitle === el);
+      showButton = true;
+    });
+  });
+
+  const openModal = async () => {
+    if (summary) {
+      showModal = true;
+      return;
+    }
+    loading = true;
     try {
-      console.log(settings)
       const summaryInfo = await getSummary(project, article.id);
       summary = atob(summaryInfo.article.summary);
-      console.log(summary);
+      console.log(settings, summary);
+      showModal = true;
     } catch (error) {
       console.log(error);
+    } finally {
+      loading = false;
     }
-  });
+  };
 </script>
-<div class="bg-black text-white">
-  <h1 class="button-text-xl">Hello!</h1>
-  <div class="card">
+<button
+  bind:this={button}
+  class="getsummer-btn"
+  style="left: {styles.left}px; top: {styles.top}px; display: {styles.display}; position: {styles.position}"
+  on:click={openModal}
+>
+  {loading ? 'Summorizing...' : 'Summorize'}
+</button>
+
+{#if showButton}
+  <Modal bind:showModal>
+    <h2 slot="header" bind:this={modalTitle}>{article.title}</h2>
+    {@html summary}
     <Counter />
-  </div>
-  {#if summary}
-
-    <button on:click={() => (showModal = true)}> show modal </button>
-
-    <Modal bind:showModal>
-      <h2 slot="header">
-        modal
-        <small><em>adjective</em> mod·al \ˈmō-dəl\</small>
-      </h2>
-      {@html summary}
-
-      <a href="https://www.merriam-webster.com/dictionary/modal">merriam-webster.com</a>
-    </Modal>
-  {/if}
-  <p class="read-the-docs">Click on the Vite and Svelte logos to learn more</p>
-</div>
-<style lang="postcss">
-  .button-text-xl {
-    @apply text-xl;
-  }
-  .read-the-docs {
-    color: #888;
+  </Modal>
+{/if}
+<style lang="scss">
+  .getsummer-btn {
+    @apply btn btn-ghost animate-bounce btn-sm;
   }
 </style>

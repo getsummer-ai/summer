@@ -13,7 +13,7 @@ export type SettingsInfo = {
   color: string | null;
   size: string | null;
 };
-const api_host = 'http://summer-api.local:3000';
+const api_host = import.meta.env.VITE_API_URL as string;
 export const project_id = writable<string>();
 export const article_info = writable<ArticleInfo>();
 export const settings = writable<SettingsInfo>();
