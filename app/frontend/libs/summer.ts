@@ -5,8 +5,8 @@ let previousUrl = location.href;
 initApp(projectId, previousUrl);
 // const a = 1;
 const observer = new MutationObserver(function() {
-  console.log('mutation', location.href)
   if (location.href !== previousUrl) {
+    console.log('mutation init app', location.href)
     previousUrl = location.href;
     initApp(projectId, previousUrl);
   }

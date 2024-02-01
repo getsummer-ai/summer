@@ -20,9 +20,9 @@ const installApp = (project: string, settings: SettingsInfo, article: ArticleIni
 };
 
 export const initApp = (projectId: string, url: string) => {
-  console.log('initApp', projectId, url);
+  // console.log('initApp', projectId, url);
   initButton(projectId, url).then((info) => {
-    console.log(info);
+    // console.log(info);
     installApp(projectId, info.settings, info.article);
   });
 };

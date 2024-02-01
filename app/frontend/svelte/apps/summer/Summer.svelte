@@ -15,65 +15,87 @@
   let modalTitle: HTMLHeadingElement;
   let loading = false;
   let showButton = false;
-  let styles = {
-    left: 0,
-    top: 0,
-    display: 'none',
-    position: 'fixed',
-  };
-
+  let buttonStyles = hideButton();
   onMount(async () => {
     document.querySelectorAll('h1, h2, h3').forEach((el) => {
       if (modalTitle === el) return;
       if (showButton || !el.innerHTML.includes(article.title)) return;
       const rect = el.getBoundingClientRect();
-      styles = {
-        left: rect.left + window.scrollX - (button.getBoundingClientRect().width + 10),
+      buttonStyles = {
+        left: rect.left + window.scrollX - (button.offsetWidth + 10),
         top: rect.top + window.scrollY,
-        display: 'inline-block',
-        position: 'absolute',
+        opacity: 1,
       };
-      console.log(styles, article.title, el.innerHTML, el, modalTitle === el);
+      // console.log(buttonStyles, article.title, button.offsetWidth);
       showButton = true;
     });
   });
 
-  const openModal = async () => {
-    if (summary) {
+  function hideButton(): { left: number; top: number; opacity: number } {
+    return {
+      left: -200,
+      top: 9999,
+      opacity: 0,
+    };
+  }
+
+  const openModal = (delay = 100) => {
+    setTimeout(() => {
+      console.log(settings, summary);
       showModal = true;
-      return;
-    }
+      buttonStyles.opacity = 0;
+    }, delay);
+  };
+
+  const onButtonClick = async () => {
+    if (summary) return openModal();
     loading = true;
     try {
       const summaryInfo = await getSummary(project, article.id);
       summary = atob(summaryInfo.article.summary);
-      console.log(settings, summary);
-      showModal = true;
+      openModal(1000);
     } catch (error) {
       console.log(error);
-    } finally {
       loading = false;
     }
   };
+
+  const closeModal = () => {
+    loading = false;
+    showModal = false;
+    setTimeout(() => (buttonStyles.opacity = 1), 500);
+  };
 </script>
+
 <button
   bind:this={button}
-  class="getsummer-btn"
-  style="left: {styles.left}px; top: {styles.top}px; display: {styles.display}; position: {styles.position}"
-  on:click={openModal}
+  class="getsummer-btn animate"
+  style="left: {buttonStyles.left}px; top: {buttonStyles.top}px; opacity: {buttonStyles.opacity};"
+  on:click={onButtonClick}
 >
-  {loading ? 'Summorizing...' : 'Summorize'}
+  {#if loading}
+    <span class="loading loading-spinner loading-xs" />
+    Summorizing
+  {:else}
+    Summorize
+  {/if}
 </button>
 
 {#if showButton}
-  <Modal bind:showModal>
+  <Modal bind:showModal on:close={closeModal}>
     <h2 slot="header" bind:this={modalTitle}>{article.title}</h2>
     {@html summary}
     <Counter />
   </Modal>
 {/if}
+
 <style lang="scss">
   .getsummer-btn {
-    @apply btn btn-ghost animate-bounce btn-sm;
+    @apply btn btn-sm btn-accent absolute transition-opacity duration-500 ease-in-out;
+    &.animate {
+      @apply animate-bounce;
+      -webkit-animation-iteration-count: 2.5;
+      animation-iteration-count: 2.5;
+    }
   }
 </style>

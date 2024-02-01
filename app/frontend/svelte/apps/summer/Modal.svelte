@@ -1,4 +1,12 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher();
+
+  function closeModal() {
+    // () => (showModal = false)
+    dispatch('close');
+  }
   export let showModal = false; // boolean
 
   let dialog: HTMLDialogElement; // HTMLDialogElement
@@ -9,7 +17,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-noninteractive-element-interactions -->
 <dialog
   bind:this={dialog}
-  on:close={() => (showModal = false)}
+  on:close={closeModal}
   on:click|self={() => dialog.close()}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->

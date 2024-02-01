@@ -15,7 +15,7 @@
     });
   }
   const i = (t) => {
-    const r = 'http://summer-api.local:3000',
+    const r = '',
       n = new Headers();
     n.set('Content-Type', 'application/json'),
       n.set('Api-Key', t),
