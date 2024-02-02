@@ -3,16 +3,18 @@
 <h1 class="text-2xl">My Projects</h1>
 
 <div class="mb-4">
-  <%= link_to "New project", new_project_path, class: 'btn btn-sm btn-link' %>
+  <%= link_to 'New project', new_project_path, class: 'btn btn-sm btn-link' %>
 </div>
 
 <div id="projects">
   <% @projects.each do |project| %>
     <%= render project %>
     <p class="mb-4">
-      <%= link_to "Show this project", project, class: 'btn btn-sm btn-secondary' %>
+      <%=
+        link_to 'Show this project',
+                project_path(id: project.encrypted_id),
+                class: 'btn btn-sm btn-secondary'
+      %>
     </p>
   <% end %>
 </div>
-
-

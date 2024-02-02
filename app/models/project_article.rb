@@ -23,13 +23,14 @@ end
 #  id            :bigint           not null, primary key
 #  article       :text             not null
 #  article_hash  :string           not null
+#  is_accessible :boolean          default(TRUE), not null
 #  is_summarized :boolean          default(FALSE), not null
 #  summary       :text
 #  title         :text             default(""), not null
 #  title_hash    :string
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  project_id    :uuid             not null
+#  project_id    :bigint           not null
 #
 # Indexes
 #

@@ -28,7 +28,7 @@ module Private
       respond_to do |format|
         if @project.save
           format.html do
-            redirect_to project_url(@project), notice: 'Project was successfully created.'
+            redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully created.'
           end
           format.json { render :show, status: :created, location: @project }
         else
@@ -41,9 +41,10 @@ module Private
     # PATCH/PUT /projects/1 or /projects/1.json
     def update
       respond_to do |format|
+        @project.start_tracking(source: 'Update form', author: current_user)
         if @project.update(project_params)
           format.html do
-            redirect_to project_url(@project), notice: 'Project was successfully updated.'
+            redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully updated.'
           end
           format.json { render :show, status: :ok, location: @project }
         else
@@ -67,7 +68,7 @@ module Private
 
     # Use callbacks to share common setup or constraints between actions.
     def set_project
-      @project = current_user.projects.find(params[:id])
+      @project = current_user.projects.find(BasicEncrypting.decode(params[:id]))
     end
 
     # Only allow a list of trusted parameters through.

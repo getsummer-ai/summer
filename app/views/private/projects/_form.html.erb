@@ -1,18 +1,20 @@
-
-<%= simple_form_for(@project) do |f| %>
+<%= simple_form_for(
+      @project,
+      url: @project.new_record? ?
+             new_project_url(id: @project.encrypted_id) :
+             project_url(id: @project.encrypted_id)) do |f| %>
   <%= f.error_notification class: 'text-sm font-bold' %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 
   <%# if @project.errors.any? %>
-<!--    <div class="mt-1 border-l-2 border-accent pl-2">-->
-<!--      <ul>-->
-        <%# @project.errors.full_messages.each do |message| %>
-<!--          <li class="pb-1 text-sm"><%#= message %></li>-->
-        <%# end %>
-<!--      </ul>-->
-<!--    </div>-->
+  <!--    <div class="mt-1 border-l-2 border-accent pl-2">-->
+  <!--      <ul>-->
+  <%# @project.errors.full_messages.each do |message| %>
+  <!--          <li class="pb-1 text-sm">[object Object]</li>-->
   <%# end %>
-
+  <!--      </ul>-->
+  <!--    </div>-->
+  <%# end %>
 
   <div class="mt-2">
     <%= f.input :name %>

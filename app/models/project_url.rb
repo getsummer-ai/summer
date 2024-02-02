@@ -18,7 +18,7 @@ end
 #  url        :string           not null
 #  url_hash   :string           not null
 #  created_at :datetime         not null
-#  project_id :uuid             not null
+#  project_id :bigint           not null
 #
 # Indexes
 #

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_02_194500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,24 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "paid"]
+
+  create_table "events", force: :cascade do |t|
+    t.string "category", null: false
+    t.string "subcategory", null: false
+    t.string "trackable_type"
+    t.bigint "trackable_id"
+    t.string "source"
+    t.jsonb "details", null: false
+    t.string "author_type"
+    t.bigint "author_id"
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.index ["author_type", "author_id"], name: "index_events_on_author"
+    t.index ["created_at"], name: "index_events_on_created_at"
+    t.index ["project_id", "source"], name: "index_events_on_project_id_and_source"
+    t.index ["source"], name: "index_events_on_source"
+    t.index ["trackable_type", "trackable_id"], name: "index_events_on_trackable"
+  end
 
   create_table "good_job_batches", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -102,6 +120,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.bigint "project_article_id", null: false
     t.bigint "project_url_id", null: false
     t.date "date", null: false
+    t.integer "hour", limit: 2, null: false
     t.bigint "views", default: 0, null: false
     t.bigint "clicks", default: 0, null: false
     t.datetime "created_at", null: false
@@ -122,13 +141,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
   end
 
   create_table "project_articles", force: :cascade do |t|
-    t.uuid "project_id", null: false
+    t.bigint "project_id", null: false
     t.text "title", default: "", null: false
     t.string "title_hash"
     t.text "article", null: false
     t.string "article_hash", null: false
     t.text "summary"
     t.boolean "is_summarized", default: false, null: false
+    t.boolean "is_accessible", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id", "article_hash"], name: "index_project_articles_on_project_id_and_article_hash", unique: true
@@ -136,7 +156,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
   end
 
   create_table "project_urls", force: :cascade do |t|
-    t.uuid "project_id", null: false
+    t.bigint "project_id", null: false
     t.string "url_hash", null: false
     t.string "url", null: false
     t.datetime "created_at", null: false
@@ -144,7 +164,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.index ["project_id"], name: "index_project_urls_on_project_id"
   end
 
-  create_table "projects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+  create_table "projects", force: :cascade do |t|
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.bigint "user_id", null: false
     t.string "name", default: "", null: false
     t.string "domain", null: false
@@ -158,6 +179,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true
     t.index ["user_id"], name: "index_projects_on_user_id"
+    t.index ["uuid"], name: "index_projects_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|
@@ -193,6 +215,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_01_17_173200) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "events", "projects"
   add_foreign_key "project_article_statistics", "project_articles"
   add_foreign_key "project_article_statistics", "project_urls"
   add_foreign_key "project_article_urls", "project_articles"

@@ -11,6 +11,7 @@ end
 #  id                 :bigint           not null, primary key
 #  clicks             :bigint           default(0), not null
 #  date               :date             not null
+#  hour               :integer          not null
 #  views              :bigint           default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null

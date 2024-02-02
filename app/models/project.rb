@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
+  include Trackable
   enum plan: { free: 'free', paid: 'paid' }
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }
 
@@ -49,10 +50,27 @@ class Project < ApplicationRecord
 
   before_save :normalize_domain
 
+  alias project_id id
+
+  #
+  # before_update do
+  #   # We set trackable_type: 'Customer' because our events association is not from trackable module
+  #   # (association events - has been overwritten to get all events related to customer)
+  #   options = _tracking_options.merge({ trackable_type: 'Customer', trackable_uuid: try(:id) })
+  #   # If we call "track!" before this callback, then we need to set a source
+  #   options[:source] = 'Customer#before_update' unless _instance_tracking
+  #   start_tracking(options)
+  # end
+
   def self.host_from_url(url)
     prefix = 'http://'
     prefix = '' if url.start_with?('http')
     Addressable::URI.parse([prefix, url].join).host
+  end
+
+  def encrypted_id
+    return nil if id.nil?
+    @encrypted_id ||= BasicEncrypting.encode(id)
   end
 
   private
@@ -68,13 +86,14 @@ end
 #
 # Table name: projects
 #
-#  id         :uuid             not null, primary key
+#  id         :bigint           not null, primary key
 #  deleted_at :datetime
 #  domain     :string           not null
 #  name       :string           default(""), not null
 #  plan       :enum             default("free"), not null
 #  settings   :jsonb
 #  status     :enum             default("active"), not null
+#  uuid       :uuid             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null
@@ -85,6 +104,7 @@ end
 #  index_projects_on_user_id             (user_id)
 #  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE
 #  index_projects_on_user_id_and_name    (user_id,name) UNIQUE
+#  index_projects_on_uuid                (uuid) UNIQUE
 #
 # Foreign Keys
 #

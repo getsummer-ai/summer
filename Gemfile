@@ -13,7 +13,7 @@ gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 6.0'
-
+gem 'sqids'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'boilerpipe-ruby', require: 'boilerpipe'
 gem 'faraday'
