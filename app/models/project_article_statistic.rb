@@ -20,10 +20,10 @@ end
 #
 # Indexes
 #
-#  idx_on_project_article_id_date_project_url_id_e0dc6bb21f  (project_article_id,date,project_url_id) UNIQUE
-#  index_project_article_statistics_on_date                  (date)
-#  index_project_article_statistics_on_project_article_id    (project_article_id)
-#  index_project_article_statistics_on_project_url_id        (project_url_id)
+#  idx_on_project_article_id_project_url_id_date_hour_aee771512a  (project_article_id,project_url_id,date,hour) UNIQUE
+#  index_project_article_statistics_on_date                       (date)
+#  index_project_article_statistics_on_project_article_id         (project_article_id)
+#  index_project_article_statistics_on_project_url_id             (project_url_id)
 #
 # Foreign Keys
 #

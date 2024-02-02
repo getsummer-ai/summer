@@ -70,7 +70,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.bigint :clicks, default: 0, null: false
       t.timestamps
     end
-    add_index :project_article_statistics, [:project_article_id, :date, :project_url_id], unique: true
+    add_index :project_article_statistics, [:project_article_id, :project_url_id, :date, :hour], unique: true
     add_index :project_article_statistics, :date
   end
 end

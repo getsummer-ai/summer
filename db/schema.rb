@@ -126,7 +126,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_02_194500) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["date"], name: "index_project_article_statistics_on_date"
-    t.index ["project_article_id", "date", "project_url_id"], name: "idx_on_project_article_id_date_project_url_id_e0dc6bb21f", unique: true
+    t.index ["project_article_id", "project_url_id", "date", "hour"], name: "idx_on_project_article_id_project_url_id_date_hour_aee771512a", unique: true
     t.index ["project_article_id"], name: "index_project_article_statistics_on_project_article_id"
     t.index ["project_url_id"], name: "index_project_article_statistics_on_project_url_id"
   end
