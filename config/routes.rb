@@ -32,7 +32,15 @@ Rails.application.routes.draw do
 
     scope '/app', module: 'private' do
       get '/', to: 'app#index', as: 'user_app'
-      resources :projects do
+      resources :projects, param: :project_id, except: [:index] do
+        member do
+          get :setup
+          get :settings
+          get :statistics
+          get :knowledge
+        end
+      end
+      resources :projects, only: [] do
         resources :articles, only: %i[index show edit update]
       end
     end

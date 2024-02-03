@@ -1,0 +1,27 @@
+<%
+  routes = [
+    { name: 'Setup', path: setup_project_path(@project), icon: vite_asset_path('assets/icons/puzzle.svg') },
+    { name: 'Knowledge', path: knowledge_project_path(@project), icon: vite_asset_path('assets/icons/brain.svg') },
+    { name: 'Statistics', path: statistics_project_path(@project), icon: vite_asset_path('assets/icons/statistics.svg') },
+    { name: 'Settings', path: settings_project_path(@project), icon: vite_asset_path('assets/icons/settings.svg') }
+  ]
+%>
+
+<ul class="mt-4">
+  <% routes.each do |route|
+     classes = %w[p-1.5 rounded-xl block]
+     if current_page?(route[:path])
+       classes << 'bg-gray-200'
+       else
+        classes << 'hover:opacity-100 opacity-60'
+      end
+  %>
+    <li>
+
+      <%=link_to route[:path], class: classes do %>
+        <img src="<%= route[:icon] %>" class="summer-icon mr-1" alt="<%= route[:name] %>"/>
+        <span class="align-middle"><%= route[:name] %></span>
+      <% end %>
+    </li>
+  <% end %>
+</ul>

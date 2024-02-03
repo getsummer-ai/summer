@@ -11,5 +11,4 @@ class TurboModalComponent < ViewComponent::Base
     @go_back_path = go_back_path
     @redirect_following = redirect_following
   end
-
 end

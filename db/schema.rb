@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_02_194500) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -209,7 +209,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_02_194500) do
     t.enum "locale", default: "en", null: false, enum_type: "user_locale"
     t.boolean "is_admin", default: false, null: false
     t.datetime "deleted_at"
+    t.bigint "default_project_id"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
+    t.index ["default_project_id"], name: "index_users_on_default_project_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
@@ -223,4 +225,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_02_194500) do
   add_foreign_key "project_articles", "projects"
   add_foreign_key "project_urls", "projects"
   add_foreign_key "projects", "users"
+  add_foreign_key "users", "projects", column: "default_project_id", on_delete: :nullify
 end

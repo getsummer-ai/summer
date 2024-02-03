@@ -20,3 +20,7 @@
   opacity: 0;
   transform: translateX(30px);
 }
+
+.summer-icon {
+  @apply w-6 h-6 inline-block align-middle;
+}

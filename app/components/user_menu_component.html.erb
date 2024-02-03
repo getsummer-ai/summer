@@ -1,0 +1,54 @@
+<%
+  routes = [
+    { name: 'My Plan', path: edit_user_registration_path, icon: vite_asset_path('assets/icons/puzzle.svg') },
+    { name: 'Billing', path: edit_user_registration_path, icon: vite_asset_path('assets/icons/brain.svg') },
+    { name: 'Settings', path: edit_user_registration_path, icon: vite_asset_path('assets/icons/statistics.svg') },
+  ]
+%>
+<div class="dropdown dropdown-top block">
+  <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1 flex font-semibold">
+    <span class="w-6 h-6 flex rounded-full text-base-100
+        bg-gradient-to-r from-orange-600 to-orange-500
+        justify-center items-center"
+    >
+      <%=
+        if @user.avatar_url.present?
+          image_tag @user.avatar_url, class: 'rounded-full', referrerpolicy: "no-referrer"
+        else
+          @user.email[0].upcase
+        end
+      %>
+    </span>
+    <span class="ml-2"><%= @user.name %></span>
+  </div>
+  <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-white rounded-2xl w-52">
+    <% routes.each do |route|
+      classes = %w[p-1.5 pl-3 rounded-xl block]
+      if current_page?(route[:path])
+        classes << 'bg-gray-200'
+      else
+        classes << 'hover:bg-gray-200'
+      end
+    %>
+      <li>
+        <%=link_to route[:path], class: classes do %>
+          <img src="<%= route[:icon] %>" class="summer-icon mr-1" alt="<%= route[:name] %>"/>
+          <span class="align-middle"><%= route[:name] %></span>
+        <% end %>
+      </li>
+    <% end %>
+    <li>
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    class: 'block w-full text-left',
+                    form_class: 'trigger-submit-form p-1.5 pl-3 rounded-xl block' do %>
+        <img
+          src="<%= vite_asset_path('assets/icons/logout.svg') %>"
+          class="summer-icon mr-1"
+          alt="Logout Icon"
+          />
+        <span class="align-middle text-red-400">Log Out</span>
+      <% end %>
+    </li>
+  </ul>
+</div>

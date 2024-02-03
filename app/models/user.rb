@@ -18,6 +18,7 @@ class User < ApplicationRecord
   enum :locale, { en: 'en' }, default: :en, validate: true
 
   has_many :projects, dependent: :restrict_with_exception
+  belongs_to :default_project, class_name: 'Project', optional: true
 
   def self.from_omniauth(auth, locale = nil)
     user =
@@ -97,11 +98,17 @@ end
 #  unlock_token           :string
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
+#  default_project_id     :bigint
 #
 # Indexes
 #
 #  index_users_on_confirmation_token    (confirmation_token) UNIQUE
+#  index_users_on_default_project_id    (default_project_id)
 #  index_users_on_email                 (email) UNIQUE
 #  index_users_on_reset_password_token  (reset_password_token) UNIQUE
 #  index_users_on_unlock_token          (unlock_token) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (default_project_id => projects.id) ON DELETE => nullify
 #

@@ -31,52 +31,14 @@
         <hr>
       </div>
       <div class="mt-5 font-bold p-1.5">
-        <div class="dropdown dropdown-bottom block">
-          <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1">Enty Blog</div>
-          <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-48">
-            <% project_list.each do |project| %>
-              <li>
-                <%= link_to project.name.upcase, project_url(project), class: "p-1.5 pl-2 hover:bg-gray-200 transition-all rounded-xl block" %>
-              </li>
-            <% end %>
-            <li>
-              <%= link_to 'Add New', new_project_url, class: "p-1.5 pl-2 hover:bg-gray-200 transition-all rounded-xl block" %>
-            </li>
-          </ul>
-        </div>
+        <%=render(ProjectSelectorComponent.new(current_project: current_user.default_project, projects: project_list)) %>
       </div>
-      <% if project_list.any? %>
-        <ul class="mt-5">
-          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
-            Setup
-          </li>
-          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
-            Knowledge
-          </li>
-          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
-            Statistics
-          </li>
-          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
-            Settings
-          </li>
-        </ul>
+      <% if current_user.default_project.present? %>
+        <%=render(ProjectMenuComponent.new(project: current_user.default_project)) %>
       <% end %>
     </div>
-    <div class="menu-footer">
-      <span
-        class="w-10 h-10 flex rounded-full text-base-100
-          bg-gradient-to-r from-orange-600 to-orange-500
-          justify-center items-center"
-      >
-        <%=
-          if current_user.avatar_url.present?
-            image_tag current_user.avatar_url, class: 'rounded-full', referrerpolicy: "no-referrer"
-          else
-            current_user.email[0].upcase
-          end
-        %>
-      </span>
-      <span class="mr-2"><%= current_user.name %></span>
+    <div class="menu-footer mt-10">
+      <%=render(UserMenuComponent.new(user: current_user)) %>
     </div>
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">

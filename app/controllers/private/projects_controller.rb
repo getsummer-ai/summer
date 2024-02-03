@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 module Private
   class ProjectsController < PrivateController
-    before_action :set_project, only: %i[show edit update destroy]
-
+    before_action :find_project, only: %i[show setup settings knowledge statistics edit update destroy]
     # GET /projects or /projects.json
-    def index
-      @projects = current_user.projects.all
-    end
+    # def index
+    #   @projects = current_user.projects.all
+    # end
 
     # GET /projects/1 or /projects/1.json
     def show
@@ -15,6 +14,18 @@ module Private
     # GET /projects/new
     def new
       @project = Project.new
+    end
+
+    def setup
+    end
+
+    def statistics
+    end
+
+    def knowledge
+    end
+
+    def settings
     end
 
     # GET /projects/1/edit
@@ -26,7 +37,7 @@ module Private
       @project = Project.new(project_params.merge(user_id: current_user.id))
       @project.start_tracking(source: 'Create Project Form', author: current_user)
       if @project.save
-        return redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully created.'
+        return redirect_to project_url(@project), notice: 'Project was successfully created.'
       end
 
       render :new, status: :unprocessable_entity
@@ -36,7 +47,7 @@ module Private
     def update
       @project.start_tracking(source: 'Update Project Form', author: current_user)
       if @project.update(project_params)
-        return redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully updated.'
+        return redirect_to project_url(@project), notice: 'Project was successfully updated.'
       end
       render :edit, status: :unprocessable_entity
     end
@@ -48,11 +59,6 @@ module Private
     end
 
     private
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_project
-      @project = current_user.projects.find(BasicEncrypting.decode(params[:id]))
-    end
 
     # Only allow a list of trusted parameters through.
     def project_params
