@@ -24,36 +24,30 @@ module Private
     end
 
     def update
-      respond_to do |format|
-        if @article.update(article_params)
-          format.html do
-            redirect_to project_article_url(@project, @article),
-                        notice: 'Article was successfully updated.'
-          end
-          format.json { render :show, status: :ok, location: @project }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @project.errors, status: :unprocessable_entity }
-        end
+      if @article.update(article_params)
+        return redirect_to project_article_url(@project, @article),
+                    notice: 'Article was successfully updated.'
       end
+      render :edit, status: :unprocessable_entity
     end
 
     private
 
     def set_project
-      @project = Project.find(params[:project_id])
+      @project = Project.find(BasicEncrypting.decode(params[:project_id]))
     end
 
     def set_article
-      # @article = @project.project_articles.find(params[:id])
-      @article =
-        @project.project_articles.first_or_create do |article|
-          article.title = 'Article Title'
-          article.summary = 'Article Summary'
-          article.article = 'Article Content'
-          article.article_hash = 'Article Content'
-          article.is_summarized = true
-        end
+      decoded_id = BasicEncrypting.decode(params[:id])
+      @article = @project.project_articles.find(decoded_id)
+      # @article =
+      #   @project.project_articles.first_or_create do |article|
+      #     article.title = 'Article Title'
+      #     article.summary = 'Article Summary'
+      #     article.article = 'Article Content'
+      #     article.article_hash = 'Article Content'
+      #     article.is_summarized = true
+      #   end
     end
 
     # Only allow a list of trusted parameters through.

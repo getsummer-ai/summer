@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--<html data-theme="business">-->
-<html data-theme="lofi">
+<html class="bg-light-gray" data-theme="lofi">
 <!--<html data-theme="emerald">-->
   <head>
     <title>Summer</title>
@@ -30,15 +30,6 @@
   </head>
   <% environment_hash = { environment: Rails.env } %>
   <body data-init="<%= environment_hash.to_json %>">
-    <div class="min-h-screen flex flex-col justify-between">
-      <!--      <div class="container mx-auto mb-auto px-3">-->
-      <!--      </div>-->
-      <div class="mb-auto">
-        <%= content_for?(:content) ? yield(:content) : yield %>
-      </div>
-      <% if content_for?(:footer) %>
-        <%= yield(:footer) %>
-      <% end %>
-    </div>
+    <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>

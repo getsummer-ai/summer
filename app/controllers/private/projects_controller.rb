@@ -24,44 +24,27 @@ module Private
     # POST /projects or /projects.json
     def create
       @project = Project.new(project_params.merge(user_id: current_user.id))
-
-      respond_to do |format|
-        if @project.save
-          format.html do
-            redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully created.'
-          end
-          format.json { render :show, status: :created, location: @project }
-        else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @project.errors, status: :unprocessable_entity }
-        end
+      @project.start_tracking(source: 'Create Project Form', author: current_user)
+      if @project.save
+        return redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully created.'
       end
+
+      render :new, status: :unprocessable_entity
     end
 
     # PATCH/PUT /projects/1 or /projects/1.json
     def update
-      respond_to do |format|
-        @project.start_tracking(source: 'Update form', author: current_user)
-        if @project.update(project_params)
-          format.html do
-            redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully updated.'
-          end
-          format.json { render :show, status: :ok, location: @project }
-        else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @project.errors, status: :unprocessable_entity }
-        end
+      @project.start_tracking(source: 'Update Project Form', author: current_user)
+      if @project.update(project_params)
+        return redirect_to project_url(id: @project.encrypted_id), notice: 'Project was successfully updated.'
       end
+      render :edit, status: :unprocessable_entity
     end
 
     # DELETE /projects/1 or /projects/1.json
     def destroy
       @project.destroy!
-
-      respond_to do |format|
-        format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
-        format.json { head :no_content }
-      end
+      redirect_to projects_url, notice: 'Project was successfully destroyed.'
     end
 
     private

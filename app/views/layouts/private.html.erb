@@ -3,20 +3,102 @@
 <% end %>
 
 <% content_for :content do %>
-  <div class="container mx-auto max-w-[800px]">
-    <%= render 'layouts/shared/header' %>
+  <div class="bg-light-gray fixed flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] overflow-y-auto">
+    <div class="menu-header">
+      <div class="logo-part p-1.5">
+        <svg width="125" height="24" viewBox="0 0 125 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_127_18)">
+            <rect width="24" height="24" rx="6" fill="#C5EFF5"/>
+            <g filter="url(#filter0_f_127_18)">
+              <circle cx="12" cy="12" r="7.2" fill="#FECF29"/>
+            </g>
+          </g>
+          <path d="M35.264 14.144C35.472 15.36 36.336 16.16 37.76 16.16C38.848 16.16 39.584 15.728 39.568 14.896C39.552 14.064 38.848 13.584 37.072 13.152C34.608 12.56 33.024 11.568 33.024 9.744C33.024 7.68 34.752 6.384 37.344 6.384C39.872 6.384 41.6 7.936 41.872 10.224L39.44 10.352C39.312 9.152 38.48 8.4 37.28 8.4C36.224 8.4 35.472 8.944 35.52 9.776C35.552 10.736 36.672 11.056 37.888 11.36C40.432 11.92 42.048 13.008 42.048 14.816C42.048 16.976 40.144 18.192 37.696 18.192C34.928 18.192 32.976 16.656 32.816 14.256L35.264 14.144ZM50.8914 18H48.6994L48.6514 16.672C48.1874 17.776 47.2594 18.192 46.1554 18.192C44.3474 18.192 43.2754 16.944 43.2754 14.976V9.52H45.6754V14.176C45.6754 15.536 45.9634 16.288 46.9554 16.288C47.9474 16.288 48.4914 15.536 48.4914 14.176V9.52H50.8914V18ZM52.3697 9.52H54.5297L54.5777 10.864C55.0097 9.888 55.8577 9.328 56.9457 9.328C58.1297 9.328 58.9777 9.968 59.3617 11.072C59.7937 9.92 60.6737 9.328 61.8418 9.328C63.5538 9.328 64.6578 10.432 64.6578 12.544V18H62.2577V13.344C62.2577 11.936 61.8577 11.232 61.0577 11.232C60.0658 11.232 59.5697 11.968 59.5697 13.344V18H57.4417V13.344C57.4417 11.936 57.0577 11.232 56.2417 11.232C55.2657 11.232 54.7697 11.968 54.7697 13.344V18H52.3697V9.52ZM65.886 9.52H68.046L68.094 10.864C68.526 9.888 69.374 9.328 70.462 9.328C71.646 9.328 72.494 9.968 72.878 11.072C73.31 9.92 74.19 9.328 75.358 9.328C77.07 9.328 78.174 10.432 78.174 12.544V18H75.774V13.344C75.774 11.936 75.374 11.232 74.574 11.232C73.582 11.232 73.086 11.968 73.086 13.344V18H70.958V13.344C70.958 11.936 70.574 11.232 69.758 11.232C68.782 11.232 68.286 11.968 68.286 13.344V18H65.886V9.52ZM79.0171 13.76C79.0171 11.088 80.7291 9.328 83.3691 9.328C85.7211 9.328 87.5291 10.96 87.5131 13.936V14.384H81.5291C81.5931 15.648 82.2811 16.416 83.3691 16.416C84.0571 16.416 84.6971 16 84.9691 15.36L87.4011 15.52C86.8891 17.168 85.3051 18.192 83.3691 18.192C80.7291 18.192 79.0171 16.432 79.0171 13.76ZM81.5451 12.928H85.0811C84.9531 11.648 84.2171 11.104 83.3691 11.104C82.3451 11.104 81.6731 11.792 81.5451 12.928ZM88.4185 9.52H90.7065L90.7545 11.232C91.0745 10.096 91.7145 9.52 92.7865 9.52H93.5705V11.312H92.7705C91.3785 11.312 90.8185 11.968 90.8185 13.296V18H88.4185V9.52Z" fill="black"/>
+          <path opacity="0.4" d="M107.224 9.52L104.136 18H102.44L99.352 9.52H100.792L103.288 16.592L105.784 9.52H107.224ZM108.49 8.4C109.706 8.4 110.234 7.872 110.234 6.64H111.322V18H109.93V9.584H107.578V8.4H108.49ZM113.191 16.256H114.903V18H113.191V16.256ZM116.186 10.032C116.49 7.936 117.977 6.384 120.25 6.384C122.33 6.384 123.866 7.76 123.866 9.616C123.866 11.264 122.554 12.384 120.842 13.456C119.93 13.968 117.737 15.52 117.69 16.656H123.962V18H115.977C115.977 14.608 118.41 13.376 120.345 12.144C121.546 11.376 122.426 10.496 122.426 9.616C122.426 8.512 121.53 7.728 120.25 7.728C118.874 7.728 117.93 8.592 117.625 10.128L116.186 10.032Z" fill="black"/>
+          <defs>
+            <filter id="filter0_f_127_18" x="0.799988" y="0.799988" width="22.4" height="22.4" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+              <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+              <feGaussianBlur stdDeviation="2" result="effect1_foregroundBlur_127_18"/>
+            </filter>
+            <clipPath id="clip0_127_18">
+              <rect width="24" height="24" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <div class="mt-5 w-[40px]">
+        <hr>
+      </div>
+      <div class="mt-5 font-bold p-1.5">
+        <div class="dropdown dropdown-bottom block">
+          <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1">Enty Blog</div>
+          <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-base-100 rounded-box w-48">
+            <% project_list.each do |project| %>
+              <li>
+                <%= link_to project.name.upcase, project_url(project), class: "p-1.5 pl-2 hover:bg-gray-200 transition-all rounded-xl block" %>
+              </li>
+            <% end %>
+            <li>
+              <%= link_to 'Add New', new_project_url, class: "p-1.5 pl-2 hover:bg-gray-200 transition-all rounded-xl block" %>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <% if project_list.any? %>
+        <ul class="mt-5">
+          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
+            Setup
+          </li>
+          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
+            Knowledge
+          </li>
+          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
+            Statistics
+          </li>
+          <li class="p-1.5 pl-3 hover:bg-gray-200 transition-all rounded-xl">
+            Settings
+          </li>
+        </ul>
+      <% end %>
+    </div>
+    <div class="menu-footer">
+      <span
+        class="w-10 h-10 flex rounded-full text-base-100
+          bg-gradient-to-r from-orange-600 to-orange-500
+          justify-center items-center"
+      >
+        <%=
+          if current_user.avatar_url.present?
+            image_tag current_user.avatar_url, class: 'rounded-full', referrerpolicy: "no-referrer"
+          else
+            current_user.email[0].upcase
+          end
+        %>
+      </span>
+      <span class="mr-2"><%= current_user.name %></span>
+    </div>
   </div>
-  <div class="container mx-auto max-w-[800px] pb-10">
-    <% if content_for?(:breadcrumbs) %>
-      <div class="mt-2"><%= yield(:breadcrumbs) %></div>
-    <% end %>
-    <div class="mt-4"><%= render 'layouts/shared/alerts' %></div>
-    <div class="mt-8"><%= yield %></div>
+  <div class="pl-[250px] min-h-screen flex flex-col">
+    <div class="p-10 rounded-2xl bg-white grow">
+      <div class="container mx-auto max-w-[768px]">
+        <%= render 'layouts/shared/header' %>
+      </div>
+      <div class="container mx-auto max-w-[768px] pb-10">
+        <% if content_for?(:breadcrumbs) %>
+          <div class="mt-2"><%= yield(:breadcrumbs) %></div>
+        <% end %>
+        <div class="mt-4"><%= render 'layouts/shared/alerts' %></div>
+        <div class="mt-8"><%= yield %></div>
+      </div>
+    </div>
   </div>
+
+
 <% end %>
 
-<% content_for :footer do %>
-  <%= render 'layouts/shared/footer_small' %>
-<% end %>
+<%# content_for :footer do %>
+  <%#= render 'layouts/shared/footer_small' %>
+<%# end %>
 
 <%= render template: 'layouts/application' %>

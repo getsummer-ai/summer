@@ -1,8 +1,4 @@
-<%= simple_form_for(
-      @project,
-      url: @project.new_record? ?
-             new_project_url(id: @project.encrypted_id) :
-             project_url(id: @project.encrypted_id)) do |f| %>
+<%= simple_form_for(@project) do |f| %>
   <%= f.error_notification class: 'text-sm font-bold' %>
   <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
 

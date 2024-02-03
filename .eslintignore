@@ -8,3 +8,4 @@ vite.config.mts
 vite.config.init.lib.mts
 vite.config.app.lib.mts
 app/frontend/api/routes.*
+tailwind.config.js

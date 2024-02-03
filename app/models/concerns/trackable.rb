@@ -137,8 +137,8 @@ module Trackable
 
     def create_event(options)
       # ::Events::OptionsValidator.new.call(options)
-      res = events.create(options)
-      res.errors.full_messages
+      events.create(options)
+      # res.errors.full_messages
     end
 
     def build_event(options)

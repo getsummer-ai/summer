@@ -52,6 +52,10 @@ class Project < ApplicationRecord
 
   alias project_id id
 
+  def to_param
+    encrypted_id
+  end
+
   #
   # before_update do
   #   # We set trackable_type: 'Customer' because our events association is not from trackable module

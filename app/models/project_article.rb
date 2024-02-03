@@ -14,6 +14,15 @@ class ProjectArticle < ApplicationRecord
   SUMMARY_COLUMNS = %w[id project_id title article_hash summary is_summarized].freeze
   scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
+
+  def to_param
+    encrypted_id
+  end
+
+  def encrypted_id
+    return nil if id.nil?
+    @encrypted_id ||= BasicEncrypting.encode(id)
+  end
 end
 
 # == Schema Information
