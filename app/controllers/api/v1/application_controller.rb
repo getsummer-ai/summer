@@ -16,7 +16,7 @@ module Api
 
       # @return [Project]
       def current_project
-        @current_project ||= Project.find_by(id: request.headers[:HTTP_API_KEY])
+        @current_project ||= Project.find_by(uuid: request.headers[:HTTP_API_KEY])
       end
 
       def validate_api_key

@@ -15,7 +15,7 @@ module Api
 
       def init
         form = ProjectArticleForm.new(current_project, article_url)
-        return head :bad_request if form.valid?
+        return head :bad_request unless form.valid?
         @article = form.find_or_create
         return head :bad_request if @article.blank?
         render 'init', status: :ok

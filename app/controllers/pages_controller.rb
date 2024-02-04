@@ -22,7 +22,7 @@ class PagesController < ApplicationController
   end
 
   def example_project_id
-    @example_project_id ||= current_user&.projects&.pick(:id)
+    @example_project_id ||= current_user&.default_project&.uuid
   end
 
 end

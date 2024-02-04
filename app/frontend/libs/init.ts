@@ -30,7 +30,7 @@ if (window?.GetSummer?.key) {
   start(window.GetSummer.key);
 } else {
   window.addEventListener("DOMContentLoaded", () => {
-    if (!window?.GetSummer?.key) return start(window.GetSummer.key);
+    if (window?.GetSummer?.key) return start(window.GetSummer.key);
     console.error('GetSummer.key is not defined');
   });
 }
