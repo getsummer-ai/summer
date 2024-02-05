@@ -8,6 +8,7 @@ class AddDefaultProjectToUsers < ActiveRecord::Migration[7.1]
                    foreign_key: {
                      to_table: :projects,
                      on_delete: :nullify,
+                     on_update: :cascade
                    }
     end
   end

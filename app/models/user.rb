@@ -110,5 +110,5 @@ end
 #
 # Foreign Keys
 #
-#  fk_rails_...  (default_project_id => projects.id) ON DELETE => nullify
+#  fk_rails_...  (default_project_id => projects.id) ON DELETE => nullify ON UPDATE => cascade
 #

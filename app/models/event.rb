@@ -58,5 +58,5 @@ end
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (project_id => projects.id) ON DELETE => cascade ON UPDATE => cascade
 #

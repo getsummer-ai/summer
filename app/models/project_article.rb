@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
 class ProjectArticle < ApplicationRecord
-  validates :article_hash, presence: true, uniqueness: {
-    scope: [:project_id]
-  }
+  validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
+
+  enum status: {
+         created: 'created',
+         processing: 'processing',
+         summarized: 'summarized',
+         error: 'error',
+         skipped: 'skipped',
+       }
 
   belongs_to :project
   has_many :project_article_urls, dependent: :destroy
@@ -11,7 +17,7 @@ class ProjectArticle < ApplicationRecord
   has_many :project_article_statistics, dependent: :destroy
 
   MINIMAL_COLUMNS = %w[id title article_hash].freeze
-  SUMMARY_COLUMNS = %w[id project_id title article_hash summary is_summarized].freeze
+  SUMMARY_COLUMNS = %w[id project_id title article_hash summary status].freeze
   scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 
@@ -32,11 +38,14 @@ end
 #  id            :bigint           not null, primary key
 #  article       :text             not null
 #  article_hash  :string           not null
-#  is_accessible :boolean          default(TRUE), not null
-#  is_summarized :boolean          default(FALSE), not null
+#  image_url     :text
+#  last_modified :datetime
+#  service_info  :jsonb
+#  status        :enum             default("created"), not null
+#  summarized_at :datetime
 #  summary       :text
-#  title         :text             default(""), not null
-#  title_hash    :string
+#  title         :text
+#  tokens_count  :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #  project_id    :bigint           not null

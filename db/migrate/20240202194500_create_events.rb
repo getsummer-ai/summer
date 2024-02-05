@@ -9,7 +9,7 @@ class CreateEvents < ActiveRecord::Migration[7.1]
       t.string :source
       t.jsonb :details, null: false
       t.references :author, polymorphic: true, index: true
-      t.references :project, foreign_key: true, index: false
+      t.references :project, index: false, foreign_key: { on_update: :cascade, on_delete: :cascade }
       t.datetime :created_at, null: false
     end
     add_index :events, :created_at

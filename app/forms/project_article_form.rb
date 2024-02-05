@@ -36,10 +36,12 @@ class ProjectArticleForm
           .project_articles
           .where(article_hash:)
           .first_or_create(
+            article_hash:,
             article: scraped_article.content,
             title: scraped_article.title,
-            article_hash:,
-            title_hash: Hashing.md5(scraped_article.title),
+            image_url: scraped_article.image_url,
+            status: 'created',
+            tokens_count: TextModelTools.estimate_max_tokens(scraped_article.content),
             summary:
               "**Summary: Why Invoice is So Important for Correct Accounting**
 

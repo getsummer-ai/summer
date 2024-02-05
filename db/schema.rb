@@ -16,6 +16,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "project_article_status", ["created", "processing", "summarized", "error", "skipped"]
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "paid"]
@@ -142,13 +143,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
 
   create_table "project_articles", force: :cascade do |t|
     t.bigint "project_id", null: false
-    t.text "title", default: "", null: false
-    t.string "title_hash"
-    t.text "article", null: false
     t.string "article_hash", null: false
+    t.text "article", null: false
+    t.integer "tokens_count", default: 0, null: false
+    t.enum "status", default: "created", null: false, enum_type: "project_article_status"
+    t.jsonb "service_info"
+    t.text "title"
+    t.text "image_url"
+    t.datetime "last_modified"
     t.text "summary"
-    t.boolean "is_summarized", default: false, null: false
-    t.boolean "is_accessible", default: true, null: false
+    t.datetime "summarized_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["project_id", "article_hash"], name: "index_project_articles_on_project_id_and_article_hash", unique: true
@@ -159,7 +163,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.bigint "project_id", null: false
     t.string "url_hash", null: false
     t.string "url", null: false
+    t.boolean "is_accessible", default: true, null: false
     t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["project_id", "url_hash"], name: "index_project_urls_on_project_id_and_url_hash", unique: true
     t.index ["project_id"], name: "index_project_urls_on_project_id"
   end
@@ -217,13 +223,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "events", "projects"
-  add_foreign_key "project_article_statistics", "project_articles"
-  add_foreign_key "project_article_statistics", "project_urls"
-  add_foreign_key "project_article_urls", "project_articles"
-  add_foreign_key "project_article_urls", "project_urls"
+  add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_article_statistics", "project_articles", on_update: :cascade
+  add_foreign_key "project_article_statistics", "project_urls", on_update: :cascade
+  add_foreign_key "project_article_urls", "project_articles", on_update: :cascade
+  add_foreign_key "project_article_urls", "project_urls", on_update: :cascade
   add_foreign_key "project_articles", "projects"
-  add_foreign_key "project_urls", "projects"
-  add_foreign_key "projects", "users"
-  add_foreign_key "users", "projects", column: "default_project_id", on_delete: :nullify
+  add_foreign_key "project_urls", "projects", on_update: :cascade
+  add_foreign_key "projects", "users", on_update: :cascade
+  add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 end

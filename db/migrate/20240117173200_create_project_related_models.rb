@@ -2,14 +2,11 @@
 
 class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
   def change
-    # 	+ projects (id, user_id, name, domain, plan: (free, paid),
-    #     settings(json), status(active, suspended, deleted), created_at, updated_at, deleted_at)
-    # 		(created_at - index) user_id - FK
     create_enum "user_project_status", %w[active suspended deleted]
     create_enum "user_project_type", %w[free paid]
     create_table :projects do |t|
       t.uuid :uuid, default: "gen_random_uuid()", null: false
-      t.references :user, null: false, foreign_key: true
+      t.references :user, null: false, foreign_key: { on_update: :cascade }
       t.string :name, default: "", null: false
       t.string :domain, null: false
       t.enum :plan, default: "free", null: false, enum_type: "user_project_type"
@@ -24,46 +21,42 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     add_index :projects, [:user_id, :domain], unique: true
 
 
-    #   	+ project_urls (id: int, project_id, hash:string, url: string, created_at)
-    # 		(project_id - FK, hash - unique index)
     create_table :project_urls do |t|
-      t.references :project, null: false, index: true, foreign_key: true
+      t.references :project, null: false, index: true, foreign_key: { on_update: :cascade }
       t.string :url_hash, null: false
       t.string :url, null: false
-      t.datetime :created_at, null: false
+      t.boolean :is_accessible, default: true, null: false
+      t.timestamps
     end
     add_index :project_urls, [:project_id, :url_hash], unique: true
 
-    # 	+ project_articles (id: int, project_id, title, title_hash: string, article: text,
-    #     article_hash: string, summary: text, created_at, updated_at)
-    # 		project_id - fk, project + title_hash
+    create_enum "project_article_status", %w[created processing summarized error skipped]
     create_table :project_articles do |t|
       t.references :project, null: false, index: true, foreign_key: true
-
-      t.text :title, default: "", null: false
-      t.string :title_hash
-      t.text :article, null: false
       t.string :article_hash, null: false
+      t.text :article, null: false
+      t.integer :tokens_count, default: 0, null: false
+      t.enum :status, default: "created", null: false, enum_type: "project_article_status"
+      t.jsonb :service_info
+      t.text :title
+      t.text :image_url
+      t.datetime :last_modified
       t.text :summary
-      t.boolean :is_summarized, default: false, null: false
-      t.boolean :is_accessible, default: true, null: false
+      t.datetime :summarized_at
       t.timestamps
     end
     add_index :project_articles, [:project_id, :article_hash], unique: true
 
-    #   	+ project_article_urls (article_id: int, url_id: int)
-    # 		(article_id + url_id - PK)
+
     create_table :project_article_urls do |t|
-      t.references :project_article, null: false, index: true, foreign_key: true
-      t.references :project_url, null: false, index: true, foreign_key: true
+      t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
+      t.references :project_url, null: false, index: true, foreign_key: { on_update: :cascade }
       t.timestamps
     end
 
-    # 	+ project_article_statistic(id, article_id, project_url_id, date, views, clicks, created_at, updated_at)
-    # 		(article_id + date + project_url_id  - unique index) date - index, article_id - fk, project_url_id - fk
     create_table :project_article_statistics do |t|
-      t.references :project_article, null: false, index: true, foreign_key: true
-      t.references :project_url, null: false, index: true, foreign_key: true
+      t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
+      t.references :project_url, null: false, index: true, foreign_key: { on_update: :cascade }
       t.date :date, null: false
       t.integer :hour, limit: 1, null: false
       t.bigint :views, default: 0, null: false

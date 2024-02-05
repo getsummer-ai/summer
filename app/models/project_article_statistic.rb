@@ -27,6 +27,6 @@ end
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_article_id => project_articles.id)
-#  fk_rails_...  (project_url_id => project_urls.id)
+#  fk_rails_...  (project_article_id => project_articles.id) ON UPDATE => cascade
+#  fk_rails_...  (project_url_id => project_urls.id) ON UPDATE => cascade
 #

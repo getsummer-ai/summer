@@ -14,11 +14,13 @@ end
 #
 # Table name: project_urls
 #
-#  id         :bigint           not null, primary key
-#  url        :string           not null
-#  url_hash   :string           not null
-#  created_at :datetime         not null
-#  project_id :bigint           not null
+#  id            :bigint           not null, primary key
+#  is_accessible :boolean          default(TRUE), not null
+#  url           :string           not null
+#  url_hash      :string           not null
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  project_id    :bigint           not null
 #
 # Indexes
 #
@@ -27,5 +29,5 @@ end
 #
 # Foreign Keys
 #
-#  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (project_id => projects.id) ON UPDATE => cascade
 #

@@ -1,6 +1,6 @@
 <div class="dropdown dropdown-bottom block">
   <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1 flex justify-between">
-    <%= @current_project.try(:name) || 'Add New Project' %>
+    <%= (@current_project.try(:name) || 'Add New Project').truncate(19) %>
     <img
       src="<%= vite_asset_path('assets/icons/selector.svg') %>"
       class="summer-icon mr-1"
@@ -12,7 +12,7 @@
       <li>
         <%=
           link_to project_url(project), class: 'p-1.5 pl-2 hover:bg-gray-200 rounded-xl flex justify-between' do %>
-          <span class="align-middle"><%= project.name %></span>
+          <span class="align-middle"><%= project.name.truncate(19) %></span>
           <% if @current_project.try(:id) == project.id %>
             <img
               src="<%= vite_asset_path('assets/icons/check.svg') %>"
