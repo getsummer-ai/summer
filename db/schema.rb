@@ -16,8 +16,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "project_article_status", ["created", "processing", "summarized", "error", "skipped"]
+  create_enum "project_article_status", ["in_queue", "processing", "summarized", "error", "skipped"]
   create_enum "user_locale", ["en", "es"]
+  create_enum "user_project_llm", ["gpt3.5", "gpt4"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "paid"]
 
@@ -146,12 +147,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.string "article_hash", null: false
     t.text "article", null: false
     t.integer "tokens_count", default: 0, null: false
-    t.enum "status", default: "created", null: false, enum_type: "project_article_status"
+    t.enum "status", default: "in_queue", null: false, enum_type: "project_article_status"
     t.jsonb "service_info"
     t.text "title"
     t.text "image_url"
     t.datetime "last_modified"
     t.text "summary"
+    t.enum "llm", enum_type: "user_project_llm"
     t.datetime "summarized_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -178,6 +180,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.enum "plan", default: "free", null: false, enum_type: "user_project_type"
     t.enum "status", default: "active", null: false, enum_type: "user_project_status"
     t.jsonb "settings"
+    t.enum "default_llm", default: "gpt3.5", null: false, enum_type: "user_project_llm"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "deleted_at"

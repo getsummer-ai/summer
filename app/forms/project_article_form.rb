@@ -40,7 +40,7 @@ class ProjectArticleForm
             article: scraped_article.content,
             title: scraped_article.title,
             image_url: scraped_article.image_url,
-            status: 'created',
+            status: 'in_queue',
             tokens_count: LanguageModelTools.estimate_max_tokens(scraped_article.content),
             summary:
               "**Summary: Why Invoice is So Important for Correct Accounting**

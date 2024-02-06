@@ -2,6 +2,7 @@
 
 class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
   def change
+    create_enum "user_project_llm", %w[gpt3.5 gpt4]
     create_enum "user_project_status", %w[active suspended deleted]
     create_enum "user_project_type", %w[free paid]
     create_table :projects do |t|
@@ -12,6 +13,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.enum :plan, default: "free", null: false, enum_type: "user_project_type"
       t.enum :status, default: "active", null: false, enum_type: "user_project_status"
       t.jsonb :settings
+      t.enum :default_llm, default: "gpt3.5", null: false, enum_type: "user_project_llm"
       t.timestamps
       t.datetime :deleted_at
     end
@@ -30,18 +32,19 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     end
     add_index :project_urls, [:project_id, :url_hash], unique: true
 
-    create_enum "project_article_status", %w[created processing summarized error skipped]
+    create_enum "project_article_status", %w[in_queue processing summarized error skipped]
     create_table :project_articles do |t|
       t.references :project, null: false, index: true, foreign_key: true
       t.string :article_hash, null: false
       t.text :article, null: false
       t.integer :tokens_count, default: 0, null: false
-      t.enum :status, default: "created", null: false, enum_type: "project_article_status"
+      t.enum :status, default: "in_queue", null: false, enum_type: "project_article_status"
       t.jsonb :service_info
       t.text :title
       t.text :image_url
       t.datetime :last_modified
       t.text :summary
+      t.enum :llm, enum_type: "user_project_llm"
       t.datetime :summarized_at
       t.timestamps
     end

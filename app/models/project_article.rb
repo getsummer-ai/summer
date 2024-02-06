@@ -4,12 +4,13 @@ class ProjectArticle < ApplicationRecord
   validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
 
   enum status: {
-         created: 'created',
+         in_queue: 'in_queue',
          processing: 'processing',
          summarized: 'summarized',
          error: 'error',
          skipped: 'skipped',
-       }
+       }, _prefix: true
+  enum llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
   belongs_to :project
   has_many :project_article_urls, dependent: :destroy
@@ -40,8 +41,9 @@ end
 #  article_hash  :string           not null
 #  image_url     :text
 #  last_modified :datetime
+#  llm           :enum
 #  service_info  :jsonb
-#  status        :enum             default("created"), not null
+#  status        :enum             default("in_queue"), not null
 #  summarized_at :datetime
 #  summary       :text
 #  title         :text

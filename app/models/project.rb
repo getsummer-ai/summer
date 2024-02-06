@@ -2,8 +2,9 @@
 
 class Project < ApplicationRecord
   include Trackable
-  enum plan: { free: 'free', paid: 'paid' }
-  enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }
+  enum plan: { free: 'free', paid: 'paid' }, _suffix: true
+  enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
+  enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
   # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
   # store_accessor :settings, %i[color font_size url_filter container_id], prefix: true
@@ -90,17 +91,18 @@ end
 #
 # Table name: projects
 #
-#  id         :bigint           not null, primary key
-#  deleted_at :datetime
-#  domain     :string           not null
-#  name       :string           default(""), not null
-#  plan       :enum             default("free"), not null
-#  settings   :jsonb
-#  status     :enum             default("active"), not null
-#  uuid       :uuid             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  user_id    :bigint           not null
+#  id          :bigint           not null, primary key
+#  default_llm :enum             default("gpt3.5"), not null
+#  deleted_at  :datetime
+#  domain      :string           not null
+#  name        :string           default(""), not null
+#  plan        :enum             default("free"), not null
+#  settings    :jsonb
+#  status      :enum             default("active"), not null
+#  uuid        :uuid             not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  user_id     :bigint           not null
 #
 # Indexes
 #
