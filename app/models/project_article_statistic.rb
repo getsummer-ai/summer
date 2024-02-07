@@ -2,6 +2,15 @@
 
 class ProjectArticleStatistic < ApplicationRecord
   belongs_to :project_article
+  belongs_to :project_url
+
+  def increase_views_counter!
+    self.class.update_counters(id, views: 1)
+  end
+
+  def increase_clicks_counter!
+    self.class.update_counters(id, clicks: 1)
+  end
 end
 
 # == Schema Information

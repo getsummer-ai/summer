@@ -17,6 +17,17 @@ class BasicEncrypting
       @instance ||= new
     end
 
+    def encode_array(value)
+      instance.sqids.encode(value)
+    end
+
+    def decode_array(value, required_length)
+      return nil if value.blank?
+      res = instance.sqids.decode(value)
+      nil if res.length != required_length
+      res
+    end
+
     def encode(value)
       instance.sqids.encode([value])
     end

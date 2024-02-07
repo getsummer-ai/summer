@@ -3,6 +3,8 @@ class ProjectArticleForm
   include ActiveModel::Validations
 
   attr_accessor :url
+  attr_reader :project_url
+
   validates :url, url: true
 
   # @param [Project] project
@@ -17,8 +19,8 @@ class ProjectArticleForm
   # @return [ProjectArticle, nil]
   def find_or_create
     return nil if invalid?
-    project_url = @project.project_urls.find_by(url_hash: @hashed_url)
-    return project_url.project_articles.only_required_columns.take if project_url.present?
+    @project_url = @project.project_urls.find_by(url_hash: @hashed_url)
+    return @project_url.project_articles.only_required_columns.take if @project_url.present?
     create_or_find_article
   rescue StandardError => e
     Rails.logger.error e.message
@@ -30,7 +32,7 @@ class ProjectArticleForm
     article = nil
     article_hash = Hashing.md5(scraped_article.content)
     ActiveRecord::Base.transaction do
-      project_url = @project.project_urls.create!(url: @url, url_hash: @hashed_url)
+      @project_url = @project.project_urls.create!(url: @url, url_hash: @hashed_url)
       article =
         @project
           .project_articles
@@ -75,7 +77,7 @@ class ProjectArticleForm
   - Options include manually creating invoices, using invoicing services and setting up invoicing systems, or utilizing specialized platforms like Enty for automation.
   - Enty's Control Panel provides templates created by professionals, and with an accounting subscription, tax reports are automatically generated based on issued invoices, saving time and ensuring accuracy.",
           )
-      article.project_urls << project_url
+      article.project_urls << @project_url
     end
     article
   end

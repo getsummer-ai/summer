@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 json.article do
-  json.id @article.article_hash
+  json.id @combined_id
   json.title @article.title
 end
 json.settings do
