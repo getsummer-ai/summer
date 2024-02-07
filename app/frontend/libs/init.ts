@@ -12,17 +12,17 @@ function addScript(src: string) {
 
 const start = (key: string) => {
   const apiUrl = import.meta.env.VITE_API_URL as string;
-  const requestHeaders: HeadersInit = new Headers();
-  requestHeaders.set('Content-Type', 'application/json');
-  requestHeaders.set('Api-Key', key);
   fetch(`${apiUrl}/api/v1/button/version`, {
     mode: 'cors',
-    headers: requestHeaders,
+    headers: {
+      'Content-Type': 'application/json',
+      'Api-Key': key,
+    },
   })
     .then((response) => response.json())
-    .then((data: { path: string }) => {
+    .then((data: { message?: string; path: string }) => {
+      if (!data.path) return console.error('GetSummer - ' + (data.message || 'No applications found'))
       addScript(apiUrl + data.path).catch(console.log);
-      console.log(data);
     });
 };
 

@@ -37,6 +37,8 @@ module Api
       private
 
       def update_statistics
+        return if @url_id.nil? || @article.nil?
+
         service = ArticleStatisticService.new(url_id: @url_id, article_id: @article.id)
         if action_name == 'init'
           service.view!
