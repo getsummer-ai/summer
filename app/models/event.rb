@@ -6,6 +6,7 @@ class Event < ApplicationRecord
   # belongs_to :project
   belongs_to :trackable, polymorphic: true
   belongs_to :author, polymorphic: true
+  belongs_to :project
 
   store :details,
         accessors: %i[changes snapshot],

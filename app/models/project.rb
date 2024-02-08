@@ -17,19 +17,20 @@ class Project < ApplicationRecord
   has_many :project_urls, dependent: :destroy
   has_many :project_articles, dependent: :destroy
   has_many :project_article_statistics, through: :project_articles
+  has_many :all_events, class_name: 'Event', foreign_key: 'project_id'
 
   validates :name,
             presence: true,
             uniqueness: {
               scope: :user_id,
-              message: 'You already have a project with this name',
+              message: 'You have a project with this name',
             }
   validates :domain,
             domain_url: true,
             presence: true,
             uniqueness: {
               scope: :user_id,
-              message: 'You already have a project with this domain',
+              message: 'You have a project with this domain',
             }
   validates :settings_container_id,
             allow_blank: true,
@@ -45,13 +46,16 @@ class Project < ApplicationRecord
             }
 
   normalizes :name, with: ->(name) { name.strip }
-  # normalizes :settings_container_id, with: ->(container_id) { container_id.to_s.downcase }
-  # normalizes :settings_container_id, apply_to_nil: true, with: ->(v) { v }
-  # normalizes :settings_url_filter, apply_to_nil: true, with: ->(v) { v }
 
   before_save :normalize_domain
 
   alias project_id id
+
+  track_changes_formatter_for :settings do |old_value, new_value|
+    original = new_value.to_h
+    changed = old_value.to_h
+    [HashDiffer.new(original, changed).deep_diff, HashDiffer.new(changed, original).deep_diff]
+  end
 
   def to_param
     encrypted_id

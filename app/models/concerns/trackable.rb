@@ -14,20 +14,7 @@ module Trackable
     attr_accessor :_instance_tracking, :_skip_after_save_trackable_callback
     attr_writer :_tracking_options
 
-    has_many :events, as: :trackable, class_name: '::Event'
-
-    # inverse relation.
-    # relation_name = base.name.tableize.tr('/', '_').to_sym
-
-    # begin
-    #   Event.belongs_to relation_name,
-    #     -> { includes(:events).where(events: { trackable_type: base.name }) },
-    #     foreign_key: 'trackable_id',
-    #     class_name: base.name
-    # rescue SyntaxError
-    #   relation_name = base.table_name.singularize.to_sym
-    #   retry
-    # end
+    has_many :events, as: :trackable, class_name: '::Event', dependent: :destroy
 
     with_options if: :track? do |assoc|
       assoc.after_create :track_creation
@@ -50,14 +37,6 @@ module Trackable
     def stop_tracking
       self._class_tracking = false
       self._class_tracking_options = {}
-    end
-
-    def start_tracking_all(records, options)
-      records.each { |record| record.start_tracking(options) }
-    end
-
-    def stop_tracking_all(records)
-      records.each(&:stop_tracking)
     end
 
     def custom_untrackable_params(params = nil)
@@ -101,18 +80,11 @@ module Trackable
     self._instance_tracking = false
   end
 
-  # def track_email!(name, options = {})
-  #   options = {
-  #     category: 'email', subcategory: name.to_s, customer_id: try(:customer_id)
-  #   }.merge(options)
-  #   create_event(options)
-  # end
-
   def track_creation(options = {})
     options = {
       category: 'log', subcategory: 'create', snapshot: snapshot, project_id: try(:project_id)
     }.merge(_current_tracking_options).merge(options)
-    create_event(options)
+    events.create(options)
     self._skip_after_save_trackable_callback = true
   end
 
@@ -121,30 +93,19 @@ module Trackable
     options = {
       category: 'log', subcategory: 'update', changes: trackable_changes, project_id: try(:project_id)
     }.merge(_current_tracking_options).merge(options)
-    create_event(options) if trackable_changes.present?
+    events.create(options) if trackable_changes.present?
   end
 
   def track_removal(options = {})
     options = {
       category: 'log', subcategory: 'destroy', snapshot: snapshot, project_id: try(:project_id)
     }.merge(_current_tracking_options).merge(options)
-    event = build_event(options)
+    event = events.build(options)
     event.save
     event
   end
 
   private
-
-    def create_event(options)
-      # ::Events::OptionsValidator.new.call(options)
-      events.create(options)
-      # res.errors.full_messages
-    end
-
-    def build_event(options)
-      # ::Events::OptionsValidator.new.call(options)
-      events.build(options)
-    end
 
     def trackable_changes
       calculated_changes = changes.select { |k, _| k.start_with? 'tracked_' }

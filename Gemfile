@@ -51,11 +51,12 @@ gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'pagy'
 gem 'rack-cors'
-# gem 'sprockets', '~> 4.0'
-# gem 'sprockets-rails', require: 'sprockets/railtie'
+
+gem 'propshaft'
 gem 'vite_rails'
 
-gem 'avo', '>= 3.0.1.beta9', source: 'https://packager.dev/avo-hq/'
+gem "avo", ">= 3.2.1"
+# gem 'avo', '>= 3.0.1.beta9', source: 'https://packager.dev/avo-hq/'
 # Use Sass to process CSS
 # gem "sassc-rails"
 gem 'dotenv-rails'

@@ -17,6 +17,7 @@ class User < ApplicationRecord
 
   enum :locale, { en: 'en' }, default: :en, validate: true
 
+  has_many :all_events, class_name: 'Event', as: :author, dependent: :restrict_with_exception
   has_many :projects, dependent: :restrict_with_exception
   belongs_to :default_project, class_name: 'Project', optional: true
 
