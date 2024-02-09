@@ -52,10 +52,11 @@ gem 'omniauth-rails_csrf_protection'
 gem 'pagy'
 gem 'rack-cors'
 
-gem 'propshaft'
-gem 'vite_rails'
-
 gem "avo", ">= 3.2.1"
+gem 'propshaft'
+
+gem 'ransack', :github => 'activerecord-hackery/ransack', :branch => 'main'
+gem 'vite_rails'
 # gem 'avo', '>= 3.0.1.beta9', source: 'https://packager.dev/avo-hq/'
 # Use Sass to process CSS
 # gem "sassc-rails"

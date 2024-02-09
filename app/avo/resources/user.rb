@@ -1,10 +1,16 @@
 module Avo
   module Resources
     class User < Avo::BaseResource
+      self.model_class = AvoUser
       self.includes = []
-      # self.search = {
-      #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
-      # }
+      self.search = {
+        query: -> { query.ransack(email_or_name_i_cont: params[:q]).result(distinct: false) },
+        item: -> do
+          {
+            title: "[#{record.id}] #{record.email} :: #{record.name}",
+          }
+        end
+      }
 
       def fields
         # field :preview, as: :preview, hide_on: [:show]

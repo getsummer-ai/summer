@@ -5,7 +5,9 @@ Avo.configure do |config|
   config.root_path = '/avo-hey'
   # used only when you have custom `map` configuration in your config.ru
   # config.prefix_path = "/internal"
-
+  # config.app_name = 'Get'
+  config.id_links_to_resource = true
+  config.home_path = "/avo/dashboard"
   # Sometimes you might want to mount Avo's engines yourself.
   # https://docs.avohq.io/3.0/routing.html
   # config.mount_avo_engines = true

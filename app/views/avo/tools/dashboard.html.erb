@@ -1,0 +1,44 @@
+<div class="flex flex-col">
+  <%= render Avo::PanelComponent.new(name: 'Dashboard', display_breadcrumbs: true) do |c| %>
+    <% c.with_tools do %>
+      <div class="text-sm italic"><%= Time.now.utc.strftime('%d %B %Y %H:%M') %> UTC</div>
+
+    <% end %>
+
+    <% c.with_body do %>
+      <div class="flex flex-col justify-between py-6 min-h-24">
+        <div class="px-6 space-y-2">
+          <div class="text-xl">
+            Users Total: <span><%= @dashboard_statistics.users %></span>
+          </div>
+          <div class="text-xl">
+            New Users Today: <span><%= @dashboard_statistics.users_today %></span>
+          </div>
+          <div class="text-xl">
+            Projects Total: <span><%= @dashboard_statistics.projects %></span>
+          </div>
+          <div class="p-4 rounded bg-gray-500 text-white inline-block">
+            <div class="text-xl pb-2">Articles</div>
+            <div>Skipped: <%= @dashboard_statistics.articles[:skipped] %></div>
+            <div>In_queue: <%= @dashboard_statistics.articles[:in_queue] %></div>
+            <div>Processing: <%= @dashboard_statistics.articles[:processing] %></div>
+            <div>Summarized: <%= @dashboard_statistics.articles[:summarized] %></div>
+            <div>Error: <%= @dashboard_statistics.articles[:error] %></div>
+          </div>
+
+          <!--          <p>-->
+          <!--            You can edit this file here <code class='p-1 rounded bg-gray-500 text-white text-sm'>app/views/avo/tools/dashboard.html.erb</code>.-->
+          <!--          </p>-->
+
+          <!--          <p>-->
+          <!--            For this tool we created the <code class='p-1 rounded bg-gray-500 text-white text-sm'>dashboard</code> method in the <code class='p-1 rounded bg-gray-500 text-white text-sm'>Avo::ToolsController</code>. You may delete it or move it to your own controller.-->
+          <!--          </p>-->
+
+          <!--          <p>-->
+          <!--            A new <code class='p-1 rounded bg-gray-500 text-white text-sm'>Dashboard</code> item should have been added to the sidebar. Edit it in <code class='p-1 rounded bg-gray-500 text-white text-sm'>app/views/avo/sidebar/items/_dashboard.html.erb</code>-->
+          <!--          </p>-->
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+</div>

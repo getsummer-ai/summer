@@ -3,11 +3,19 @@
 module Avo
   module Resources
     class Project < Avo::BaseResource
-      self.model_class = Avo::Models::Project
+      self.model_class = ::AvoProject
       self.includes = []
       # self.search = {
       #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
       # }
+      self.search = {
+        query: -> { query.ransack(name_or_domain_i_cont: params[:q]).result(distinct: false) },
+        item: -> do
+          {
+            title: "[#{record.id}] #{record.name} :: #{record.domain}",
+          }
+        end
+      }
 
       def fields
         field :preview, as: :preview, hide_on: [:show]

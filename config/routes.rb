@@ -65,3 +65,9 @@ Rails.application.routes.draw do
   match '/404', to: 'errors#not_found', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
 end
+
+if defined? ::Avo
+  Avo::Engine.routes.draw do
+    get "dashboard", to: "tools#dashboard", as: :dashboard
+  end
+end

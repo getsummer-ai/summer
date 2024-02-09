@@ -3,6 +3,7 @@
 module Avo
   module Resources
     class Event < Avo::BaseResource
+      self.model_class = ::AvoEvent
       self.includes = []
       # self.search = {
       #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
