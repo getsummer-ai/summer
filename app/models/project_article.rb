@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectArticle < ApplicationRecord
+  include Trackable
   validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
 
   enum status: {
@@ -21,6 +22,8 @@ class ProjectArticle < ApplicationRecord
   SUMMARY_COLUMNS = %w[id project_id title article_hash summary status].freeze
   scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
+
+  # custom_untrackable_parmams(%i[heartbeat])
 
   def to_param
     encrypted_id

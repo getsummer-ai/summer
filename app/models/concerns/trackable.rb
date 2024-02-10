@@ -93,7 +93,9 @@ module Trackable
     options = {
       category: 'log', subcategory: 'update', changes: trackable_changes, project_id: try(:project_id)
     }.merge(_current_tracking_options).merge(options)
-    events.create(options) if trackable_changes.present?
+    return if trackable_changes.blank?
+    events.create(options)
+    # res.errors.full_messages
   end
 
   def track_removal(options = {})
