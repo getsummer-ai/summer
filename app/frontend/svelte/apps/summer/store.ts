@@ -1,4 +1,4 @@
-// import { writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 export type ArticleInitInfo = {
   id: string;
@@ -47,11 +47,24 @@ export const initButton = async (project_id: string, url: string) => {
   );
 };
 
-export const getSummary = async (project_id: string, id: string) => {
-  const info = await getFetch<{ article: ArticleInfo }>(
-    `${api_host}/api/v1/button/summary?id=${encodeURIComponent(id)}`,
-    project_id,
-  );
-  // article_info.set(info.article);
-  return info;
+export const getSummary = (project_id: string, id: string) => {
+  const eventSource = new EventSource(`/api/v1/summary/stream?id=${id}&key=${project_id}`);
+
+  const result = writable('');
+
+  eventSource.addEventListener("message", (event) => {
+    // const events = document.getElementById("events")
+    // events.innerHTML += `<p>${event.data}</p>`
+    console.log(event.data);
+    result.set(event.data);
+  })
+
+  eventSource.addEventListener("error", (event) => {
+    if (event.eventPhase === EventSource.CLOSED) {
+      eventSource.close()
+      console.log("Event Source Closed")
+    }
+    console.log(event);
+  })
+  return result;
 };

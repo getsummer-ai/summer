@@ -6,8 +6,7 @@ module Api
     #
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
-      before_action :extract_data_from_id_param, only: :summary
-      after_action  :update_statistics, only: [:init, :summary]
+      after_action  :update_statistics, only: :init
 
       wrap_parameters false
 
@@ -28,23 +27,13 @@ module Api
         render 'init', status: :ok
       end
 
-      def summary
-        @article = current_project.project_articles.summary_columns.find(@article_id)
-        summary_html = MarkdownLib.render(@article&.summary || '')
-        @html_summary = summary_html ? Base64.encode64(summary_html) : ''
-      end
-
       private
 
       def update_statistics
         return if @url_id.nil? || @article.nil?
 
         service = ArticleStatisticService.new(url_id: @url_id, article_id: @article.id)
-        if action_name == 'init'
-          service.view!
-        elsif action_name == 'summary'
-          service.click!
-        end
+        service.view!
       end
 
       def validate_init_request
@@ -61,19 +50,8 @@ module Api
         @article_url ||= permitted_params['s'].to_s
       end
 
-      def extract_data_from_id_param
-        decoded_info = BasicEncrypting.decode_array(permitted_params[:id], 3)
-        return head(:bad_request) if decoded_info.nil?
-
-        expired_at = decoded_info[2]
-        return head(:gone) if Time.now.utc.to_i > expired_at
-
-        @article_id = decoded_info[0]
-        @url_id = decoded_info[1]
-      end
-
       def permitted_params
-        params.permit(:s, :id)
+        params.permit(:s)
       end
     end
   end

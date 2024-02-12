@@ -21,12 +21,7 @@ class ProjectArticleForm
     return nil if invalid?
     @project_url = @project.project_urls.find_by(url_hash: @hashed_url)
     return @project_url.project_articles.only_required_columns.take if @project_url.present?
-    article = create_or_find_article
-    return if article.nil?
-    if article.previously_new_record? && article.status_in_queue?
-      SummarizeArticleJob.perform_now(article.id)
-    end
-    article
+    create_or_find_article
   rescue StandardError => e
     Rails.logger.error e.message
     nil

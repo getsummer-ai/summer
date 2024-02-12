@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'button/version', to: 'button#version'
       post 'button/init', to: 'button#init'
-      get 'button/summary', to: 'button#summary'
+      get 'summary/stream', to: 'summary#stream'
       resources :projects, only: %i[show]
     end
   end

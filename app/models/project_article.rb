@@ -33,6 +33,10 @@ class ProjectArticle < ApplicationRecord
     return nil if id.nil?
     @encrypted_id ||= BasicEncrypting.encode(id)
   end
+
+  def redis_name
+    "article-#{article_hash}"
+  end
 end
 
 # == Schema Information

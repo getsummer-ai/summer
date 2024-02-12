@@ -16,12 +16,18 @@ module Api
 
       # @return [Project]
       def current_project
-        @current_project ||= Project.find_by(uuid: request.headers[:HTTP_API_KEY])
+        @current_project ||= Project.find_by(uuid: api_key)
       end
 
       def validate_api_key
-        return if request.headers[:HTTP_API_KEY].present? && current_project.present?
+        return if api_key.present? && current_project.present?
         render json: { message: 'Invalid Api-Key' }, status: :forbidden
+      end
+
+      def api_key
+        @api_key ||=
+          request.headers[:HTTP_API_KEY].presence ||
+            params.extract!(:key).permit(:key)[:key].presence
       end
 
       def validate_origin

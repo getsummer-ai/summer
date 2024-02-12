@@ -4,13 +4,14 @@
   import type { ArticleInitInfo, SettingsInfo } from './store';
   import Counter from '../lib/Counter.svelte';
   import Modal from './Modal.svelte';
+  import markdown from './markdown.js';
 
   /* eslint svelte/no-at-html-tags: 0 */
   let showModal = false;
   export let project: string;
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
-  let summary: string;
+  let summary: string = '';
   let button: HTMLButtonElement;
   let modalTitle: HTMLHeadingElement;
   let loading = false;
@@ -47,13 +48,16 @@
     }, delay);
   };
 
-  const onButtonClick = async () => {
+  const onButtonClick = () => {
     if (summary) return openModal();
     loading = true;
     try {
-      const summaryInfo = await getSummary(project, article.id);
-      summary = atob(summaryInfo.article.summary);
-      openModal(1000);
+      const summaryStore = getSummary(project, article.id);
+      summaryStore.subscribe((value) => {
+        summary += value;
+      });
+      // summary = atob(summaryInfo.article.summary);
+      openModal(200);
     } catch (error) {
       console.log(error);
       loading = false;
@@ -84,7 +88,7 @@
 {#if showButton}
   <Modal bind:showModal on:close={closeModal}>
     <h2 slot="header" bind:this={modalTitle}>{article.title}</h2>
-    {@html summary}
+    {@html markdown(summary)}
     <Counter />
   </Modal>
 {/if}
