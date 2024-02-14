@@ -14,8 +14,7 @@ class ProjectArticle < ApplicationRecord
   enum llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
   belongs_to :project
-  has_many :project_article_urls, dependent: :destroy
-  has_many :project_urls, through: :project_article_urls
+  has_many :project_urls, dependent: :destroy
   has_many :project_article_statistics, dependent: :destroy
 
   MINIMAL_COLUMNS = %w[id title article_hash].freeze
@@ -43,21 +42,23 @@ end
 #
 # Table name: project_articles
 #
-#  id            :bigint           not null, primary key
-#  article       :text             not null
-#  article_hash  :string           not null
-#  image_url     :text
-#  last_modified :datetime
-#  llm           :enum
-#  service_info  :jsonb
-#  status        :enum             default("in_queue"), not null
-#  summarized_at :datetime
-#  summary       :text
-#  title         :text
-#  tokens_count  :integer          default(0), not null
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  project_id    :bigint           not null
+#  id               :bigint           not null, primary key
+#  article          :text             not null
+#  article_hash     :string           not null
+#  image_url        :text
+#  last_modified_at :datetime
+#  last_scraped_at  :datetime
+#  llm              :enum
+#  service_info     :jsonb
+#  status           :enum             default("in_queue"), not null
+#  summarized_at    :datetime
+#  summary          :text
+#  title            :text
+#  tokens_in_count  :integer          default(0), not null
+#  tokens_out_count :integer          default(0), not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  project_id       :bigint           not null
 #
 # Indexes
 #

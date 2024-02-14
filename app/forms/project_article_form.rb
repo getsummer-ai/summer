@@ -3,7 +3,7 @@ class ProjectArticleForm
   include ActiveModel::Validations
 
   attr_accessor :url
-  attr_reader :project_url
+  attr_reader :project_url, :url_hash
 
   validates :url, url: true
 
@@ -13,42 +13,51 @@ class ProjectArticleForm
     # @type [Project]
     @project = project
     @url = url.to_s.gsub(/&?utm_.+?(&|$)/, '').chomp('?')
-    @hashed_url = Hashing.md5(@url)
+    @url_hash = Hashing.md5(@url)
   end
 
   # @return [ProjectArticle, nil]
   def find_or_create
     return nil if invalid?
-    @project_url = @project.project_urls.find_by(url_hash: @hashed_url)
-    return @project_url.project_articles.only_required_columns.take if @project_url.present?
-    create_or_find_article
+    @project_url = @project.project_urls.find_by(url_hash:)
+    if @project_url.present?
+      return ProjectArticle.only_required_columns.find_by(id: @project_url.project_article_id)
+    end
+    create_article_and_url
   rescue StandardError => e
     Rails.logger.error e.message
     nil
   end
 
+  private
+
   # @return [ProjectArticle, nil]
-  def create_or_find_article
-    article = nil
+  def create_article_and_url
+    project_article = nil
+    ActiveRecord::Base.transaction do
+      project_article = find_or_create_article(scraped_article)
+      @project_url = @project.project_urls.create!(url:, url_hash:, project_article:)
+    end
+    project_article
+  end
+
+  # @param [::ArticleScrapperService] scraped_article
+  # @return [ProjectArticle]
+  def find_or_create_article(scraped_article)
     article_hash = Hashing.md5(scraped_article.content)
     tokens = LanguageModelTools.estimate_max_tokens(scraped_article.content)
-    ActiveRecord::Base.transaction do
-      @project_url = @project.project_urls.create!(url: @url, url_hash: @hashed_url)
-      article =
-        @project
-          .project_articles
-          .where(article_hash:)
-          .first_or_create(
-            article_hash:,
-            article: scraped_article.content,
-            title: scraped_article.title,
-            image_url: scraped_article.image_url,
-            status: tokens > 500 ? 'in_queue' : 'skipped',
-            tokens_count: tokens,
-          )
-      article.project_urls << @project_url
-    end
-    article
+    @project
+      .project_articles
+      .where(article_hash:)
+      .first_or_create(
+        article_hash:,
+        article: scraped_article.content,
+        title: scraped_article.title,
+        last_scraped_at: Time.now.utc,
+        image_url: scraped_article.image_url,
+        status: tokens > 500 ? 'in_queue' : 'skipped',
+        tokens_in_count: tokens,
+      )
   end
 
   # @return [::ArticleScrapperService]

@@ -24,3 +24,33 @@ class AvoProject < Project
     throw :abort
   end
 end
+
+# == Schema Information
+#
+# Table name: projects
+#
+#  id          :bigint           not null, primary key
+#  default_llm :enum             default("gpt3.5"), not null
+#  deleted_at  :datetime
+#  domain      :string           not null
+#  name        :string           default(""), not null
+#  plan        :enum             default("free"), not null
+#  settings    :jsonb
+#  status      :enum             default("active"), not null
+#  uuid        :uuid             not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  user_id     :bigint           not null
+#
+# Indexes
+#
+#  index_projects_on_created_at          (created_at)
+#  index_projects_on_user_id             (user_id)
+#  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE
+#  index_projects_on_user_id_and_name    (user_id,name) UNIQUE
+#  index_projects_on_uuid                (uuid) UNIQUE
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id) ON UPDATE => cascade
+#

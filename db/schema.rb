@@ -133,27 +133,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.index ["project_url_id"], name: "index_project_article_statistics_on_project_url_id"
   end
 
-  create_table "project_article_urls", force: :cascade do |t|
-    t.bigint "project_article_id", null: false
-    t.bigint "project_url_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["project_article_id"], name: "index_project_article_urls_on_project_article_id"
-    t.index ["project_url_id"], name: "index_project_article_urls_on_project_url_id"
-  end
-
   create_table "project_articles", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.string "article_hash", null: false
-    t.text "article", null: false
-    t.integer "tokens_count", default: 0, null: false
-    t.enum "status", default: "in_queue", null: false, enum_type: "project_article_status"
-    t.jsonb "service_info"
     t.text "title"
-    t.text "image_url"
-    t.datetime "last_modified"
-    t.text "summary"
+    t.text "article", null: false
+    t.enum "status", default: "in_queue", null: false, enum_type: "project_article_status"
+    t.integer "tokens_in_count", default: 0, null: false
+    t.integer "tokens_out_count", default: 0, null: false
     t.enum "llm", enum_type: "user_project_llm"
+    t.jsonb "service_info"
+    t.text "image_url"
+    t.datetime "last_modified_at"
+    t.datetime "last_scraped_at"
+    t.text "summary"
     t.datetime "summarized_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -166,8 +159,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.string "url_hash", null: false
     t.string "url", null: false
     t.boolean "is_accessible", default: true, null: false
+    t.bigint "project_article_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["project_article_id"], name: "index_project_urls_on_project_article_id"
     t.index ["project_id", "url_hash"], name: "index_project_urls_on_project_id_and_url_hash", unique: true
     t.index ["project_id"], name: "index_project_urls_on_project_id"
   end
@@ -229,9 +224,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_statistics", "project_articles", on_update: :cascade
   add_foreign_key "project_article_statistics", "project_urls", on_update: :cascade
-  add_foreign_key "project_article_urls", "project_articles", on_update: :cascade
-  add_foreign_key "project_article_urls", "project_urls", on_update: :cascade
   add_foreign_key "project_articles", "projects"
+  add_foreign_key "project_urls", "project_articles", on_update: :cascade
   add_foreign_key "project_urls", "projects", on_update: :cascade
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify

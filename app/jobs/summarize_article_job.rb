@@ -39,9 +39,10 @@ class SummarizeArticleJob < ApplicationJob
   # @param [Complex] time
   # @param [String] summary
   def update_model_with_success_info!(model, time, summary)
-    model.update!(
-      { service_info: { time: }, status: :summarized, summary:, summarized_at: Time.zone.now.utc },
-    )
+    tokens_out_count = LanguageModelTools.estimate_max_tokens(summary)
+    summarized_at = Time.now.utc
+    status = :summarized
+    model.update!({ service_info: { time: }, status:, tokens_out_count:, summary:, summarized_at: })
   end
 
   # @param [ProjectArticle] model
@@ -71,7 +72,7 @@ class SummarizeArticleJob < ApplicationJob
     measure { ask_gpt_to_summarize(PREFIX + model.article, model.llm, stream_func) }
   end
 
-  #   @return [ProjectArticle]
+  # @return [ProjectArticle]
   def find_article_and_start_tracking(id)
     model = ProjectArticle.includes(:project).find(id)
     model.start_tracking(source: 'SummarizeArticleJob')
