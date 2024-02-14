@@ -3,33 +3,6 @@
 describe SummarizeArticleJob do
   subject { described_class.perform(article.id) }
 
-  let(:openai_client) { double }
-  let(:openai_response) do
-    {
-      id: 'chatcmpl-8qV2NLOihOWZGWfbM6ON0FleXHYKf',
-      model: 'gpt-3.5-turbo-0613',
-      usage: {
-        total_tokens: 1014,
-        prompt_tokens: 880,
-        completion_tokens: 134,
-      },
-      object: 'chat.completion',
-      choices: [
-        {
-          index: 0,
-          message: {
-            role: 'assistant',
-            content:
-              "- New Year celebrations have been happening for thousands of years \n"
-          },
-          logprobs: nil,
-          finish_reason: 'stop',
-        },
-      ],
-      created: 1_707_523_055,
-      system_fingerprint: nil,
-    }
-  end
   let!(:article) do
     user = User.create(
       email: 'admin@test.com',
@@ -48,16 +21,34 @@ describe SummarizeArticleJob do
     article
   end
 
-  before do
-    allow(OpenAI::Client).to receive(:new).and_return(openai_client)
-    allow(openai_client).to receive(:chat).and_return(openai_response)
+  let(:first_event_stream_message) do
+    { choices: [{ delta: { content: " New" } }] }
+  end
+
+  let(:second_event_stream_message) do
+    { choices: [{ delta: { content: " Year's traditions..." } }] }
+  end
+
+  let(:third_event_stream_message) do
+    { choices: [{ delta: { content: "" } }] }
   end
 
   describe '#perform' do
     it 'works well' do
+      WebMock.disable_net_connect!
+      # We stub request to OPEN AI = OpenAI::Client.new; client.chat
+      # @see SummarizeArticleJob#ask_gpt_to_summarize
+      stub_request(:post, %r{/chat/completions}).to_return(
+        body: "event: test\nid: 1\ndata: #{first_event_stream_message.to_json}\n\n" \
+              "event: test\nid: 2\ndata: #{second_event_stream_message.to_json}\n\n" \
+              "event: test\nid: 2\ndata: #{third_event_stream_message.to_json}\n\n" \
+              "event: test\nid: 2\ndata: [DONE]\n\n",
+        headers: { 'Content-Type' => 'text/event-stream' }
+      )
       expect { subject }.to change { article.reload.status }.from('in_queue').to('summarized')
       expect(article.service_info['time']).to be_a(Float)
-      expect(article.service_info['response']).to eq openai_response.deep_stringify_keys
+      expect(article.summary).to eq " New Year's traditions..."
+      WebMock.allow_net_connect!
     end
   end
 end

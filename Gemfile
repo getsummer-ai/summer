@@ -55,7 +55,7 @@ gem 'rack-cors'
 gem "avo", ">= 3.2.1"
 gem 'propshaft'
 
-gem 'ransack', :github => 'activerecord-hackery/ransack', :branch => 'main'
+gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'main'
 gem 'vite_rails'
 # gem 'avo', '>= 3.0.1.beta9', source: 'https://packager.dev/avo-hq/'
 # Use Sass to process CSS
@@ -89,7 +89,9 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem 'capybara'
   gem 'database_cleaner-active_record'
+  gem "fakeredis", require: "fakeredis/rspec"
   gem 'selenium-webdriver'
+  gem "webmock"
 end
 
 gem 'good_job', '~> 3.19'

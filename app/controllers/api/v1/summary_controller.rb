@@ -17,10 +17,9 @@ module Api
         sse = SSE.new(response.stream)
         return sse.write(article.summary) if article.status_summarized?
 
-        subscribe_and_send_stream(sse, article.redis_name)
+        subscribe_and_send_from_stream(sse, article)
       ensure
         sse&.close
-        @redis&.quit
       end
 
       private
@@ -36,17 +35,34 @@ module Api
       end
 
       #   @param [SSE] sse
-      #   @param [String] channel_name
-      def subscribe_and_send_stream(sse, channel_name)
+      #   @param [ProjectArticle] article
+      def subscribe_and_send_from_stream(sse, article)
         # on first message from redis we send the buffered summary
+        channel_name = article.redis_name
+        redis_subscriber = Redis.new
+        redis_buffer = Redis.new
+        subscribe_on_channel(sse, redis_subscriber, redis_buffer, channel_name)
+      rescue Redis::TimeoutError => e
+        sse.write(article.summary) if article.reload.status_summarized?
+        Rails.logger.error e.message
+        raise
+      ensure
+        redis_subscriber&.quit
+        redis_buffer&.quit
+      end
+
+      #   @param [SSE] sse
+      #   @param [Redis] redis_subscriber
+      #   @param [Redis] redis_buffer
+      #   @param [String] channel_name
+      def subscribe_on_channel(sse, redis_subscriber, redis_buffer, channel_name)
         message = 0
-        init_message = redis.get(channel_name)
-        redis.subscribe_with_timeout(10, channel_name) do |on|
+        redis_subscriber.subscribe_with_timeout(5, channel_name) do |on|
           on.message do |_event, data|
-            if data == 'done'
-              redis.unsubscribe(channel_name)
-            elsif message.zero? && init_message.present?
-              sse.write init_message
+            if message.zero? && redis_buffer.exists?(channel_name)
+              sse.write redis_buffer.get(channel_name)
+            elsif data == 'done'
+              redis_subscriber.unsubscribe(channel_name)
             else
               sse.write data
             end
@@ -71,10 +87,6 @@ module Api
 
         @article_id = decoded_info[0]
         @url_id = decoded_info[1]
-      end
-
-      def redis
-        @redis ||= Redis.new
       end
     end
   end
