@@ -21,6 +21,9 @@ Rails.application.routes.draw do
     get '/about', to: 'pages#about', as: 'about'
     get '/homepage', to: 'pages#homepage', as: 'homepage'
     get '/new-year-celebrations', to: 'pages#new_year_celebration', as: 'new_year_celebrations'
+    get '/how-to-make-contracts-more-human',
+        to: 'pages#how_to_make_contracts_more_human',
+        as: 'how_to_make_contracts_more_human'
 
     resources :modals, only: [] do
       collection do

@@ -49,6 +49,7 @@
   };
 
   const onButtonClick = () => {
+    if (loading) return;
     if (summary) return openModal();
     loading = true;
     try {
@@ -57,7 +58,7 @@
         summary += value;
       });
       // summary = atob(summaryInfo.article.summary);
-      openModal(200);
+      openModal(100);
     } catch (error) {
       console.log(error);
       loading = false;

@@ -2,7 +2,7 @@
 
 class PagesController < ApplicationController
   skip_before_action :authenticate_user!
-  before_action :example_project_id, only: [:about, :new_year_celebration]
+  helper_method :example_project_id
 
   layout :custom_layout
 
@@ -21,8 +21,10 @@ class PagesController < ApplicationController
   def new_year_celebration
   end
 
+  def how_to_make_contracts_more_human
+  end
+
   def example_project_id
     @example_project_id ||= current_user&.default_project&.uuid
   end
-
 end
