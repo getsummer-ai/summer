@@ -2,6 +2,7 @@
 
 class AvoProject < Project
   has_many :all_events, class_name: 'AvoEvent', foreign_key: 'project_id'
+  has_many :project_urls, class_name: 'AvoProjectUrl', foreign_key: 'project_id'
   belongs_to :user, class_name: 'AvoUser'
 
   before_destroy :stop_destroy

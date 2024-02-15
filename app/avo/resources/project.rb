@@ -29,9 +29,10 @@ module Avo
         field :settings, as: :key_value, hide_on: [:index], show_on: :preview
         # field :settings, as: :code, language: 'javascript', hide_on: [:index], show_on: :preview
         field :default_llm, as: :select, enum: ::Project.default_llms
-        field :deleted_at, as: :date_time
+        field :deleted_at, as: :date_time, hide_on: [:index]
         # field :events, as: :has_many, polymorphic_as: 'Avo::Project'
         field :user, as: :belongs_to, resource: Avo::Resources::User
+        field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
         field :all_events, as: :has_many, resource: Avo::Resources::Event
         # field :project_urls, as: :has_many
         # field :project_articles, as: :has_many

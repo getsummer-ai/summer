@@ -1,13 +1,28 @@
 # frozen_string_literal: true
 
-class ProjectUrl < ApplicationRecord
-  include Trackable
-  belongs_to :project
-  belongs_to :project_article
+class AvoProjectUrl < ProjectUrl
+  has_many :events, class_name: 'AvoEvent', as: :trackable, dependent: :destroy
+  belongs_to :project, class_name: 'AvoProject'
+  belongs_to :project_article, class_name: 'AvoProjectArticle'
 
-  validates :url_hash, presence: true, uniqueness: {
-    scope: [:project_id]
-  }
+  before_destroy :stop_destroy
+
+  def to_param
+    id
+  end
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id url url_hash project_id]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    %w[project project_article]
+  end
+
+  def stop_destroy
+    errors.add(:base, :undestroyable)
+    throw :abort
+  end
 end
 
 # == Schema Information

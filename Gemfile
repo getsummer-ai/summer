@@ -52,7 +52,7 @@ gem 'omniauth-rails_csrf_protection'
 gem 'pagy'
 gem 'rack-cors'
 
-gem "avo", ">= 3.2.1"
+gem "avo", ">= 3.4.0"
 gem 'propshaft'
 
 gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'main'

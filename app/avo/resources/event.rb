@@ -10,12 +10,18 @@ module Avo
       # }
 
       def fields
+        visible = -> {
+          @params[:resource_name]&.classify == 'Project' ||
+          @params[:resource_name]&.classify != @resource&.record&.trackable_type
+        }
         field :preview, as: :preview, hide_on: [:show]
         field :id, as: :id
         field :category, as: :text
         field :subcategory, as: :text
-        field :trackable_type, as: :text
-        field :trackable_id, as: :number
+        field(:trackable_type,
+              as: :text,
+              visible:)
+        field(:trackable_id, as: :number, visible:)
         field :source, as: :text
         field :details, as: :text, show_on: :preview, hide_on: [:index]
         # field :author_type, as: :text, hide_on: [:index]
