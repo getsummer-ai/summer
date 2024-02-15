@@ -13,21 +13,22 @@ module Avo
       }
 
       def fields
-        field :id, as: :id
-        field :project_id, as: :number, hide_on: [:index]
         field :project, as: :belongs_to, use_resource: Avo::Resources::Project
-        field :article_hash, as: :text
-        field :title, as: :textarea
+        field :id, as: :id
+        field :preview, as: :preview, hide_on: [:show]
+        # field :project_id, as: :number, hide_on: [:index]
+        field :article_hash, as: :text, hide_on: [:index]
+        field :title, as: :text
         field :article, as: :textarea
         field :status, as: :select, enum: ::ProjectArticle.statuses
         field :tokens_in_count, as: :number
         field :tokens_out_count, as: :number
-        field :llm, as: :select, enum: ::ProjectArticle.llms
+        field :llm, as: :select, enum: ::ProjectArticle.llms, hide_on: [:index], show_on: :preview
         field :service_info, as: :key_value
         field :image_url, as: :textarea
-        field :last_modified_at, as: :date_time, hide_on: [:index]
-        field :last_scraped_at, as: :date_time, hide_on: [:index]
-        field :summarized_at, as: :date_time
+        field :last_modified_at, as: :date_time, hide_on: [:index], show_on: :preview
+        field :last_scraped_at, as: :date_time, hide_on: [:index], show_on: :preview
+        field :summarized_at, as: :date_time, hide_on: [:index], show_on: :preview
         field :summary, as: :markdown
         field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
 

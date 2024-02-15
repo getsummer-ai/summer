@@ -18,8 +18,9 @@ module Avo
       }
 
       def fields
-        field :preview, as: :preview, hide_on: [:show]
+        field :user, as: :belongs_to, resource: Avo::Resources::User
         field :id, as: :id, link_to_record: true
+        field :preview, as: :preview, hide_on: [:show]
         # field :uuid, as: :text
         field :user_id, as: :number, show_on: :preview, hide_on: [:index]
         field :name, as: :text
@@ -28,10 +29,10 @@ module Avo
         field :status, as: :select, enum: ::Project.statuses
         field :settings, as: :key_value, hide_on: [:index], show_on: :preview
         # field :settings, as: :code, language: 'javascript', hide_on: [:index], show_on: :preview
-        field :default_llm, as: :select, enum: ::Project.default_llms
+        field :default_llm, as: :select, enum: ::Project.default_llms, hide_on: [:index], show_on: :preview
+        field :created_at, as: :date_time
         field :deleted_at, as: :date_time, hide_on: [:index]
         # field :events, as: :has_many, polymorphic_as: 'Avo::Project'
-        field :user, as: :belongs_to, resource: Avo::Resources::User
         field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
         field :all_events, as: :has_many, resource: Avo::Resources::Event
         # field :project_urls, as: :has_many

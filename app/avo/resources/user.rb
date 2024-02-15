@@ -14,6 +14,7 @@ module Avo
 
       def fields
         # field :preview, as: :preview, hide_on: [:show]
+        field :default_project, as: :belongs_to, use_resource: Avo::Resources::Project
         field :id, as: :id
         field :email, as: :text
         field :sign_in_count, as: :number, show_on: :preview, hide_on: [:index]
@@ -37,7 +38,6 @@ module Avo
         field :deleted_at, as: :date_time, show_on: :preview, hide_on: [:index]
         field :default_project_id, as: :number, show_on: :preview, hide_on: [:index]
         # field :events, as: :has_many
-        field :default_project, as: :belongs_to, use_resource: Avo::Resources::Project
         field :projects, as: :has_many, use_resource: Avo::Resources::Project
         field :all_events, as: :has_many, resource: Avo::Resources::Event
       end
