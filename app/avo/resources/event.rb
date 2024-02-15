@@ -14,11 +14,11 @@ module Avo
           @params[:resource_name]&.classify == 'Project' ||
             @params[:resource_name]&.classify != @resource&.record&.trackable_type
         end
-        field :id, as: :id
         field :project,
               as: :belongs_to,
               use_resource: Avo::Resources::Project,
               visible: -> { @params[:resource_name]&.classify != 'Project' }
+        field :id, as: :id
         field :category, as: :text, hide_on: [:index]
         field :subcategory, as: :text, hide_on: [:index]
         field(:trackable_type, as: :text, visible:)
