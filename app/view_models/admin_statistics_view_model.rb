@@ -7,6 +7,8 @@ class AdminStatisticsViewModel
       in_queue: ProjectArticle.status_in_queue.async_count,
       processing: ProjectArticle.status_processing.async_count,
       summarized: ProjectArticle.status_summarized.async_count,
+      tokens_in_count: ProjectArticle.status_summarized.async_sum(:tokens_in_count),
+      tokens_out_count: ProjectArticle.status_summarized.async_sum(:tokens_out_count),
       skipped: ProjectArticle.status_skipped.async_count,
       error: ProjectArticle.status_error.async_count,
     }

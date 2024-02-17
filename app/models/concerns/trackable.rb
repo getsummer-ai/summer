@@ -9,7 +9,7 @@ module Trackable
 
   included do |base|
     # condition for callbacks.
-    cattr_accessor :_class_tracking, :_class_tracking_options, :_custom_untrackable_params,
+    cattr_accessor :_class_tracking, :_class_tracking_options, :_non_trackable_params,
       :_custom_change_formatters
     attr_accessor :_instance_tracking, :_skip_after_save_trackable_callback
     attr_writer :_tracking_options
@@ -39,9 +39,9 @@ module Trackable
       self._class_tracking_options = {}
     end
 
-    def custom_untrackable_params(params = nil)
-      return _custom_untrackable_params.to_a if params.nil?
-      self._custom_untrackable_params = params.to_a
+    def non_trackable_params(params = nil)
+      return _non_trackable_params.to_a if params.nil?
+      self._non_trackable_params = params.to_a
     end
 
     # @yieldparam [String, Boolean, Hash, SmartSettings, Number] old_value
@@ -124,7 +124,7 @@ module Trackable
     end
 
     def untrackable_params
-      DEFAULT_UNTRACKABLE_PARAMS.map(&:to_s) | self.class.custom_untrackable_params.map(&:to_s)
+      DEFAULT_UNTRACKABLE_PARAMS.map(&:to_s) | self.class.non_trackable_params.map(&:to_s)
     end
 
     def useful_changes(changes)

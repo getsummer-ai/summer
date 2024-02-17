@@ -6,7 +6,6 @@ module Api
     #
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
-      after_action  :update_statistics, only: :init
 
       wrap_parameters false
 
@@ -21,19 +20,18 @@ module Api
 
         @article = form.find_or_create
         return head :bad_request if @article.nil?
+        return head :not_found if @article.status_skipped? || @article.status_error?
 
         @url_id = form.project_url.id
         @combined_id = BasicEncrypting.encode_array([@article.id, @url_id, 4.hours.from_now.utc.to_i])
-        render 'init', status: :ok
+        update_statistics @url_id, @article.id
+        # render 'init', status: :ok
       end
 
       private
 
-      def update_statistics
-        return if @url_id.nil? || @article.nil?
-
-        service = ArticleStatisticService.new(url_id: @url_id, article_id: @article.id)
-        service.view!
+      def update_statistics(url_id, article_id)
+        ArticleStatisticService.new(url_id:, article_id:).view!
       end
 
       def validate_init_request

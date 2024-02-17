@@ -19,11 +19,13 @@
           </div>
           <div class="p-4 rounded bg-gray-500 text-white inline-block">
             <div class="text-xl pb-2">Articles</div>
+            <div>Error: <%= @dashboard_statistics.articles[:error] %></div>
             <div>Skipped: <%= @dashboard_statistics.articles[:skipped] %></div>
             <div>In_queue: <%= @dashboard_statistics.articles[:in_queue] %></div>
             <div>Processing: <%= @dashboard_statistics.articles[:processing] %></div>
             <div>Summarized: <%= @dashboard_statistics.articles[:summarized] %></div>
-            <div>Error: <%= @dashboard_statistics.articles[:error] %></div>
+            <div>AVG Tokens In: <%= @dashboard_statistics.articles[:tokens_in_count] / @dashboard_statistics.articles[:summarized] %></div>
+            <div>AVG Tokens Out: <%= @dashboard_statistics.articles[:tokens_out_count] / @dashboard_statistics.articles[:summarized] %></div>
           </div>
 
           <!--          <p>-->

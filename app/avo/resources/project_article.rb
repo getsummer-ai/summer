@@ -8,7 +8,9 @@ module Avo
       #   query: -> { query.ransack(id_eq: params[:q], m: "or").result(distinct: false) }
       # }
       self.search = {
-        query: -> { query.ransack(article_hash_or_title_i_cont: params[:q]).result(distinct: false) },
+        query: -> do
+          query.ransack(article_hash_or_title_i_cont: params[:q]).result(distinct: false)
+        end,
         item: -> { { title: "[#{record.id}] #{record.article_hash} :: #{record.title}" } },
       }
 
@@ -20,9 +22,17 @@ module Avo
         field :article_hash, as: :text, hide_on: [:index]
         field :title, as: :text
         field :article, as: :textarea
-        field :status, as: :select, enum: ::ProjectArticle.statuses
-        field :tokens_in_count, as: :number
-        field :tokens_out_count, as: :number
+        field :status,
+              as: :badge,
+              options: {
+                success: :summarized,
+                warning: :processing,
+                danger: :error,
+                neutral: :skipped,
+              }
+
+        field :tokens_in_count, as: :number, sortable: true
+        field :tokens_out_count, as: :number, sortable: true
         field :llm, as: :select, enum: ::ProjectArticle.llms, hide_on: [:index], show_on: :preview
         field :service_info, as: :key_value
         field :image_url, as: :textarea

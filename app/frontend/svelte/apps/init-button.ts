@@ -24,5 +24,7 @@ export const initApp = (projectId: string, url: string) => {
   initButton(projectId, url).then((info) => {
     // console.log(info);
     installApp(projectId, info.settings, info.article);
+  }).catch((e) => {
+    console.error('initApp', e);
   });
 };

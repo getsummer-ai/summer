@@ -17,12 +17,12 @@ class ProjectArticle < ApplicationRecord
   has_many :project_urls, dependent: :destroy
   has_many :project_article_statistics, dependent: :destroy
 
-  MINIMAL_COLUMNS = %w[id title article_hash].freeze
+  MINIMAL_COLUMNS = %w[id title status article_hash].freeze
   SUMMARY_COLUMNS = %w[id project_id title article_hash summary status].freeze
   scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 
-  # custom_untrackable_parmams(%i[heartbeat])
+  non_trackable_params(%i[summary article])
 
   def to_param
     encrypted_id
