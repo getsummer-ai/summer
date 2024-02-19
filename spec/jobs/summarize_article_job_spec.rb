@@ -16,7 +16,7 @@ describe SummarizeArticleJob do
       article: 'On the night of 31 December and the morning of 1 January, people in many countries all over...',
       title: 'New Year celebrations',
       status: 'in_queue',
-      tokens_count: 942,
+      tokens_in_count: 942,
     )
     article
   end
