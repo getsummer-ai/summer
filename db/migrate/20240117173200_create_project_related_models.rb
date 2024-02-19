@@ -22,23 +22,17 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     add_index :projects, %i[user_id name], unique: true
     add_index :projects, %i[user_id domain], unique: true
 
-    create_enum 'project_article_status', %w[in_queue processing summarized error skipped]
     create_table :project_articles do |t|
+      t.timestamps
       t.references :project, null: false, index: true, foreign_key: true
       t.string :article_hash, null: false
       t.text :title
       t.text :article, null: false
-      t.enum :status, default: 'in_queue', null: false, enum_type: 'project_article_status'
-      t.integer :tokens_in_count, default: 0, null: false
-      t.integer :tokens_out_count, default: 0, null: false
-      t.enum :llm, enum_type: 'user_project_llm'
-      t.jsonb :service_info
+      t.integer :tokens_count, default: 0, null: false
       t.text :image_url
       t.datetime :last_modified_at
       t.datetime :last_scraped_at
-      t.text :summary
-      t.datetime :summarized_at
-      t.timestamps
+      t.jsonb :info
     end
     add_index :project_articles, %i[project_id article_hash], unique: true
 

@@ -10,13 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_19_144000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "project_article_status", ["in_queue", "processing", "summarized", "error", "skipped"]
+  create_enum "project_article_common_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_llm", ["gpt3.5", "gpt4"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
@@ -118,6 +118,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "project_article_services", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "project_article_id", null: false
+    t.bigint "project_service_id", null: false
+    t.index ["project_article_id", "project_service_id"], name: "idx_on_project_article_id_project_service_id_cba9cb8a1d", unique: true
+    t.index ["project_article_id"], name: "index_project_article_services_on_project_article_id"
+    t.index ["project_service_id"], name: "index_project_article_services_on_project_service_id"
+  end
+
   create_table "project_article_statistics", force: :cascade do |t|
     t.bigint "project_article_id", null: false
     t.bigint "project_url_id", null: false
@@ -133,25 +142,45 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
     t.index ["project_url_id"], name: "index_project_article_statistics_on_project_url_id"
   end
 
+  create_table "project_article_summaries", force: :cascade do |t|
+    t.bigint "project_article_id", null: false
+    t.jsonb "info"
+    t.integer "tokens_count", default: 0, null: false
+    t.enum "llm", null: false, enum_type: "user_project_llm"
+    t.text "summary"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_article_id"], name: "index_project_article_summaries_on_project_article_id"
+  end
+
   create_table "project_articles", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "project_id", null: false
     t.string "article_hash", null: false
     t.text "title"
     t.text "article", null: false
-    t.enum "status", default: "in_queue", null: false, enum_type: "project_article_status"
-    t.integer "tokens_in_count", default: 0, null: false
-    t.integer "tokens_out_count", default: 0, null: false
-    t.enum "llm", enum_type: "user_project_llm"
-    t.jsonb "service_info"
+    t.integer "tokens_count", default: 0, null: false
     t.text "image_url"
     t.datetime "last_modified_at"
     t.datetime "last_scraped_at"
-    t.text "summary"
-    t.datetime "summarized_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.jsonb "info"
+    t.enum "status_summary", default: "wait", null: false, enum_type: "project_article_common_status"
+    t.enum "status_services", default: "wait", null: false, enum_type: "project_article_common_status"
     t.index ["project_id", "article_hash"], name: "index_project_articles_on_project_id_and_article_hash", unique: true
     t.index ["project_id"], name: "index_project_articles_on_project_id"
+  end
+
+  create_table "project_services", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "title", null: false
+    t.string "description", null: false
+    t.string "link", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_services_on_project_id"
+    t.index ["uuid"], name: "index_project_services_on_uuid"
   end
 
   create_table "project_urls", force: :cascade do |t|
@@ -222,9 +251,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_03_115500) do
   end
 
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_article_services", "project_articles", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_article_services", "project_services", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_statistics", "project_articles", on_update: :cascade
   add_foreign_key "project_article_statistics", "project_urls", on_update: :cascade
+  add_foreign_key "project_article_summaries", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_articles", "projects"
+  add_foreign_key "project_services", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_urls", "project_articles", on_update: :cascade
   add_foreign_key "project_urls", "projects", on_update: :cascade
   add_foreign_key "projects", "users", on_update: :cascade

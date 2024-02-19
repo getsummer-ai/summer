@@ -33,16 +33,13 @@ end
 #  article          :text             not null
 #  article_hash     :string           not null
 #  image_url        :text
+#  info             :jsonb
 #  last_modified_at :datetime
 #  last_scraped_at  :datetime
-#  llm              :enum
-#  service_info     :jsonb
-#  status           :enum             default("in_queue"), not null
-#  summarized_at    :datetime
-#  summary          :text
+#  status_services  :enum             default("wait"), not null
+#  status_summary   :enum             default("wait"), not null
 #  title            :text
-#  tokens_in_count  :integer          default(0), not null
-#  tokens_out_count :integer          default(0), not null
+#  tokens_count     :integer          default(0), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  project_id       :bigint           not null

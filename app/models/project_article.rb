@@ -4,25 +4,37 @@ class ProjectArticle < ApplicationRecord
   include Trackable
   validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
 
-  enum status: {
-         in_queue: 'in_queue',
-         processing: 'processing',
-         summarized: 'summarized',
+  enum status_summary: {
          error: 'error',
          skipped: 'skipped',
-       }, _prefix: true
-  enum llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
+         wait: 'wait',
+         processing: 'processing',
+         summarized: 'completed',
+         static: 'static',
+       },
+       _prefix: true
+
+  enum status_services: {
+         error: 'error',
+         skipped: 'skipped',
+         wait: 'wait',
+         processing: 'processing',
+         summarized: 'completed',
+         static: 'static',
+       },
+       _prefix: true
 
   belongs_to :project
   has_many :project_urls, dependent: :destroy
   has_many :project_article_statistics, dependent: :destroy
+  has_many :project_article_summaries, dependent: :destroy
 
   MINIMAL_COLUMNS = %w[id title status article_hash].freeze
-  SUMMARY_COLUMNS = %w[id project_id title article_hash summary status].freeze
+  SUMMARY_COLUMNS = %w[id project_id title article_hash status_summary].freeze
   scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 
-  non_trackable_params(%i[summary article])
+  non_trackable_params(%i[article])
 
   def to_param
     encrypted_id
@@ -46,16 +58,13 @@ end
 #  article          :text             not null
 #  article_hash     :string           not null
 #  image_url        :text
+#  info             :jsonb
 #  last_modified_at :datetime
 #  last_scraped_at  :datetime
-#  llm              :enum
-#  service_info     :jsonb
-#  status           :enum             default("in_queue"), not null
-#  summarized_at    :datetime
-#  summary          :text
+#  status_services  :enum             default("wait"), not null
+#  status_summary   :enum             default("wait"), not null
 #  title            :text
-#  tokens_in_count  :integer          default(0), not null
-#  tokens_out_count :integer          default(0), not null
+#  tokens_count     :integer          default(0), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
 #  project_id       :bigint           not null

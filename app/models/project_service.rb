@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+class ProjectService < ApplicationRecord
+  belongs_to :project
+end
+
+# == Schema Information
+#
+# Table name: project_services
+#
+#  id          :bigint           not null, primary key
+#  description :string           not null
+#  link        :string           not null
+#  title       :string           not null
+#  uuid        :uuid             not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  project_id  :bigint           not null
+#
+# Indexes
+#
+#  index_project_services_on_project_id  (project_id)
+#  index_project_services_on_uuid        (uuid)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (project_id => projects.id) ON DELETE => cascade ON UPDATE => cascade
+#
