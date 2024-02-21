@@ -42,7 +42,7 @@ module Private
           article.summary = 'Article Summary'
           article.article = 'Article Content'
           article.article_hash = 'Article Content'
-          article.is_summarized = true
+          # article.is_summarized = true
         end
     end
 

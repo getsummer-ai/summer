@@ -4,13 +4,13 @@ class AdminStatisticsViewModel
   def initialize
     current_time = Time.zone.now
     @article_calculation = {
-      in_queue: ProjectArticle.status_in_queue.async_count,
-      processing: ProjectArticle.status_processing.async_count,
-      summarized: ProjectArticle.status_summarized.async_count,
-      tokens_in_count: ProjectArticle.status_summarized.async_sum(:tokens_in_count),
-      tokens_out_count: ProjectArticle.status_summarized.async_sum(:tokens_out_count),
-      skipped: ProjectArticle.status_skipped.async_count,
-      error: ProjectArticle.status_error.async_count,
+      wait: ProjectArticle.status_summary_wait.async_count,
+      processing: ProjectArticle.status_summary_processing.async_count,
+      completed: ProjectArticle.status_summary_completed.async_count,
+      tokens_count: ProjectArticle.status_summary_completed.async_sum(:tokens_count),
+      # tokens_out_count: ProjectArticle.status_summary_completed.async_sum(:tokens_count),
+      skipped: ProjectArticle.status_summary_skipped.async_count,
+      error: ProjectArticle.status_summary_error.async_count,
     }
 
     @users_today = User.where(created_at: current_time.all_day).async_count

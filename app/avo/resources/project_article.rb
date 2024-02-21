@@ -22,24 +22,24 @@ module Avo
         field :article_hash, as: :text, hide_on: [:index]
         field :title, as: :text
         field :article, as: :textarea
-        field :status,
+        field :status_summary,
               as: :badge,
               options: {
-                success: :summarized,
+                success: :completed,
                 warning: :processing,
                 danger: :error,
                 neutral: :skipped,
               }
 
-        field :tokens_in_count, as: :number, sortable: true
-        field :tokens_out_count, as: :number, sortable: true
-        field :llm, as: :select, enum: ::ProjectArticle.llms, hide_on: [:index], show_on: :preview
-        field :service_info, as: :key_value
+        field :tokens_count, as: :number, sortable: true
+        # field :tokens_out_count, as: :number, sortable: true
+        # field :llm, as: :select, enum: ::ProjectArticle.llms, hide_on: [:index], show_on: :preview
+        field :info, as: :key_value
         field :image_url, as: :textarea
         field :last_modified_at, as: :date_time, hide_on: [:index], show_on: :preview
         field :last_scraped_at, as: :date_time, hide_on: [:index], show_on: :preview
-        field :summarized_at, as: :date_time, hide_on: [:index], show_on: :preview
-        field :summary, as: :markdown
+        # field :summarized_at, as: :date_time, hide_on: [:index], show_on: :preview
+        # field :summary, as: :markdown
         field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
 
         field :events, as: :has_many, resource: Avo::Resources::Event

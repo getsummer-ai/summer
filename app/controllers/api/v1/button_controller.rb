@@ -20,12 +20,11 @@ module Api
 
         @article = form.find_or_create
         return head :bad_request if @article.nil?
-        return head :not_found if @article.status_skipped? || @article.status_error?
+        return head :not_found if @article.status_summary_skipped? || @article.status_summary_error?
 
         @url_id = form.project_url.id
         @combined_id = BasicEncrypting.encode_array([@article.id, @url_id, 4.hours.from_now.utc.to_i])
         update_statistics @url_id, @article.id
-        # render 'init', status: :ok
       end
 
       private

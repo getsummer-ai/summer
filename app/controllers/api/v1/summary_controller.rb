@@ -12,10 +12,10 @@ module Api
       wrap_parameters false
 
       def stream
-        SummarizeArticleJob.perform_later(article.id) if article.status_in_queue?
+        SummarizeArticleJob.perform_later(article.id) if article.status_summary_wait?
         response.headers['Content-Type'] = 'text/event-stream'
         sse = SSE.new(response.stream)
-        return sse.write(article.summary) if article.status_summarized?
+        return sse.write(article.project_article_summaries.last.summary) if article.status_summary_completed?
 
         subscribe_and_send_from_stream(sse, article)
       ensure
@@ -29,8 +29,8 @@ module Api
         @article ||=
           current_project
             .project_articles
-            .where(status: %i[in_queue processing summarized])
-            .summary_columns
+            .where(status_summary: %i[wait processing completed])
+            .only_required_columns
             .find(@article_id)
       end
 
@@ -43,7 +43,7 @@ module Api
         redis_buffer = Redis.new
         subscribe_on_channel(sse, redis_subscriber, redis_buffer, channel_name)
       rescue Redis::TimeoutError => e
-        sse.write(article.summary) if article.reload.status_summarized?
+        sse.write(article.summary) if article.reload.status_summary
         Rails.logger.error e.message
         raise
       ensure

@@ -9,7 +9,7 @@ class ProjectArticle < ApplicationRecord
          skipped: 'skipped',
          wait: 'wait',
          processing: 'processing',
-         summarized: 'completed',
+         completed: 'completed',
          static: 'static',
        },
        _prefix: true
@@ -19,7 +19,7 @@ class ProjectArticle < ApplicationRecord
          skipped: 'skipped',
          wait: 'wait',
          processing: 'processing',
-         summarized: 'completed',
+         completed: 'completed',
          static: 'static',
        },
        _prefix: true
@@ -28,13 +28,15 @@ class ProjectArticle < ApplicationRecord
   has_many :project_urls, dependent: :destroy
   has_many :project_article_statistics, dependent: :destroy
   has_many :project_article_summaries, dependent: :destroy
-
-  MINIMAL_COLUMNS = %w[id title status article_hash].freeze
-  SUMMARY_COLUMNS = %w[id project_id title article_hash status_summary].freeze
-  scope :summary_columns, -> { select(SUMMARY_COLUMNS) }
+  MINIMAL_COLUMNS = %w[id project_id title status_summary article_hash].freeze
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 
   non_trackable_params(%i[article])
+
+  store :info,
+        accessors: %i[summary services],
+        coder: JsonbSerializer,
+        prefix: true
 
   def to_param
     encrypted_id

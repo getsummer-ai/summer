@@ -50,13 +50,14 @@ class ProjectArticleForm
       .project_articles
       .where(article_hash:)
       .first_or_create(
+        title: scraped_article.title,
         article_hash:,
         article: scraped_article.content,
-        title: scraped_article.title,
+        tokens_count: tokens,
         last_scraped_at: Time.now.utc,
         image_url: scraped_article.image_url,
-        status: tokens > 500 ? 'in_queue' : 'skipped',
-        tokens_in_count: tokens,
+        status_summary: tokens > 500 ? 'wait' : 'skipped',
+        status_services: 'wait',
       )
   end
 
