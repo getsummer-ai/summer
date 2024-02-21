@@ -8,17 +8,15 @@ class Event < ApplicationRecord
   belongs_to :author, polymorphic: true, optional: true
   belongs_to :project
 
-  store :details,
-        accessors: %i[changes snapshot],
-        coder: JsonbSerializer
+  store :details, accessors: %i[changes snapshot info], coder: JsonbSerializer
 
   # serialize :details, JsonbSerializer
 
-  scope :logs, -> { where(category: "log") }
+  scope :logs, -> { where(category: 'log') }
 
   after_initialize do
     self.category ||= 'log'
-    self.changes  ||= {}
+    self.changes ||= {}
   end
 
   before_create :set_project_id

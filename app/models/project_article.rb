@@ -28,15 +28,17 @@ class ProjectArticle < ApplicationRecord
   has_many :project_urls, dependent: :destroy
   has_many :project_article_statistics, dependent: :destroy
   has_many :project_article_summaries, dependent: :destroy
+  has_one :last_summary,
+          -> { order id: :desc },
+          class_name: 'ProjectArticleSummary',
+          foreign_key: :project_article_id
+
   MINIMAL_COLUMNS = %w[id project_id title status_summary article_hash].freeze
   scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
 
   non_trackable_params(%i[article])
 
-  store :info,
-        accessors: %i[summary services],
-        coder: JsonbSerializer,
-        prefix: true
+  store :info, accessors: %i[summary services], coder: JsonbSerializer, prefix: true
 
   def to_param
     encrypted_id
@@ -49,6 +51,10 @@ class ProjectArticle < ApplicationRecord
 
   def redis_name
     "article-#{article_hash}"
+  end
+
+  def log_info(source, info = {})
+    Event.create(category: 'log', subcategory: 'info', trackable: self, project_id:, source:, info:)
   end
 end
 

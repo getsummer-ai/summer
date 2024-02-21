@@ -8,7 +8,7 @@ const observer = new MutationObserver(function() {
   if (location.href !== previousUrl) {
     console.log('mutation init app', location.href)
     previousUrl = location.href;
-    initApp(projectId, previousUrl);
+    initApp(projectId, previousUrl, 1000);
   }
 });
 

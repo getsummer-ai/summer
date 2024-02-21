@@ -21,13 +21,7 @@ class SummarizeArticleJob < ApplicationJob
     channel_name = model.redis_name
     redis = Redis.new
     begin
-      time =
-        summarize_article_and_get_time(
-          redis,
-          channel_name,
-          model.article,
-          model.project.default_llm,
-        )
+      time = summarize_article_and_get_time(redis, channel_name, model)
       update_model_with_success_info! model, time, redis.get(channel_name)
     rescue StandardError => e
       update_model_with_error_info! model, e
@@ -46,33 +40,26 @@ class SummarizeArticleJob < ApplicationJob
   # @param [String] summary
   def update_model_with_success_info!(model, time, summary)
     tokens_count = LanguageModelTools.estimate_max_tokens(summary)
-    created_at = Time.now.utc
-    info = { summary: { time: } }
-    model.update!({ info:, status_summary: :completed })
-
-    model.project_article_summaries.create!(
-      tokens_count:,
-      llm: model.project.default_llm,
-      created_at:,
-      summary:,
-      info: info[:summary],
-    )
+    info = { time: }
+    llm = model.project.default_llm
+    ProjectArticle.transaction do
+      model.update!(info_summary: info, status_summary: :completed)
+      model.project_article_summaries.create!(tokens_count:, llm:, summary:, info:)
+    end
   end
 
   # @param [ProjectArticle] model
   # @param [StandardError] error
   def update_model_with_error_info!(model, error)
-    model.info_summary = { error: error.to_s, backtrace: error.backtrace&.grep(%r{/app/})&.join("\n") }
-    model.status_summary = :error
-    model.save!
+    info_summary = { error: error.to_s, backtrace: error.backtrace&.grep(%r{/app/})&.join("\n") }
+    model.update!(info_summary:, status_summary: :error)
   end
 
   # @param [Redis] redis
   # @param [String] channel_name
-  # @param [String] article
-  # @param [Symbol] llm
+  # @param [ProjectArticle] model
   # @return [Complex]
-  def summarize_article_and_get_time(redis, channel_name, article, llm)
+  def summarize_article_and_get_time(redis, channel_name, model)
     stream_func =
       proc do |chunk, _bytesize|
         content = chunk.dig('choices', 0, 'delta', 'content')
@@ -80,7 +67,10 @@ class SummarizeArticleJob < ApplicationJob
         redis.append(channel_name, content)
         redis.publish(channel_name, content)
       end
-    measure { ask_gpt_to_summarize(PREFIX + article, llm, stream_func) }
+
+    measure(model) do
+      ask_gpt_to_summarize(PREFIX + model.article, model.project.default_llm, stream_func)
+    end
   end
 
   # @return [ProjectArticle]
@@ -91,11 +81,18 @@ class SummarizeArticleJob < ApplicationJob
     model
   end
 
-  def measure
+  # @param [ProjectArticle] model
+  def measure(model)
+    model.log_info('OpenAI - Begins', type: 'summarize')
     starting = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     yield
     ending = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    ending - starting
+    time = ending - starting
+    model.log_info('OpenAI - Ends Successfully', type: 'summarize', time:)
+    time
+  rescue StandardError => e
+    model.log_info('OpenAI - Ends Unsuccessfully', type: 'summarize', error: e.to_s)
+    raise
   end
 
   # @param [String] message
