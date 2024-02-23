@@ -23,7 +23,7 @@ class ArticleScrapperService
   # @return [ArticleScrapperService]
   def scrape
     response =
-      Faraday.get(@url, { 'User-Agent': USER_AGENT }) do |req|
+      Faraday.get(@url) do |req|
         req.options.timeout = 3
         req.headers['User-Agent'] = USER_AGENT
       end
