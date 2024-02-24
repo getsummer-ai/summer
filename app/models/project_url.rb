@@ -5,6 +5,11 @@ class ProjectUrl < ApplicationRecord
   belongs_to :project
   belongs_to :project_article
 
+  belongs_to :article_only_title,
+             -> { select("project_articles.id, project_articles.title") },
+             class_name: "ProjectArticle",
+             foreign_key: "project_article_id"
+
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
   }

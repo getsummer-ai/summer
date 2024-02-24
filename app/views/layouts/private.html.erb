@@ -43,15 +43,12 @@
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
     <div class="p-10 rounded-2xl bg-white grow">
-      <div class="container mx-auto max-w-[768px]">
-        <%= render 'layouts/shared/header' %>
-      </div>
       <div class="container mx-auto max-w-[768px] pb-10">
         <% if content_for?(:breadcrumbs) %>
           <div class="mt-2"><%= yield(:breadcrumbs) %></div>
         <% end %>
-        <div class="mt-4"><%= render 'layouts/shared/alerts' %></div>
-        <div class="mt-8"><%= yield %></div>
+        <%= render 'layouts/shared/alerts' %>
+        <div><%= yield %></div>
       </div>
     </div>
   </div>

@@ -11,5 +11,4 @@ class ApplicationController < ActionController::Base
     u.update_attribute(:locale, I18n.locale) if u.present? && u.locale != I18n.locale
     session[:locale] = I18n.locale if session[:locale] != I18n.locale
   end
-
 end

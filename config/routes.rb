@@ -39,7 +39,7 @@ Rails.application.routes.draw do
         member do
           get :setup
           get :settings
-          get :statistics
+          get :pages
           get :knowledge
         end
       end

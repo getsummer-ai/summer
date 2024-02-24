@@ -1,0 +1,16 @@
+<div class="py-4 border-b border-primary flex flex-row justify-between <%=@has_top_border ? 'border-t' : '' %>">
+  <div><%= @project_url.article_only_title.title %></div>
+  <div class="flex flex-row">
+    <span>
+      <img src="<%= vite_asset_path('assets/icons/eye.svg') %>" class="summer-icon-sm" />
+      15,652
+    </span>
+    <span class="ml-4">
+      <img src="<%= vite_asset_path('assets/icons/click.svg') %>" class="summer-icon-sm" />
+      8,423
+    </span>
+    <span class="ml-4">
+      <input type="checkbox" class="toggle" checked />
+    </span>
+  </div>
+</div>

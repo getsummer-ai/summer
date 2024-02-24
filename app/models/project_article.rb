@@ -33,8 +33,7 @@ class ProjectArticle < ApplicationRecord
           class_name: 'ProjectArticleSummary',
           foreign_key: :project_article_id
 
-  MINIMAL_COLUMNS = %w[id project_id title status_summary article_hash].freeze
-  scope :only_required_columns, -> { select(MINIMAL_COLUMNS) }
+  scope :only_required_columns, -> { select(%w[id project_id title status_summary article_hash]) }
 
   non_trackable_params(%i[article])
 

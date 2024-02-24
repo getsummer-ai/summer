@@ -24,3 +24,6 @@
 .summer-icon {
   @apply w-6 h-6 inline-block align-middle;
 }
+.summer-icon-sm {
+  @apply w-5 h-5 inline-block align-middle;
+}

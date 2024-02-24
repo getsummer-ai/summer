@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Private
   class ProjectsController < PrivateController
-    before_action :find_project, only: %i[show setup settings knowledge statistics edit update destroy]
+    before_action :find_project, only: %i[show setup settings knowledge pages edit update destroy]
     # GET /projects or /projects.json
     # def index
     #   @projects = current_user.projects.all
@@ -19,7 +19,8 @@ module Private
     def setup
     end
 
-    def statistics
+    def pages
+      @urls = @current_project.project_urls.includes(:article_only_title)
     end
 
     def knowledge
