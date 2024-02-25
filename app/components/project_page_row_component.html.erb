@@ -1,4 +1,7 @@
-<div class="py-4 border-b border-primary flex flex-row justify-between <%=@has_top_border ? 'border-t' : '' %>">
+<div
+  id="<%= dom_id(@project_url) %>"
+  class="py-4 border-primary flex flex-row justify-between border-t"
+>
   <div><%= @project_url.article_only_title.title %></div>
   <div class="flex flex-row">
     <span>
@@ -10,7 +13,11 @@
       8,423
     </span>
     <span class="ml-4">
-      <input type="checkbox" class="toggle" checked />
+      <%= form_with model: @project_url,
+                    url: project_page_path(@project, @project_url),
+                    method: :patch do |form| %>
+        <%= form.check_box :is_accessible, class: 'toggle', onchange: 'this.form.requestSubmit()' %>
+      <% end %>
     </span>
   </div>
 </div>

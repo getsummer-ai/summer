@@ -13,6 +13,10 @@ class ProjectUrl < ApplicationRecord
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
   }
+
+  # def to_param
+  #   url_hash
+  # end
 end
 
 # == Schema Information

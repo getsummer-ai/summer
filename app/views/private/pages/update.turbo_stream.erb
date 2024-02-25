@@ -1,0 +1,4 @@
+<%= turbo_stream.replace @current_url do %>
+  <%= render ProjectPageRowComponent.new(project: @current_project, project_url: @current_url) %>
+<% end %>
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

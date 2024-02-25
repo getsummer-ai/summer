@@ -39,12 +39,12 @@ Rails.application.routes.draw do
         member do
           get :setup
           get :settings
-          get :pages
           get :knowledge
         end
       end
       resources :projects, only: [] do
         resources :articles, only: %i[index show edit update]
+        resources :pages, only: %i[index update]
       end
     end
   end
