@@ -6,11 +6,11 @@
   <div class="flex flex-row">
     <span>
       <img src="<%= vite_asset_path('assets/icons/eye.svg') %>" class="summer-icon-sm" />
-      15,652
+      <%=@project_url.statistics_by_total&.views || 0 %>
     </span>
     <span class="ml-4">
       <img src="<%= vite_asset_path('assets/icons/click.svg') %>" class="summer-icon-sm" />
-      8,423
+      <%=@project_url.statistics_by_total&.clicks || 0 %>
     </span>
     <span class="ml-4">
       <%= form_with model: @project_url,

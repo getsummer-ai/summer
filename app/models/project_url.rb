@@ -10,6 +10,8 @@ class ProjectUrl < ApplicationRecord
              class_name: "ProjectArticle",
              foreign_key: "project_article_id"
 
+  has_one :statistics_by_total, class_name: "ProjectUrlStatisticsByTotal"
+
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
   }

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_19_144000) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -262,4 +262,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_19_144000) do
   add_foreign_key "project_urls", "projects", on_update: :cascade
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
+
+  create_view "project_url_statistics_by_totals", sql_definition: <<-SQL
+      SELECT pas.project_url_id,
+      (sum(pas.clicks))::bigint AS clicks,
+      (sum(pas.views))::bigint AS views
+     FROM project_article_statistics pas
+    GROUP BY pas.project_url_id;
+  SQL
 end

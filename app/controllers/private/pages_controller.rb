@@ -12,14 +12,14 @@ module Private
     end
 
     def index
-      @urls = @current_project.project_urls.includes(:article_only_title)
+      @urls = @current_project.project_urls.includes(:article_only_title, :statistics_by_total)
     end
 
     def update
       if @current_url.update(url_params)
         respond_to do |format|
-          format.html { redirect_to project_pages_path, notice: "URL was successfully updated" }
-          format.turbo_stream { flash.now[:notice] = "URL was successfully updated" }
+          format.html { redirect_to project_pages_path, notice: 'URL was successfully updated' }
+          format.turbo_stream { flash.now[:notice] = 'URL was successfully updated' }
         end
       else
         redirect_to project_pages_path, error: "URL wasn't updated."
