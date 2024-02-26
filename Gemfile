@@ -61,6 +61,7 @@ gem 'vite_rails'
 # Use Sass to process CSS
 # gem "sassc-rails"
 gem 'dotenv-rails'
+gem "scenic"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
