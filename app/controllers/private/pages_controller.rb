@@ -12,7 +12,10 @@ module Private
     end
 
     def index
-      @urls = @current_project.project_urls.includes(:article_only_title, :statistics_by_total)
+      @urls = @current_project.project_urls
+              .preload(:article_only_title)
+              .eager_load(:statistics_by_total)
+              .order(ProjectUrlStatisticsByTotal.arel_table[:views].asc)
     end
 
     def update
