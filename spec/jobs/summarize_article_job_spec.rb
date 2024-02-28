@@ -11,7 +11,7 @@ describe SummarizeArticleJob do
       confirmed_at: Time.zone.now
     )
     project = user.projects.create(name: 'Test Project', domain: 'test.com')
-    article = project.project_articles.create(
+    article = project.articles.create(
       article_hash: '354fdebd51e8fbdfd462dd604e00224b',
       article: 'On the night of 31 December and the morning of 1 January, people in many countries all over...',
       title: 'New Year celebrations',
@@ -47,7 +47,7 @@ describe SummarizeArticleJob do
       )
       expect { subject }.to change { article.reload.status_summary }.from('wait').to('completed')
       expect(article.info_summary['time']).to be_a(Float)
-      expect(article.project_article_summaries.count).to eq 1
+      expect(article.summaries.count).to eq 1
       expect(article.last_summary.summary).to eq " New Year's traditions..."
       expect(article.events.order(id: :asc).pluck(:source)).to \
         eq ['SummarizeArticleJob', 'OpenAI - Begins', 'OpenAI - Ends Successfully', 'SummarizeArticleJob']

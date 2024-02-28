@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class AvoProjectUrl < ProjectUrl
+class AvoProjectPage < ProjectPage
   has_many :events, class_name: 'AvoEvent', as: :trackable, dependent: :destroy
   belongs_to :project, class_name: 'AvoProject'
   belongs_to :project_article, class_name: 'AvoProjectArticle'
@@ -27,7 +27,7 @@ end
 
 # == Schema Information
 #
-# Table name: project_urls
+# Table name: project_pages
 #
 #  id                 :bigint           not null, primary key
 #  is_accessible      :boolean          default(TRUE), not null
@@ -40,9 +40,9 @@ end
 #
 # Indexes
 #
-#  index_project_urls_on_project_article_id       (project_article_id)
-#  index_project_urls_on_project_id               (project_id)
-#  index_project_urls_on_project_id_and_url_hash  (project_id,url_hash) UNIQUE
+#  index_project_pages_on_project_article_id       (project_article_id)
+#  index_project_pages_on_project_id               (project_id)
+#  index_project_pages_on_project_id_and_url_hash  (project_id,url_hash) UNIQUE
 #
 # Foreign Keys
 #

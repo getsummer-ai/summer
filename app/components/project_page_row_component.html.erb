@@ -1,20 +1,20 @@
 <div
-  id="<%= dom_id(@project_url) %>"
+  id="<%= dom_id(@page) %>"
   class="py-4 border-primary flex flex-row justify-between border-t"
 >
-  <div><%= @project_url.article_only_title.title %></div>
+  <div><%= @page.article_only_title.title %></div>
   <div class="flex flex-row">
     <span>
       <img src="<%= vite_asset_path('assets/icons/eye.svg') %>" class="summer-icon-sm" />
-      <%=@project_url.statistics_by_total&.views || 0 %>
+      <%=@page.statistics_by_total&.views || 0 %>
     </span>
     <span class="ml-4">
       <img src="<%= vite_asset_path('assets/icons/click.svg') %>" class="summer-icon-sm" />
-      <%=@project_url.statistics_by_total&.clicks || 0 %>
+      <%=@page.statistics_by_total&.clicks || 0 %>
     </span>
     <span class="ml-4">
-      <%= form_with model: @project_url,
-                    url: project_page_path(@project, @project_url),
+      <%= form_with model: @page,
+                    url: project_page_path(@project, @page),
                     method: :patch do |form| %>
         <%= form.check_box :is_accessible, class: 'toggle', onchange: 'this.form.requestSubmit()' %>
       <% end %>

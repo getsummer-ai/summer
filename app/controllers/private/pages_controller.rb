@@ -12,14 +12,15 @@ module Private
     end
 
     def index
-      @urls = @current_project.project_urls
+      @pages = @current_project.pages
               .preload(:article_only_title)
               .eager_load(:statistics_by_total)
-              .order(ProjectUrlStatisticsByTotal.arel_table[:views].asc)
+              .order(ProjectStatisticsByTotal.arel_table[:views].asc)
+              .to_a
     end
 
     def update
-      if @current_url.update(url_params)
+      if @project_page.update(url_params)
         respond_to do |format|
           format.html { redirect_to project_pages_path, notice: 'URL was successfully updated' }
           format.turbo_stream { flash.now[:notice] = 'URL was successfully updated' }
@@ -32,12 +33,12 @@ module Private
     private
 
     def set_url
-      @current_url = @current_project.project_urls.find(params[:id])
+      @project_page = @current_project.pages.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def url_params
-      params.fetch(:project_url, {}).permit(:is_accessible)
+      params.fetch(:project_page, {}).permit(:is_accessible)
     end
   end
 end

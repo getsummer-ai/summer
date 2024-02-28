@@ -36,7 +36,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     end
     add_index :project_articles, %i[project_id article_hash], unique: true
 
-    create_table :project_urls do |t|
+    create_table :project_pages do |t|
       t.references :project, null: false, index: true, foreign_key: { on_update: :cascade }
       t.string :url_hash, null: false
       t.string :url, null: false
@@ -44,20 +44,21 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
       t.timestamps
     end
-    add_index :project_urls, %i[project_id url_hash], unique: true
+    add_index :project_pages, %i[project_id url_hash], unique: true
 
-    create_table :project_article_statistics do |t|
-      t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
-      t.references :project_url, null: false, index: true, foreign_key: { on_update: :cascade }
+    create_table :project_statistics do |t|
+      t.references :trackable, polymorphic: true, index: true
+      # t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
+      t.references :project, null: false, foreign_key: { on_update: :cascade }
       t.date :date, null: false
       t.integer :hour, limit: 1, null: false
       t.bigint :views, default: 0, null: false
       t.bigint :clicks, default: 0, null: false
       t.timestamps
     end
-    add_index :project_article_statistics,
-              %i[project_article_id project_url_id date hour],
+    add_index :project_statistics,
+              %i[project_id trackable_type trackable_id date hour],
               unique: true
-    add_index :project_article_statistics, :date
+    add_index :project_statistics, [:project_id, :date]
   end
 end

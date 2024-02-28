@@ -14,10 +14,10 @@ class Project < ApplicationRecord
         prefix: true
 
   belongs_to :user
-  has_many :project_urls, dependent: :destroy
-  has_many :project_articles, dependent: :destroy
-  has_many :project_article_statistics, through: :project_articles
-  has_many :all_events, class_name: 'Event', foreign_key: 'project_id'
+  has_many :pages, dependent: :destroy, class_name: 'ProjectPage', foreign_key: 'project_id'
+  has_many :articles, dependent: :destroy, class_name: 'ProjectArticle', foreign_key: 'project_id'
+  has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
+  has_many :all_events, class_name: 'Event'
 
   validates :name,
             presence: true,

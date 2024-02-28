@@ -3,7 +3,7 @@
 class ProjectArticleSummary < ApplicationRecord
   enum llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
-  belongs_to :project_article
+  belongs_to :article, class_name: 'ProjectArticle', foreign_key: :project_article_id
 end
 
 # == Schema Information

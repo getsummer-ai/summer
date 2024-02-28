@@ -25,9 +25,9 @@ class ProjectArticle < ApplicationRecord
        _prefix: true
 
   belongs_to :project
-  has_many :project_urls, dependent: :destroy
-  has_many :project_article_statistics, dependent: :destroy
-  has_many :project_article_summaries, dependent: :destroy
+  has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
+  has_many :statistics, as: :trackable, class_name: 'ProjectStatistic', dependent: :destroy
+  has_many :summaries, dependent: :destroy, class_name: 'ProjectArticleSummary'
   has_one :last_summary,
           -> { order id: :desc },
           class_name: 'ProjectArticleSummary',

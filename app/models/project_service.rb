@@ -2,6 +2,11 @@
 
 class ProjectService < ApplicationRecord
   belongs_to :project
+
+  has_many :statistics, as: :trackable, class_name: "ProjectStatistic", dependent: :destroy
+  has_one :statistics_by_total,
+          class_name: "ProjectStatisticsByTotal",
+          as: :trackable
 end
 
 # == Schema Information

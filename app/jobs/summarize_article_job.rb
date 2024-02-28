@@ -44,7 +44,7 @@ class SummarizeArticleJob < ApplicationJob
     llm = model.project.default_llm
     ProjectArticle.transaction do
       model.update!(info_summary: info, status_summary: :completed)
-      model.project_article_summaries.create!(tokens_count:, llm:, summary:, info:)
+      model.summaries.create!(tokens_count:, llm:, summary:, info:)
     end
   end
 

@@ -3,7 +3,7 @@
 class AvoProjectArticle < ProjectArticle
   has_many :events, class_name: 'AvoEvent', as: :trackable, dependent: :destroy
   belongs_to :project, class_name: 'AvoProject'
-  has_many :project_urls, class_name: 'AvoProjectUrl', foreign_key: 'project_article_id'
+  has_many :project_pages, class_name: 'AvoProjectPage', foreign_key: 'project_article_id'
 
   before_destroy :stop_destroy
 

@@ -22,15 +22,15 @@ module Api
         return head :bad_request if @article.nil?
         return head :not_found if @article.status_summary_skipped? || @article.status_summary_error?
 
-        @url_id = form.project_url.id
-        @combined_id = BasicEncrypting.encode_array([@article.id, @url_id, 4.hours.from_now.utc.to_i])
-        update_statistics @url_id, @article.id
+        @combined_id = BasicEncrypting.encode_array([form.project_page.id, 4.hours.from_now.utc.to_i])
+        update_statistics form.project_page
       end
 
       private
 
-      def update_statistics(url_id, article_id)
-        ArticleStatisticService.new(url_id:, article_id:).view!
+      # @param [ProjectPage] project_page
+      def update_statistics(project_page)
+        ArticleStatisticService.new(project: @current_project, trackable: project_page).view!
       end
 
       def validate_init_request

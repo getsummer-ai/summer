@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
-class ProjectUrl < ApplicationRecord
+class ProjectPage < ApplicationRecord
   include Trackable
   belongs_to :project
-  belongs_to :project_article
+  belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
 
   belongs_to :article_only_title,
              -> { select("project_articles.id, project_articles.title") },
              class_name: "ProjectArticle",
-             foreign_key: "project_article_id"
+             foreign_key: "project_article_id",
+             inverse_of: :pages
 
-  has_one :statistics_by_total, class_name: "ProjectUrlStatisticsByTotal"
+  has_one :statistics_by_total,
+          class_name: "ProjectStatisticsByTotal",
+          as: :trackable
 
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
@@ -23,7 +26,7 @@ end
 
 # == Schema Information
 #
-# Table name: project_urls
+# Table name: project_pages
 #
 #  id                 :bigint           not null, primary key
 #  is_accessible      :boolean          default(TRUE), not null
@@ -36,9 +39,9 @@ end
 #
 # Indexes
 #
-#  index_project_urls_on_project_article_id       (project_article_id)
-#  index_project_urls_on_project_id               (project_id)
-#  index_project_urls_on_project_id_and_url_hash  (project_id,url_hash) UNIQUE
+#  index_project_pages_on_project_article_id       (project_article_id)
+#  index_project_pages_on_project_id               (project_id)
+#  index_project_pages_on_project_id_and_url_hash  (project_id,url_hash) UNIQUE
 #
 # Foreign Keys
 #

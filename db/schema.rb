@@ -127,21 +127,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.index ["project_service_id"], name: "index_project_article_services_on_project_service_id"
   end
 
-  create_table "project_article_statistics", force: :cascade do |t|
-    t.bigint "project_article_id", null: false
-    t.bigint "project_url_id", null: false
-    t.date "date", null: false
-    t.integer "hour", limit: 2, null: false
-    t.bigint "views", default: 0, null: false
-    t.bigint "clicks", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["date"], name: "index_project_article_statistics_on_date"
-    t.index ["project_article_id", "project_url_id", "date", "hour"], name: "idx_on_project_article_id_project_url_id_date_hour_aee771512a", unique: true
-    t.index ["project_article_id"], name: "index_project_article_statistics_on_project_article_id"
-    t.index ["project_url_id"], name: "index_project_article_statistics_on_project_url_id"
-  end
-
   create_table "project_article_summaries", force: :cascade do |t|
     t.bigint "project_article_id", null: false
     t.jsonb "info"
@@ -171,6 +156,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.index ["project_id"], name: "index_project_articles_on_project_id"
   end
 
+  create_table "project_pages", force: :cascade do |t|
+    t.bigint "project_id", null: false
+    t.string "url_hash", null: false
+    t.string "url", null: false
+    t.boolean "is_accessible", default: true, null: false
+    t.bigint "project_article_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_article_id"], name: "index_project_pages_on_project_article_id"
+    t.index ["project_id", "url_hash"], name: "index_project_pages_on_project_id_and_url_hash", unique: true
+    t.index ["project_id"], name: "index_project_pages_on_project_id"
+  end
+
   create_table "project_services", force: :cascade do |t|
     t.bigint "project_id", null: false
     t.string "title", null: false
@@ -183,17 +181,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.index ["uuid"], name: "index_project_services_on_uuid"
   end
 
-  create_table "project_urls", force: :cascade do |t|
+  create_table "project_statistics", force: :cascade do |t|
+    t.string "trackable_type"
+    t.bigint "trackable_id"
     t.bigint "project_id", null: false
-    t.string "url_hash", null: false
-    t.string "url", null: false
-    t.boolean "is_accessible", default: true, null: false
-    t.bigint "project_article_id", null: false
+    t.date "date", null: false
+    t.integer "hour", limit: 2, null: false
+    t.bigint "views", default: 0, null: false
+    t.bigint "clicks", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["project_article_id"], name: "index_project_urls_on_project_article_id"
-    t.index ["project_id", "url_hash"], name: "index_project_urls_on_project_id_and_url_hash", unique: true
-    t.index ["project_id"], name: "index_project_urls_on_project_id"
+    t.index ["project_id", "date"], name: "index_project_statistics_on_project_id_and_date"
+    t.index ["project_id", "trackable_type", "trackable_id", "date", "hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__92da09a367", unique: true
+    t.index ["project_id"], name: "index_project_statistics_on_project_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_project_statistics_on_trackable"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -253,21 +254,22 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_services", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_services", "project_services", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "project_article_statistics", "project_articles", on_update: :cascade
-  add_foreign_key "project_article_statistics", "project_urls", on_update: :cascade
   add_foreign_key "project_article_summaries", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_articles", "projects"
+  add_foreign_key "project_pages", "project_articles", on_update: :cascade
+  add_foreign_key "project_pages", "projects", on_update: :cascade
   add_foreign_key "project_services", "projects", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "project_urls", "project_articles", on_update: :cascade
-  add_foreign_key "project_urls", "projects", on_update: :cascade
+  add_foreign_key "project_statistics", "projects", on_update: :cascade
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 
-  create_view "project_url_statistics_by_totals", sql_definition: <<-SQL
-      SELECT pas.project_url_id,
-      (sum(pas.clicks))::bigint AS clicks,
-      (sum(pas.views))::bigint AS views
-     FROM project_article_statistics pas
-    GROUP BY pas.project_url_id;
+  create_view "project_statistics_by_totals", sql_definition: <<-SQL
+      SELECT ps.project_id,
+      ps.trackable_type,
+      ps.trackable_id,
+      (sum(ps.clicks))::bigint AS clicks,
+      (sum(ps.views))::bigint AS views
+     FROM project_statistics ps
+    GROUP BY ps.project_id, ps.trackable_type, ps.trackable_id;
   SQL
 end

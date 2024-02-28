@@ -7,31 +7,30 @@ module Api
     class SummaryController < Api::V1::ApplicationController
       include ActionController::Live
       before_action :extract_data_from_id_param
-      after_action :update_statistics
 
       wrap_parameters false
 
       def stream
+        article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
         SummarizeArticleJob.perform_later(article.id) if article.status_summary_wait?
         response.headers['Content-Type'] = 'text/event-stream'
         sse = SSE.new(response.stream)
-        return sse.write(article.project_article_summaries.last.summary) if article.status_summary_completed?
-
-        subscribe_and_send_from_stream(sse, article)
+        send_article(sse, article)
+        ArticleStatisticService.new(project: @current_project, trackable: @project_page).click!
+      rescue StandardError => e
+        sse&.write('--ERROR--')
+        Rails.logger.error e.message
       ensure
         sse&.close
       end
 
       private
 
-      # @return [ProjectArticle]
-      def article
-        @article ||=
-          current_project
-            .project_articles
-            .where(status_summary: %i[wait processing completed])
-            .only_required_columns
-            .find(@article_id)
+      #   @param [SSE] sse
+      #   @param [ProjectArticle] article
+      def send_article(sse, article)
+        return sse.write(article.summaries.last.summary) if article.status_summary_completed?
+        subscribe_and_send_from_stream(sse, article)
       end
 
       #   @param [SSE] sse
@@ -71,22 +70,17 @@ module Api
         end
       end
 
-      def update_statistics
-        return if @url_id.nil? || @article.nil?
-
-        service = ArticleStatisticService.new(url_id: @url_id, article_id: @article.id)
-        service.click!
-      end
-
       def extract_data_from_id_param
-        decoded_info = BasicEncrypting.decode_array(params.permit(:id)[:id], 3)
+        decoded_info = BasicEncrypting.decode_array(params.permit(:id)[:id], 2)
         return head(:bad_request) if decoded_info.nil?
 
-        expired_at = decoded_info[2]
+        expired_at = decoded_info[1]
         return head(:gone) if Time.now.utc.to_i > expired_at
+        @page_id = decoded_info[0]
+      end
 
-        @article_id = decoded_info[0]
-        @url_id = decoded_info[1]
+      def project_page
+        @project_page ||= current_project.pages.find(@page_id)
       end
     end
   end

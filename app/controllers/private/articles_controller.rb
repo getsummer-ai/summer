@@ -14,7 +14,7 @@ module Private
     # GET /projects or /projects.json
     def index
       # return redirect_to project_url(@project) unless turbo_frame_request?
-      @articles = @project.project_articles.all
+      @articles = @project.articles.all
     end
 
     def show

@@ -3,7 +3,7 @@ class ProjectArticleForm
   include ActiveModel::Validations
 
   attr_accessor :url
-  attr_reader :project_url, :url_hash
+  attr_reader :project_page, :url_hash
 
   validates :url, url: true
 
@@ -19,9 +19,9 @@ class ProjectArticleForm
   # @return [ProjectArticle, nil]
   def find_or_create
     return nil if invalid?
-    @project_url = @project.project_urls.find_by(url_hash:)
-    if @project_url.present?
-      return ProjectArticle.only_required_columns.find_by(id: @project_url.project_article_id)
+    @project_page = @project.pages.find_by(url_hash:)
+    if @project_page.present?
+      return ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
     end
     create_article_and_url
   rescue StandardError => e
@@ -33,12 +33,12 @@ class ProjectArticleForm
 
   # @return [ProjectArticle, nil]
   def create_article_and_url
-    project_article = nil
+    article = nil
     ActiveRecord::Base.transaction do
-      project_article = find_or_create_article(scraped_article)
-      @project_url = @project.project_urls.create!(url:, url_hash:, project_article:)
+      article = find_or_create_article(scraped_article)
+      @project_page = @project.pages.create!(url:, url_hash:, article:)
     end
-    project_article
+    article
   end
 
   # @param [::ArticleScrapperService] scraped_article
@@ -47,7 +47,7 @@ class ProjectArticleForm
     article_hash = Hashing.md5(scraped_article.content)
     tokens = LanguageModelTools.estimate_max_tokens(scraped_article.content)
     @project
-      .project_articles
+      .articles
       .where(article_hash:)
       .first_or_create(
         title: scraped_article.title,

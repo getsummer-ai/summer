@@ -50,10 +50,10 @@ module Avo
         field :created_at, as: :date_time, show_on: :preview, hide_on: [:index]
         field :deleted_at, as: :date_time, hide_on: [:index]
         # field :events, as: :has_many, polymorphic_as: 'Avo::Project'
-        field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
+        field :project_pages, as: :has_many, resource: Avo::Resources::ProjectPage
         field :project_articles, as: :has_many, resource: Avo::Resources::ProjectArticle
         field :all_events, as: :has_many, resource: Avo::Resources::Event
-        # field :project_urls, as: :has_many
+        # field :project_pages, as: :has_many
         # field :project_articles, as: :has_many
         # field :project_article_statistics, as: :has_many, through: :project_articles
       end

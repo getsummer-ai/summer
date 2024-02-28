@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module Avo
   module Resources
-    class ProjectUrl < Avo::BaseResource
-      self.model_class = ::AvoProjectUrl
+    class ProjectPage < Avo::BaseResource
+      self.model_class = ::AvoProjectPage
 
       self.includes = []
       self.search = {

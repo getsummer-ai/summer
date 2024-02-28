@@ -2,11 +2,11 @@
 
 class ArticleStatisticService
 
-  # @param [Integer] url_id
-  # @param [Integer] article_id
-  def initialize(url_id:, article_id:)
-    @project_url_id = url_id
-    @article_id = article_id
+  # @param [Project] project
+  # @param [ProjectPage, ProjectService] trackable
+  def initialize(project:, trackable:)
+    @project = project
+    @trackable = trackable
     @time = Time.now.utc
   end
 
@@ -21,9 +21,9 @@ class ArticleStatisticService
   private
 
   def model
-    @model ||= ProjectArticleStatistic.find_or_create_by(
-      project_article_id: @article_id,
-      project_url_id: @project_url_id,
+    @model ||= ProjectStatistic.find_or_create_by(
+      project: @project,
+      trackable: @trackable,
       date: @time.to_date,
       hour: @time.hour
     )

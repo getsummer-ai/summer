@@ -40,7 +40,7 @@ module Avo
         field :last_scraped_at, as: :date_time, hide_on: [:index], show_on: :preview
         # field :summarized_at, as: :date_time, hide_on: [:index], show_on: :preview
         # field :summary, as: :markdown
-        field :project_urls, as: :has_many, resource: Avo::Resources::ProjectUrl
+        field :project_pages, as: :has_many, resource: Avo::Resources::ProjectPage
 
         field :events, as: :has_many, resource: Avo::Resources::Event
         # field :project_article_statistics, as: :has_many
