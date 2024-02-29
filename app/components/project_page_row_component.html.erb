@@ -1,23 +1,14 @@
-<div
-  id="<%= dom_id(@page) %>"
-  class="py-4 border-primary flex flex-row justify-between border-t"
->
-  <div><%= @page.article_only_title.title %></div>
-  <div class="flex flex-row">
-    <span>
-      <img src="<%= vite_asset_path('assets/icons/eye.svg') %>" class="summer-icon-sm" />
-      <%=@page.statistics_by_total&.views || 0 %>
-    </span>
-    <span class="ml-4">
-      <img src="<%= vite_asset_path('assets/icons/click.svg') %>" class="summer-icon-sm" />
-      <%=@page.statistics_by_total&.clicks || 0 %>
-    </span>
-    <span class="ml-4">
-      <%= form_with model: @page,
-                    url: project_page_path(@project, @page),
-                    method: :patch do |form| %>
-        <%= form.check_box :is_accessible, class: 'toggle', onchange: 'this.form.requestSubmit()' %>
-      <% end %>
-    </span>
-  </div>
-</div>
+<tr id="<%= dom_id(@page) %>">
+  <td class="font-semibold pl-0"><%= @page.article_only_title.title.truncate(60) %></td>
+  <td>
+    <%=number_to_delimited(@page.statistics_by_total&.views || 0) %>
+  </td>
+  <td>
+    <%=number_to_delimited(@page.statistics_by_total&.clicks || 0) %>
+  </td>
+  <td class="px-0">
+    <%= form_with model: @page, url: project_page_path(@project, @page), method: :patch do |form| %>
+      <%= form.check_box :is_accessible, class: 'toggle', onchange: 'this.form.requestSubmit()' %>
+    <% end %>
+  </td>
+</tr>

@@ -12,11 +12,15 @@ module Private
     end
 
     def index
-      @pages = @current_project.pages
-              .preload(:article_only_title)
-              .eager_load(:statistics_by_total)
-              .order(ProjectStatisticsByTotal.arel_table[:views].asc)
-              .to_a
+      @statistics = ProjectStatisticsViewModel.new(@current_project, :views, :actions)
+
+      @pages =
+        @current_project
+          .pages
+          .preload(:article_only_title)
+          .eager_load(:statistics_by_total)
+          .order(ProjectStatisticsByTotal.arel_table[:views].asc)
+          .to_a
     end
 
     def update

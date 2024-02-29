@@ -4,6 +4,8 @@ class ProjectStatistic < ApplicationRecord
   belongs_to :project
   belongs_to :trackable, polymorphic: true
 
+  scope :by_pages, -> { where(trackable_type: ProjectPage.to_s) }
+  scope :current_month, -> { where(date: Time.now.utc.all_month) }
 
   def increase_views_counter!
     self.class.update_counters(id, views: 1)

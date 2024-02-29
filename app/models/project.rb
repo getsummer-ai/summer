@@ -14,8 +14,8 @@ class Project < ApplicationRecord
         prefix: true
 
   belongs_to :user
-  has_many :pages, dependent: :destroy, class_name: 'ProjectPage', foreign_key: 'project_id'
-  has_many :articles, dependent: :destroy, class_name: 'ProjectArticle', foreign_key: 'project_id'
+  has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
+  has_many :articles, dependent: :destroy, class_name: 'ProjectArticle'
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
   has_many :all_events, class_name: 'Event'
 
