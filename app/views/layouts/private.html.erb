@@ -1,5 +1,5 @@
 <% content_for :js do %>
-  <%= vite_typescript_tag 'application' %>
+  <%#= vite_typescript_tag 'application' %>
 <% end %>
 
 <% content_for :content do %>
@@ -31,7 +31,7 @@
         <hr>
       </div>
       <div class="mt-5 font-bold p-1.5">
-        <%=render(ProjectSelectorComponent.new(current_project: current_user.default_project, projects: project_list)) %>
+        <%=render(ProjectSelector::Component.new(current_project: current_user.default_project, projects: project_list)) %>
       </div>
       <% if current_user.default_project.present? %>
         <%=render(ProjectMenuComponent.new(project: current_user.default_project)) %>
@@ -42,20 +42,19 @@
     </div>
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
-    <div class="p-10 rounded-2xl bg-white grow relative">
+    <div class="p-10 rounded-2xl bg-white grow">
       <div class="container mx-auto max-w-[768px] pb-10">
         <% if content_for?(:breadcrumbs) %>
           <div class="mt-2"><%= yield(:breadcrumbs) %></div>
         <% end %>
         <div><%= yield %></div>
       </div>
-      <div id="flash" class="fixed bottom-10 right-10 w-100">
-        <%= render 'layouts/shared/alerts' %>
-      </div>
     </div>
   </div>
-
-
+  <%= render TurboModalContainer::Component.new %>
+  <div id="flash" class="fixed bottom-5 right-5 w-100 z-10">
+    <%= render 'layouts/shared/alerts' %>
+  </div>
 <% end %>
 
 <%# content_for :footer do %>

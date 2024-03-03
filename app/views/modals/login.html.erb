@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "modal" do %>
-  <%= render TurboModalComponent.new(title: t('.sign_in')) do %>
+  <%= render TurboModal::Component.new(title: t('.sign_in')) do %>
     <%= render 'devise/sessions/login_form' %>
     <div class="mt-5 text-center font-bold underline">
       <%=

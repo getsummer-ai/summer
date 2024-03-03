@@ -1,4 +1,14 @@
+<%= turbo_stream.replace dom_id(@project_page, :switch_button) do %>
+  <%= render ProjectPageComponents::SwitchButtonComponent.new(
+      project: @current_project,
+      page: @project_page,
+      is_checkbox: false
+  ) %>
+<% end %>
 <%= turbo_stream.replace @project_page do %>
-  <%= render ProjectPageRowComponent.new(project: @current_project, page: @project_page) %>
+  <%= render ProjectPageComponents::RowComponent.new(
+      project: @current_project,
+      page: @project_page
+  ) %>
 <% end %>
 <%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

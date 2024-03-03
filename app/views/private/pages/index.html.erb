@@ -46,22 +46,29 @@
     <p class="opacity-50 mt-1 font-light">
       Summer is disabled on the pages with less than 500 symbols by default. You can turn it on manually.
     </p>
-    <div class="overflow-x-auto mt-6">
-      <table class="table text-[15px] tracking-tight">
-        <thead class="text-[15px]">
-          <tr>
-            <th class="font-semibold pl-0">Page</th>
-            <th class="font-semibold w-24">Shown</th>
-            <th class="font-semibold w-24">Clicked</th>
-            <th class="font-semibold px-0 w-14">On/Off</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @pages.each_with_index do |page, i|%>
-            <%= render ProjectPageRowComponent.new(project: @current_project, page:, has_top_border: i === 0) %>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
+    <%=turbo_frame_tag 'pages', target: "_top", 'data-turbo-action': 'advance' do %>
+      <div class="overflow-x-auto mt-6">
+        <table class="table text-[15px] tracking-tight">
+          <thead class="text-[15px]">
+            <tr>
+              <th class="font-semibold pl-0">Page</th>
+              <th class="font-semibold w-24">Shown</th>
+              <th class="font-semibold w-24">Clicked</th>
+              <th class="font-semibold px-0 w-14">On/Off</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @pages.each_with_index do |page, i|%>
+              <%= render ProjectPageComponents::RowComponent.new(project: @current_project, page:) %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <% if @pagy.pages > 1 %>
+        <div class="mt-4">
+          <%== pagy_nav(@pagy) %>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 <% end %>

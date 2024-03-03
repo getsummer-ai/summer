@@ -1,5 +1,4 @@
 import '@hotwired/turbo-rails';
-
 import { initApps } from '@/vue/apps/init-vue';
 import '@/stimulus/init-stimulus';
 import { initSvelteApps } from "@/svelte/apps/init-svelte";

@@ -19,7 +19,6 @@ gem 'boilerpipe-ruby', require: 'boilerpipe'
 gem 'faraday'
 gem 'nokogiri'
 gem 'redcarpet'
-
 gem 'turbo-rails'
 gem 'validate_url'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
@@ -49,7 +48,7 @@ gem 'devise', git: 'https://github.com/heartcombo/devise.git', branch: '4-stable
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
-gem 'pagy'
+gem 'pagy', '~> 7.0'
 gem 'rack-cors'
 
 gem "avo", ">= 3.4.0"

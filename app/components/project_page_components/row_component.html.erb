@@ -1,0 +1,18 @@
+<tr id="<%= dom_id(@page) %>">
+  <td class="font-semibold pl-0">
+    <%=
+      link_to project_page_path(@project, @page), data: {'turbo-frame': "modal"} do
+        @page.article_only_title.title.truncate(60)
+      end
+    %>
+  </td>
+  <td>
+    <%=number_to_delimited(@page.statistics_by_total&.views || 0) %>
+  </td>
+  <td>
+    <%=number_to_delimited(@page.statistics_by_total&.clicks || 0) %>
+  </td>
+  <td class="px-0">
+    <%= render ProjectPageComponents::SwitchButtonComponent.new(project: @project, page: @page, is_checkbox: true) %>
+  </td>
+</tr>

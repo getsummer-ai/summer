@@ -29,3 +29,57 @@
 .summer-icon-sm {
   @apply w-5 h-5 inline-block align-middle;
 }
+
+.pagy {
+  @apply flex space-x-1 font-semibold text-sm text-gray-500 justify-end;
+  .page {
+    a {
+      @apply block rounded px-3 py-1 bg-gray-100;
+      &:hover {
+        @apply bg-gray-300;
+      }
+    }
+    &.active a {
+      @apply text-white bg-gray-600 cursor-default;
+    }
+    &.disabled a {
+      @apply text-gray-300 bg-gray-100 cursor-default;
+    }
+    &.gap { }  /* if you need to customize it */
+  }
+  .pagy-combo-input, &.pagy-items-selector-js {
+    @apply inline-block bg-gray-200 rounded-lg px-3 py-0.5;
+    input {
+      @apply bg-gray-100 border-none rounded-md;
+    }
+  }
+}
+.table-page-statistics {
+  @apply table-sm;
+
+  tr {
+    &:first-child {
+      border-top-width: 1px;
+    }
+    border-bottom-width: 1px;
+  }
+
+  td {
+    padding-left: 0;
+    padding-right: 0;
+    font-size: 13px;
+    letter-spacing: -0.26px;
+  }
+  td:first-child {
+    @apply text-gray-500;
+  }
+  td:last-child {
+    text-align: right;
+  }
+}
+.btn-summer {
+  height: 2.3rem;
+  min-height: 2.3rem;
+  font-size: 15px;
+  @apply rounded-lg btn-block;
+}

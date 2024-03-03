@@ -1,0 +1,52 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: '', redirect_following: false) do %>
+    <div>
+      <h2 class="text-xl font-semibold tracking-tight">Page</h2>
+      <h4 class="text-[13px] font-semibold mt-7">Name</h4>
+      <div class="p-2 border-2 rounded">
+        <%=@project_page.article_only_title.title.truncate(60) %>
+      </div>
+      <h4 class="text-[13px] font-semibold mt-6">Link</h4>
+      <div class="p-2 border-2 rounded">
+        <%=@project_page.url %>
+      </div>
+      <h4 class="text-[13px] font-semibold mt-6">Statistics</h4>
+      <div class="mt-2">
+        <table class="table table-page-statistics">
+          <tbody>
+            <tr>
+              <td>Summer shown</td>
+              <td><%=number_with_delimiter(@project_page.statistics_by_total.views) %></td>
+            </tr>
+            <tr>
+              <td>Summer clicked</td>
+              <td><%=number_with_delimiter(@project_page.statistics_by_total.clicks) %></td>
+            </tr>
+            <tr>
+              <td>Symbols on the page</td>
+              <td>2,432</td>
+            </tr>
+            <tr>
+              <td>Symbols in summary</td>
+              <td>412</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="mt-5 text-center font-bold underline">
+      <%= render ProjectPageComponents::SwitchButtonComponent.new(
+        project: @project,
+        page: @project_page,
+        is_checkbox: false
+      ) %>
+      <button
+        data-action="turbo-modal#closeModal"
+        type="button"
+        class="btn btn-summer btn-neutral mt-2"
+      >
+        Dismiss
+      </button>
+    </div>
+  <% end %>
+<% end %>

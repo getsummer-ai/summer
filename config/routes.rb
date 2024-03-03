@@ -44,7 +44,7 @@ Rails.application.routes.draw do
       end
       resources :projects, only: [] do
         resources :articles, only: %i[index show edit update]
-        resources :pages, only: %i[index update]
+        resources :pages, only: %i[index update show]
       end
     end
   end
