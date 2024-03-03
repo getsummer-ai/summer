@@ -22,9 +22,10 @@ function removeModalQueryStringParam() {
   if (hash.get('m') === null) return;
   hash.delete('m');
   log('removeModalQueryStringParam START', window.location.href);
+  const scrollPosition = window.scrollY
   window.location.hash = hash.toString();
   window.history.replaceState(window.history.state, '', window.location.href.split('#')[0]);
-  // window.Turbo.navigator.history.replace(new URL(window.location.href.split('#')[0]));
+  window.scroll(0, scrollPosition)
   log('removeModalQueryStringParam END', window.location.href);
 }
 
