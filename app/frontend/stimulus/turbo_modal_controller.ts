@@ -1,22 +1,31 @@
 import { Controller } from '@hotwired/stimulus';
 
+type LogArg = string | number | boolean | null | undefined | HTMLElement;
+const logIsActive = false;
+function log(...args: LogArg[]) {
+  if (logIsActive) console.log(...args);
+}
+
 function setModalQueryStringParam(value: string) {
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-  if (params.get('m') === value) return;
-  params.set('m', value);
-  url.search = params.toString();
-  console.log('setModalQueryStringParam', url.href)
-  window.Turbo.navigator.history.push(url);
+  const url = window.location;
+  const hash = new URLSearchParams(url.hash.substring(1));
+  if (hash.get('m') === value) return;
+  hash.set('m', value);
+  log('setModalQueryStringParam START', window.location.href);
+  window.location.hash = hash.toString();
+  log('setModalQueryStringParam END', window.location.href);
 }
 
 function removeModalQueryStringParam() {
-  const url = new URL(window.location.href);
-  const params = url.searchParams;
-  params.delete('m');
-  url.search = params.toString();
-  console.log('removeModalQueryStringParam', url.href);
-  window.Turbo.navigator.history.push(url);
+  const url = window.location;
+  const hash = new URLSearchParams(url.hash.substring(1));
+  if (hash.get('m') === null) return;
+  hash.delete('m');
+  log('removeModalQueryStringParam START', window.location.href);
+  window.location.hash = hash.toString();
+  window.history.replaceState(window.history.state, '', window.location.href.split('#')[0]);
+  // window.Turbo.navigator.history.replace(new URL(window.location.href.split('#')[0]));
+  log('removeModalQueryStringParam END', window.location.href);
 }
 
 export default class TurboModalController extends Controller {
@@ -33,7 +42,7 @@ export default class TurboModalController extends Controller {
   connect() {
     const src = this.element.parentElement?.getAttribute('src');
     if (!src) return;
-    console.log('Modal connect', src);
+    log('Modal connect', src);
     const url = new URL(src);
     setModalQueryStringParam(btoa(url.pathname));
   }
@@ -41,17 +50,15 @@ export default class TurboModalController extends Controller {
   disconnect() {
     this.closeModal();
     removeModalQueryStringParam();
-    console.log('Modal disconnect');
+    log('Modal disconnect');
   }
 
   closeModal() {
     if (this.closed) return;
-    console.log('closeModal', this.element.parentElement);
+    log('closeModal', this.element.parentElement);
     if (this.element.parentElement) {
       this.element.parentElement.removeAttribute('src');
       this.element.parentElement.focus();
-      // console.log('removeAttribute src', this.element.parentElement.getAttribute('src'));
-      // console.log('closeModal after removeAttribute', this.element.parentElement);
     }
     this.element.remove();
     this.closed = true;
