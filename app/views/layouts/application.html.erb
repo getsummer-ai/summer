@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <!--<html data-theme="business">-->
-<html class="bg-light-gray" data-theme="lofi">
-<!--<html data-theme="emerald">-->
+<% bg_color = content_for?(:bg_color) ? yield(:bg_color) : '' %>
+<html class="<%=bg_color%>" data-theme="lofi">
+  <!--<html data-theme="emerald">-->
   <head>
     <title>Summer</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Silkscreen" rel="stylesheet" />
+    <!--    <link rel="preconnect" href="https://fonts.googleapis.com" />-->
+    <!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />-->
+    <!--    <link href="https://fonts.googleapis.com/css2?family=Silkscreen" rel="stylesheet" />-->
     <%= vite_stylesheet_tag 'global.scss' %>
     <%= vite_client_tag %>
     <% if content_for?(:js) %>
@@ -26,7 +27,6 @@
 
       Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
     -->
-
   </head>
   <% environment_hash = { environment: Rails.env } %>
   <body data-init="<%= environment_hash.to_json %>">

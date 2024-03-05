@@ -24,7 +24,8 @@ module.exports = {
       emerald: colors.emerald,
       red: colors.red,
       indigo: colors.indigo,
-      yellow: colors.yellow,
+      yellow: '#FFCF24',
+      blue: '#2FA8FF',
       'light-gray': '#F6F6F9',
     },
     // container: {
