@@ -1,5 +1,50 @@
 <% is_turbo = turbo_frame_request_id.present? %>
 <%= turbo_conditional_tag "sign-up-form", is_turbo do %>
+
+
+  <div class="mt-6 text-center">
+    <% if devise_mapping.omniauthable? %>
+      <%= form_for "Google",
+                   # url: user_google_oauth2_omniauth_authorize_path,
+                   url: omniauth_authorize_path(resource_name, :google_oauth2),
+                   method: :post,
+                   data: { turbo: "false" } do |form| %>
+        <%= form.button(type: 'submit', class: "btn btn-outline btn-input-summer btn-block rounded-lg") do %>
+          <svg
+            class="w-4 h-4"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 48 48"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            style="display: block;"
+          >
+            <path
+              fill="#EA4335"
+              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+            ></path>
+            <path
+              fill="#4285F4"
+              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
+            ></path>
+            <path
+              fill="#FBBC05"
+              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
+            ></path>
+            <path
+              fill="#34A853"
+              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+            ></path>
+            <path fill="none" d="M0 0h48v48H0z"></path>
+          </svg>
+          <%= t('.sign_up_via_google') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="divider my-6 text-sm text-gray-500"> <%= t('.or') %> </div>
+
+
   <%= form_for resource, as: resource_name, url: registration_path(resource_name), builder: DaisyBuilder do |f| %>
     <% unless is_turbo %>
       <%= render 'devise/shared/error_messages', resource: resource %>
@@ -12,7 +57,7 @@
     </div>
 
     <div class="form-control mt-2">
-      <%= f.label :password, class: 'label pb-1' do |_builder| %>
+      <%= f.label :password, class: 'label label-summer' do |_builder| %>
         <%= content_tag(:span, t('.password'), class: 'label-text') %>
         <% if @minimum_password_length %>
           <span class="label-text-alt">(<%= @minimum_password_length %> characters minimum)</span>
@@ -45,49 +90,7 @@
     <% end %>
 
     <div class="form-control mt-8">
-      <%= f.submit t('.sign_up'), class: 'btn rounded-lg btn-md btn-neutral btn-active btn-block' %>
+      <%= f.submit t('.create_account'), class: 'btn btn-summer btn-neutral btn-block' %>
     </div>
   <% end %>
-
-  <div class="divider mt-8"> <%= t('.or') %> </div>
-
-  <div class="mt-6 text-center">
-    <% if devise_mapping.omniauthable? %>
-      <%= form_for "Sign up via Google",
-                   # url: user_google_oauth2_omniauth_authorize_path,
-                   url: omniauth_authorize_path(resource_name, :google_oauth2),
-                   method: :post,
-                   data: { turbo: "false" } do |form| %>
-        <%= form.button(type: 'submit', class: "btn btn-block rounded-lg") do %>
-          <svg
-            class="w-4 h-4"
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 48 48"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            style="display: block;"
-          >
-            <path
-              fill="#EA4335"
-              d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-            ></path>
-            <path
-              fill="#4285F4"
-              d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-            ></path>
-            <path
-              fill="#FBBC05"
-              d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-            ></path>
-            <path
-              fill="#34A853"
-              d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-            ></path>
-            <path fill="none" d="M0 0h48v48H0z"></path>
-          </svg>
-          <%= t('.sign_up_via_google') %>
-        <% end %>
-      <% end %>
-    <% end %>
-  </div>
 <% end %>

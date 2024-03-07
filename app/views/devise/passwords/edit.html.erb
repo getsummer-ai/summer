@@ -1,8 +1,7 @@
-<div class="card mt-8 bg-base-100 drop-shadow-xl">
+<div class="card">
   <div class="card-body">
-    <h2 class="card-title mb-4">
-      <span class="border-b-8 border-accent"><%= t('.change_your_password') %></span>
-    </h2>
+    <h2 class="card-title mb-6"><%=t('.change_your_password') %></h2>
+
     <% is_turbo = turbo_frame_request_id.present? %>
     <%= form_for resource,
                  as: resource_name,
@@ -13,7 +12,7 @@
       <%= f.hidden_field :reset_password_token %>
 
       <div class="form-control">
-        <%= f.label :password, class: 'label pb-1' do %>
+        <%= f.label :password, class: 'label label-summer' do %>
           <%= content_tag(:span, t('.new_password'), class: 'label-text') %>
           <% if @minimum_password_length %>
             <span class="label-text-alt">
@@ -30,7 +29,7 @@
       </div>
 
       <div class="form-control mt-8">
-        <%= f.submit t('.change_my_password') %>
+        <%= f.submit t('.change_my_password'), class: 'btn btn-summer btn-neutral btn-block' %>
       </div>
     <% end %>
 

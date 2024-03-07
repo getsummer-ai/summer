@@ -1,8 +1,11 @@
-<div class="card mt-8 bg-base-100 drop-shadow-xl">
+<div class="card">
   <div class="card-body">
-    <h2 class="card-title mb-4">
-      <span class="border-b-8 border-accent"><%= t('.forgot_your_password') %></span>
-    </h2>
+    <div class="mb-6">
+      <h2 class="card-title"><%=t('.restore_password') %></h2>
+      <p class="opacity-50 text-sm mt-1">
+        You’ll receive a link to reset your password.
+      </p>
+    </div>
     <%= render 'devise/passwords/forgot_password_form' %>
   </div>
 </div>

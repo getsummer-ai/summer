@@ -4,8 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.font-silkscreen {
-  font-family: 'Silkscreen', monospace;
+.text-15 {
+  font-size: 15px;
 }
 
 .field_with_errors {
@@ -82,4 +82,21 @@
   min-height: 2.3rem;
   font-size: 15px;
   @apply rounded-lg btn-block;
+}
+
+.btn-input-summer {
+  @apply rounded-lg border-gray-200;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.input-summer {
+  @apply input-bordered rounded-lg border-gray-200;
+  box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+.label-summer {
+  @apply font-medium pb-1.5 pl-0;
+  .label-text {
+    @apply text-sm;
+  }
 }

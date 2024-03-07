@@ -7,12 +7,20 @@
 
 <% content_for :content do %>
   <div class="flex flex-row h-full">
-
-    <div class="image bg-[#2FA8FF] w-1/2 relative overflow-hidden">
-      <div class="w-[1240px] h-[1240px] right-[-500px] top-[-640px] absolute bg-[#FFCF24] blur-[200px] rounded-full"></div>
+    <div class="image bg-[#2FA8FF] w-1/2 relative overflow-hidden flex flex-col justify-between text-white">
+      <div class="w-[1240px] h-[1240px] left-0 top-[-750px] absolute bg-[#FFCF24] blur-[200px] rounded-full"></div>
+      <div class="m-4">
+        <%=render LogoComponent.new %>
+      </div>
+       <div class="m-8 mb-14">
+         <blockquote class="text-4xl max-w-[608px] font-semibold">
+           “Our users can’t simply read our blog anymore they just click this magic button.”
+         </blockquote>
+         <p class="opacity-50 text-15 mt-2">Kirill Zheleznov, CEO at Enty</p>
+       </div>
     </div>
-    <div class="w-1/2 bg-white flex justify-center min-h-screen flex-column overflow-scroll">
-      <div class="w-96 mt-16">
+    <div class="w-1/2 bg-white flex flex-column justify-center items-center min-h-screen">
+      <div class="w-96 pb-5">
         <%= yield %>
         <div class="mt-4">
           <%= render 'layouts/shared/alerts' %>

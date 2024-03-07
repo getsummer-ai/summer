@@ -1,8 +1,12 @@
-<div class="card mt-8 bg-base-100 drop-shadow-xl">
+<div class="card">
   <div class="card-body">
-    <h2 class="card-title mb-4">
-      <span class="border-b-8 border-accent"><%=t('.sign_up') %></span>
-    </h2>
+    <div>
+      <h2 class="card-title"><%=t('.create_account') %></h2>
+      <p class="opacity-50 text-sm mt-1">
+        Already have an account?
+        <%= link_to t('.sign_in'), new_session_path('user'), class: 'link underline underline-offset-2' %>
+      </p>
+    </div>
     <%= render 'devise/registrations/sign_up_form' %>
   </div>
 </div>
