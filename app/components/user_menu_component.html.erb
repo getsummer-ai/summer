@@ -6,8 +6,8 @@
   ]
 %>
 <div class="dropdown dropdown-top block">
-  <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1 flex font-semibold">
-    <span class="w-6 h-6 flex rounded-full text-base-100
+  <div tabindex="0" role="button" class="p-1.5 hover:bg-gray-200 rounded-xl mb-1 flex font-medium">
+    <span class="w-6 h-6 min-w-6 flex rounded-full text-base-100
         bg-gradient-to-r from-orange-600 to-orange-500
         justify-center items-center"
     >
@@ -19,7 +19,7 @@
         end
       %>
     </span>
-    <span class="ml-2"><%= @user.name %></span>
+    <span class="ml-2 overflow-hidden font-semibold text-ellipsis"><%= @user.name || @user.email + @user.email  %></span>
   </div>
   <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-white rounded-2xl w-52">
     <% routes.each do |route|

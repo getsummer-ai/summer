@@ -24,6 +24,7 @@ module.exports = {
       emerald: colors.emerald,
       red: colors.red,
       indigo: colors.indigo,
+      orange: colors.orange,
       yellow: '#FFCF24',
       blue: '#2FA8FF',
       'light-gray': '#F6F6F9',

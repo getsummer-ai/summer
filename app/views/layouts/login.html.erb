@@ -2,28 +2,28 @@
   <%= vite_typescript_tag 'login' %>
 <% end %>
 <% content_for :bg_color do %>
-  bg-yellow
+  bg-[#bdb963] md:bg-yellow
 <% end %>
 
 <% content_for :content do %>
-  <div class="flex flex-row h-full">
-    <div class="image bg-[#2FA8FF] w-1/2 relative overflow-hidden flex flex-col justify-between text-white">
-      <div class="w-[1240px] h-[1240px] left-0 top-[-750px] absolute bg-[#FFCF24] blur-[200px] rounded-full"></div>
-      <div class="m-4">
-        <%=render LogoComponent.new %>
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="image bg-[#2FA8FF] md:w-1/2 relative overflow-hidden flex flex-col justify-between text-white">
+      <div class="w-[1240px] h-[1240px] left-0 top-[-750px] absolute bg-[#FFCF24] blur-[200px] rounded-full z-0"></div>
+      <div class="m-4 z-0">
+        <%=render LogoComponent.new(color: 'white') %>
       </div>
-       <div class="m-8 mb-14">
-         <blockquote class="text-4xl max-w-[608px] font-semibold">
-           “Our users can’t simply read our blog anymore they just click this magic button.”
-         </blockquote>
-         <p class="opacity-50 text-15 mt-2">Kirill Zheleznov, CEO at Enty</p>
-       </div>
+      <div class="m-6 mt-2 md:m-8 md:mb-14 z-0">
+        <blockquote class="text-xl md:text-4xl max-w-[608px] font-semibold text-white">
+          “Our users can’t simply read our blog anymore they just click this magic button.”
+        </blockquote>
+        <p class="opacity-50 text-xs md:text-[15px] mt-2">Kirill Zheleznov, CEO at Enty</p>
+      </div>
     </div>
-    <div class="w-1/2 bg-white flex flex-column justify-center items-center min-h-screen">
+    <div class="md:w-1/2 bg-white flex flex-column justify-center items-center md:min-h-screen flex-grow">
       <div class="w-96 pb-5">
         <%= yield %>
         <div class="mt-4">
-          <%= render 'layouts/shared/alerts' %>
+          <%= render 'layouts/shared/alerts', is_persistent: true %>
         </div>
         <div class="mt-6 px-1">
           <%= render 'devise/shared/links' %>

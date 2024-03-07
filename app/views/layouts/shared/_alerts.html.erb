@@ -1,7 +1,8 @@
+<% is_persistent ||= false %>
 <% if flash[:notice] %>
-  <%= render 'shared/alert', message: flash[:notice] %>
+  <%= render 'shared/alert', message: flash[:notice], is_persistent: is_persistent %>
 <% end %>
 
 <% if flash[:alert] %>
-  <%= render 'shared/alert', message: flash[:alert], type: 'warning' %>
+  <%= render 'shared/alert', message: flash[:alert], type: 'warning', is_persistent: is_persistent %>
 <% end %>

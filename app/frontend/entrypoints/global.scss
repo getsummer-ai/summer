@@ -77,11 +77,11 @@
     text-align: right;
   }
 }
+
 .btn-summer {
   height: 2.3rem;
   min-height: 2.3rem;
-  font-size: 15px;
-  @apply rounded-lg btn-block;
+  @apply text-[15px] rounded-lg btn-block;
 }
 
 .btn-input-summer {

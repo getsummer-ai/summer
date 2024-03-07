@@ -45,7 +45,7 @@
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), builder: DaisyBuilder) do |f| %>
     <div class="form-control">
       <%= f.label :email, t('.email') %>
-      <%= f.email_field :email, autofocus: !is_turbo, required: true, autocomplete: 'email' %>
+      <%= f.email_field :email, required: true, autocomplete: 'email' %>
     </div>
 
     <div class="form-control mt-2">

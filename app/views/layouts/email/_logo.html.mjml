@@ -4,8 +4,9 @@
 <% else %>
   <mj-column width="100%">
     <mj-text css-class="sans-serif">
-      <div class="logo"><%=t('layouts.main.header.name')%></div>
-      <div class="under-logo"><%=t('layouts.main.header.description')%></div>
+      <div class="logo">
+        <%=render LogoComponent.new %>
+      </div>
     </mj-text>
     <mj-spacer height="20px"></mj-spacer>
   </mj-column>
