@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!--<html data-theme="business">-->
-<% bg_color = content_for?(:bg_color) ? yield(:bg_color) : '' %>
-<html class="<%=bg_color%>" data-theme="lofi">
+<% html_class = content_for?(:html_class) ? yield(:html_class) : '' %>
+<% body_class = content_for?(:body_class) ? yield(:body_class) : '' %>
+<html class="<%=html_class%>" data-theme="lofi">
   <!--<html data-theme="emerald">-->
   <head>
     <title>Summer</title>
@@ -29,7 +30,7 @@
     -->
   </head>
   <% environment_hash = { environment: Rails.env } %>
-  <body data-init="<%= environment_hash.to_json %>">
+  <body data-init="<%= environment_hash.to_json %>" class="<%=body_class %>">
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>
