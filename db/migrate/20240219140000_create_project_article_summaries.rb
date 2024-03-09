@@ -2,6 +2,7 @@
 class CreateProjectArticleSummaries < ActiveRecord::Migration[7.1]
   def change
     create_table :project_article_summaries do |t|
+      t.timestamps
       t.references :project_article,
                    null: false,
                    index: true,
@@ -13,7 +14,6 @@ class CreateProjectArticleSummaries < ActiveRecord::Migration[7.1]
       t.integer :tokens_count, default: 0, null: false
       t.enum :llm, null: false, enum_type: 'user_project_llm'
       t.text :summary
-      t.timestamps
     end
 
     create_enum 'project_article_common_status', %w[error skipped wait processing completed static]

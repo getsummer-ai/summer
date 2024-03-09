@@ -6,10 +6,11 @@ class Project < ApplicationRecord
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
+  store_accessor :paths, :paths_array
   # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
-  # store_accessor :settings, %i[color font_size url_filter container_id], prefix: true
+  # store_accessor :settings, %i[theme font_size container_id], prefix: true
   store :settings,
-        accessors: %i[color font_size url_filter container_id],
+        accessors: %i[theme font_size container_id],
         coder: JsonbSerializer,
         prefix: true
 
@@ -38,12 +39,12 @@ class Project < ApplicationRecord
               with: /\A[a-zA-Z][\w:.-]*\z/,
               message: "Only html ID name is allowed. Example: 'article-container'",
             }
-  validates :settings_url_filter,
-            allow_blank: true,
-            format: {
-              with: %r{\A/[\w-]*/\z},
-              message: "Only url path is allowed. Example: '/blog/'",
-            }
+  # validates :settings_url_filter,
+  #           allow_blank: true,
+  #           format: {
+  #             with: %r{\A/[\w-]*/\z},
+  #             message: "Only url path is allowed. Example: '/blog/'",
+  #           }
 
   normalizes :name, with: ->(name) { name.strip }
 
@@ -100,7 +101,9 @@ end
 #  deleted_at  :datetime
 #  domain      :string           not null
 #  name        :string           default(""), not null
+#  paths       :jsonb            not null
 #  plan        :enum             default("free"), not null
+#  protocol    :string           not null
 #  settings    :jsonb
 #  status      :enum             default("active"), not null
 #  uuid        :uuid             not null

@@ -36,7 +36,9 @@ end
 #  deleted_at  :datetime
 #  domain      :string           not null
 #  name        :string           default(""), not null
+#  paths       :jsonb            not null
 #  plan        :enum             default("free"), not null
+#  protocol    :string           not null
 #  settings    :jsonb
 #  status      :enum             default("active"), not null
 #  uuid        :uuid             not null

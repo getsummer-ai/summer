@@ -5,16 +5,19 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     create_enum 'user_project_llm', %w[gpt3.5 gpt4]
     create_enum 'user_project_status', %w[active suspended deleted]
     create_enum 'user_project_type', %w[free paid]
+    create_enum 'user_project_protocol', %w[http https]
     create_table :projects do |t|
-      t.uuid :uuid, default: 'gen_random_uuid()', null: false
+      t.timestamps
       t.references :user, null: false, foreign_key: { on_update: :cascade }
       t.string :name, default: '', null: false
+      t.string :protocol, null: false, enum_type: 'user_project_protocol'
       t.string :domain, null: false
-      t.enum :plan, default: 'free', null: false, enum_type: 'user_project_type'
-      t.enum :status, default: 'active', null: false, enum_type: 'user_project_status'
+      t.jsonb :paths, default: '[]', null: false
       t.jsonb :settings
+      t.enum :status, default: 'active', null: false, enum_type: 'user_project_status'
+      t.enum :plan, default: 'free', null: false, enum_type: 'user_project_type'
       t.enum :default_llm, default: "gpt3.5", null: false, enum_type: 'user_project_llm'
-      t.timestamps
+      t.uuid :uuid, default: 'gen_random_uuid()', null: false
       t.datetime :deleted_at
     end
     add_index :projects, :uuid, unique: true
@@ -37,16 +40,18 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     add_index :project_articles, %i[project_id article_hash], unique: true
 
     create_table :project_pages do |t|
+      t.timestamps
       t.references :project, null: false, index: true, foreign_key: { on_update: :cascade }
       t.string :url_hash, null: false
       t.string :url, null: false
       t.boolean :is_accessible, default: true, null: false
       t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
-      t.timestamps
     end
     add_index :project_pages, %i[project_id url_hash], unique: true
+    add_index :project_pages, %i[project_id url], unique: true
 
     create_table :project_statistics do |t|
+      t.timestamps
       t.references :trackable, polymorphic: true, index: true
       # t.references :project_article, null: false, index: true, foreign_key: { on_update: :cascade }
       t.references :project, null: false, foreign_key: { on_update: :cascade }
@@ -54,7 +59,6 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.integer :hour, limit: 1, null: false
       t.bigint :views, default: 0, null: false
       t.bigint :clicks, default: 0, null: false
-      t.timestamps
     end
     add_index :project_statistics,
               %i[project_id trackable_type trackable_id date hour],

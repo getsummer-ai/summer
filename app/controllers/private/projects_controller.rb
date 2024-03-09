@@ -13,7 +13,9 @@ module Private
 
     # GET /projects/new
     def new
-      @project = Project.new
+      @project = ProjectForm.new(current_user)
+      layout_name = current_user.projects.count.positive? ? 'private' : 'login'
+      render :new, status: :unprocessable_entity, layout: layout_name
     end
 
     def setup
@@ -31,13 +33,13 @@ module Private
 
     # POST /projects or /projects.json
     def create
-      @project = Project.new(project_params.merge(user_id: current_user.id))
-      @project.start_tracking(source: 'Create Project Form', author: current_user)
-      if @project.save
-        return redirect_to project_url(@project), notice: 'Project was successfully created.'
+      @project = ProjectForm.new(current_user, project_params)
+      res = @project.create
+      if res
+        return redirect_to project_url(res), notice: 'Project was successfully created.'
       end
-
-      render :new, status: :unprocessable_entity
+      layout_name = current_user.projects.count.positive? ? 'private' : 'login'
+      render :new, status: :unprocessable_entity, layout: layout_name
     end
 
     # PATCH/PUT /projects/1 or /projects/1.json
@@ -59,7 +61,7 @@ module Private
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.fetch(:project, {}).permit(:name, :domain, :settings_container_id, :settings_url_filter)
+      params.fetch(:project_form, {}).permit(:name, :urls)
     end
   end
 end

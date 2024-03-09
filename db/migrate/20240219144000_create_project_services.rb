@@ -2,6 +2,7 @@
 class CreateProjectServices < ActiveRecord::Migration[7.1]
   def change
     create_table :project_services do |t|
+      t.timestamps
       t.references :project,
                    null: false,
                    index: true,
@@ -13,7 +14,6 @@ class CreateProjectServices < ActiveRecord::Migration[7.1]
       t.string :description, null: false
       t.string :link, null: false
       t.uuid :uuid, default: 'gen_random_uuid()', null: false, index: true
-      t.timestamps
     end
 
     change_table :project_articles do |t|

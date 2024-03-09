@@ -1,26 +1,23 @@
-<%= simple_form_for(@project) do |f| %>
-  <%= f.error_notification class: 'text-sm font-bold' %>
-  <%= f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present? %>
-
+<%= form_for @project, url: projects_path, builder: DaisyBuilder do |f| %>
   <%# if @project.errors.any? %>
-  <!--    <div class="mt-1 border-l-2 border-accent pl-2">-->
-  <!--      <ul>-->
-  <%# @project.errors.full_messages.each do |message| %>
-  <!--          <li class="pb-1 text-sm">[object Object]</li>-->
+<!--    <div class="mt-1 border-l-2 border-accent pl-2">-->
+<!--      <ul>-->
+        <%# @project.errors.full_messages.each do |message| %>
+<!--          <li class="pb-1 text-sm">message</li>-->
+        <%# end %>
+<!--      </ul>-->
+<!--    </div>-->
   <%# end %>
-  <!--      </ul>-->
-  <!--    </div>-->
-  <%# end %>
-
-  <div class="mt-2">
-    <%= f.input :name %>
-    <%= f.input :domain %>
-
-    <%= f.input :settings_url_filter %>
-    <%= f.input :settings_container_id %>
+  <div class="form-control">
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </div>
+  <div class="form-control mt-2">
+    <%= f.label :urls %>
+    <%= f.text_field :urls %>
   </div>
 
-  <div class="form-actions mt-2">
-    <%= f.button :submit %>
+  <div class="form-control mt-8">
+    <%= f.submit 'Create Project', class: 'btn btn-summer btn-neutral btn-block' %>
   </div>
 <% end %>

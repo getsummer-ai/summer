@@ -19,10 +19,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   create_enum "project_article_common_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_llm", ["gpt3.5", "gpt4"]
+  create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "paid"]
 
   create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "project_id"
     t.string "category", null: false
     t.string "subcategory", null: false
     t.string "trackable_type"
@@ -31,8 +34,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.jsonb "details", null: false
     t.string "author_type"
     t.bigint "author_id"
-    t.bigint "project_id"
-    t.datetime "created_at", null: false
     t.index ["author_type", "author_id"], name: "index_events_on_author"
     t.index ["created_at"], name: "index_events_on_created_at"
     t.index ["project_id", "source"], name: "index_events_on_project_id_and_source"
@@ -128,13 +129,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   end
 
   create_table "project_article_summaries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "project_article_id", null: false
     t.jsonb "info"
     t.integer "tokens_count", default: 0, null: false
     t.enum "llm", null: false, enum_type: "user_project_llm"
     t.text "summary"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["project_article_id"], name: "index_project_article_summaries_on_project_article_id"
   end
 
@@ -157,31 +158,34 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   end
 
   create_table "project_pages", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "project_id", null: false
     t.string "url_hash", null: false
     t.string "url", null: false
     t.boolean "is_accessible", default: true, null: false
     t.bigint "project_article_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["project_article_id"], name: "index_project_pages_on_project_article_id"
+    t.index ["project_id", "url"], name: "index_project_pages_on_project_id_and_url", unique: true
     t.index ["project_id", "url_hash"], name: "index_project_pages_on_project_id_and_url_hash", unique: true
     t.index ["project_id"], name: "index_project_pages_on_project_id"
   end
 
   create_table "project_services", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "project_id", null: false
     t.string "title", null: false
     t.string "description", null: false
     t.string "link", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["project_id"], name: "index_project_services_on_project_id"
     t.index ["uuid"], name: "index_project_services_on_uuid"
   end
 
   create_table "project_statistics", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "trackable_type"
     t.bigint "trackable_id"
     t.bigint "project_id", null: false
@@ -189,8 +193,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.integer "hour", limit: 2, null: false
     t.bigint "views", default: 0, null: false
     t.bigint "clicks", default: 0, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.index ["project_id", "date"], name: "index_project_statistics_on_project_id_and_date"
     t.index ["project_id", "trackable_type", "trackable_id", "date", "hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__92da09a367", unique: true
     t.index ["project_id"], name: "index_project_statistics_on_project_id"
@@ -198,16 +200,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   end
 
   create_table "projects", force: :cascade do |t|
-    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.bigint "user_id", null: false
-    t.string "name", default: "", null: false
-    t.string "domain", null: false
-    t.enum "plan", default: "free", null: false, enum_type: "user_project_type"
-    t.enum "status", default: "active", null: false, enum_type: "user_project_status"
-    t.jsonb "settings"
-    t.enum "default_llm", default: "gpt3.5", null: false, enum_type: "user_project_llm"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.string "name", default: "", null: false
+    t.string "protocol", null: false
+    t.string "domain", null: false
+    t.jsonb "paths", default: "[]", null: false
+    t.jsonb "settings"
+    t.enum "status", default: "active", null: false, enum_type: "user_project_status"
+    t.enum "plan", default: "free", null: false, enum_type: "user_project_type"
+    t.enum "default_llm", default: "gpt3.5", null: false, enum_type: "user_project_llm"
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.datetime "deleted_at"
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true
@@ -217,6 +221,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   end
 
   create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -234,8 +240,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "provider"
     t.string "uid"
     t.string "name"

@@ -53,9 +53,9 @@ SimpleForm.setup do |config|
     b.optional :readonly
 
     ## Inputs
-    b.use :label, class: 'label-text py-1'
+    b.use :label, class: 'label label-summer'
     b.use :input,
-          class: 'input input-bordered input-sm',
+          class: 'input input-summer',
           error_class: 'input-error',
           valid_class: 'is-valid'
 
@@ -80,7 +80,7 @@ SimpleForm.setup do |config|
   config.boolean_style = :nested
 
   # Default class for buttons
-  config.button_class = 'btn btn-sm btn-primary'
+  config.button_class = 'btn btn-summer btn-neutral btn-block'
 
   # Method used to tidy up errors. Specify any Rails Array method.
   # :first lists the first message for each field.
@@ -113,7 +113,7 @@ SimpleForm.setup do |config|
   # config.item_wrapper_class = nil
 
   # How the label text should be generated altogether with the required text.
-  # config.label_text = lambda { |label, required, explicit_label| "#{required} #{label}" }
+  config.label_text = lambda { |label, _required, _explicit_label| label.to_s }
 
   # You can define the class to use on all labels. Default is nil.
   # config.label_class = nil

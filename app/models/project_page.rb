@@ -41,6 +41,7 @@ end
 #
 #  index_project_pages_on_project_article_id       (project_article_id)
 #  index_project_pages_on_project_id               (project_id)
+#  index_project_pages_on_project_id_and_url       (project_id,url) UNIQUE
 #  index_project_pages_on_project_id_and_url_hash  (project_id,url_hash) UNIQUE
 #
 # Foreign Keys

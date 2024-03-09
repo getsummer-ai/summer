@@ -25,14 +25,14 @@
         <div class="mt-4">
           <%= render 'layouts/shared/alerts', is_persistent: true %>
         </div>
-        <div class="mt-6 px-1">
-          <%= render 'devise/shared/links' %>
-        </div>
+        <% unless user_signed_in? %>>
+          <div class="mt-6 px-1">
+            <%= render 'devise/shared/links' %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
-
-
 <% end %>
 
 <%= render template: 'layouts/application' %>
