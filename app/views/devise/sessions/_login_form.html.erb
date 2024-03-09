@@ -54,17 +54,17 @@
     </div>
 
     <% unless is_turbo %>
-      <div class="mt-1">
+      <div class="mt-1 text-sm">
         <%= link_to t('.restore_password'),
                     new_password_path('user'),
-                    class: 'link text-sm underline-offset-2 underline opacity-50' %>
+                    class: 'link-summer' %>
       </div>
     <% end %>
 
     <% if is_turbo && (resource.errors.any? || flash[:alert]) %>
       <% if flash[:alert] %>
         <div class="mt-2 mb-2">
-          <div class="text-xs absolute -mt-1">
+          <div class="text-sm absolute -mt-1">
             <%= flash[:alert] %>
           </div>
         </div>

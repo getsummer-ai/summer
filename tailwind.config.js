@@ -14,6 +14,13 @@ module.exports = {
   ],
   theme: {
     extend: {},
+    fontSize: {
+      xs: ['12px', '15px'],
+      sm: ['13px', '16px'],
+      base: ['15px', '22px'],
+      lg: ['20px', '26px'],
+      xl: ['24px', '32px'],
+    },
     colors: {
       transparent: 'transparent',
       current: 'currentColor',

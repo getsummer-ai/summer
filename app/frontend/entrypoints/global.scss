@@ -79,9 +79,9 @@
 }
 
 .btn-summer {
-  height: 2.3rem;
-  min-height: 2.3rem;
-  @apply text-[15px] rounded-lg btn-block;
+  height: 34px;
+  min-height: 34px;
+  @apply text-base rounded-lg btn-block;
 }
 
 .btn-input-summer {
@@ -90,7 +90,7 @@
 }
 
 .input-summer {
-  @apply input-bordered rounded-lg border-gray-200;
+  @apply input-bordered rounded-lg border-gray-200 text-base;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -101,7 +101,10 @@
   }
 }
 
-
 .bg-default {
   background: linear-gradient(180deg, #E6EFF8 54.5%, #FFEFE7 100%);
+}
+
+.link-summer {
+  @apply cursor-pointer text-sm underline-offset-2 underline opacity-50;
 }

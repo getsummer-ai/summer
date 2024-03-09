@@ -16,7 +16,7 @@
         <blockquote class="text-xl md:text-4xl max-w-[608px] font-semibold text-white">
           “Our users can’t simply read our blog anymore they just click this magic button.”
         </blockquote>
-        <p class="opacity-50 text-xs md:text-[15px] mt-2">Kirill Zheleznov, CEO at Enty</p>
+        <p class="opacity-50 text-xs md:text-base mt-2">Kirill Zheleznov, CEO at Enty</p>
       </div>
     </div>
     <div class="md:w-1/2 bg-white flex flex-column justify-center items-center md:min-h-screen flex-grow">
@@ -25,7 +25,7 @@
         <div class="mt-4">
           <%= render 'layouts/shared/alerts', is_persistent: true %>
         </div>
-        <% unless user_signed_in? %>>
+        <% unless user_signed_in? %>
           <div class="mt-6 px-1">
             <%= render 'devise/shared/links' %>
           </div>

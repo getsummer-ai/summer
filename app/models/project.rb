@@ -6,7 +6,7 @@ class Project < ApplicationRecord
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
-  store_accessor :paths, :paths_array
+  # store_accessor :paths, :paths_array
   # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
   # store_accessor :settings, %i[theme font_size container_id], prefix: true
   store :settings,

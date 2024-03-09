@@ -2,6 +2,8 @@
 class ProjectForm
   include ActiveModel::Model
 
+  # serialize :urls, Array
+
   attr_accessor :urls, :name
 
   validates :name, presence: true, length: 3..50
@@ -9,10 +11,11 @@ class ProjectForm
   validate :validate_urls
 
   def validate_urls
-    errors.add(:urls, :invalid) unless urls.is_a?(Array)
+    return errors.add(:urls, :invalid) unless urls.is_a?(Array)
 
-    host = URI.parse(@urls.first).host&.downcase
-    urls.each { |url| errors.add(:urls, :invalid) if host != URI.parse(url).host&.downcase }
+    host = parsed_urls[0].host&.downcase
+    errors.add(:urls, :invalid) if host.nil?
+    parsed_urls.each { |url| errors.add(:urls, :invalid) if host != url.host&.downcase }
   end
 
   # @param [User] user
@@ -20,12 +23,12 @@ class ProjectForm
   def initialize(user, params = {})
     @user = user
     @name = params[:name]
-    @urls = params[:urls]
+    @urls = params[:urls] || ['']
     @project = params[:project]
   end
 
   def self.from_project(project)
-    urls = project.paths_array.map { |path| "#{project.protocol}://#{project.domain}#{path}" }
+    urls = project.paths.map { |path| "#{project.protocol}://#{project.domain}#{path}" }
     new(project.user_id, name: project.name, urls:)
   end
 
@@ -38,7 +41,8 @@ class ProjectForm
     return nil if invalid?
     model = generate_new_project
     if model.invalid?
-      model.errors.each { |k, v| errors.add(k, v) } and return
+      model.errors.full_messages.each{ |msg| errors.add(:base, msg) }
+      return nil
     end
 
     res = model.save(validate: false)
@@ -53,23 +57,29 @@ class ProjectForm
 
   # @return [Project]
   def generate_new_project
-    model = Project.new(user_id: @user.id, protocol:, domain:, paths_array: parsed_urls.map(&:path))
+    model = Project.new(
+      user_id: @user.id,
+      name:,
+      protocol:,
+      domain:,
+      paths: parsed_urls.map(&:path).compact_blank
+    )
     model.start_tracking(source: 'Create Project Form', author: @user)
     model
   end
 
-  # @return [Array<URI::HTTP>]
+  # @return [Array<URI::Generic>]
   def parsed_urls
     @parsed_urls ||= @urls.map { |url| URI.parse(url) }
   end
 
-  # @return [String]
+  # @return [String, nil]
   def protocol
-    parsed_urls[0].split('://').first
+    parsed_urls[0].scheme
   end
 
-  # @return [String]
+  # @return [String, nil]
   def domain
-    parsed_urls[0].split('://').last.split('/').first
+    parsed_urls[0].host
   end
 end

@@ -15,7 +15,7 @@ module Private
     def new
       @project = ProjectForm.new(current_user)
       layout_name = current_user.projects.count.positive? ? 'private' : 'login'
-      render :new, status: :unprocessable_entity, layout: layout_name
+      render :new, layout: layout_name
     end
 
     def setup
@@ -31,7 +31,6 @@ module Private
     def edit
     end
 
-    # POST /projects or /projects.json
     def create
       @project = ProjectForm.new(current_user, project_params)
       res = @project.create
@@ -42,7 +41,6 @@ module Private
       render :new, status: :unprocessable_entity, layout: layout_name
     end
 
-    # PATCH/PUT /projects/1 or /projects/1.json
     def update
       @project.start_tracking(source: 'Update Project Form', author: current_user)
       if @project.update(project_params)
@@ -51,7 +49,6 @@ module Private
       render :edit, status: :unprocessable_entity
     end
 
-    # DELETE /projects/1 or /projects/1.json
     def destroy
       @project.destroy!
       redirect_to projects_url, notice: 'Project was successfully destroyed.'
@@ -61,7 +58,7 @@ module Private
 
     # Only allow a list of trusted parameters through.
     def project_params
-      params.fetch(:project_form, {}).permit(:name, :urls)
+      params.fetch(:project_form, {}).permit(:name, urls: [])
     end
   end
 end
