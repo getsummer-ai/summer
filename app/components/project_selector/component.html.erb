@@ -24,7 +24,9 @@
       </li>
     <% end %>
     <li>
-      <%= link_to new_project_url, class: 'p-1.5 pl-2 hover:bg-gray-100 transition-all rounded-xl block' do %>
+      <%= link_to new_project_url,
+                  data: { "turbo-frame": "modal" },
+                  class: 'p-1.5 pl-2 hover:bg-gray-100 transition-all rounded-xl block' do %>
         <img
           src="<%= vite_asset_path('assets/icons/plus.svg') %>"
           class="summer-icon mr-0.5"

@@ -5,8 +5,8 @@ json.article do
   json.title @article.title
 end
 json.settings do
-  json.color @current_project.settings_color
+  json.theme @current_project.settings_theme
   json.size @current_project.settings_font_size
-  json.filter @current_project.settings_url_filter
+  json.paths @current_project.paths
   json.container_id @current_project.settings_container_id
 end

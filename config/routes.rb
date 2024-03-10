@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   match '/500', to: 'errors#internal_server_error', via: :all
 end
 
-if defined? ::Avo
+if defined? Avo
   Avo::Engine.routes.draw do
     get "dashboard", to: "tools#dashboard", as: :dashboard
   end

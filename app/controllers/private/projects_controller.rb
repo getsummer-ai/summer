@@ -2,6 +2,8 @@
 module Private
   class ProjectsController < PrivateController
     before_action :find_project, except: %i[new create]
+    layout :set_new_project_layout, only: %i[new create]
+
     # GET /projects or /projects.json
     # def index
     #   @projects = current_user.projects.all
@@ -14,8 +16,7 @@ module Private
     # GET /projects/new
     def new
       @project = ProjectForm.new(current_user)
-      layout_name = current_user.projects.count.positive? ? 'private' : 'login'
-      render :new, layout: layout_name
+      render(:new_modal) if turbo_frame_request?
     end
 
     def setup
@@ -34,11 +35,9 @@ module Private
     def create
       @project = ProjectForm.new(current_user, project_params)
       res = @project.create
-      if res
-        return redirect_to project_url(res), notice: 'Project was successfully created.'
-      end
-      layout_name = current_user.projects.count.positive? ? 'private' : 'login'
-      render :new, status: :unprocessable_entity, layout: layout_name
+      return redirect_to(project_url(res), notice: 'Project was successfully created') if res
+
+      render :new, status: :unprocessable_entity
     end
 
     def update
@@ -55,6 +54,12 @@ module Private
     end
 
     private
+
+    def set_new_project_layout
+      return 'turbo_rails/frame' if turbo_frame_request?
+      return 'login' unless current_user.projects.exists?
+      'private'
+    end
 
     # Only allow a list of trusted parameters through.
     def project_params

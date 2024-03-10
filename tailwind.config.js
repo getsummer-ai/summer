@@ -20,7 +20,7 @@ module.exports = {
       base: ['15px', '22px'],
       lg: ['20px', '26px'],
       xl: ['24px', '32px'],
-      '2xl': ['40px', '48px'],
+      '2xl': ['32px', '40px'],
       '3xl': ['48px', '54px'],
       '6xl': ['74px', '82px'],
     },

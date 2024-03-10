@@ -22,27 +22,27 @@ class ProjectStatisticsViewModel
 
   # @return [Integer]
   def current_month_new_pages_count
-    current_month_pages_statistics.value
+    current_month_pages_statistics.value || 0
   end
 
   # @return [Integer]
   def total_views_count
-    total_action_statistics.value.dig(0, 0)
+    total_action_statistics.value.dig(0, 0) || 0
   end
 
   # @return [Integer]
   def total_clicks_count
-    total_action_statistics.value.dig(0, 1)
+    total_action_statistics.value.dig(0, 1) || 0
   end
 
   # @return [Integer]
   def current_month_new_views_count
-    current_month_action_statistics.value.dig(0, 0)
+    current_month_action_statistics.value.dig(0, 0) || 0
   end
 
   # @return [Integer]
   def current_month_new_clicks_count
-    current_month_action_statistics.value.dig(0, 1)
+    current_month_action_statistics.value.dig(0, 1) || 0
   end
 
   private

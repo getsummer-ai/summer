@@ -1,24 +1,11 @@
-<h2 class="font-semibold text-[32px]">Pages</h2>
-<p class="opacity-50 mt-1 text-[15px]">Gain insights on how people use Summer on Enty Blog</p>
-
-<hr class="mt-12 mb-12" />
-
-<h2 class="text-xl font-semibold">Project Domain</h2>
-<p class="opacity-50 mt-1 text-[15px]">
+<h2 class="font-semibold text-2xl">Pages</h2>
+<p class="opacity-50 mt-1">
   Summer will appear on the pages under this domain link.
   If you experience issues with the domain or want to change
   the address contact support via support@getsummer.ai
 </p>
 
-<div class="mt-7 flex justify-between bg-green-50 rounded-xl border border-green-400 p-4">
-  <div><%=[@current_project.domain].compact.join('') %></div>
-  <div class="text-green-500 tracking-tight">
-    <span class="inline-block w-1.5 h-1.5 rounded bg-green-400 align-middle mr-0.5"></span>
-    Connected
-  </div>
-</div>
-
-<div class="grid gap-4 grid-flow-col grid-cols-3 mt-7">
+<div class="grid gap-4 grid-flow-col grid-cols-3 mt-12">
   <%= render "private/pages/metric_card",
              title: 'Pages',
              icon_src: vite_asset_path('assets/icons/pages.svg'),

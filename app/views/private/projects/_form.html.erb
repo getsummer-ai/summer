@@ -1,64 +1,57 @@
-<%= form_for @project,
-             url: projects_path,
-             builder: DaisyBuilder,
-             html: { 'data-controller': "project-form" } do |f| %>
-  <%# if @project.errors.any? %>
-<!--    <div class="mt-1 border-l-2 border-accent pl-2">-->
-<!--      <ul>-->
-        <%# @project.errors.full_messages.each do |message| %>
-<!--          <li class="pb-1 text-sm">message</li>-->
-        <%# end %>
-<!--      </ul>-->
-<!--    </div>-->
-  <%# end %>
-  <div class="form-control">
-    <%= f.label :name, 'Project Name' %>
-    <%= f.text_field :name %>
-  </div>
-  <div class="form-control mt-2">
-    <%= f.label :urls, 'Domain Address' %>
-    <%
-      @project.urls.each_with_index do |item, index|
-        if item.present? || index == 0
-          data_attributes = {}
-          data_attributes = { 'data-project-form-target': "field" } if index == 0
-          concat f.text_field :urls,
-                            multiple: true,
-                            value: item,
-                            id: "project_form_urls_#{index}",
-                            **data_attributes
-
+<% is_turbo = turbo_frame_request_id.present? %>
+<%= turbo_conditional_tag "project-form", is_turbo do %>
+  <%= form_for @project,
+               url: projects_path,
+               builder: DaisyBuilder,
+               html: { 'data-controller': "project-form" } do |f| %>
+    <div class="form-control">
+      <%= f.label :name, 'Project Name' %>
+      <%= f.text_field :name %>
+    </div>
+    <div class="form-control mt-2">
+      <%= f.label :urls, 'Domain Address' %>
+      <%
+        @project.urls.each_with_index do |item, index|
+          if item.present? || index == 0
+            data_attributes = {}
+            data_attributes = { 'data-project-form-target': "field" } if index == 0
+            concat f.text_field :urls,
+                              multiple: true,
+                              value: item,
+                              id: "project_form_urls_#{index}",
+                              **data_attributes
+          end
         end
-      end
-    %>
-  </div>
-  <div>
-    <span class="link-summer" data-action="click->project-form#addInput"> Add address </span>
-  </div>
+      %>
+    </div>
+    <div>
+      <span class="link-summer" data-action="click->project-form#addInput"> Add address </span>
+    </div>
 
-  <% if @project.errors.any? %>
-    <div class="text-xs mt-1">
-      <% @project.errors.full_messages.each do |message| %>
-        <div><%= message %></div>
-      <% end %>
+    <% if @project.errors.any? %>
+      <div class="text-xs mt-1">
+        <% @project.errors.full_messages.each do |message| %>
+          <div><%= message %></div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="p-4 flex flex-row bg-gray-100 rounded-xl mt-6">
+      <img
+        src="<%= vite_asset_path('assets/icons/plus.svg') %>"
+        class="summer-icon mr-0.5"
+        alt="Plus Icon"
+      />
+      <div class="ml-2 text-sm leading-4">
+        <b>Important:</b>
+        Summer will appear on every page under this domain.
+        Make sure to use specific directory address, such as “domain.com/blog”,
+        and not the main domain address only.
+      </div>
+    </div>
+
+    <div class="form-control mt-8">
+      <%= f.submit 'Create Project', class: 'btn btn-summer btn-neutral btn-block' %>
     </div>
   <% end %>
-
-  <div class="p-4 flex flex-row bg-gray-100 rounded-xl mt-6">
-    <img
-      src="<%= vite_asset_path('assets/icons/plus.svg') %>"
-      class="summer-icon mr-0.5"
-      alt="Plus Icon"
-    />
-    <div class="ml-2 text-sm leading-4">
-      <b>Important:</b>
-      Summer will appear on every page under this domain.
-      Make sure to use specific directory address, such as “domain.com/blog”,
-      and not the main domain address only.
-    </div>
-  </div>
-
-  <div class="form-control mt-8">
-    <%= f.submit 'Create Project', class: 'btn btn-summer btn-neutral btn-block' %>
-  </div>
 <% end %>
