@@ -38,8 +38,6 @@ export default class TurboModalController extends Controller {
   declare readonly modalTarget: HTMLDivElement;
   declare allowRedirectValue: boolean;
 
-  closed = false;
-
   connect() {
     const src = this.element.parentElement?.getAttribute('src');
     if (!src) return;
@@ -49,20 +47,21 @@ export default class TurboModalController extends Controller {
   }
 
   disconnect() {
-    this.closeModal();
-    removeModalQueryStringParam();
+    // if (!this.element.parentElement) return log('Modal has benn disconnected without cleaning');
+    this.closeModal(false);
     log('Modal disconnect');
   }
 
-  closeModal() {
-    if (this.closed) return;
+  closeModal(cleanQueryStringParam = true) {
+    log('cleanQueryStringParam', cleanQueryStringParam);
+    if (cleanQueryStringParam) removeModalQueryStringParam();
     log('closeModal', this.element.parentElement);
     if (this.element.parentElement) {
       this.element.parentElement.removeAttribute('src');
+      // this.element.parentElement.removeAttribute('complete');
       this.element.parentElement.focus();
     }
     this.element.remove();
-    this.closed = true;
   }
 
   submitEnd(e: {
