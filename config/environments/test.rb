@@ -41,15 +41,18 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  port = ENV['CYPRESS_DEV'] ? 5002 : 3000
-  Rails.application.routes.default_url_options[:host] = 'lvh.me'
-  Rails.application.routes.default_url_options[:port] = port
-  config.action_mailer.asset_host = "http://lvh.me:#{port}"
-  config.action_mailer.default_url_options = Rails.application.routes.default_url_options
+  # port = ENV['CYPRESS_DEV'] ? 5002 : 3000
+
+  # Rails.application.routes.default_url_options[:host] = 'lvh.me'
+  # Rails.application.routes.default_url_options[:port] = port
+
+  # config.action_mailer.asset_host = "http://lvh.me:#{port}"
+  # config.action_mailer.default_url_options = Rails.application.routes.default_url_options
   config.action_controller.raise_on_open_redirects = false
   config.action_controller.default_url_options = {
-    host: 'lvh.me',
-    port: 3000,
+    # host: 'lvh.me',
+    # port: 3000,
+    locale: nil
   }
 
   # config.hosts << "127.0.0.1"

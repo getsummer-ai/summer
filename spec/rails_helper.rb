@@ -59,9 +59,9 @@ RSpec.configure do |config|
   config.include ViewComponent::SystemTestHelpers, type: :component
   config.include Capybara::RSpecMatchers, type: :component
 
-  # config.before(type: :feature) do
-  #   self.default_url_options = ApplicationController.default_url_options
-  # end
+  config.before(type: :feature) do
+    self.default_url_options = ApplicationController.default_url_options
+  end
 
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false

@@ -10,7 +10,7 @@ describe SummarizeArticleJob do
       password_confirmation: '12345678',
       confirmed_at: Time.zone.now
     )
-    project = user.projects.create(name: 'Test Project', domain: 'test.com')
+    project = user.projects.create(name: 'Test Project', protocol: 'http', domain: 'test.com')
     article = project.articles.create(
       article_hash: '354fdebd51e8fbdfd462dd604e00224b',
       article: 'On the night of 31 December and the morning of 1 January, people in many countries all over...',

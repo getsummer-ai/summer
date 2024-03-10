@@ -9,7 +9,7 @@ RSpec.describe Api::V1::ButtonController do
       confirmed_at: Time.zone.now,
     )
   end
-  let!(:project) { user.projects.create!(domain: 'localhost.com', name: 'Test Project') }
+  let!(:project) { user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project') }
   let!(:api_key) { project.uuid }
 
   before { request.headers['Api-Key'] = api_key }

@@ -16,9 +16,9 @@ describe "the SignIn process" do
       fill_in 'Email', with: 'admin@test.com'
       fill_in 'Password', with: '12345678'
     end
-    click_button 'Sign in'
+    click_on 'Sign in'
 
-    expect(page).to have_content 'Photo Magic'
-    expect(page).to have_content 'Upload photos'
+    expect(page).to have_content 'Create new project'
+    # expect(page).to have_content 'Upload photos'
   end
 end

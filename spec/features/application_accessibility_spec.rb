@@ -2,15 +2,16 @@
 #
 describe 'main application accessibility' do
   before(:all) do
-    User.create(
+    user = User.create(
       email: 'admin@test.com',
       password: '12345678',
       password_confirmation: '12345678',
       confirmed_at: Time.zone.now,
     )
+    user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
   end
 
-  context 'when user is not logged in', js: true do
+  context 'when user is not logged in', :js do
     it 'opens a login modal when click on try button' do
       visit '/'
 
@@ -45,7 +46,7 @@ describe 'main application accessibility' do
       click_button 'Sign in'
     end
 
-    it 'redirects user from main page to app', js: true do
+    it 'redirects user from main page to app', :js do
       expect(page).to have_content(/upload photos/i)
       visit '/'
       click_link id: 'try-button'
