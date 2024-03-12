@@ -1,0 +1,40 @@
+<h2 class="font-semibold text-2xl">Settings</h2>
+<hr class="my-12">
+
+<h3 class="font-semibold text-lg">Domain Addresses</h3>
+<p class="opacity-50 mt-1">
+  Summer will appear on the pages under this domain(s).
+  If you experience issues with the domain or want to change the root address contact support via support@getsummer.ai
+</p>
+
+<%= render Notice::Component.new(container_class: 'mt-6') do %>
+  <div>
+    <b>Important:</b>
+    Summer will appear on every page under this domain.
+    Make sure to use specific directory address, such as “domain.com/blog”,
+    and not the main domain address only.
+  </div>
+<% end %>
+
+<div class="mt-12">
+  <%=turbo_frame_tag 'path_info' do %>
+    <div class="overflow-x-auto mt-6">
+      <table class="table text-[15px] tracking-tight">
+        <thead class="text-[15px]">
+        <tr>
+          <th class="font-semibold pl-0">URL Address</th>
+          <th class="font-semibold w-24">Pages</th>
+          <th class="font-semibold w-24">Shown</th>
+          <th class="font-semibold px-0 w-14">Clicked</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @statistics.result.each do |path_info|%>
+          <%= render ProjectPathComponents::RowComponent.new(project: @current_project, path_info:) %>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>
+

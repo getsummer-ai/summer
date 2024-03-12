@@ -62,7 +62,7 @@ class ProjectForm
       name:,
       protocol:,
       domain:,
-      paths: parsed_urls.map(&:path).compact_blank
+      paths: parsed_urls.filter_map(&:path)
     )
     model.start_tracking(source: 'Create Project Form', author: @user)
     model
@@ -70,7 +70,7 @@ class ProjectForm
 
   # @return [Array<URI::Generic>]
   def parsed_urls
-    @parsed_urls ||= @urls.map { |url| URI.parse(url) }
+    @parsed_urls ||= @urls.uniq.map { |url| URI.parse(url) }
   end
 
   # @return [String, nil]

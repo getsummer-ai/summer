@@ -38,13 +38,13 @@ Rails.application.routes.draw do
       resources :projects, param: :project_id, except: [:index] do
         member do
           get :setup
-          get :settings
           get :knowledge
         end
       end
       resources :projects, only: [] do
         resources :articles, only: %i[index show edit update]
         resources :pages, only: %i[index update show]
+        resources :settings, only: [:index]
       end
     end
   end
