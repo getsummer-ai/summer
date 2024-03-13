@@ -5,12 +5,7 @@ module Private
     before_action :find_project
     before_action :set_url, only: %i[show update]
 
-    layout :custom_layout
-
-    def custom_layout
-      return 'turbo_rails/frame' if turbo_frame_request?
-      'private'
-    end
+    layout :private_or_turbo_layout
 
     def index
       @statistics = ProjectStatisticsViewModel.new(@current_project, :views, :actions)

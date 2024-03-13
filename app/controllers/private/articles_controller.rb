@@ -4,12 +4,7 @@ module Private
     before_action :find_project
     before_action :set_article, only: %i[show edit update]
 
-    layout :custom_layout
-
-    def custom_layout
-      return 'turbo_rails/frame' if turbo_frame_request?
-      'private'
-    end
+    layout :private_or_turbo_layout
 
     # GET /projects or /projects.json
     def index

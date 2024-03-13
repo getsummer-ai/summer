@@ -25,9 +25,6 @@ module Private
     def knowledge
     end
 
-    def settings
-    end
-
     # GET /projects/1/edit
     def edit
     end
@@ -49,8 +46,17 @@ module Private
     end
 
     def destroy
-      @project.destroy!
-      redirect_to projects_url, notice: 'Project was successfully destroyed.'
+      @project.track!(source: 'Delete Project', author: current_user) do
+        @project.update(deleted_at: Time.current.utc, status: :deleted)
+      end
+
+      if @project.errors.any?
+        error_message = "Error happened while deleting project #{@project.id} - " + @project.errors.full_messages.to_s
+        Rails.logger.error(error_message)
+        return redirect_back_or_to(user_app_path, alert: 'Error happened while deleting project')
+      end
+
+      redirect_to user_app_path, notice: 'Project was successfully destroyed.'
     end
 
     private

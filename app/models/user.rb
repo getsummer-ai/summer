@@ -19,7 +19,9 @@ class User < ApplicationRecord
 
   has_many :all_events, class_name: 'Event', as: :author, dependent: :restrict_with_exception
   has_many :projects, dependent: :restrict_with_exception
-  belongs_to :default_project, class_name: 'Project', optional: true
+  belongs_to :default_project, -> { available }, class_name: 'Project', optional: true, inverse_of: :user
+
+  validates :name, presence: true
 
   def self.from_omniauth(auth, locale = nil)
     user =

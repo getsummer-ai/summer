@@ -81,7 +81,13 @@
 .btn-summer {
   height: 34px;
   min-height: 34px;
-  @apply text-base rounded-lg btn-block;
+  @apply text-base rounded-lg border-0;
+  &.btn-red {
+    @apply bg-red-100 text-red-500 hover:bg-red-200;
+  }
+  &:hover {
+    @apply border-0;
+  }
 }
 
 .btn-input-summer {

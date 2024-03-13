@@ -8,7 +8,7 @@
   else
     concat form.hidden_field :is_accessible, value: !@page.is_accessible
     concat form.submit (@page.is_accessible? ? 'Turn off' : 'Turn on') + ' this page',
-                       class: 'btn btn-summer'
+                       class: 'btn btn-summer btn-block'
   end
   end
 %>

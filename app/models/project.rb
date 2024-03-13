@@ -20,6 +20,8 @@ class Project < ApplicationRecord
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
   has_many :all_events, class_name: 'Event'
 
+  scope :available, -> { where.not(status: :deleted) }
+
   validates :name,
             presence: true,
             uniqueness: {
@@ -33,6 +35,7 @@ class Project < ApplicationRecord
               scope: :user_id,
               message: 'You have a project with this domain',
             }
+  validate :validate_paths
   validates :settings_container_id,
             allow_blank: true,
             format: {
@@ -84,6 +87,16 @@ class Project < ApplicationRecord
   end
 
   private
+
+  def validate_paths
+    return unless paths_changed?
+
+    paths.each do
+      Addressable::URI.parse(path)
+    rescue StandardError => e
+      errors.add(:paths, "#{path} #{e.message}")
+    end
+  end
 
   def normalize_domain
     return if domain.nil? || !domain_changed?

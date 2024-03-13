@@ -1,0 +1,5 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: 'Edit Domain Address', redirect_following: true) do %>
+    <%= render "form", project: @project %>
+  <% end %>
+<% end %>

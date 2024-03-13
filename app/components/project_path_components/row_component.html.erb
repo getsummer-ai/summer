@@ -1,7 +1,7 @@
 <tr id="path_info_<%= @path_info.id %>">
   <td class="font-semibold pl-0">
     <%=
-      link_to project_page_path(@project, @path_info), data: {'turbo-frame': "modal"} do
+      link_to edit_project_path_path(@project, @path_info), data: {'turbo-frame': "modal"} do
         @path_info.url
       end
     %>

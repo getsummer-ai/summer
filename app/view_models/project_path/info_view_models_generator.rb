@@ -6,19 +6,21 @@ module ProjectPath
       # @type [Project]
       @project = project
       # @type [Array<String>]
-      @urls = @project.paths.map { |path| "#{@project.protocol}://#{@project.domain}#{path}" }
+      @paths = @project.paths
     end
 
     def result
-      @result ||= @urls.map { |url, index| calculate_statistic(url, index) }
+      @result ||= @paths.map do |url|
+        calculate_statistic(url)
+      end
     end
 
     private
 
-    # @param [String] url
-    # @param [Integer] index
+    # @param [String] path
     # @return [InfoViewModel]
-    def calculate_statistic(url, index)
+    def calculate_statistic(path)
+      url = "#{@project.protocol}://#{@project.domain}#{path}"
       ids_query = @project.pages.select('id').where("url LIKE ?", "#{url}%")
       columns = Arel.sql('COUNT(*)::BIGINT, SUM(views)::BIGINT, SUM(clicks)::BIGINT')
       result =
@@ -30,7 +32,13 @@ module ProjectPath
       pages_views = result.dig(0, 1) || 0
       pages_clicks = result.dig(0, 2) || 0
 
-      InfoViewModel.new(id: index, url:, pages: pages_count, views: pages_views, clicks: pages_clicks)
+      InfoViewModel.new(
+        path:,
+        url:,
+        pages: pages_count,
+        views: pages_views,
+        clicks: pages_clicks
+      )
     end
   end
 end

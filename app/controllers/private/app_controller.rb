@@ -4,11 +4,12 @@ module Private
 
     def index
       project = current_user.default_project
-      if project.nil? && current_user.projects.first.nil?
-        return redirect_to new_project_path
-      end
-      redirect_to project_path(project || current_user.projects.first)
-      # render formats: :html
+      return redirect_to project_path(project) if project.present?
+
+      project = current_user.projects.available.first
+      return redirect_to project_path(project) if project.present?
+
+      redirect_to(new_project_path)
     end
   end
 end
