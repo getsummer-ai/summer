@@ -12,25 +12,27 @@ module Private
       anchor = generate_modal_anchor(new_project_path_path)
       redirect_to project_settings_path(anchor:) unless turbo_frame_request?
 
-      @path_form = ProjectPathForm.new(@project)
+      project_path = generate_empty_project_path
+      @path_form = ProjectPathForm.new(project_path)
     end
 
     def edit
-      anchor = generate_modal_anchor(edit_project_path_path(@project, params[:id]))
+      anchor = generate_modal_anchor(edit_project_path_path(@project, @project_path))
       redirect_to project_settings_path(anchor:) unless turbo_frame_request?
-      @path_form = ProjectPathForm.new(@project, path: @project_path)
+      @path_form = ProjectPathForm.new(@project_path)
     end
 
     def create
-      @path_form = ProjectPathForm.new(@project, value: project_path_params[:value])
+      project_path = generate_empty_project_path
+      @path_form = ProjectPathForm.new(project_path, value: project_path_params[:value])
       res = @path_form.create
-      return redirect_to(project_url(res), notice: 'Project was successfully created') if res
+      return redirect_to(project_settings_url, notice: 'Project was successfully created') if res
 
       render :new, status: :unprocessable_entity
     end
 
     def update
-      @path_form = ProjectPathForm.new(@project, path: @project_path, value: project_path_params[:value])
+      @path_form = ProjectPathForm.new(@project_path, value: project_path_params[:value])
       if @path_form.update
         return redirect_to project_settings_path, notice: 'Domain Address was successfully updated'
       end
@@ -38,13 +40,13 @@ module Private
     end
 
     def destroy
-      @path_form = ProjectPathForm.new(@project, path: @project_path)
+      @path_form = ProjectPathForm.new(@project_path)
 
       if @path_form.destroy
-        redirect_to project_settings_path, notice: "#{@project_path} was successfully deleted"
+        return redirect_to(project_settings_path, notice: "#{@project_path.path} was successfully deleted")
       end
 
-      error_message = "Error while deleting path (#{@project_path}) from project #{@project.id} - " \
+      error_message = "Error while deleting path (#{@project_path.path}) from project #{@project.id} - " \
         + @path_form.errors.full_messages.to_s
       Rails.logger.error(error_message)
       redirect_back_or_to(project_settings_path, alert: 'Error happened while deleting the path')
@@ -53,21 +55,27 @@ module Private
     private
 
     def paths_count_filter
-      return unless @project.paths.size <= 1
+      return unless @project_path.last_one?
 
       redirect_to project_settings_path, alert: 'You cannot delete the last domain address'
     end
 
     # Only allow a list of trusted parameters through.
     def project_path_params
-      params.fetch(:project_path, {}).permit(:url)
+      params.fetch(:project_path_form, {}).permit(:value)
     end
 
-    # @return [String]
+    # @return [Project::ProjectPath]
+    def generate_empty_project_path
+      Project::ProjectPath.new(@project)
+    end
+
+    # @return [Project::ProjectPath]
     def find_project_path
-      id = params[:id].to_s == 'default' ? "" : Base64.decode(params[:id].to_s)
-      @project_path = @project.paths.find { |p| p == id }
+      # @type [Project::ProjectPath]
+      @project_path = @project.smart_paths.find { |p| p.id == params[:id] }
       raise ActiveRecord::RecordNotFound if @project_path.nil?
+
       @project_path
     end
   end

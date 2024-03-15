@@ -86,12 +86,18 @@ class Project < ApplicationRecord
     @encrypted_id ||= BasicEncrypting.encode(id)
   end
 
+  # @return [Array<ProjectPath>]
+  def smart_paths
+    res = self[:paths] || []
+    res.map { |path| ProjectPath.new(self, path) }
+  end
+
   private
 
   def validate_paths
     return unless paths_changed?
 
-    paths.each do
+    paths.each do |path|
       Addressable::URI.parse(path)
     rescue StandardError => e
       errors.add(:paths, "#{path} #{e.message}")

@@ -17,30 +17,31 @@
 <% end %>
 
 <div class="mt-12">
-  <%=turbo_frame_tag 'path_info' do %>
-    <div class="overflow-x-auto mt-6">
-      <table class="table text-[15px] tracking-tight">
-        <thead class="text-[15px]">
-        <tr>
-          <th class="font-semibold pl-0">URL Address</th>
-          <th class="font-semibold w-24">Pages</th>
-          <th class="font-semibold w-24">Shown</th>
-          <th class="font-semibold px-0 w-14">Clicked</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% @statistics.result.each do |path_info|%>
-          <%= render ProjectPathComponents::RowComponent.new(project: @current_project, path_info:) %>
-        <% end %>
-        </tbody>
-      </table>
-      <%=
-        link_to new_project_path_path, data: {'turbo-frame': "modal"} do
-          '+ Add new address'
-        end
-      %>
-    </div>
-  <% end %>
+  <div class="overflow-x-auto mt-6">
+    <table class="table text-[15px] tracking-tight">
+      <thead class="text-[15px]">
+      <tr>
+        <th class="font-semibold pl-0">URL Address</th>
+        <th class="font-semibold w-24">Pages</th>
+        <th class="font-semibold w-24">Shown</th>
+        <th class="font-semibold px-0 w-14">Clicked</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @statistics.result.each do |statistic_view_model|%>
+        <%= render ProjectPathComponents::RowComponent.new(
+            project: @current_project,
+            statistic_view_model:
+        ) %>
+      <% end %>
+      </tbody>
+    </table>
+    <%=
+      link_to new_project_path_path, data: {'turbo-frame': "modal"} do
+        '+ Add new address'
+      end
+    %>
+  </div>
 </div>
 
 <hr class="my-12">

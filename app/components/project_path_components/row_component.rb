@@ -6,11 +6,11 @@ module ProjectPathComponents
     include ActiveSupport::NumberHelper
 
     # @param [Project] project
-    # @param [ProjectPath::InfoViewModel] path_info
-    def initialize(project:, path_info:)
+    # @param [Project::ProjectPath::StatisticViewModel] statistic_view_model
+    def initialize(project:, statistic_view_model:)
       super
       @project = project
-      @path_info = path_info
+      @statistic_view_model = statistic_view_model
     end
   end
 end

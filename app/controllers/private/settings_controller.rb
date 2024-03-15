@@ -4,7 +4,7 @@ module Private
     before_action :find_project
 
     def index
-      @statistics = ProjectPath::InfoViewModelsGenerator.new(@current_project)
+      @statistics = Project::ProjectPath::Statistics.new(@current_project)
     end
   end
 end

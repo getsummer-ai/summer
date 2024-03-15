@@ -2,7 +2,7 @@
 class ProjectPathForm
   include ActiveModel::Model
 
-  attr_accessor :id, :path, :value
+  attr_accessor :path, :value
 
   validates :value, presence: true
   validates :value, url: true
@@ -17,23 +17,22 @@ class ProjectPathForm
   end
 
   def check_path_existence
-    return unless @project.paths.exclude?(path)
+    return if @project_path.persisted?
     errors.add(:path, :invalid)
   end
 
-  # @param [Project] project
-  # @param [String, nil] path
+  # @param [Project::ProjectPath] project_path
   # @param [String, nil] value
-  def initialize(project, path: nil, value: nil)
+  def initialize(project_path, value: nil)
+    # @type [Project::ProjectPath]
+    @project_path = project_path
     # @type [Project]
-    @project = project
+    @project = project_path.project
+    @path = project_path.path
     @value = value
-    return if path.nil?
+    return if @path.nil?
 
-    @id = path == "" ? 'default' : Base64.encode64(path)
-    @path = path
-    url = "#{@project.protocol}://#{@project.domain}#{path}"
-    @value = @value.nil? ? url : @value
+    @value = @value.nil? ? project_path.url : @value
   end
 
   def create
@@ -88,6 +87,6 @@ class ProjectPathForm
   end
 
   def to_param
-    id
+    @project_path.id
   end
 end
