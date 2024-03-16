@@ -10,10 +10,17 @@ class ProjectPathForm
 
   validates :path, presence: true, allow_blank: true, on: [:update, :destroy]
   validate :check_path_existence, on: [:update, :destroy]
+  validate :check_path_uniqueness, if: proc { |o| o.errors.empty? }
 
   def check_domain_correctness
     return if parsed_value&.host == @project.domain
-    errors.add(:value, :invalid)
+    errors.add(:base, 'Domain name must match the project domain')
+  end
+
+  def check_path_uniqueness
+    return if not_changed?
+    return unless @project.paths.include?(parsed_value&.path)
+    errors.add(:base, 'URL already exists')
   end
 
   def check_path_existence
@@ -84,6 +91,10 @@ class ProjectPathForm
   def parsed_value
     return nil if value.nil?
     @parsed_value ||= URI.parse(value)
+  end
+
+  def not_changed?
+    parsed_value&.path == @project_path.path
   end
 
   def to_param

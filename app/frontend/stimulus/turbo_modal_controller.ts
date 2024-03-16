@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { useClickOutside } from 'stimulus-use'
 
 type LogArg = string | number | boolean | null | undefined | HTMLElement;
 const logIsActive = false;
@@ -39,6 +40,7 @@ export default class TurboModalController extends Controller {
   declare allowRedirectValue: boolean;
 
   connect() {
+    useClickOutside(this, { element: this.modalTarget, events: ['touchend', 'mousedown']});
     const src = this.element.parentElement?.getAttribute('src');
     if (!src) return;
     log('Modal connect', src);
@@ -80,8 +82,8 @@ export default class TurboModalController extends Controller {
     if (e.code == 'Escape') this.closeModal();
   }
 
-  closeOnClickOutside(e: MouseEvent) {
-    if (e.target && this.modalTarget.contains(e.target as Node)) return;
-    this.closeModal();
-  }
+  // closeOnClickOutside(e: MouseEvent) {
+  //   if (e.target && this.modalTarget.contains(e.target as Node)) return;
+  //   this.closeModal();
+  // }
 }

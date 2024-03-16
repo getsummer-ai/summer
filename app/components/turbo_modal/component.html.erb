@@ -1,7 +1,9 @@
 <div
   data-controller="turbo-modal"
   data-turbo-modal-allow-redirect-value="<%= @redirect_following %>"
-  data-action="turbo:submit-end->turbo-modal#submitEnd keyup@window->turbo-modal#closeOnEscape click@window->turbo-modal#closeOnClickOutside"
+  data-action="turbo:submit-end->turbo-modal#submitEnd
+              keyup@window->turbo-modal#closeOnEscape
+              turbo-modal:click:outside->turbo-modal#closeModal"
   class="relative z-10"
   aria-labelledby="modal-title"
   role="dialog"
