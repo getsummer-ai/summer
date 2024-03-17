@@ -1,44 +1,34 @@
-<% is_turbo = turbo_frame_request_id.present? %>
-<%= turbo_conditional_tag "project-path-form", is_turbo do %>
-  <%= form_for @path_form,
-               url: @path_form.path.nil? ? project_paths_path : project_path_path(@current_project, @path_form),
-               method: @path_form.path.nil? ? :post : :put,
-               builder: DaisyBuilder do |f| %>
-    <div class="form-control">
-      <%= f.label :value, 'Address' %>
-      <%= f.text_field :value %>
-    </div>
+<%= form_for project_path_form,
+             url: project_path_form.path.nil? ? project_paths_path : project_path_path(@current_project, project_path_form),
+             method: project_path_form.path.nil? ? :post : :put,
+             builder: DaisyBuilder do |f| %>
+  <div class="form-control">
+    <%= f.label :value, 'Address' %>
+    <%= f.text_field :value %>
+  </div>
 
-    <% if @path_form.errors.any? %>
-      <div class="text-xs mt-1">
-        <% @path_form.errors.full_messages.each do |message| %>
-          <div><%= message %></div>
-        <% end %>
-      </div>
-    <% end %>
-
-    <%= render Notice::Component.new(container_class: 'mt-6') do %>
-      <div class="text-sm leading-4">
-        <b>Important:</b>
-        Summer will appear on every page under this domain. Make sure to use specific directory
-        address, such as “domain.com/blog”, and not the main domain address only.
-      </div>
-    <% end %>
-
-    <div class="form-control mt-8">
-      <% unless @path_form.path.nil? %>
-        <%=
-          link_to 'Remove Address',
-                  project_paths_path(@current_project),
-                  class: 'btn btn-summer mb-2 btn-block btn-red',
-                  data: {
-                    'turbo-method': :delete,
-                    turbo_confirm: 'Are you sure?',
-                  }
-        %>
+  <% if project_path_form.errors.any? %>
+    <div id="<%=dom_id(project_path_form, :errors) %>" class="text-xs mt-1">
+      <% project_path_form.errors.full_messages.each do |message| %>
+        <div><%= message %></div>
       <% end %>
-
-      <%= f.submit @path_form.path.nil? ? 'Add Domain' : 'Save', class: 'btn btn-summer btn-neutral btn-block' %>
     </div>
   <% end %>
+
+  <%= render Notice::Component.new(container_class: 'mt-6') do %>
+    <div class="text-sm leading-4">
+      <b>Important:</b>
+      Summer will appear on every page under this domain. Make sure to use specific directory
+      address, such as “domain.com/blog”, and not the main domain address only.
+    </div>
+  <% end %>
+
+  <div class="form-control mt-8">
+    <% unless project_path_form.path.nil? %>
+      <%= render ProjectPathComponents::DestroyButtonComponent.new(project_path: project_path_form.project_path) %>
+    <% end %>
+
+    <%= f.submit project_path_form.path.nil? ? 'Add Domain' : 'Save', class: 'btn btn-summer btn-neutral btn-block' %>
+  </div>
 <% end %>
+

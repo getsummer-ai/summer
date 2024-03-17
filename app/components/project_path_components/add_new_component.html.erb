@@ -1,0 +1,9 @@
+<%
+  if @project.paths.count <= 5
+    concat link_to(
+      '+ Add new address', new_project_path_path,
+      class: 'btn btn-summer',
+      data: {'turbo-frame': "modal"}
+    )
+  end
+%>

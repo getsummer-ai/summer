@@ -1,18 +1,21 @@
 <tr id="project_path_statistic_<%= @statistic_view_model.project_path.id %>">
-  <td class="font-semibold pl-0">
+  <td class="font-semibold">
     <%=
-      link_to edit_project_path_path(@project, @statistic_view_model.project_path), data: {'turbo-frame': "modal"} do
+      link_to edit_project_path_path(
+                @statistic_view_model.project_path.project,
+                @statistic_view_model.project_path
+              ), data: {'turbo-frame': "modal"} do
         @statistic_view_model.project_path.url
       end
     %>
   </td>
-  <td>
+  <td class="text-right">
     <%=number_to_delimited(@statistic_view_model.pages) %>
   </td>
-  <td>
+  <td class="text-right">
     <%=number_to_delimited(@statistic_view_model.views) %>
   </td>
-  <td>
+  <td class="text-right">
     <%=number_to_delimited(@statistic_view_model.clicks) %>
   </td>
 </tr>

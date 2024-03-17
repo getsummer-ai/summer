@@ -25,31 +25,46 @@ module Private
     def create
       project_path = generate_empty_project_path
       @path_form = ProjectPathForm.new(project_path, value: project_path_params[:value])
-      res = @path_form.create
-      return redirect_to(project_settings_url, notice: 'Project was successfully created') if res
+      return render(:new, status: :unprocessable_entity) unless @path_form.create
 
-      render :new, status: :unprocessable_entity
+      flash[:notice] = 'Successfully created'
+      respond_to do |format|
+        format.html { redirect_to project_settings_path }
+        format.turbo_stream
+      end
     end
 
     def update
       @path_form = ProjectPathForm.new(@project_path, value: project_path_params[:value])
-      if @path_form.update
-        return redirect_to project_settings_path, notice: 'Domain Address was successfully updated'
+      new_project_path = @path_form.update
+      return render(:edit, status: :unprocessable_entity) unless new_project_path
+
+      respond_to do |format|
+        format.html { redirect_to project_settings_path, notice: 'Successfully updated' }
+        format.turbo_stream do
+          @new_project_path_form = ProjectPathForm.new(new_project_path)
+          @new_project_path_statistic = Project::ProjectPath::Statistics.new(
+            @project,
+            path: new_project_path
+          ).result.first
+          flash.now[:notice] = 'Successfully updated'
+        end
       end
-      render :edit, status: :unprocessable_entity
     end
 
     def destroy
       @path_form = ProjectPathForm.new(@project_path)
 
-      if @path_form.destroy
-        return redirect_to(project_settings_path, notice: "#{@project_path.path} was successfully deleted")
+      unless @path_form.destroy
+        Rails.logger.error("Error: deleting (#{@project_path.path}) from project #{@project.id} - " \
+                           + @path_form.errors.full_messages.to_s)
+        return redirect_to(project_settings_path, alert: 'Error happened while deleting the path')
       end
 
-      error_message = "Error while deleting path (#{@project_path.path}) from project #{@project.id} - " \
-        + @path_form.errors.full_messages.to_s
-      Rails.logger.error(error_message)
-      redirect_back_or_to(project_settings_path, alert: 'Error happened while deleting the path')
+      respond_to do |format|
+        format.html { redirect_to project_settings_path, notice: "#{@project_path.url} was deleted" }
+        format.turbo_stream { flash.now[:notice] = "#{@project_path.url} was deleted" }
+      end
     end
 
     private
@@ -74,9 +89,9 @@ module Private
     def find_project_path
       # @type [Project::ProjectPath]
       @project_path = @project.smart_paths.find { |p| p.id == params[:id] }
-      raise ActiveRecord::RecordNotFound if @project_path.nil?
+      return @project_path unless @project_path.nil?
 
-      @project_path
+      raise ActiveRecord::RecordNotFound
     end
   end
 end

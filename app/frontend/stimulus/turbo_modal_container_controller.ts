@@ -34,7 +34,7 @@ export default class TurboModalContainerController extends Controller {
     log('openOrCloseModalBasedOnPathInUrl', window.location.href, modal_url_param);
 
     if (!modal_url_param) {
-      if (this.modalTarget.firstElementChild) {
+      if (this.modalTarget?.firstElementChild) {
         log(this.modalTarget);
         this.modalTarget.removeChild(this.modalTarget.firstElementChild);
         log('clean src');

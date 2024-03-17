@@ -54,6 +54,24 @@
     }
   }
 }
+
+.table-summer {
+  th {
+    @apply tracking-tight text-black opacity-50;
+  }
+  th, td {
+    @apply px-0;
+  }
+  tr {
+    @apply text-base;
+    @apply border-b-gray-200;
+    &:last-child {
+      @apply border-b;
+    }
+  }
+
+}
+
 .table-page-statistics {
   @apply table-sm;
 

@@ -16,31 +16,26 @@
   </div>
 <% end %>
 
-<div class="mt-12">
+<div>
   <div class="overflow-x-auto mt-6">
-    <table class="table text-[15px] tracking-tight">
-      <thead class="text-[15px]">
-      <tr>
-        <th class="font-semibold pl-0">URL Address</th>
+    <table class="table table-summer">
+      <thead>
+      <tr class="text-right">
+        <th class="font-semibold text-left">URL Address</th>
         <th class="font-semibold w-24">Pages</th>
         <th class="font-semibold w-24">Shown</th>
-        <th class="font-semibold px-0 w-14">Clicked</th>
+        <th class="font-semibold w-24">Clicked</th>
       </tr>
       </thead>
       <tbody>
       <% @statistics.result.each do |statistic_view_model|%>
-        <%= render ProjectPathComponents::RowComponent.new(
-            project: @current_project,
-            statistic_view_model:
-        ) %>
+        <%= render ProjectPathComponents::RowComponent.new(statistic_view_model:) %>
       <% end %>
       </tbody>
     </table>
-    <%=
-      link_to new_project_path_path, data: {'turbo-frame': "modal"} do
-        '+ Add new address'
-      end
-    %>
+    <div class="my-3" id="add-new-project-path-btn">
+      <%= render ProjectPathComponents::AddNewComponent.new(project: @current_project) %>
+    </div>
   </div>
 </div>
 

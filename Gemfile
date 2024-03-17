@@ -19,7 +19,7 @@ gem 'boilerpipe-ruby', require: 'boilerpipe'
 gem 'faraday'
 gem 'nokogiri'
 gem 'redcarpet'
-gem 'turbo-rails'
+gem 'turbo-rails', '~> 2.0.5'
 gem 'validate_url'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'draper'

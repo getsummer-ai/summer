@@ -1,5 +1,7 @@
 <%= turbo_frame_tag "modal" do %>
-  <%= render TurboModal::Component.new(title: 'Domain Address', redirect_following: true) do %>
-    <%= render "form", project: @project %>
+  <%= render TurboModal::Component.new(title: "Domain Address") do %>
+    <%= turbo_conditional_tag "project-path-frame", turbo_frame_request_id.present? do %>
+      <%= render "form", project_path_form: @path_form %>
+    <% end %>
   <% end %>
 <% end %>

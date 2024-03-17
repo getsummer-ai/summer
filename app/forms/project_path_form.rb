@@ -2,25 +2,31 @@
 class ProjectPathForm
   include ActiveModel::Model
 
-  attr_accessor :path, :value
+  attr_accessor :path, :project_path, :value
 
   validates :value, presence: true
-  validates :value, url: true
-  validate :check_domain_correctness
+  validates :value, url: true, if: -> { errors.empty? }
+  validate :check_domain_correctness, if: -> { errors.empty? }
+  validate :check_paths_max_count, on: %i[create], if: -> { errors.empty? }
 
-  validates :path, presence: true, allow_blank: true, on: [:update, :destroy]
-  validate :check_path_existence, on: [:update, :destroy]
-  validate :check_path_uniqueness, if: proc { |o| o.errors.empty? }
+  validates :path, presence: true, allow_blank: true, on: %i[update destroy]
+  validate :check_path_existence, on: %i[update destroy]
+  validate :check_path_uniqueness, if: -> { errors.empty? }
 
   def check_domain_correctness
     return if parsed_value&.host == @project.domain
-    errors.add(:base, 'Domain name must match the project domain')
+    errors.add(:base, "The URL must belong to #{@project.domain}")
   end
 
   def check_path_uniqueness
     return if not_changed?
     return unless @project.paths.include?(parsed_value&.path)
     errors.add(:base, 'URL already exists')
+  end
+
+  def check_paths_max_count
+    return if @project.paths.count <= 5
+    errors.add(:base, 'Max URL amount is 5')
   end
 
   def check_path_existence
@@ -43,7 +49,7 @@ class ProjectPathForm
   end
 
   def create
-    return nil if invalid?
+    return nil if invalid?(:create)
 
     @project.track!(source: 'Add Project Path', author: @project.user) do
       @project.paths << parsed_value&.path
@@ -56,6 +62,7 @@ class ProjectPathForm
     nil
   end
 
+  # @return [Project::ProjectPath, nil]
   def update
     return nil if invalid?(:update)
 
@@ -64,7 +71,9 @@ class ProjectPathForm
       @project.save
     end
 
-    return true if @project.errors.empty?
+    if @project.errors.empty?
+      return Project::ProjectPath.new(@project, parsed_value&.path)
+    end
 
     pass_project_errors_to_model
     nil
@@ -73,8 +82,8 @@ class ProjectPathForm
   def destroy
     return nil if invalid?(:destroy)
 
-    @project.track!(source: 'Delete Path', author: current_user) do
-      @project.paths.delete_at(@project.paths.find_index(@project_path))
+    @project.track!(source: 'Delete Path', author: @project.user) do
+      @project.paths.delete_at(@project.paths.find_index(@path))
       @project.save
     end
 
@@ -99,5 +108,14 @@ class ProjectPathForm
 
   def to_param
     @project_path.id
+  end
+
+  def persisted?
+    !@project_path.path.nil?
+  end
+
+  def to_key
+    return nil if @path.nil?
+    [@project_path.id]
   end
 end

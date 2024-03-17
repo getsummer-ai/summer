@@ -1,0 +1,11 @@
+<%=
+  link_to 'Remove Address',
+        project_path_path(@project_path.project, @project_path),
+        id: "remove-path-#{@project_path.id}",
+        class: 'btn btn-summer mb-2 btn-block btn-red',
+        data: {
+          'turbo-frame': '_top',
+          'turbo-method': :delete,
+          turbo_confirm: 'Are you sure?',
+        }
+%>

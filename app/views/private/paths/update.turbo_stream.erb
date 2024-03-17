@@ -1,0 +1,13 @@
+<%= turbo_stream.replace "project_path_statistic_#{@project_path.id}" do %>
+  <%= render ProjectPathComponents::RowComponent.new(statistic_view_model: @new_project_path_statistic) %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@path_form, :edit) do %>
+  <%=render 'form', project_path_form: @new_project_path_form %>
+<% end %>
+
+<%= turbo_stream.replace dom_id(@path_form, :errors) do %>
+  <%='' %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

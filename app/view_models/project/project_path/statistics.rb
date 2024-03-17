@@ -3,14 +3,20 @@ class Project
   class ProjectPath
     class Statistics
       # @param [Project] project
-      def initialize(project)
+      # @param [ProjectPath. nil] path
+      def initialize(project, path: nil)
         # @type [Project]
         @project = project
+        # @type [ProjectPath. nil]
+        @path = path
       end
 
       # @return [Array<StatisticViewModel>]
       def result
-        @result ||= @project.smart_paths.map { |project_path| calculate_statistic(project_path) }
+        return @result if @result
+        paths = @project.smart_paths
+        paths = paths.filter { |p| p.id == @path.id } if @path.present?
+        @result = paths.map { |project_path| calculate_statistic(project_path) }
       end
 
       private

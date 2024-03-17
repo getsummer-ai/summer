@@ -9,7 +9,7 @@ declare global {
           replace: (url: string | URL) => void;
         };
       };
-      visit: (s: string, params: { action: string; frame?: string }) => void;
+      visit: (s: string, params?: { action: string; frame?: string }) => void;
       setProgressBarDelay: (delay: number) => void;
     };
   }

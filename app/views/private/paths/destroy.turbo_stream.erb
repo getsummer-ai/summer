@@ -1,0 +1,8 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.remove "project_path_statistic_#{@project_path.id}" %>
+<%= turbo_stream.update "add-new-project-path-btn" do %>
+  <%= render ProjectPathComponents::AddNewComponent.new(project: @project)  %>
+<% end %> %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
