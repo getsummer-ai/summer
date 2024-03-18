@@ -22,8 +22,8 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     end
     add_index :projects, :uuid, unique: true
     add_index :projects, :created_at
-    add_index :projects, %i[user_id name], unique: true
-    add_index :projects, %i[user_id domain], unique: true
+    add_index :projects, %i[user_id name], unique: true, where: "status <> 'deleted'"
+    add_index :projects, %i[user_id domain], unique: true, where: "status <> 'deleted'"
 
     create_table :project_articles do |t|
       t.timestamps

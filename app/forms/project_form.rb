@@ -8,7 +8,7 @@ class ProjectForm
 
   validates :name, presence: true, length: 3..50
   validates :urls, url: { accept_array: true }
-  validate :validate_urls
+  validate :validate_urls, if: -> { errors.empty? }
 
   def validate_urls
     return errors.add(:urls, :invalid) unless urls.is_a?(Array)

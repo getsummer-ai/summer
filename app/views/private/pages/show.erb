@@ -1,34 +1,35 @@
 <%= turbo_frame_tag "modal" do %>
-  <%= render TurboModal::Component.new(title: '', redirect_following: false) do %>
+  <%= render TurboModal::Component.new(title: 'Page', redirect_following: false) do %>
     <div>
-      <h2 class="text-xl font-semibold tracking-tight">Page</h2>
-      <h4 class="text-sm font-semibold mt-7">Name</h4>
-      <div class="p-2 border-2 rounded">
-        <%=@project_page.article_only_title.title.truncate(60) %>
+<!--      <h2 class="text-xl font-semibold tracking-tight">Page</h2>-->
+      <label class="label label-summer">Name</label>
+      <input class="input input-summer w-full cursor-default" value="<%=@project_page_decorated.article_only_title.title.truncate(60) %>" />
+
+      <div class="p-2 bordered rounded-lg border-gray-200 text-base">
+        <%= %>
       </div>
-      <h4 class="text-sm font-semibold mt-6">Link</h4>
-      <div class="p-2 border-2 rounded">
-        <%=@project_page.url %>
-      </div>
+      <label class="label label-summer">Link</label>
+      <input class="input input-summer w-full cursor-default" value="<%=@project_page_decorated.url %>" />
       <h4 class="text-sm font-semibold mt-6">Statistics</h4>
       <div class="mt-2">
         <table class="table table-page-statistics">
+          <% statistic = @project_page_decorated.statistics_by_total %>
           <tbody>
             <tr>
               <td>Summer shown</td>
-              <td><%=number_with_delimiter(@project_page.statistics_by_total.views) %></td>
+              <td><%=number_with_delimiter(statistic.views) %></td>
             </tr>
             <tr>
               <td>Summer clicked</td>
-              <td><%=number_with_delimiter(@project_page.statistics_by_total.clicks) %></td>
+              <td><%=number_with_delimiter(statistic.clicks) %></td>
             </tr>
             <tr>
               <td>Symbols on the page</td>
-              <td>2,432</td>
+              <td><%=number_with_delimiter(@project_page_decorated.article_symbols) %></td>
             </tr>
             <tr>
               <td>Symbols in summary</td>
-              <td>412</td>
+              <td><%=number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
             </tr>
           </tbody>
         </table>
@@ -37,7 +38,7 @@
     <div class="mt-5 text-center font-bold underline">
       <%= render ProjectPageComponents::SwitchButtonComponent.new(
         project: @project,
-        page: @project_page,
+        page: @project_page_decorated,
         is_checkbox: false
       ) %>
       <button

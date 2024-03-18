@@ -21,8 +21,11 @@ module Private
     end
 
     def show
+      @project_page_decorated = @project_page.decorate
+
       return if turbo_frame_request?
       modal_anchor_to_open = Base64.encode64(project_page_path(@current_project, @project_page))
+      # @type [ProjectPageDecorator]
       redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
     end
 

@@ -50,8 +50,8 @@ end
 #
 #  index_projects_on_created_at          (created_at)
 #  index_projects_on_user_id             (user_id)
-#  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE
-#  index_projects_on_user_id_and_name    (user_id,name) UNIQUE
+#  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
+#  index_projects_on_user_id_and_name    (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
 #  index_projects_on_uuid                (uuid) UNIQUE
 #
 # Foreign Keys

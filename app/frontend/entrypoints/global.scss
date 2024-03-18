@@ -125,6 +125,13 @@
   }
 }
 
+.toggle-summer {
+  @apply rounded-2xl [--tglbg:#ccc] border-0 hover:bg-white bg-white;
+  &:checked {
+    @apply [--tglbg:black] border-0;
+  }
+}
+
 .bg-default {
   background: linear-gradient(180deg, #E6EFF8 54.5%, #FFEFE7 100%);
 }
