@@ -4,8 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.text-15 {
-  font-size: 15px;
+html {
+  @apply text-base;
 }
 
 .field_with_errors {
@@ -29,18 +29,21 @@
 .summer-icon-sm {
   @apply w-5 h-5 inline-block align-middle;
 }
+.summer-icon-xs {
+  @apply w-4 h-4 inline-block align-middle;
+}
 
 .pagy {
-  @apply flex space-x-1 font-semibold text-sm text-gray-500 justify-end;
+  @apply flex space-x-1 font-semibold text-sm text-gray-800 justify-end;
   .page {
     a {
-      @apply block rounded px-3 py-1 bg-gray-100;
+      @apply block rounded px-3 py-1.5 bg-gray-100;
       &:hover {
-        @apply bg-gray-300;
+        @apply bg-gray-200;
       }
     }
     &.active a {
-      @apply text-white bg-gray-600 cursor-default;
+      @apply text-white bg-black cursor-default;
     }
     &.disabled a {
       @apply text-gray-300 bg-gray-100 cursor-default;
@@ -114,7 +117,7 @@
 }
 
 .input-summer {
-  @apply input-bordered rounded-lg border-gray-200 text-base;
+  @apply input-bordered rounded-lg border-gray-200;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.05);
 }
 
@@ -138,4 +141,12 @@
 
 .link-summer {
   @apply cursor-pointer text-sm underline-offset-2 underline opacity-50;
+}
+
+.badge-summer {
+  @apply cursor-default inline font-semibold tracking-tight bg-black bg-opacity-10 rounded-xl text-sm py-1 px-2.5;
+
+  &.badge-xl {
+    @apply text-lg py-1.5 px-4;
+  }
 }

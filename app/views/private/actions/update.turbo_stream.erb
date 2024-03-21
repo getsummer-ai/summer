@@ -1,0 +1,4 @@
+<%= turbo_stream.update 'summer_feature_cards' do %>
+  <%= render 'cards_list' %>
+<% end %>
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

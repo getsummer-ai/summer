@@ -4,11 +4,6 @@ module Private
     before_action :find_project, except: %i[new create]
     layout :set_new_project_layout, only: %i[new create]
 
-    # GET /projects or /projects.json
-    # def index
-    #   @projects = current_user.projects.all
-    # end
-
     # GET /projects/1 or /projects/1.json
     def show
     end
@@ -23,6 +18,7 @@ module Private
     end
 
     def knowledge
+      @services = @current_project.services
     end
 
     # GET /projects/1/edit

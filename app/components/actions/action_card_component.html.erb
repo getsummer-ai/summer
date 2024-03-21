@@ -1,0 +1,40 @@
+<%
+  color = case @color
+  when 'blue' then 'bg-[#E6EFF8]'
+  when 'green' then 'bg-[#EEF9EB]'
+  when 'yellow' then 'bg-[#F8F7E6]'
+  when 'pink' then 'bg-[#F9EFEB]'
+  else 'bg-[#F9EFEB]'
+  end
+%>
+
+<div class="card <%= color %> h-[380px] rounded-xl">
+  <div class="card-body flex justify-between">
+    <div class="cursor-default">
+      <div class="font-semibold">
+        <img
+          src="<%= vite_asset_path('assets/icons/action.svg') %>"
+          class="summer-icon mr-0.5"
+          alt="Action icon"
+        />
+        <span><%= @title %></span>
+      </div>
+      <p class="text-xl mt-4 tracking-tight font-semibold">
+        <%= @description %>
+      </p>
+
+      <div class="text-black opacity-60 mt-4 cursor-pointer">
+        <img
+          src="<%= vite_asset_path('assets/icons/play.svg') %>"
+          class="summer-icon-xs mr-0.5"
+          alt="Action icon"
+        />
+        <span class="align-middle">How it works?</span>
+      </div>
+    </div>
+
+    <div>
+      <%=content%>
+    </div>
+  </div>
+</div>

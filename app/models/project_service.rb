@@ -3,6 +3,10 @@
 class ProjectService < ApplicationRecord
   belongs_to :project
 
+  validates :title, presence: true
+  validates :description, presence: true
+  validates :link, domain_url: true, presence: true
+
   has_many :statistics, as: :trackable, class_name: "ProjectStatistic", dependent: :destroy
   has_one :statistics_by_total,
           class_name: "ProjectStatisticsByTotal",

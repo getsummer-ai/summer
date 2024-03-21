@@ -44,6 +44,8 @@ Rails.application.routes.draw do
       resources :projects, only: [] do
         resources :articles, only: %i[index show edit update]
         resources :pages, only: %i[index update show]
+        resources :actions, only: %i[index update]
+        resources :services, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
         resources :settings, only: [:index]
       end

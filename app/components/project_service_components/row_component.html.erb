@@ -1,0 +1,15 @@
+<tr id="<%= dom_id(@service) %>">
+  <td class="font-semibold pl-0">
+    <%=
+      link_to edit_project_service_path(@service.project, @service), data: {'turbo-frame': "modal"} do
+        @service.title.truncate(60)
+      end
+    %>
+  </td>
+  <td class="text-right">
+    <%=number_to_delimited(0) %>
+  </td>
+  <td class="text-right">
+    <%=number_to_delimited(0) %>
+  </td>
+</tr>

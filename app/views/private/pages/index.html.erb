@@ -30,13 +30,13 @@
   <div class="mt-12">
     <%=turbo_frame_tag 'pages', target: "_top", 'data-turbo-action': 'advance' do %>
       <div class="overflow-x-auto mt-6">
-        <table class="table text-[15px] tracking-tight">
-          <thead class="text-[15px]">
+        <table class="table tracking-tight table-summer">
+          <thead>
             <tr>
               <th class="font-semibold pl-0">Page</th>
-              <th class="font-semibold w-24">Shown</th>
-              <th class="font-semibold w-24">Clicked</th>
-              <th class="font-semibold px-0 w-14">On/Off</th>
+              <th class="font-semibold w-24 text-right">Shown</th>
+              <th class="font-semibold w-24 text-right">Clicked</th>
+              <th class="font-semibold w-24 text-right">On/Off</th>
             </tr>
           </thead>
           <tbody>
@@ -47,7 +47,7 @@
         </table>
       </div>
       <% if @pagy.pages > 1 %>
-        <div class="mt-4">
+        <div class="mt-6">
           <%== pagy_nav(@pagy) %>
         </div>
       <% end %>

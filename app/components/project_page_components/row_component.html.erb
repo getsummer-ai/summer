@@ -6,13 +6,13 @@
       end
     %>
   </td>
-  <td>
+  <td class="text-right">
     <%=number_to_delimited(@page.statistics_by_total&.views || 0) %>
   </td>
-  <td>
+  <td class="text-right">
     <%=number_to_delimited(@page.statistics_by_total&.clicks || 0) %>
   </td>
-  <td class="px-0">
+  <td class="text-right">
     <%= render ProjectPageComponents::SwitchButtonComponent.new(project: @project, page: @page, is_checkbox: true) %>
   </td>
 </tr>

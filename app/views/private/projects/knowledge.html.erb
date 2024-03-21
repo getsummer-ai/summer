@@ -1,1 +1,49 @@
-<h1 class="text-xl">Knowledge</h1>
+<h2 class="font-semibold text-2xl">Knowledge</h2>
+<p class="opacity-50 mt-1">
+  Help Summer know your product better so it can offer products to customers,
+  follow your communication guidelines and stay on-brand.
+</p>
+
+<hr class="my-12">
+
+<h3 class="font-semibold text-lg">Guidlines</h3>
+<p class="opacity-50 mt-1">
+  Summer will suggest your products to your customers in the right context.
+  Add products and and they will appear in the summary window. Learn more
+</p>
+<div class="mt-4">
+  <textarea class="w-full h-24 p-4 border rounded-lg" placeholder="Your guidelines...">
+  </textarea>
+</div>
+
+<hr class="my-12">
+
+<h3 class="font-semibold text-lg">Products</h3>
+<p class="opacity-50 mt-1">
+  Summer will suggest your products to your customers in the right context.
+  Add products and they will appear in the summary window when the description matches the content.
+</p>
+
+<hr class="my-12">
+
+<div>
+  <div class="overflow-x-auto mt-6">
+    <table class="table tracking-tight table-summer">
+      <thead>
+      <tr>
+        <th class="font-semibold pl-0">Product</th>
+        <th class="font-semibold w-24 text-right">Shown</th>
+        <th class="font-semibold w-24 text-right">Clicked</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @services.each do |service|%>
+        <%= render ProjectServiceComponents::RowComponent.new(service:) %>
+      <% end %>
+      </tbody>
+    </table>
+    <div class="my-3" id="add-new-service-btn">
+      <%= render ProjectServiceComponents::AddNewComponent.new(project: @current_project) %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+<%
+  if @project.services.count <= 5
+    concat link_to(
+      '+ Add new product', new_project_service_path,
+      class: 'btn btn-summer btn-neutral',
+      data: {'turbo-frame': "modal"}
+    )
+  end
+%>

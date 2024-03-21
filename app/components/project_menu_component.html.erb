@@ -2,12 +2,13 @@
   routes = [
     { name: 'Setup', path: setup_project_path(@project), icon: vite_asset_path('assets/icons/puzzle.svg') },
     { name: 'Knowledge', path: knowledge_project_path(@project), icon: vite_asset_path('assets/icons/brain.svg') },
-    { name: 'Pages', path: project_pages_path(@project), icon: vite_asset_path('assets/icons/statistics.svg') },
+    { name: 'Pages', path: project_pages_path(@project), icon: vite_asset_path('assets/icons/pages.svg') },
+    { name: 'Actions', path: project_actions_path(@project), icon: vite_asset_path('assets/icons/actions.svg') },
     { name: 'Settings', path: project_settings_path(@project), icon: vite_asset_path('assets/icons/settings.svg') }
   ]
 %>
 
-<ul class="mt-4 text-[15px] text-black">
+<ul class="mt-4 text-black">
   <% routes.each do |route|
      classes = %w[p-1.5 pb-2 rounded-xl block]
      if current_page?(route[:path])

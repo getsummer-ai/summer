@@ -1,0 +1,50 @@
+<%= form_for @project_service,
+             url: @project_service.new_record? ? project_services_path : project_service_path(@current_project, @project_service),
+             builder: DaisyBuilder do |f| %>
+  <div class="form-control">
+    <%= f.label :title, 'Name' %>
+    <%= f.text_field :title %>
+  </div>
+
+  <div class="form-control mt-4">
+    <%= f.label :link, 'Link' %>
+    <%= f.text_field :link %>
+  </div>
+
+  <div class="form-control mt-4">
+    <%= f.label :description, 'Description' %>
+    <%= f.text_field :description %>
+  </div>
+
+  <% if @project_service.errors.any? %>
+    <div id="<%=dom_id(@project_service, :errors) %>" class="text-xs mt-1">
+      <% @project_service.errors.full_messages.each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render Notice::Component.new(container_class: 'mt-6') do %>
+    <div class="text-sm leading-4">
+      This description will help Summer to match the product with the context. It won’t be shown to the user.
+    </div>
+  <% end %>
+
+  <div class="form-control mt-8">
+    <% if @project_service.persisted? %>
+      <%=
+        link_to 'Remove Product',
+                project_service_path(@current_project, @project_service),
+                class: 'btn btn-summer mb-2 btn-block btn-red',
+                data: {
+                  'turbo-frame': '_top',
+                  'turbo-method': :delete,
+                  turbo_confirm: 'Are you sure?',
+                }
+      %>
+    <% end %>
+
+    <%= f.submit @project_service.persisted? ? 'Save' : 'Add product', class: 'btn btn-summer btn-neutral btn-block' %>
+  </div>
+<% end %>
+

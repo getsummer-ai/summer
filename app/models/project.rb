@@ -6,17 +6,28 @@ class Project < ApplicationRecord
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
-  # store_accessor :paths, :paths_array
   # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
   # store_accessor :settings, %i[theme font_size container_id], prefix: true
-  store :settings,
-        accessors: %i[theme font_size container_id],
-        coder: JsonbSerializer,
-        prefix: true
+  store :settings, accessors: %i[theme font_size container_id], coder: JsonbSerializer, prefix: true
+  store_accessor :settings, :feature_suggestion, :feature_subscription
+
+  store_accessor :feature_suggestion, :enabled, prefix: true
+  store_accessor :feature_subscription, :enabled, prefix: true
+
+  attribute :feature_suggestion, :jsonb
+  attribute :feature_subscription, :jsonb
+
+  track_changes_formatter_for :settings do |old_value, new_value|
+    original, changed = new_value.to_h, old_value.to_h
+    [HashDiffer.new(original, changed).deep_diff, HashDiffer.new(changed, original).deep_diff]
+  end
+
+  alias project_id id
 
   belongs_to :user
   has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
   has_many :articles, dependent: :destroy, class_name: 'ProjectArticle'
+  has_many :services, dependent: :destroy, class_name: 'ProjectService'
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
   has_many :all_events, class_name: 'Event'
 
@@ -38,51 +49,29 @@ class Project < ApplicationRecord
               case_sensitive: false,
               conditions: -> { where.not(status: :deleted) },
               message: 'is already taken',
-            }
-  validate :validate_paths
+            },
+            if: -> { domain_changed? }
   validates :settings_container_id,
             allow_blank: true,
             format: {
               with: /\A[a-zA-Z][\w:.-]*\z/,
               message: "Only html ID name is allowed. Example: 'article-container'",
             }
-  # validates :settings_url_filter,
-  #           allow_blank: true,
-  #           format: {
-  #             with: %r{\A/[\w-]*/\z},
-  #             message: "Only url path is allowed. Example: '/blog/'",
-  #           }
+
+  validate :validate_paths, if: -> { paths_changed? }
 
   normalizes :name, with: ->(name) { name.strip }
 
-  before_save :normalize_domain
-
-  alias project_id id
-
-  track_changes_formatter_for :settings do |old_value, new_value|
-    original = new_value.to_h
-    changed = old_value.to_h
-    [HashDiffer.new(original, changed).deep_diff, HashDiffer.new(changed, original).deep_diff]
+  before_save if: -> { domain_changed? } do |project|
+    project.domain = Project.host_from_url(domain)
   end
 
   def to_param
     encrypted_id
   end
 
-  #
-  # before_update do
-  #   # We set trackable_type: 'Customer' because our events association is not from trackable module
-  #   # (association events - has been overwritten to get all events related to customer)
-  #   options = _tracking_options.merge({ trackable_type: 'Customer', trackable_uuid: try(:id) })
-  #   # If we call "track!" before this callback, then we need to set a source
-  #   options[:source] = 'Customer#before_update' unless _instance_tracking
-  #   start_tracking(options)
-  # end
-
   def self.host_from_url(url)
-    prefix = 'http://'
-    prefix = '' if url.start_with?('http')
-    Addressable::URI.parse([prefix, url].join).host
+    Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join).host
   end
 
   def encrypted_id
@@ -92,26 +81,17 @@ class Project < ApplicationRecord
 
   # @return [Array<ProjectPath>]
   def smart_paths
-    res = self[:paths] || []
-    res.map { |path| ProjectPath.new(self, path) }
+    (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
   end
 
   private
 
   def validate_paths
-    return unless paths_changed?
-
     paths.each do |path|
       Addressable::URI.parse(path)
     rescue StandardError => e
       errors.add(:paths, "#{path} #{e.message}")
     end
-  end
-
-  def normalize_domain
-    return if domain.nil? || !domain_changed?
-    # self.domain = PublicSuffix.domain(domain) and return if PublicSuffix.valid?(domain)
-    self.domain = self.class.host_from_url(domain)
   end
 end
 

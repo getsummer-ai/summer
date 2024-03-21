@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: 'Product or Service') do %>
+    <%= turbo_frame_tag "project-service-frame" do %>
+      <%= render "form" %>
+    <% end %>
+  <% end %>
+<% end %>

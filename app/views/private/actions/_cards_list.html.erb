@@ -1,0 +1,57 @@
+<%= render Actions::ActionCardComponent.new(
+    title: 'Summary',
+    color: 'pink',
+    description: 'Gives user a summary of the content on the page.',
+    ) do %>
+  <input
+    class="toggle toggle-summer toggle-lg"
+    type="checkbox"
+    value="1"
+    checked="checked"
+    disabled
+  />
+<% end %>
+
+<%= render Actions::ActionCardComponent.new(
+    title: 'Product Suggestions',
+    color: 'blue',
+    description: 'Offers your product when it is relevant to the context of the summary.',
+    ) do %>
+  <%=
+    form_with model: @project,
+          url: project_action_path(@project, :feature_suggestion),
+          method: :patch,
+          id: 'project_feature_suggestion_form' do |form|
+      concat form.check_box :feature_suggestion_enabled,
+                        class: 'toggle toggle-summer toggle-lg',
+                        onchange: 'this.form.requestSubmit()'
+    end
+  %>
+<% end %>
+
+<%=
+  render Actions::ActionCardComponent.new(
+    title: 'Subscription',
+    color: 'green',
+    description: 'Offers a weekly email subscription to your latest articles summaries.',
+    ) do %>
+  <%=
+    form_with model: @project,
+          url: project_action_path(@project, :feature_subscription),
+          method: :patch,
+          id: 'project_feature_suggestion_form' do |form|
+      concat form.check_box :feature_subscription_enabled,
+                        class: 'toggle toggle-summer toggle-lg',
+                        onchange: 'this.form.requestSubmit()'
+    end
+  %>
+<% end %>
+
+<%=
+  render Actions::ActionCardComponent.new(
+         title: 'Context',
+         color: 'yellow',
+         description: 'Provides extended context to selected fragment of the page.',
+       ) do %>
+  <div class="badge-summer badge-xl">Coming Soon</div>
+<% end %>
