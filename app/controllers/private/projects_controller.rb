@@ -4,10 +4,6 @@ module Private
     before_action :find_project, except: %i[new create]
     layout :set_new_project_layout, only: %i[new create]
 
-    # GET /projects/1 or /projects/1.json
-    def show
-    end
-
     # GET /projects/new
     def new
       @project = ProjectForm.new(current_user)
@@ -21,24 +17,12 @@ module Private
       @services = @current_project.services
     end
 
-    # GET /projects/1/edit
-    def edit
-    end
-
     def create
       @project = ProjectForm.new(current_user, project_params)
       res = @project.create
-      return redirect_to(project_url(res), notice: 'Project was successfully created') if res
+      return redirect_to(project_pages_url(res), notice: 'Project was successfully created') if res
 
       render :new, status: :unprocessable_entity
-    end
-
-    def update
-      @project.start_tracking(source: 'Update Project Form', author: current_user)
-      if @project.update(project_params)
-        return redirect_to project_url(@project), notice: 'Project was successfully updated.'
-      end
-      render :edit, status: :unprocessable_entity
     end
 
     def destroy

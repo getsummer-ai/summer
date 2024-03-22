@@ -35,14 +35,13 @@ Rails.application.routes.draw do
 
     scope '/app', module: 'private' do
       get '/', to: 'app#index', as: 'user_app'
-      resources :projects, param: :project_id, except: [:index] do
+      resources :projects, param: :project_id, only: [:new, :create, :destroy] do
         member do
           get :setup
           get :knowledge
         end
       end
       resources :projects, only: [] do
-        resources :articles, only: %i[index show edit update]
         resources :pages, only: %i[index update show]
         resources :actions, only: %i[index update]
         resources :services, only: %i[new create edit update destroy]
