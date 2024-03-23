@@ -3,17 +3,17 @@
              builder: DaisyBuilder do |f| %>
   <div class="form-control">
     <%= f.label :title, 'Name' %>
-    <%= f.text_field :title %>
+    <%= f.text_field :title, placeholder: 'Product or service name' %>
   </div>
 
   <div class="form-control mt-4">
     <%= f.label :link, 'Link' %>
-    <%= f.text_field :link %>
+    <%= f.text_field :link, placeholder: 'Link to page' %>
   </div>
 
   <div class="form-control mt-4">
     <%= f.label :description, 'Description' %>
-    <%= f.text_field :description %>
+    <%= f.text_area :description, placeholder: 'Product or service description', rows: 3 %>
   </div>
 
   <% if @project_service.errors.any? %>
@@ -24,11 +24,9 @@
     </div>
   <% end %>
 
-  <%= render Notice::Component.new(container_class: 'mt-6') do %>
-    <div class="text-sm leading-4">
-      This description will help Summer to match the product with the context. It won’t be shown to the user.
-    </div>
-  <% end %>
+  <div class="mt-2 opacity-50 text-sm leading-4">
+    This description will help Summer to match the product with the context. It won’t be shown to the user.
+  </div>
 
   <div class="form-control mt-8">
     <% if @project_service.persisted? %>
@@ -37,8 +35,8 @@
                 project_service_path(@current_project, @project_service),
                 class: 'btn btn-summer mb-2 btn-block btn-red',
                 data: {
-                  'turbo-frame': '_top',
-                  'turbo-method': :delete,
+                  turbo_frame: '_top',
+                  turbo_method: :delete,
                   turbo_confirm: 'Are you sure?',
                 }
       %>

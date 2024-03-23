@@ -119,6 +119,10 @@ html {
 .input-summer {
   @apply input-bordered rounded-lg border-gray-200;
   box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.05);
+
+  &.textarea {
+    @apply text-base;
+  }
 }
 
 .label-summer {

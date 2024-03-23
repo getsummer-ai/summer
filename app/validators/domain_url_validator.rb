@@ -2,7 +2,7 @@
 class DomainUrlValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if url_valid?(value)
-    record.errors.add(attribute, (options[:message] || 'must be a valid domain name'))
+    record.errors.add(attribute, (options[:message] || 'must be a valid url'))
   end
 
   def url_valid?(url)

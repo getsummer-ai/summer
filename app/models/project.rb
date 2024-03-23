@@ -2,6 +2,7 @@
 
 class Project < ApplicationRecord
   include Trackable
+  include EncryptedKey
   enum plan: { free: 'free', paid: 'paid' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
@@ -66,17 +67,8 @@ class Project < ApplicationRecord
     project.domain = Project.host_from_url(domain)
   end
 
-  def to_param
-    encrypted_id
-  end
-
   def self.host_from_url(url)
     Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join).host
-  end
-
-  def encrypted_id
-    return nil if id.nil?
-    @encrypted_id ||= BasicEncrypting.encode(id)
   end
 
   # @return [Array<ProjectPath>]

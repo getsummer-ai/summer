@@ -29,7 +29,7 @@ module Private
       flash[:notice] = 'Successfully created'
       respond_to do |format|
         format.html { redirect_to knowledge_project_path }
-        format.turbo_stream
+        format.turbo_stream { flash.now[:notice] = 'Successfully created' }
       end
     end
 
@@ -38,7 +38,7 @@ module Private
       return render(:edit, status: :unprocessable_entity) if @project_service.errors.any?
 
       respond_to do |format|
-        format.html { redirect_to project_service_path, notice: 'Successfully updated' }
+        format.html { redirect_to knowledge_project_path, notice: 'Successfully updated' }
         format.turbo_stream do
           flash.now[:notice] = 'Successfully updated'
         end
@@ -53,7 +53,7 @@ module Private
       end
 
       respond_to do |format|
-        format.html { redirect_to @project_service, notice: "#{@project_service.title} was deleted" }
+        format.html { redirect_to knowledge_project_path, notice: "#{@project_service.title} was deleted" }
         format.turbo_stream { flash.now[:notice] = "#{@project_service.title} was deleted" }
       end
     end
@@ -61,7 +61,8 @@ module Private
     private
 
     def set_service
-      @project_service = @current_project.services.find(params[:id])
+      id = params[:id].is_a?(String) ? BasicEncrypting.decode(params[:id]) : params[:id]
+      @project_service = @current_project.services.find(id)
     end
 
     # Only allow a list of trusted parameters through.

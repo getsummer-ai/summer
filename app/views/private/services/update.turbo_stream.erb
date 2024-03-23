@@ -1,15 +1,15 @@
-<!--<turbo-stream action="close-modal"></turbo-stream>-->
+<turbo-stream action="close-modal"></turbo-stream>
 
 <%= turbo_stream.replace dom_id(@project_service) do %>
   <%= render ProjectServiceComponents::RowComponent.new(service: @project_service) %>
 <% end %>
 
-<%= turbo_stream.replace dom_id(@project_service, :edit) do %>
-  <%=render 'form' %>
-<% end %>
+<%#= turbo_stream.replace dom_id(@project_service, :edit) do %>
+  <%#=render 'form' %>
+<%# end %>
 
-<%= turbo_stream.replace dom_id(@project_service, :errors) do %>
-  <%='' %>
-<% end %>
+<%#= turbo_stream.replace dom_id(@project_service, :errors) do %>
+  <%#='' %>
+<%# end %>
 
 <%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

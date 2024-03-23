@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ProjectService < ApplicationRecord
+  include EncryptedKey
+  include Trackable
+
   belongs_to :project
 
   validates :title, presence: true

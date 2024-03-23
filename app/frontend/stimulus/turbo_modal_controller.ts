@@ -104,6 +104,10 @@ export default class TurboModalController extends Controller {
 
     res.detail.render = (streamElement) => {
       log(streamElement.action)
+      if (streamElement.action == 'del-link-from-history') {
+        window.history.replaceState(window.history.state, '', window.location.href.split('#')[0]);
+        return;
+      }
       if (streamElement.action == 'close-modal') return this.closeModal();
       if (streamElement.action == 'refresh') this.closeModal();
       fallbackToDefaultActions(streamElement);
