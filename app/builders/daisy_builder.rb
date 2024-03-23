@@ -31,6 +31,6 @@ class DaisyBuilder < ActionView::Helpers::FormBuilder
   end
 
   def text_area(attribute, options = {})
-    super(attribute, options.reverse_merge(class: 'textarea textarea-bordered input-summer'))
+    super(attribute, options.reverse_merge(class: 'textarea w-full input-summer'))
   end
 end

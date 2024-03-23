@@ -60,6 +60,7 @@ class Project < ApplicationRecord
             }
 
   validate :validate_paths, if: -> { paths_changed? }
+  validates :guidelines, length: { maximum: 500 }
 
   normalizes :name, with: ->(name) { name.strip }
 
@@ -95,13 +96,13 @@ end
 #  default_llm :enum             default("gpt3"), not null
 #  deleted_at  :datetime
 #  domain      :string           not null
+#  guidelines  :text             default("")
 #  name        :string           default(""), not null
 #  paths       :jsonb            not null
 #  plan        :enum             default("free"), not null
 #  protocol    :string           not null
 #  settings    :jsonb
 #  status      :enum             default("active"), not null
-#  uuid        :uuid             not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  user_id     :bigint           not null
@@ -112,7 +113,6 @@ end
 #  index_projects_on_user_id             (user_id)
 #  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
 #  index_projects_on_user_id_and_name    (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_uuid                (uuid) UNIQUE
 #
 # Foreign Keys
 #

@@ -15,12 +15,13 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.jsonb :paths, default: '[]', null: false
       t.jsonb :settings
       t.enum :status, default: 'active', null: false, enum_type: 'user_project_status'
+      t.datetime :deleted_at
       t.enum :plan, default: 'free', null: false, enum_type: 'user_project_type'
       t.enum :default_llm, default: "gpt3.5", null: false, enum_type: 'user_project_llm'
-      t.uuid :uuid, default: 'gen_random_uuid()', null: false
-      t.datetime :deleted_at
+      # t.uuid :uuid, default: 'gen_random_uuid()', null: false
+      t.text :guidelines, default: ''
     end
-    add_index :projects, :uuid, unique: true
+    # add_index :projects, :uuid, unique: true
     add_index :projects, :created_at
     add_index :projects, %i[user_id name], unique: true, where: "status <> 'deleted'"
     add_index :projects, %i[user_id domain], unique: true, where: "status <> 'deleted'"

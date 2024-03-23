@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       resources :projects, param: :project_id, only: [:new, :create, :destroy] do
         member do
           get :setup
+          put :guidelines, action: :update_guidelines
           get :knowledge
         end
       end

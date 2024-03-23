@@ -13,6 +13,20 @@ module Private
     def setup
     end
 
+    def update_guidelines
+      form = params.fetch(:project, {}).permit(:guidelines)
+      res = @project.update(form)
+
+      message = res ? 'Guidelines were successfully updated. ' : 'Guidelines were not updated. '
+      message += @project.errors.full_messages.join('. ') if @project.errors.any?
+      flash.now[res ? :notice : :alert] = message
+
+      respond_to do |format|
+        format.html { redirect_to knowledge_project_path }
+        format.turbo_stream
+      end
+    end
+
     def knowledge
       @services = @current_project.services
     end

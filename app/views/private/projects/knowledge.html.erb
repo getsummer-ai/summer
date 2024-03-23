@@ -1,45 +1,56 @@
 <h2 class="font-semibold text-2xl">Knowledge</h2>
 <p class="opacity-50 mt-1">
-  Help Summer know your product better so it can offer products to customers,
-  follow your communication guidelines and stay on-brand.
+  Help Summer know your product better so it can offer products to customers, follow your
+  communication guidelines and stay on-brand.
 </p>
 
-<hr class="my-12">
+<hr class="my-12" />
 
-<h3 class="font-semibold text-lg">Guidlines</h3>
+<h3 class="font-semibold text-lg">Guidelines</h3>
 <p class="opacity-50 mt-1">
-  Summer will suggest your products to your customers in the right context.
-  Add products and and they will appear in the summary window. Learn more
+  Summer will suggest your products to your customers in the right context. Add products and and
+  they will appear in the summary window. Learn more
 </p>
 <div class="mt-4">
-  <textarea class="w-full h-24 p-4 border rounded-lg" placeholder="Your guidelines...">
-  </textarea>
+  <%= form_for @project,
+               url: guidelines_project_path(@project),
+               html: {
+                 method: :put,
+                 'data-controller': "project-guidelines-form"
+               },
+               builder: DaisyBuilder do |f| %>
+    <%= f.text_area :guidelines,
+                    placeholder: 'Your guidelines...',
+                    rows: 4,
+                    'data-action': "input->project-guidelines-form#change"
+    %>
+  <% end %>
 </div>
 
-<hr class="my-12">
+<hr class="my-12" />
 
 <h3 class="font-semibold text-lg">Products</h3>
 <p class="opacity-50 mt-1">
-  Summer will suggest your products to your customers in the right context.
-  Add products and they will appear in the summary window when the description matches the content.
+  Summer will suggest your products to your customers in the right context. Add products and they
+  will appear in the summary window when the description matches the content.
 </p>
 
-<hr class="my-12">
+<hr class="my-12" />
 
 <div>
   <div class="overflow-x-auto mt-6">
     <table class="table tracking-tight table-summer">
       <thead>
-      <tr>
-        <th class="font-semibold pl-0">Product</th>
-        <th class="font-semibold w-24 text-right">Shown</th>
-        <th class="font-semibold w-24 text-right">Clicked</th>
-      </tr>
+        <tr>
+          <th class="font-semibold pl-0">Product</th>
+          <th class="font-semibold w-24 text-right">Shown</th>
+          <th class="font-semibold w-24 text-right">Clicked</th>
+        </tr>
       </thead>
-      <tbody id="<%=dom_id(ProjectService, :table) %>">
-      <% @services.each do |service|%>
-        <%= render ProjectServiceComponents::RowComponent.new(service:) %>
-      <% end %>
+      <tbody id="<%= dom_id(ProjectService, :table) %>">
+        <% @services.each do |service|%>
+          <%= render ProjectServiceComponents::RowComponent.new(service:) %>
+        <% end %>
       </tbody>
     </table>
     <div class="my-3" id="add-new-service-btn">
