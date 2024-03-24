@@ -1,6 +1,5 @@
 <script lang="ts">
   import svelteLogo from './assets/svelte.svg';
-  import Counter from '@/svelte/apps/lib/Counter.svelte';
 
   let a = 123;
 </script>
@@ -14,7 +13,6 @@
   <h1>Vite + Svelte {a}</h1>
 
   <div class="card">
-    <Counter />
   </div>
 
   <p>
