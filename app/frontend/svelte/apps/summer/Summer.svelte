@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
   import { getSummary } from './store';
   import type { ArticleInitInfo, SettingsInfo } from './store';
-  import Counter from '../lib/Counter.svelte';
   import Modal from './Modal.svelte';
   import markdown from './markdown.js';
 
@@ -12,30 +11,20 @@
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string = '';
-  let button: HTMLButtonElement;
-  let modalTitle: HTMLHeadingElement;
+  // let button: HTMLButtonElement;
   let loading = false;
   let showButton = false;
   let buttonStyles = hideButton();
   onMount(async () => {
-    document.querySelectorAll('h1, h2, h3').forEach((el) => {
-      if (modalTitle === el) return;
-      if (showButton || !el.innerHTML.includes(article.title)) return;
-      const rect = el.getBoundingClientRect();
-      buttonStyles = {
-        left: rect.left + window.scrollX - (button.offsetWidth + 10),
-        top: rect.top + window.scrollY,
-        opacity: 1,
-      };
-      // console.log(buttonStyles, article.title, button.offsetWidth);
-      showButton = true;
-    });
+    if (showButton) return;
+    buttonStyles = {
+      opacity: 1,
+    };
+    showButton = true;
   });
 
-  function hideButton(): { left: number; top: number; opacity: number } {
+  function hideButton(): { opacity: number } {
     return {
-      left: -200,
-      top: 9999,
       opacity: 0,
     };
   }
@@ -72,12 +61,7 @@
   };
 </script>
 
-<button
-  bind:this={button}
-  class="getsummer-btn animate"
-  style="left: {buttonStyles.left}px; top: {buttonStyles.top}px; opacity: {buttonStyles.opacity};"
-  on:click={onButtonClick}
->
+<button class="getsummer-btn" style="opacity: {buttonStyles.opacity};" on:click={onButtonClick}>
   {#if loading}
     <span class="loading loading-spinner loading-xs" />
     Summorizing
@@ -88,19 +72,23 @@
 
 {#if showButton}
   <Modal bind:showModal on:close={closeModal}>
-    <h2 slot="header" bind:this={modalTitle}>{article.title}</h2>
     {@html markdown(summary)}
-    <Counter />
   </Modal>
 {/if}
 
 <style lang="scss">
   .getsummer-btn {
-    @apply btn btn-sm btn-accent absolute transition-opacity duration-500 ease-in-out;
-    &.animate {
-      @apply animate-bounce;
-      -webkit-animation-iteration-count: 2.5;
-      animation-iteration-count: 2.5;
-    }
+    @apply rounded-3xl text-base text-white select-none;
+    padding: 4px 12px;
+    position: fixed;
+    transition: opacity 0.3s;
+    left: calc(50% - 50px);
+    bottom: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 36px 60px 0 rgba(0, 0, 0, 0.18), 0 13.902px 18.888px 0 rgba(0, 0, 0, 0.12),
+      0 6.929px 11.218px 0 rgba(0, 0, 0, 0.1), 0 3.621px 7.444px 0 rgba(0, 0, 0, 0.08),
+      0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);
+    backdrop-filter: blur(4px);
   }
 </style>

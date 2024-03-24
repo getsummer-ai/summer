@@ -202,6 +202,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   create_table "projects", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
     t.bigint "user_id", null: false
     t.string "name", default: "", null: false
     t.string "protocol", null: false
@@ -217,6 +218,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id"], name: "index_projects_on_user_id"
+    t.index ["uuid"], name: "index_projects_on_uuid", unique: true
   end
 
   create_table "users", force: :cascade do |t|

@@ -8,6 +8,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
     create_enum 'user_project_protocol', %w[http https]
     create_table :projects do |t|
       t.timestamps
+      t.uuid :uuid, default: 'gen_random_uuid()', null: false
       t.references :user, null: false, foreign_key: { on_update: :cascade }
       t.string :name, default: '', null: false
       t.string :protocol, null: false, enum_type: 'user_project_protocol'
@@ -18,10 +19,9 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.datetime :deleted_at
       t.enum :plan, default: 'free', null: false, enum_type: 'user_project_type'
       t.enum :default_llm, default: "gpt3.5", null: false, enum_type: 'user_project_llm'
-      # t.uuid :uuid, default: 'gen_random_uuid()', null: false
       t.text :guidelines, default: ''
     end
-    # add_index :projects, :uuid, unique: true
+    add_index :projects, :uuid, unique: true
     add_index :projects, :created_at
     add_index :projects, %i[user_id name], unique: true, where: "status <> 'deleted'"
     add_index :projects, %i[user_id domain], unique: true, where: "status <> 'deleted'"
