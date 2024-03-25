@@ -69,12 +69,22 @@
       }
 
       :global(ul) {
+        margin: 0;
+        padding: 0 0 0 15px;
         list-style-type: disc;
-        padding-left: 15px;
         list-style-position: outside;
       }
-      :global(li) {
-        margin-bottom: 8px;
+      :global(li)  {
+        margin: 0 0 8px 0;
+        padding: 0;
+      }
+
+      :global(p)  {
+        margin: 0 0 8px 0;
+        padding: 0;
+        &:first-child {
+          margin-bottom: 12px;
+        }
       }
     }
 

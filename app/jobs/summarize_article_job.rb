@@ -4,6 +4,7 @@ class SummarizeArticleJob < ApplicationJob
   # retry_on StandardError, attempts: 2
   PREFIX =
     "Below you will find an article, please make a summary for me. Please follow the following instruction:
+              — %{guidelines};
               — Don't include things that look like promotion;
               — Keep the same language as in the original article;
               — Make structure clear and easy, use bullet points;
@@ -68,8 +69,11 @@ class SummarizeArticleJob < ApplicationJob
         redis.publish(channel_name, content)
       end
 
+    project = model.project
+    text = format(PREFIX, guidelines: project.guidelines) + model.article
+
     measure(model) do
-      ask_gpt_to_summarize(PREFIX + model.article, model.project.default_llm, stream_func)
+      ask_gpt_to_summarize(text, project.default_llm, stream_func)
     end
   end
 

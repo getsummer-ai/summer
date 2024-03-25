@@ -11,7 +11,7 @@
   Summer will suggest your products to your customers in the right context. Add products and and
   they will appear in the summary window. Learn more
 </p>
-<div class="mt-4">
+<div class="mt-4 relative">
   <%= form_for @project,
                url: guidelines_project_path(@project),
                html: {
@@ -22,8 +22,12 @@
     <%= f.text_area :guidelines,
                     placeholder: 'Your guidelines...',
                     rows: 4,
+                    'data-project-guidelines-form-target': "input",
                     'data-action': "input->project-guidelines-form#change"
     %>
+    <div class="text-right absolute right-0 text-sm opacity-50">
+      <span data-project-guidelines-form-target="limit">0</span><span>/500</span>
+    </div>
   <% end %>
 </div>
 
