@@ -22,6 +22,10 @@ module Users
       resource.update_with_password(params)
     end
 
+    def after_sign_up_path_for(resource)
+      user_app_path(locale: resource.locale)
+    end
+
     def configure_sign_up_params
       devise_parameter_sanitizer.permit(:sign_up, keys: [:locale])
     end

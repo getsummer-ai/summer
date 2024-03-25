@@ -11,10 +11,12 @@ end
 # Table name: project_article_summaries
 #
 #  id                 :bigint           not null, primary key
+#  in_tokens_count    :integer          default(0), not null
 #  info               :jsonb
+#  input              :text
 #  llm                :enum             not null
+#  out_tokens_count   :integer          default(0), not null
 #  summary            :text
-#  tokens_count       :integer          default(0), not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  project_article_id :bigint           not null

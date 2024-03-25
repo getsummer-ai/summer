@@ -21,8 +21,6 @@ class User < ApplicationRecord
   has_many :projects, dependent: :restrict_with_exception
   belongs_to :default_project, -> { available }, class_name: 'Project', optional: true, inverse_of: :user
 
-  validates :name, presence: true
-
   def self.from_omniauth(auth, locale = nil)
     user =
       where(email: auth.info.email).first_or_create do |u|

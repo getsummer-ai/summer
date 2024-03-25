@@ -29,7 +29,7 @@ module Api
       #   @param [SSE] sse
       #   @param [ProjectArticle] article
       def send_article(sse, article)
-        return sse.write(article.summaries.last.summary) if article.status_summary_completed?
+        return sse.write(article.summaries.order(id: :desc).pick(:summary)) if article.status_summary_completed?
         subscribe_and_send_from_stream(sse, article)
       end
 

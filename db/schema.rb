@@ -133,8 +133,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.datetime "updated_at", null: false
     t.bigint "project_article_id", null: false
     t.jsonb "info"
-    t.integer "tokens_count", default: 0, null: false
+    t.integer "in_tokens_count", default: 0, null: false
+    t.text "input"
     t.enum "llm", null: false, enum_type: "user_project_llm"
+    t.integer "out_tokens_count", default: 0, null: false
     t.text "summary"
     t.index ["project_article_id"], name: "index_project_article_summaries_on_project_article_id"
   end
