@@ -5,9 +5,18 @@ export type ArticleInitInfo = {
   title: string;
 };
 
+export type ErrorCodeType = {
+  code: string;
+  message: string;
+};
+
 export type SettingsInfo = {
-  color: string | null;
-  size: string | null;
+  theme: string | null;
+  paths: string[];
+  features: {
+    suggestion: boolean,
+    subscription: boolean,
+  }
 };
 const api_host = import.meta.env.VITE_API_URL as string;
 
@@ -29,7 +38,7 @@ const getFetch = async <T>(
 };
 
 export const initButton = async (project_id: string, url: string) => {
-  return getFetch<{ settings: SettingsInfo; article: ArticleInitInfo }>(
+  return getFetch<{ article: ArticleInitInfo } | ErrorCodeType>(
     `${api_host}/api/v1/button/init`,
     project_id,
     { s: url },

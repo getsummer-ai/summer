@@ -1,7 +1,7 @@
 export {};
 declare global {
   interface Window {
-    GetSummer: { key: string };
+    GetSummer: { id: string, settings: object };
     Turbo: {
       navigator: Navigator & {
         history: History & {

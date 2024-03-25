@@ -9,9 +9,9 @@ module Api
 
       wrap_parameters false
 
-      def version
-        app_path = Rails.env.production? ? "/libs/app.umd.js" : helpers.vite_asset_path('libs/summer.ts')
-        render json: { path: app_path }
+      def settings
+        @app_path =
+          Rails.env.production? ? '/libs/app.umd.js' : helpers.vite_asset_path('libs/summer.ts')
       end
 
       def init
@@ -22,7 +22,8 @@ module Api
         return head :bad_request if @article.nil?
         return head :not_found if @article.status_summary_skipped? || @article.status_summary_error?
 
-        @combined_id = BasicEncrypting.encode_array([form.project_page.id, 4.hours.from_now.utc.to_i])
+        @combined_id =
+          BasicEncrypting.encode_array([form.project_page.id, 4.hours.from_now.utc.to_i])
         update_statistics form.project_page
       end
 
@@ -35,11 +36,15 @@ module Api
 
       def validate_init_request
         return head(:bad_request) if article_url.blank?
+        parsed_url = Project.parse_url(article_url)
 
-        article_url_domain = Project.host_from_url(article_url)
-        return if article_url_domain == current_project.domain
+        if parsed_url.nil? || parsed_url.host != current_project.domain
+          return send_incorrect_domain_response!
+        end
 
-        send_incorrect_domain_response!
+        return unless @current_project.paths.find { |path| parsed_url.path.start_with?(path) }.nil?
+
+        send_incorrect_path_response!
       end
 
       # @return [String]
@@ -49,6 +54,10 @@ module Api
 
       def permitted_params
         params.permit(:s)
+      end
+
+      def send_incorrect_path_response!
+        render json: { code: :forbidden_path, message: 'Forbidden path' }, status: :forbidden
       end
     end
   end

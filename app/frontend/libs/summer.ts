@@ -1,17 +1,15 @@
 import { initApp } from '@/svelte/apps/init-button';
 // const appId = (import.meta.url.split('/').pop() || 'getsummer-app').split('.')[0];
-const projectId = window.GetSummer.key;
+const project = {
+  id: window.GetSummer.id,
+  settings: window.GetSummer.settings,
+};
 let previousUrl = location.href;
-initApp(projectId, previousUrl);
-// const a = 1;
-const observer = new MutationObserver(function () {
-  if (location.href !== previousUrl) {
-    console.log('mutation init app', location.href);
-    previousUrl = location.href;
-    initApp(projectId, previousUrl, 1000);
-  }
-});
+initApp(project, previousUrl);
 
-// Mutation observer setup
-const config = { subtree: true, childList: true };
-observer.observe(document, config);
+new MutationObserver(function () {
+  if (location.href === previousUrl) return
+  // console.log('mutation init app', location.href);
+  previousUrl = location.href;
+  initApp(project, previousUrl, 1000);
+}).observe(document, { subtree: true, childList: true });

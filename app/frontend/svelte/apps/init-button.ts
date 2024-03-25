@@ -8,7 +8,7 @@ let timeoutId: number;
 const destroyApp = () => {
   if (buttonApp && typeof buttonApp.$destroy == 'function') buttonApp.$destroy();
   buttonApp = undefined;
-}
+};
 
 const installApp = (project: string, settings: SettingsInfo, article: ArticleInitInfo) => {
   const appId = 'getsummer-' + project;
@@ -25,23 +25,34 @@ const installApp = (project: string, settings: SettingsInfo, article: ArticleIni
   return appId;
 };
 
-export const initApp = (projectId: string, url: string, timeout = 100) => {
+export const initApp = (project: { id: string; settings: object }, url: string, timeout = 100) => {
+  const pathname = new URL(url).pathname;
+  const settings = project.settings as SettingsInfo
+
   clearInterval(checkerInterval);
   clearTimeout(timeoutId);
 
+  const path = settings.paths.find((path) => (pathname.indexOf(path) === 0))
+  // console.log('initApp', path, pathname);
+  if (typeof path === 'undefined') return;
+
   timeoutId = setTimeout(() => {
-    initButton(projectId, url).then((info) => {
-      const install = () => installApp(projectId, info.settings, info.article)
-      // console.log(info);
-      const appId = install();
-      checkerInterval = setInterval(() => {
-        if (document.getElementById(appId) !== null) return;
-        console.log('app destroyed, reinstalling');
-        destroyApp();
-        install();
-      }, 2000);
-    }).catch((e) => {
-      console.error('initApp', e);
-    });
+    initButton(project.id, url)
+      .then((info) => {
+        if ('code' in info) return console.error('GetSummer', info);
+        const install = () =>
+          installApp(project.id, settings, info.article);
+        // console.log(info);
+        const appId = install();
+        checkerInterval = setInterval(() => {
+          if (document.getElementById(appId) !== null) return;
+          console.log('app destroyed, reinstalling');
+          destroyApp();
+          install();
+        }, 2000);
+      })
+      .catch((e) => {
+        console.error('initApp', e);
+      });
   }, timeout);
 };

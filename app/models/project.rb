@@ -65,11 +65,11 @@ class Project < ApplicationRecord
   normalizes :name, with: ->(name) { name.strip }
 
   before_save if: -> { domain_changed? } do |project|
-    project.domain = Project.host_from_url(domain)
+    project.domain = Project.parse_url(domain)&.host
   end
 
-  def self.host_from_url(url)
-    Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join).host
+  def self.parse_url(url)
+    Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join)
   end
 
   # @return [Array<ProjectPath>]

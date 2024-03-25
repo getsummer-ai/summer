@@ -1,5 +1,5 @@
 <script type="text/javascript">
-  window.GetSummer = window.GetSummer || { key: '<%=example_project_id %>' }
+  window.GetSummer = window.GetSummer || { id: '<%=example_project_id %>' }
 </script>
 <% if Rails.env.production? %>
   <script type="module" src="<%=ENV['VITE_API_URL']%>/libs/init.umd.js" async></script>

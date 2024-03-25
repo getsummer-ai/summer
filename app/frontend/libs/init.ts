@@ -12,7 +12,7 @@ function addScript(src: string) {
 
 const start = (key: string) => {
   const apiUrl = import.meta.env.VITE_API_URL as string;
-  fetch(`${apiUrl}/api/v1/button/version`, {
+  fetch(`${apiUrl}/api/v1/button/settings`, {
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
@@ -20,17 +20,21 @@ const start = (key: string) => {
     },
   })
     .then((response) => response.json())
-    .then((data: { message?: string; path: string }) => {
+    .then((data: { message?: string; path: string; settings: object }) => {
       if (!data.path) return console.error('GetSummer - ' + (data.message || 'No applications found'))
+      window.GetSummer.settings = data.settings;
       addScript(apiUrl + data.path).catch(console.log);
-    });
+    }).catch((e) => {
+      console.error(e);
+      console.error('GetSummer - Failed to fetch version');
+    })
 };
 
-if (window?.GetSummer?.key) {
-  start(window.GetSummer.key);
+if (window?.GetSummer?.id) {
+  start(window.GetSummer.id);
 } else {
   window.addEventListener("DOMContentLoaded", () => {
-    if (window?.GetSummer?.key) return start(window.GetSummer.key);
+    if (window?.GetSummer?.id) return start(window.GetSummer.id);
     console.error('GetSummer.key is not defined');
   });
 }

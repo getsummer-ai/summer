@@ -22,6 +22,6 @@ class CheckProjectRequestForm
     return false if errors.any?
     request_from_url = @origin.presence || @referer.presence
 
-    Project.host_from_url(request_from_url) == @project.domain
+    Project.parse_url(request_from_url)&.host == @project.domain
   end
 end

@@ -54,7 +54,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      get 'button/version', to: 'button#version'
+      get 'button/settings', to: 'button#settings'
       post 'button/init', to: 'button#init'
       get 'summary/stream', to: 'summary#stream'
       resources :projects, only: %i[show]
