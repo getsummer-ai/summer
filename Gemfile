@@ -24,6 +24,7 @@ gem 'validate_url'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem 'draper'
 gem 'jbuilder'
+gem 'store_model', '~> 2.3'
 
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'

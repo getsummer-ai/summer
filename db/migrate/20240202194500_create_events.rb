@@ -9,7 +9,7 @@ class CreateEvents < ActiveRecord::Migration[7.1]
       t.string :subcategory, null: false
       t.references :trackable, polymorphic: true, index: true
       t.string :source
-      t.jsonb :details, null: false
+      t.jsonb :details, default: {}, null: false
       t.references :author, polymorphic: true, index: true
     end
     add_index :events, :created_at

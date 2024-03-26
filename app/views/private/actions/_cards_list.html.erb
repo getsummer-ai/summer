@@ -20,11 +20,14 @@
   <%=
     form_with model: @project,
           url: project_action_path(@project, :feature_suggestion),
-          method: :patch,
-          id: 'project_feature_suggestion_form' do |form|
-      concat form.check_box :feature_suggestion_enabled,
-                        class: 'toggle toggle-summer toggle-lg',
-                        onchange: 'this.form.requestSubmit()'
+          method: :patch do |form|
+      form.fields_for :settings do |settings_fields|
+        settings_fields.fields_for :feature_suggestion do |feature_fields|
+          concat feature_fields.check_box :enabled,
+                                          class: 'toggle toggle-summer toggle-lg',
+                                          onchange: 'this.form.requestSubmit()'
+        end
+      end
     end
   %>
 <% end %>
@@ -38,11 +41,14 @@
   <%=
     form_with model: @project,
           url: project_action_path(@project, :feature_subscription),
-          method: :patch,
-          id: 'project_feature_suggestion_form' do |form|
-      concat form.check_box :feature_subscription_enabled,
-                        class: 'toggle toggle-summer toggle-lg',
-                        onchange: 'this.form.requestSubmit()'
+          method: :patch  do |form|
+      form.fields_for :settings do |settings_fields|
+        settings_fields.fields_for :feature_subscription do |feature_fields|
+          concat feature_fields.check_box :enabled,
+                                          class: 'toggle toggle-summer toggle-lg',
+                                          onchange: 'this.form.requestSubmit()'
+        end
+      end
     end
   %>
 <% end %>

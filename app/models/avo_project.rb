@@ -40,7 +40,7 @@ end
 #  paths       :jsonb            not null
 #  plan        :enum             default("free"), not null
 #  protocol    :string           not null
-#  settings    :jsonb
+#  settings    :jsonb            not null
 #  status      :enum             default("active"), not null
 #  uuid        :uuid             not null
 #  created_at  :datetime         not null

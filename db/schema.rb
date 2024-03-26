@@ -31,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.string "trackable_type"
     t.bigint "trackable_id"
     t.string "source"
-    t.jsonb "details", null: false
+    t.jsonb "details", default: {}, null: false
     t.string "author_type"
     t.bigint "author_id"
     t.index ["author_type", "author_id"], name: "index_events_on_author"
@@ -132,7 +132,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "project_article_id", null: false
-    t.jsonb "info"
+    t.jsonb "info", default: {}, null: false
     t.integer "in_tokens_count", default: 0, null: false
     t.text "input"
     t.enum "llm", null: false, enum_type: "user_project_llm"
@@ -152,7 +152,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.text "image_url"
     t.datetime "last_modified_at"
     t.datetime "last_scraped_at"
-    t.jsonb "info"
+    t.jsonb "info", default: {}, null: false
     t.enum "status_summary", default: "wait", null: false, enum_type: "project_article_common_status"
     t.enum "status_services", default: "wait", null: false, enum_type: "project_article_common_status"
     t.index ["project_id", "article_hash"], name: "index_project_articles_on_project_id_and_article_hash", unique: true
@@ -209,8 +209,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.string "name", default: "", null: false
     t.string "protocol", null: false
     t.string "domain", null: false
-    t.jsonb "paths", default: "[]", null: false
-    t.jsonb "settings"
+    t.jsonb "paths", default: [], null: false
+    t.jsonb "settings", default: {}, null: false
     t.enum "status", default: "active", null: false, enum_type: "user_project_status"
     t.datetime "deleted_at"
     t.enum "plan", default: "free", null: false, enum_type: "user_project_type"

@@ -12,7 +12,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  in_tokens_count    :integer          default(0), not null
-#  info               :jsonb
+#  info               :jsonb            not null
 #  input              :text
 #  llm                :enum             not null
 #  out_tokens_count   :integer          default(0), not null

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Project < ApplicationRecord
+  include StoreModel::NestedAttributes
   include Trackable
   include EncryptedKey
   enum plan: { free: 'free', paid: 'paid' }, _suffix: true
@@ -9,17 +10,20 @@ class Project < ApplicationRecord
 
   # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
   # store_accessor :settings, %i[theme font_size container_id], prefix: true
-  store :settings, accessors: %i[theme font_size container_id], coder: JsonbSerializer, prefix: true
-  store_accessor :settings, :feature_suggestion, :feature_subscription
+  # store :settings, accessors: %i[theme container_id], coder: JsonbSerializer, prefix: true
+  # store_accessor :settings, :feature_suggestion, :feature_subscription
 
-  store_accessor :feature_suggestion, :enabled, prefix: true
-  store_accessor :feature_subscription, :enabled, prefix: true
+  # store_accessor :feature_suggestion, :enabled, prefix: true
+  # store_accessor :feature_subscription, :enabled, prefix: true
 
-  attribute :feature_suggestion, :jsonb
-  attribute :feature_subscription, :jsonb
+  # attribute :feature_suggestion, :jsonb
+  # attribute :feature_subscription, :jsonb
+
+  attribute :settings, ProjectSettings.to_type
+  accepts_nested_attributes_for :settings, allow_destroy: false
 
   track_changes_formatter_for :settings do |old_value, new_value|
-    original, changed = new_value.to_h, old_value.to_h
+    original, changed = new_value.as_json, old_value.as_json
     [HashDiffer.new(original, changed).deep_diff, HashDiffer.new(changed, original).deep_diff]
   end
 
@@ -33,6 +37,8 @@ class Project < ApplicationRecord
   has_many :all_events, class_name: 'Event'
 
   scope :available, -> { where.not(status: :deleted) }
+
+  validates :settings, store_model: { merge_errors: true }
 
   validates :name,
             presence: true,
@@ -52,12 +58,6 @@ class Project < ApplicationRecord
               message: 'is already taken',
             },
             if: -> { domain_changed? }
-  validates :settings_container_id,
-            allow_blank: true,
-            format: {
-              with: /\A[a-zA-Z][\w:.-]*\z/,
-              message: "Only html ID name is allowed. Example: 'article-container'",
-            }
 
   validate :validate_paths, if: -> { paths_changed? }
   validates :guidelines, length: { maximum: 500 }
@@ -101,7 +101,7 @@ end
 #  paths       :jsonb            not null
 #  plan        :enum             default("free"), not null
 #  protocol    :string           not null
-#  settings    :jsonb
+#  settings    :jsonb            not null
 #  status      :enum             default("active"), not null
 #  uuid        :uuid             not null
 #  created_at  :datetime         not null

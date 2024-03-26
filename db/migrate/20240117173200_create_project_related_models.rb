@@ -13,8 +13,8 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.string :name, default: '', null: false
       t.string :protocol, null: false, enum_type: 'user_project_protocol'
       t.string :domain, null: false
-      t.jsonb :paths, default: '[]', null: false
-      t.jsonb :settings
+      t.jsonb :paths, default: [], null: false
+      t.jsonb :settings, default: {}, null: false
       t.enum :status, default: 'active', null: false, enum_type: 'user_project_status'
       t.datetime :deleted_at
       t.enum :plan, default: 'free', null: false, enum_type: 'user_project_type'
@@ -36,7 +36,7 @@ class CreateProjectRelatedModels < ActiveRecord::Migration[7.1]
       t.text :image_url
       t.datetime :last_modified_at
       t.datetime :last_scraped_at
-      t.jsonb :info
+      t.jsonb :info, default: {}, null: false
     end
     add_index :project_articles, %i[project_id article_hash], unique: true
 

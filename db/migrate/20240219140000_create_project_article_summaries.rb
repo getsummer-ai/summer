@@ -10,7 +10,7 @@ class CreateProjectArticleSummaries < ActiveRecord::Migration[7.1]
                      on_update: :cascade,
                      on_delete: :cascade,
                    }
-      t.jsonb :info
+      t.jsonb :info, default: {}, null: false
       t.integer :in_tokens_count, default: 0, null: false
       t.text :input
       t.enum :llm, null: false, enum_type: 'user_project_llm'

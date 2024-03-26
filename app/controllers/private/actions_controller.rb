@@ -10,7 +10,7 @@ module Private
     end
 
     def update
-      if @project.update(params.fetch(:project, {}).permit(:"#{@feature}_enabled"))
+      if @project.update(update_attributes)
         respond_to do |format|
           format.html { redirect_to project_actions_path, notice: 'The feature has been updated' }
           format.turbo_stream { flash.now[:notice] = 'The feature has been updated' }
@@ -25,6 +25,14 @@ module Private
     end
 
     private
+
+    def update_attributes
+      params.fetch(:project, {}).permit(
+        settings_attributes: {
+          "#{@feature}_attributes" => %i[enabled],
+        },
+      )
+    end
 
     def init_update_data
       unless %w[feature_suggestion feature_subscription].include?(params[:id].to_s)

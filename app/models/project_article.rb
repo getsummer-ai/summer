@@ -65,7 +65,7 @@ end
 #  article          :text             not null
 #  article_hash     :string           not null
 #  image_url        :text
-#  info             :jsonb
+#  info             :jsonb            not null
 #  last_modified_at :datetime
 #  last_scraped_at  :datetime
 #  status_services  :enum             default("wait"), not null

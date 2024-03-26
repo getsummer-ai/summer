@@ -433,6 +433,8 @@ GEM
       hashie
       version_gem (~> 1.1, >= 1.1.1)
     sqids (0.2.0)
+    store_model (2.3.0)
+      activerecord (>= 5.2)
     stringio (3.1.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
@@ -540,6 +542,7 @@ DEPENDENCIES
   selenium-webdriver
   simple_form
   sqids
+  store_model (~> 2.3)
   turbo-rails (~> 2.0.5)
   tzinfo-data
   validate_url
