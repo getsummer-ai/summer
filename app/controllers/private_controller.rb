@@ -1,7 +1,9 @@
 # frozen_string_literal: true
-
+# @!attribute current_project
+#  @return [Project]
 class PrivateController < ApplicationController
   layout 'private'
+  attr_reader :current_project
 
   def private_or_turbo_layout
     return 'turbo_rails/frame' if turbo_frame_request?

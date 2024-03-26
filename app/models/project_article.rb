@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
+# @!attribute info
+#  @return [ProjectArticle::Info]
 class ProjectArticle < ApplicationRecord
+  include StoreModel::NestedAttributes
   include Trackable
-  validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
 
   enum status_summary: {
          error: 'error',
@@ -37,7 +39,13 @@ class ProjectArticle < ApplicationRecord
 
   non_trackable_params(%i[article])
 
-  store :info, accessors: %i[summary services], coder: JsonbSerializer, prefix: true
+  # store :info, accessors: %i[summary services], coder: JsonbSerializer, prefix: true
+
+  attribute :info, ProjectArticle::Info.to_type
+  accepts_nested_attributes_for :info, allow_destroy: false
+
+  validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
+  validates :info, store_model: { merge_errors: true }
 
   def to_param
     encrypted_id

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# @!attribute settings
+#  @return [ProjectSettings]
 class Project < ApplicationRecord
   include StoreModel::NestedAttributes
   include Trackable

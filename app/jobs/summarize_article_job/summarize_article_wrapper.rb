@@ -53,14 +53,14 @@ class SummarizeArticleJob
       )
     end
 
-    # @param [Hash] info_summary
-    def success!(info_summary)
+    # @param [Hash] info
+    def success!(info)
       summary = @redis_wrapper.result
       in_tokens_count = LanguageModelTools.estimate_max_tokens(input)
       out_tokens_count = LanguageModelTools.estimate_max_tokens(summary)
 
       ProjectArticle.transaction do
-        @model.update!(info_summary:, status_summary: :completed)
+        @model.update!(info_attributes: { summary: info }, status_summary: :completed)
         @model.summaries.create!(in_tokens_count:, out_tokens_count:, llm: @llm, summary:, info:)
       end
     end
@@ -68,7 +68,7 @@ class SummarizeArticleJob
     # @param [StandardError] error
     def error!(error)
       info_summary = { error: error.to_s, backtrace: error.backtrace&.grep(%r{/app/})&.join("\n") }
-      @model.update!(info_summary:, status_summary: :error)
+      @model.update!(info_attributes: { summary: info_summary }, status_summary: :error)
     end
 
     def input

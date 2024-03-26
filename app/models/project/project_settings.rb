@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 class Project
+  # @!attribute feature_suggestion
+  #   @return [ProjectSuggestionFeature]
+  # @!attribute feature_subscription
+  #   @return [ProjectSubscriptionFeature]
   class ProjectSettings
     include StoreModel::Model
 
