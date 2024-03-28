@@ -62,7 +62,7 @@ module Private
 
     def set_service
       id = params[:id].is_a?(String) ? BasicEncrypting.decode(params[:id]) : params[:id]
-      @project_service = @current_project.services.find(id)
+      @project_service = @current_project.services.skip_retrieving(:icon).find(id)
     end
 
     # Only allow a list of trusted parameters through.

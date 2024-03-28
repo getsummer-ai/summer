@@ -13,8 +13,14 @@ class CreateProjectServices < ActiveRecord::Migration[7.1]
       t.string :title, null: false
       t.string :description, null: false
       t.string :link, null: false
-      t.uuid :uuid, default: 'gen_random_uuid()', null: false, index: true
+      t.jsonb :info
+      t.binary :icon
+      t.boolean :is_accessible, default: true, null: false
+      t.uuid :uuid, default: 'gen_random_uuid()', null: false
     end
+    add_index :project_services, :uuid, unique: true
+    add_index :project_services, %i[project_id uuid]
+
 
     change_table :project_articles do |t|
       t.enum :status_services, default: 'wait', null: false, enum_type: 'project_article_common_status'

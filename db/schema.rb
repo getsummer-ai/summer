@@ -180,9 +180,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.string "title", null: false
     t.string "description", null: false
     t.string "link", null: false
+    t.jsonb "info"
+    t.binary "icon"
+    t.boolean "is_accessible", default: true, null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["project_id", "uuid"], name: "index_project_services_on_project_id_and_uuid"
     t.index ["project_id"], name: "index_project_services_on_project_id"
-    t.index ["uuid"], name: "index_project_services_on_uuid"
+    t.index ["uuid"], name: "index_project_services_on_uuid", unique: true
   end
 
   create_table "project_statistics", force: :cascade do |t|

@@ -10,6 +10,7 @@ export type ProjectServiceType = {
   link: string;
   description: string;
   title: string;
+  icon: string | null;
 };
 
 export type ErrorCodeType = {

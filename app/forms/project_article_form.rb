@@ -41,7 +41,7 @@ class ProjectArticleForm
     article
   end
 
-  # @param [::ArticleScrapperService] scraped_article
+  # @param [::WebScrapperService] scraped_article
   # @return [ProjectArticle]
   def find_or_create_article(scraped_article)
     article_hash = Hashing.md5(scraped_article.content)
@@ -61,8 +61,8 @@ class ProjectArticleForm
       )
   end
 
-  # @return [::ArticleScrapperService]
+  # @return [::WebScrapperService]
   def scraped_article
-    @scraped_article ||= ArticleScrapperService.new(url).scrape
+    @scraped_article ||= WebScrapperService.new(url).scrape
   end
 end

@@ -28,7 +28,7 @@ module Private
     end
 
     def knowledge
-      @services = @current_project.services
+      @services = @current_project.services.skip_retrieving(:icon, :info, :uuid)
     end
 
     def create

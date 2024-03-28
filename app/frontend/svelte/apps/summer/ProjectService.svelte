@@ -2,11 +2,22 @@
   import type { ProjectServiceType } from './store';
 
   export let service: ProjectServiceType;
+
+  const default_image =
+    'UklGRu4BAABXRUJQVlA4IOIBAABQDACdASo+AC0APoU4l0elI6IhMrbeYKAQiWoAnTKvOre08kyAEAntg' +
+    'H4zAZy9vkOgh4JcOf6+UHtoYnnQI0ofxVdaPK953IrCWaRh6wCYIbvBDf7BhTiZl5I6cQVoZw9UMWi++n' +
+    'D968tQAAD+8LbxR2HzLRY99ySxutdJJ4IAo3dk2igB3q9wa4KAhZsvu3S5GuNEvuW1PlV1REW/srz/Qkr' +
+    'hyD6NuQ3kUA/tHi3aPECBNOTArZavMnRQMEbpTkwpOv7plM7e6IPsNJmOk+DNmd+tlbDTtKeLdOOvuMxZ' +
+    'rO1ShCrpbg7CbnFyqRhT4zWubzKbBP3o9zPItggP56RNhtdVh7CseZQW5639vd5D6+Jfqml4zeLfTPSRf' +
+    '2Rjx+7ZRJ/Xc3OreSBYK02RZ2PeRk/pQd693nLl7zhldpz4lDSZB9tDg5pKjTN5NV4p2H98gYRI0bUoQr' +
+    'uYxzpt6zA2v00ooGZDQ27bPeY8eTfw/J5sIMxfxVjCmACIdbsXpVhB0E/pxRy4j+Q3iNqCFcHUiyFIrFMa' +
+    '5I6SxrUhPDnrq8FUTtqmmIKs8KQmDY22rv/kKujcH/f5Ga0uTY5g/w9tpXghjN7ex0/3PbEqr4gltm9K2f' +
+    'tzmTtDwo4v78EfmOAAAA=='
 </script>
 
 <a href={service.link}>
   <div class="flex justify-between items-center">
-    <img alt="preview" src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAQEBAQEBAQEBAQGBgUGBggHBwcHCAwJCQkJCQwTDA4MDA4MExEUEA8QFBEeFxUVFx4iHRsdIiolJSo0MjRERFwBBAQEBAQEBAQEBAYGBQYGCAcHBwcIDAkJCQkJDBMMDgwMDgwTERQQDxAUER4XFRUXHiIdGx0iKiUlKjQyNEREXP/CABEIAC0APgMBIgACEQEDEQH/xAAZAAEBAQEBAQAAAAAAAAAAAAAGBQcIAgn/2gAIAQEAAAAA0cxSLjzBh51gmnAstCBTfY19/wCBOD5TL3FInzyuQBwN5r2JGbRgsb6DZ57kyymB9yf/xAAYAQADAQEAAAAAAAAAAAAAAAAEBQYDB//aAAgBAhAAAADO6uWHKHVfXwZBhv8A/8QAGQEAAgMBAAAAAAAAAAAAAAAABAcBBggJ/9oACAEDEAAAALvJgefGE0j+forvbX//xAAwEAACAQMCBQMCBAcAAAAAAAABAgMABAUGERIhIjFBBzJxExQIFUKhM1FhgYKRsv/aAAgBAQABPwDVeIyOpcpdZXISPMXkJhjdi0cKfpSNewAFRaalgfmhqSxdY9ip3FZC077iru2Ub8qu4AN+VXiAb16ces+o/Tea7t47iW8xcsOyWUzF4opeIEOgJ6ax2oMHe8KreICfEgKf9AV+V21wodApB8irrAxlT0VmNOFQxVTWVxUkJbkav4mXi3FZBzxFF71LGu/W1Q3+DtFCy3Su4/TGOM/tyrF6wtrFwLM3KJvuVZQUP9t6t9cYq4RY7giOVuw7Bvji2qfP4llMV1xoPDFCR+29Zm3xd3G8lrdwyDbw43HyK1I0MJkSIh3/AKVcq7O3FUsexq0B2FWZAI3o2tvkbR7ebsRyYd1Pgin1FmtNXbY6+b60K9lfmrJ4KHxX5lj81A01o/WB1xt7lrJQDq5VfRbOTVwyR7cTAfNW0B2HKokIq1naMVmbW1yqfTu03I9jj3L8GrvC5TETC9x0hlEfPo9238ivkVlNcY+PoktLoTbc14QFB+SavNSXN6SIo1hQ/wCTf7NNIzkszEk+TXqPouy0xlRNZTs0F6zzLCy/wtzzUN5FCNaA2FXLkE0Z3BrVWBsL+ylvHiCTL3KjvU6fbztGp3ANfhs9HdN5bE3OsdQgZL7mL7aGyli2ih7OX7ks1f/EACYRAAIBBAEEAAcAAAAAAAAAAAECAwAEBREhBhITMQciMkGBgpH/2gAIAQIBAT8AwnWzXMKRM6kAa0p9VjMjFKwIbW6tR5ACp3U+Iiu7cx3UatG32asZ8Men8ZCFL3E8uuXZgv8AAoqz6RgJdLO4cOp32O3P6msPbPZv45mYsp+lxoinHkTuPNWd5FeQR3ERPY42Nil+R/Ih0w9EUmR7pIxdIG1wHXhvzWUzdtiLI3UysV2Aqr7Ymv/EACgRAAICAgEBBwUBAAAAAAAAAAECAwQAEQUGBxITISJRgSNBUmKR0f/aAAgBAwEBPwCXj4KDELVEe/10TkU0J9LrhrxONqMn45HX1KNHOa7aOrbczCvHRrw78o/CMn9LnOh+r6nVUTV7sa1+SjG2SJtJIv5IG38jKsHhkfVJX2IyyieH3yQB7nOYr2eNv2aFtQJYm0dHYP3Byheu1bUNmnZkhmhbvRyI2mU5wna71AjV6nKrBMpIUTLH3ZPnXlicu92vHZkld1YbAP8Amf/Z" />
+    <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="ml-5">
       {service.title}
     </span>
@@ -37,6 +48,11 @@
     color: black;
     margin-top: 20px;
     animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
+    img {
+      width: auto;
+      max-height: 45px;
+      border-radius: 4px;
+    }
   }
 
   a:hover {

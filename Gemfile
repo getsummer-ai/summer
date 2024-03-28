@@ -61,6 +61,8 @@ gem 'vite_rails'
 # Use Sass to process CSS
 # gem "sassc-rails"
 gem 'dotenv-rails'
+gem "down"
+gem "image_processing", "~> 1.2"
 gem "scenic"
 
 group :development, :test do
