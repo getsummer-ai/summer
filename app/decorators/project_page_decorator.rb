@@ -17,6 +17,6 @@ class ProjectPageDecorator < Draper::Decorator
   end
 
   def article_symbols
-    ProjectArticle.where(id:).pick(Arel.sql("CHAR_LENGTH(article)")) || 0
+    ProjectArticle.where(id: project_article_id).pick(Arel.sql("CHAR_LENGTH(article)")) || 0
   end
 end

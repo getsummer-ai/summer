@@ -7,8 +7,9 @@ module Api
     class ApplicationController < ActionController::API
       before_action :validate_api_key
       before_action :validate_origin
-
       helper_method :current_project
+
+      wrap_parameters false
 
       respond_to :json
 

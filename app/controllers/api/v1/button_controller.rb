@@ -7,8 +7,6 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      wrap_parameters false
-
       def settings
         @app_path =
           Rails.env.production? ? '/libs/app.umd.js' : helpers.vite_asset_path('libs/summer.ts')

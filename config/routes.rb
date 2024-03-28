@@ -56,7 +56,8 @@ Rails.application.routes.draw do
     namespace :v1 do
       get 'button/settings', to: 'button#settings'
       post 'button/init', to: 'button#init'
-      get 'summary/stream', to: 'summary#stream'
+      get 'pages/:id/summary', to: 'summary#stream'
+      get 'pages/:id/products', to: 'products#show'
       resources :projects, only: %i[show]
     end
   end

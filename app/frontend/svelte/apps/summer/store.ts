@@ -1,7 +1,14 @@
 import { writable } from 'svelte/store';
 
 export type ArticleInitInfo = {
-  id: string;
+  page_id: string;
+  title: string;
+};
+
+export type ProjectServiceType = {
+  uuid: string;
+  link: string;
+  description: string;
   title: string;
 };
 
@@ -46,23 +53,32 @@ export const initButton = async (project_id: string, url: string) => {
 };
 
 export const getSummary = (project_id: string, id: string) => {
-  const eventSource = new EventSource(`/api/v1/summary/stream?id=${id}&key=${project_id}`);
-
+  const eventSource = new EventSource(`/api/v1/pages/${id}/summary?key=${project_id}`);
   const result = writable('');
+  const isCompleted = writable(false);
 
   eventSource.addEventListener("message", (event) => {
     // const events = document.getElementById("events")
     // events.innerHTML += `<p>${event.data}</p>`
     // console.log(event.data);
     result.set(event.data);
+    // console.log('readyState', eventSource.readyState)
   })
 
   eventSource.addEventListener("error", (event) => {
     if (event.eventPhase === EventSource.CLOSED) {
       eventSource.close()
-      console.log("Event Source Closed")
+      // console.log("Event Source Closed")
+      isCompleted.set(true);
     }
     // console.log(event);
   })
-  return result;
+  return { result, isCompleted };
+};
+
+export const getServices = (project_id: string, id: string) => {
+  return getFetch<{ services: ProjectServiceType[] } | ErrorCodeType>(
+    `${api_host}/api/v1/pages/${id}/products`,
+    project_id,
+  );
 };

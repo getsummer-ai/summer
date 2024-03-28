@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getSummary } from './store';
-  import type { ArticleInitInfo, SettingsInfo } from './store';
+  import { getSummary, getServices } from './store';
+  import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './store';
   import Modal from './Modal.svelte';
+  import ProjectService from './ProjectService.svelte';
   import markdown from './markdown.js';
 
   /* eslint svelte/no-at-html-tags: 0 */
@@ -11,6 +12,8 @@
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string = '';
+  let services: ProjectServiceType[] = [];
+  let isSummaryCompleted: boolean = false;
   // let button: HTMLButtonElement;
   let loading = false;
   let showButton = false;
@@ -41,18 +44,38 @@
     if (loading) return;
     if (summary) return openModal();
     loading = true;
+    isSummaryCompleted = false;
     try {
-      const summaryStore = getSummary(project, article.id);
-      summaryStore.subscribe((value) => {
+      const summaryStore = getSummary(project, article.page_id);
+
+      summaryStore.result.subscribe((value) => {
         summary += value;
       });
+
+      summaryStore.isCompleted.subscribe((v) => {
+        if (v !== true) return
+        isSummaryCompleted = true;
+        retrieveProducts();
+      })
       // summary = atob(summaryInfo.article.summary);
       openModal(100);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       loading = false;
     }
   };
+
+  const retrieveProducts = async () => {
+    if (!isSummaryCompleted) return;
+    try {
+      const res = await getServices(project, article.page_id);
+      console.log(res);
+      if (res.hasOwnProperty('services')) services = res.services
+    } catch (error) {
+      console.log(error);
+      // loading = false;
+    }
+  }
 
   const closeModal = () => {
     loading = false;
@@ -73,6 +96,12 @@
 {#if showButton}
   <Modal bind:showModal on:close={closeModal}>
     {@html markdown(summary)}
+
+    {#if services.length > 0}
+      {#each services as service}
+        <ProjectService {service} />
+      {/each}
+    {/if}
   </Modal>
 {/if}
 
