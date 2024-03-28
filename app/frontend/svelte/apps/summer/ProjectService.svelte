@@ -36,8 +36,21 @@
     text-decoration: none;
     color: black;
     margin-top: 20px;
+    animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
+
   a:hover {
     background-color: #f8f8f8;
+  }
+
+  @keyframes zoom {
+    from {
+      opacity: 0.2;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 </style>

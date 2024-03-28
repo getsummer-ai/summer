@@ -55,6 +55,7 @@
       max-height: 70vh;
       overflow-y: auto;
       padding: 0 30px 30px 30px;
+      transition: max-height 0.5s, height 0.5s;
 
       @media (max-height: 40px) {
         max-height: 20vh;
