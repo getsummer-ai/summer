@@ -10,8 +10,8 @@ const destroyApp = () => {
   buttonApp = undefined;
 };
 
-const installApp = (project: string, settings: SettingsInfo, article: ArticleInitInfo) => {
-  const appId = 'getsummer-' + project;
+const installApp = (projectId: string, settings: SettingsInfo, article: ArticleInitInfo) => {
+  const appId = 'getsummer-' + projectId;
   let appElement = document.getElementById(appId);
   if (!appElement) {
     appElement = document.createElement('div');
@@ -21,7 +21,7 @@ const installApp = (project: string, settings: SettingsInfo, article: ArticleIni
     appElement.innerHTML = '';
   }
   destroyApp();
-  buttonApp = new Summer({ target: appElement, props: { project, settings, article } });
+  buttonApp = new Summer({ target: appElement, props: { projectId, settings, article } });
   return appId;
 };
 
@@ -37,6 +37,7 @@ export const initApp = (project: { id: string; settings: object }, url: string, 
   if (typeof path === 'undefined') return;
 
   timeoutId = setTimeout(() => {
+
     initButton(project.id, url)
       .then((info) => {
         if ('code' in info) return console.error('GetSummer', info);

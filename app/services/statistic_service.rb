@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ArticleStatisticService
+class StatisticService
 
   # @param [Project] project
   # @param [ProjectPage, ProjectService] trackable

@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { ProjectServiceType } from './store';
+  import { initApi } from '@/svelte/apps/summer/store';
 
   export let service: ProjectServiceType;
+  export let pageId: string;
+
+  const onLinkClick = () => initApi().clickService(pageId, service.uuid)
 
   const default_image =
     'UklGRu4BAABXRUJQVlA4IOIBAABQDACdASo+AC0APoU4l0elI6IhMrbeYKAQiWoAnTKvOre08kyAEAntg' +
@@ -15,7 +19,7 @@
     'tzmTtDwo4v78EfmOAAAA=='
 </script>
 
-<a href={service.link}>
+<a target="_blank" href={service.link} on:click={onLinkClick}>
   <div class="flex justify-between items-center">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="ml-5">

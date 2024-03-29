@@ -29,7 +29,7 @@ module Api
 
       # @param [ProjectPage] project_page
       def update_statistics(project_page)
-        ArticleStatisticService.new(project: @current_project, trackable: project_page).view!
+        StatisticService.new(project: @current_project, trackable: project_page).view!
       end
 
       def validate_init_request

@@ -1,2 +1,2 @@
 # frozen_string_literal: true
-json.services @services, :uuid, :title, :description, :link, :icon
+json.services @services, :uuid, :title, :link, :icon

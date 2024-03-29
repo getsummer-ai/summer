@@ -7,7 +7,7 @@ module ProjectPageConcern
   end
 
   def extract_data_from_id_param
-    decoded_info = BasicEncrypting.decode_array(params[:id], 2)
+    decoded_info = BasicEncrypting.decode_array(params[:page_id], 2)
     return head(:bad_request) if decoded_info.nil?
 
     expired_at = decoded_info[1]

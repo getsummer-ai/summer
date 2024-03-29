@@ -28,7 +28,12 @@ module Private
     end
 
     def knowledge
-      @services = @current_project.services.skip_retrieving(:icon, :info, :uuid)
+      @services =
+        @current_project
+          .services
+          .skip_retrieving(:icon, :info, :uuid, :created_at, :updated_at, :description, :link)
+          .eager_load(:statistics_by_total)
+          .order(ProjectStatisticsByTotal.arel_table[:views].desc)
     end
 
     def create
@@ -45,7 +50,9 @@ module Private
       end
 
       if @project.errors.any?
-        error_message = "Error happened while deleting project #{@project.id} - " + @project.errors.full_messages.to_s
+        error_message =
+          "Error happened while deleting project #{@project.id} - " +
+            @project.errors.full_messages.to_s
         Rails.logger.error(error_message)
         return redirect_back_or_to(user_app_path, alert: 'Error happened while deleting project')
       end

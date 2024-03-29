@@ -7,9 +7,9 @@
     %>
   </td>
   <td class="text-right">
-    <%=number_to_delimited(0) %>
+    <%=number_to_delimited(@service.statistics_by_total&.views || 0) %>
   </td>
   <td class="text-right">
-    <%=number_to_delimited(0) %>
+    <%=number_to_delimited(@service.statistics_by_total&.clicks || 0) %>
   </td>
 </tr>

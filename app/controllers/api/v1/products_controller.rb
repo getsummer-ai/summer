@@ -12,9 +12,17 @@ module Api
                                 .select('project_service_id')
                                 .where(project_article_id: project_page.project_article_id)
 
-        @services = @current_project.services
-                    .select('id', 'title', 'description', "encode(icon, 'base64') as icon", 'uuid', 'link')
-                    .where(id: project_article_query)
+        @services = @current_project.services.where(id: project_article_query).only_main_columns.icon_as_base64
+
+        @services.each do |service|
+          StatisticService.new(project: @current_project, trackable: service).view!
+        end
+      end
+
+      def click
+        service = @current_project.services.select('id').find_by!(uuid: params[:uuid])
+        StatisticService.new(project: @current_project, trackable: service).click!
+        head :ok
       end
     end
   end

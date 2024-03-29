@@ -13,6 +13,8 @@ class ProjectService < ApplicationRecord
   has_many :statistics, as: :trackable, class_name: 'ProjectStatistic', dependent: :destroy
   has_one :statistics_by_total, class_name: 'ProjectStatisticsByTotal', as: :trackable
 
+  scope :only_main_columns, -> { select('id', 'title', 'description', 'uuid', 'link') }
+  scope :icon_as_base64, -> { select("encode(icon, 'base64') as icon") }
   scope :skip_retrieving, ->(*v) { select(column_names.map(&:to_sym) - Array.wrap(v)) }
 
   store :info, accessors: %i[meta], coder: JsonbSerializer

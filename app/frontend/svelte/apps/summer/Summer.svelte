@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { getSummary, getServices } from './store';
+  import { initApi } from './store';
   import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './store';
   import Modal from './Modal.svelte';
   import ProjectService from './ProjectService.svelte';
@@ -8,7 +8,7 @@
 
   /* eslint svelte/no-at-html-tags: 0 */
   let showModal = false;
-  export let project: string;
+  export let projectId: string;
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string = '';
@@ -18,6 +18,9 @@
   let loading = false;
   let showButton = false;
   let buttonStyles = hideButton();
+
+  const api = initApi(projectId)
+
   onMount(async () => {
     if (showButton) return;
     buttonStyles = {
@@ -46,7 +49,7 @@
     loading = true;
     isSummaryCompleted = false;
     try {
-      const summaryStore = getSummary(project, article.page_id);
+      const summaryStore = api.getSummary(article.page_id);
 
       summaryStore.result.subscribe((value) => {
         summary += value;
@@ -68,7 +71,7 @@
   const retrieveProducts = async () => {
     if (!isSummaryCompleted) return;
     try {
-      const res = await getServices(project, article.page_id);
+      const res = await api.getServices(article.page_id);
       console.log(res);
       if (res.hasOwnProperty('services')) services = res.services
     } catch (error) {
@@ -99,7 +102,7 @@
 
     {#if services.length > 0}
       {#each services as service}
-        <ProjectService {service} />
+        <ProjectService {service} pageId={article.page_id} />
       {/each}
     {/if}
   </Modal>

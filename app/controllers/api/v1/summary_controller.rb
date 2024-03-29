@@ -14,7 +14,7 @@ module Api
         response.headers['Content-Type'] = 'text/event-stream'
         sse = SSE.new(response.stream)
         send_article(sse, article)
-        ArticleStatisticService.new(project: @current_project, trackable: @project_page).click!
+        StatisticService.new(project: @current_project, trackable: @project_page).click!
       rescue StandardError => e
         sse&.write('--ERROR--')
         Rails.logger.error e.message
