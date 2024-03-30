@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ProjectServiceType } from './store';
-  import { initApi } from '@/svelte/apps/summer/store';
+  import type { ProjectServiceType } from './api';
+  import { initApi } from '@/svelte/apps/summer/api';
 
   export let service: ProjectServiceType;
   export let pageId: string;

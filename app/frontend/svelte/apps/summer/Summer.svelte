@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { initApi } from './store';
-  import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './store';
+  import { initApi } from './api';
+  import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './api';
   import Modal from './Modal.svelte';
   import ProjectService from './ProjectService.svelte';
   import markdown from './markdown.js';

@@ -1,6 +1,6 @@
 import Summer from '@/svelte/apps/summer/Summer.svelte';
 import type { SvelteComponent } from 'svelte';
-import { ArticleInitInfo, initButton, SettingsInfo } from '@/svelte/apps/summer/store';
+import { ArticleInitInfo, initButton, SettingsInfo } from '@/svelte/apps/summer/api';
 
 let buttonApp: SvelteComponent | undefined;
 let checkerInterval: number | undefined;
