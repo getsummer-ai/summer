@@ -28,8 +28,6 @@
     </div>
     <div class="gtsm-footer">
       <slot name="footer" />
-      <input placeholder="Your Email..." type="text" />
-      <button>Subscribe</button>
     </div>
   </div>
 </dialog>
@@ -90,38 +88,11 @@
     }
 
     .gtsm-footer {
-      @apply flex justify-between relative z-10;
+      @apply relative z-10;
       box-shadow: 0px -25px 14px -11px #fff;
       -webkit-box-shadow: 0px -25px 14px -11px #fff;
       -moz-box-shadow: 0px -25px 14px -11px #fff;
       border-top: 1px solid #EFEFEF;
-      input {
-        flex-grow: 1;
-        height: 50px;
-        font-size: 14px;
-        padding: 10px 20px;
-        background: none;
-        border: none;
-        outline: none;
-        box-shadow: none;
-      }
-      button {
-        height: 50px;
-        padding: 0 20px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #000;
-        background: transparent;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        &:hover {
-          color: #555;
-        }
-        &:focus {
-          color: #0b0bde;
-        }
-      }
     }
   }
   dialog::backdrop {

@@ -4,6 +4,7 @@
   import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './api';
   import Modal from './Modal.svelte';
   import ProjectService from './ProjectService.svelte';
+  import SubscriptionBlock from './SubscriptionBlock.svelte';
   import markdown from './markdown.js';
 
   /* eslint svelte/no-at-html-tags: 0 */
@@ -19,7 +20,7 @@
   let showButton = false;
   let buttonStyles = hideButton();
 
-  const api = initApi(projectId)
+  const api = initApi(projectId);
 
   onMount(async () => {
     if (showButton) return;
@@ -56,10 +57,10 @@
       });
 
       summaryStore.isCompleted.subscribe((v) => {
-        if (v !== true) return
+        if (v !== true) return;
         isSummaryCompleted = true;
         retrieveProducts();
-      })
+      });
       // summary = atob(summaryInfo.article.summary);
       openModal(100);
     } catch (error) {
@@ -73,18 +74,19 @@
     try {
       const res = await api.getServices(article.page_id);
       console.log(res);
-      if (res.hasOwnProperty('services')) services = res.services
+      if (res.body?.hasOwnProperty('services')) services = res.body.services;
     } catch (error) {
       console.log(error);
       // loading = false;
     }
-  }
+  };
 
   const closeModal = () => {
     loading = false;
     showModal = false;
     setTimeout(() => (buttonStyles.opacity = 1), 500);
   };
+
 </script>
 
 <button class="getsummer-btn" style="opacity: {buttonStyles.opacity};" on:click={onButtonClick}>
@@ -105,6 +107,8 @@
         <ProjectService {service} pageId={article.page_id} />
       {/each}
     {/if}
+
+    <SubscriptionBlock slot="footer" bind:article />
   </Modal>
 {/if}
 

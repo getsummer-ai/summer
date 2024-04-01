@@ -13,6 +13,11 @@ export type ProjectServiceType = {
   icon: string | null;
 };
 
+export type ApiResponseType<T> = {
+  status: number;
+  body: T | null;
+};
+
 export type ErrorCodeType = {
   code: string;
   message: string;
@@ -32,7 +37,7 @@ const getFetch = async <T>(
   url: string,
   projectId: string,
   body: null | { [key: string]: string } = null,
-): Promise<T> => {
+): Promise<ApiResponseType<T>> => {
   const response = await fetch(url, {
     method: body == null ? 'GET' : 'POST',
     mode: 'cors',
@@ -42,7 +47,16 @@ const getFetch = async <T>(
     },
     ...(body == null ? {} : { body: JSON.stringify(body) }),
   });
-  return response.json();
+  let res = await response.text();
+  if (res) {
+    try {
+      res = JSON.parse(res);
+      return { status: response.status, body: res as T };
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  return { status: response.status, body: null };
 };
 
 export const initButton = async (projectId: string, url: string) => {
@@ -92,14 +106,19 @@ const clickService = (projectId: string, pageId: string, serviceId: string) => {
   );
 };
 
+const subscribe = (projectId: string, pageId: string, email: string) =>
+  getFetch(`${api_host}/api/v1/pages/${pageId}/subscribe`, projectId, { email });
+
 let initializedApi: {
   clickService: (
     pageId: string,
     serviceId: string,
-  ) => Promise<ErrorCodeType | { services: ProjectServiceType[] }>;
-  getServices: (pageId: string) => Promise<ErrorCodeType | { services: ProjectServiceType[] }>;
+  ) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectServiceType[] }>>;
+  getServices: (pageId: string) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectServiceType[] }>>;
   getSummary: (id: string) => { result: Writable<string>; isCompleted: Writable<boolean> };
+  subscribe: (pageId: string, id: string) => Promise<ApiResponseType<unknown>>;
 };
+
 export const initApi = (projectId?: string) => {
   if (!projectId && initializedApi) return initializedApi;
   if (!projectId) throw new Error('projectId is required');
@@ -108,6 +127,7 @@ export const initApi = (projectId?: string) => {
     clickService: clickService.bind(null, projectId),
     getServices: getServices.bind(null, projectId),
     getSummary: getSummary.bind(null, projectId),
+    subscribe: subscribe.bind(null, projectId),
   };
 
   return initializedApi;

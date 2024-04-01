@@ -40,9 +40,11 @@ export const initApp = (project: { id: string; settings: object }, url: string, 
 
     initButton(project.id, url)
       .then((info) => {
-        if ('code' in info) return console.error('GetSummer', info);
+        const body = info.body
+        if (!body) return console.error('GetSummer error');
+        if ('code' in body) return console.error('GetSummer', info);
         const install = () =>
-          installApp(project.id, settings, info.article);
+          installApp(project.id, settings, body.article);
         // console.log(info);
         const appId = install();
         checkerInterval = setInterval(() => {

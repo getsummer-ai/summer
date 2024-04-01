@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -205,6 +205,19 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
     t.index ["trackable_type", "trackable_id"], name: "index_project_statistics_on_trackable"
   end
 
+  create_table "project_user_emails", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "project_id", null: false
+    t.bigint "project_page_id", null: false
+    t.string "email", null: false
+    t.string "encrypted_page_id", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.index ["encrypted_page_id"], name: "index_project_user_emails_on_encrypted_page_id", unique: true
+    t.index ["project_id", "email"], name: "index_project_user_emails_on_project_id_and_email", unique: true
+    t.index ["uuid"], name: "index_project_user_emails_on_uuid", unique: true
+  end
+
   create_table "projects", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -271,6 +284,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_26_194129) do
   add_foreign_key "project_pages", "projects", on_update: :cascade
   add_foreign_key "project_services", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_statistics", "projects", on_update: :cascade
+  add_foreign_key "project_user_emails", "project_pages", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_user_emails", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 
