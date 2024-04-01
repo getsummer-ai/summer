@@ -2,7 +2,7 @@
   <td class="font-semibold pl-0">
     <%=
       link_to project_page_path(@project, @page), data: {'turbo-frame': "modal"} do
-        @page.article_only_title.title.truncate(60)
+        @page.article_only_title.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
       end
     %>
   </td>

@@ -1,13 +1,12 @@
 <%= turbo_frame_tag "modal" do %>
   <%= render TurboModal::Component.new(title: 'Page', redirect_following: false) do %>
     <div>
-<!--      <h2 class="text-xl font-semibold tracking-tight">Page</h2>-->
-      <label class="label label-summer">Name</label>
-      <input class="input input-summer w-full cursor-default" value="<%=@project_page_decorated.article_only_title.title.truncate(60) %>" />
-
-      <div class="p-2 bordered rounded-lg border-gray-200">
-        <%= %>
-      </div>
+      <% article = @project_page_decorated.article_only_title %>
+      <% if article.title.present? %>
+        <label class="label label-summer">Name</label>
+        <input class="input input-summer w-full cursor-default" value="<%=article.title.truncate(60) || '' %>" />
+        <div class="p-2 bordered rounded-lg border-gray-200"></div>
+      <% end %>
       <label class="label label-summer">Link</label>
       <input class="input input-summer w-full cursor-default" value="<%=@project_page_decorated.url %>" />
       <h4 class="text-sm font-semibold mt-6">Statistics</h4>
@@ -17,11 +16,11 @@
           <tbody>
             <tr>
               <td>Summer shown</td>
-              <td><%=number_with_delimiter(statistic.views) %></td>
+              <td><%=number_with_delimiter(statistic&.views || 0) %></td>
             </tr>
             <tr>
               <td>Summer clicked</td>
-              <td><%=number_with_delimiter(statistic.clicks) %></td>
+              <td><%=number_with_delimiter(statistic&.clicks || 0) %></td>
             </tr>
             <tr>
               <td>Symbols on the page</td>

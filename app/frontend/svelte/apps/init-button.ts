@@ -5,6 +5,10 @@ import { ArticleInitInfo, initButton, SettingsInfo } from '@/svelte/apps/summer/
 let buttonApp: SvelteComponent | undefined;
 let checkerInterval: number | undefined;
 let timeoutId: number;
+
+const log = (message: string) => {
+  console.log(`%c${message}`, 'background: #FFEFE7; padding: 2px 10px;');
+}
 const destroyApp = () => {
   if (buttonApp && typeof buttonApp.$destroy == 'function') buttonApp.$destroy();
   buttonApp = undefined;
@@ -41,7 +45,7 @@ export const initApp = (project: { id: string; settings: object }, url: string, 
     initButton(project.id, url)
       .then((info) => {
         const body = info.body
-        if (!body) return console.error('GetSummer error');
+        if (!body) return log("GetSummer: Skipping page as there's no article");
         if ('code' in body) return console.error('GetSummer', info);
         const install = () =>
           installApp(project.id, settings, body.article);

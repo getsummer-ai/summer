@@ -88,7 +88,7 @@
     }
 
     .gtsm-footer {
-      @apply relative z-10;
+      @apply relative z-10 min-h-12;
       box-shadow: 0px -25px 14px -11px #fff;
       -webkit-box-shadow: 0px -25px 14px -11px #fff;
       -moz-box-shadow: 0px -25px 14px -11px #fff;

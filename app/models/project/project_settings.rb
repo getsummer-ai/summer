@@ -13,7 +13,8 @@ class Project
     attribute :feature_suggestion, ProjectSuggestionFeature.to_type, default: -> { {} }
     attribute :feature_subscription, ProjectSubscriptionFeature.to_type, default: -> { {} }
 
-    accepts_nested_attributes_for :feature_suggestion, :feature_subscription, allow_destroy: false
+    accepts_nested_attributes_for :feature_suggestion, :feature_subscription,
+      allow_destroy: false, update_only: true
 
     validates :feature_suggestion, store_model: { merge_errors: false }
     validates :feature_subscription, store_model: { merge_errors: false }

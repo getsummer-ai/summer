@@ -24,6 +24,10 @@ class Project < ApplicationRecord
   attribute :settings, ProjectSettings.to_type
   accepts_nested_attributes_for :settings, allow_destroy: false
 
+  def settings_attributes=(attributes)
+    settings.assign_attributes(attributes)
+  end
+
   track_changes_formatter_for :settings do |old_value, new_value|
     original, changed = new_value.as_json, old_value.as_json
     [HashDiffer.new(original, changed).deep_diff, HashDiffer.new(changed, original).deep_diff]

@@ -102,13 +102,16 @@
   <Modal bind:showModal on:close={closeModal}>
     {@html markdown(summary)}
 
-    {#if services.length > 0}
+    {#if settings.features.suggestion === true && services.length > 0}
       {#each services as service}
         <ProjectService {service} pageId={article.page_id} />
       {/each}
     {/if}
-
-    <SubscriptionBlock slot="footer" bind:article />
+    <svelte:fragment slot="footer">
+      {#if settings.features.subscription === true}
+        <SubscriptionBlock bind:article />
+      {/if}
+    </svelte:fragment>
   </Modal>
 {/if}
 
