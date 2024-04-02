@@ -57,6 +57,10 @@
       max-height: 45px;
       border-radius: 4px;
     }
+
+    &:not(:first-of-type) {
+      margin-top: 10px;
+    }
   }
 
   a:hover {

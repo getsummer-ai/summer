@@ -10,6 +10,9 @@ class ProjectService < ApplicationRecord
   validates :description, presence: true
   validates :link, domain_url: true, presence: true
 
+  validates :title, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
+
+
   has_many :statistics, as: :trackable, class_name: 'ProjectStatistic', dependent: :destroy
   has_one :statistics_by_total, class_name: 'ProjectStatisticsByTotal', as: :trackable
 
