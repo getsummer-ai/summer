@@ -6,6 +6,8 @@ module Api
       # Controller with basic logic for getting article summary
       #
       class ProductsController < DefaultController
+        before_action { |_| authorize current_project, :use_suggestion_feature? }
+
         def show
           # @type [ProjectArticle]
           article = ProjectArticle.only_required_columns.find_by(id: project_page.project_article_id)

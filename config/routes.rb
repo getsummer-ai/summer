@@ -65,7 +65,6 @@ Rails.application.routes.draw do
         get ':page_id/products', to: 'products#show'
         post ':page_id/products/:uuid/click', to: 'products#click'
       end
-      resources :projects, only: %i[show]
     end
   end
 

@@ -6,6 +6,8 @@ module Api
       # Controller with basic logic for getting article summary
       #
       class UsersController < DefaultController
+        before_action { |_| authorize current_project, :use_subscription_feature? }
+
         def subscribe
           existed_model = ProjectUserEmail.find_by(encrypted_page_id: params[:page_id])
           return head(:unprocessable_entity) if existed_model.present?

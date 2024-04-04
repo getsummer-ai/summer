@@ -311,6 +311,8 @@ GEM
     public_suffix (5.0.4)
     puma (6.4.2)
       nio4r (~> 2.0)
+    pundit (2.3.1)
+      activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.7.3)
     rack (3.0.8)
@@ -538,6 +540,7 @@ DEPENDENCIES
   propshaft
   public_suffix
   puma (~> 6.0)
+  pundit
   rack-cors
   rails (~> 7.1)
   ransack!
