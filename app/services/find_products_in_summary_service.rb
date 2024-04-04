@@ -5,8 +5,8 @@ class FindProductsInSummaryService
   attr_reader :model, :guidelines, :llm
 
   PREFIX =
-    "I need to understand if the following article " +
-    "relates to the products I am selling.\n%{article}\n" +
+    "I need to understand if the following text " +
+    "relates to the products I offer.\n%{article}\n" +
     "Please take a look at the product list: \n"
   POSTFIX = "\nPlease respond as a JSON array, in the following format: [{\"id\": number, \"related\": bool}]\n"
 

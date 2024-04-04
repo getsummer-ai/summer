@@ -23,8 +23,10 @@ module Api
         end
 
         def click
-          service = @current_project.services.select('id').find_by!(uuid: params[:uuid])
-          StatisticService.new(project: @current_project, trackable: service).click!
+          product = @current_project.products.select('id').find_by(uuid: params[:uuid])
+          if product.present?
+            StatisticService.new(project: @current_project, trackable: product).click!
+          end
           head :ok
         end
 
