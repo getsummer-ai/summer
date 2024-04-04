@@ -37,7 +37,7 @@ Rails.application.routes.draw do
       end
     end
 
-    if Rails.env.development?
+    unless Rails.env.production?
       get '/about', to: 'pages#about', as: 'about'
       get '/homepage', to: 'pages#homepage', as: 'homepage'
       get '/new-year-celebrations', to: 'pages#new_year_celebration', as: 'new_year_celebrations'

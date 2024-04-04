@@ -14,6 +14,60 @@ RSpec.describe Api::V1::ButtonController do
 
   before { request.headers['Api-Key'] = api_key }
 
+  describe 'GET /settings' do
+    context 'when api key is wrong' do
+      let(:api_key) { 'random-key' }
+
+      it 'returns invalid Api-Key response' do
+        get(:settings)
+        expect(response).to have_http_status(:forbidden)
+        expect(response.body).to eq "{\"message\":\"Invalid Api-Key\"}"
+      end
+    end
+
+    it 'returns incorrect domain response' do
+      get(:settings)
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to eq "{\"code\":\"wrong_domain\",\"message\":\"Incorrect domain\"}"
+    end
+
+    context 'when http_status is 200' do
+      render_views
+
+      it 'returns response successfully' do
+        request.headers['origin'] = 'http://localhost.com'
+        get(:settings)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(
+          path: be_a(String).and(include('/libs/app.umd.js')),
+          settings: {
+            theme: nil, paths: [], features: { suggestion: true, subscription: true }
+          }            
+        )
+      end
+
+      it 'returns response successfully when project settings are changed' do
+        project.update!(
+          settings_attributes: {
+            feature_subscription_attributes: { enabled: false }, feature_suggestion_attributes: { enabled: false }
+          },
+          paths: %w[/path1 /path2]
+        )
+        request.headers['origin'] = 'http://localhost.com'
+
+        get(:settings)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(
+          path: be_a(String).and(include('/libs/app.umd.js')),
+          settings: {
+            theme: nil, paths: %w[/path1 /path2], features: { suggestion: false, subscription: false }
+          }
+        )
+      end
+    end
+  end
+
   describe 'POST /init' do
     subject(:post_request) do
       post(:init, body: { s: 'http://localhost:3000/new-year-celebrations' }.to_json, as: :json)
@@ -55,8 +109,8 @@ RSpec.describe Api::V1::ButtonController do
         article = project.articles.first
         expect(article.tokens_count).to be_a(Integer)
         expect(article.title).to eq 'New Year celebrations'
-        expect(article.status_summary).to eq 'wait'
-        expect(article.status_services).to eq 'wait'
+        expect(article.summary_status).to eq 'wait'
+        expect(article.products_status).to eq 'wait'
 
         page = project.pages.first
         expect(page.url).to eq 'http://localhost:3000/new-year-celebrations'
@@ -67,9 +121,8 @@ RSpec.describe Api::V1::ButtonController do
         post_request
         expect(response).to have_http_status(:ok)
         body = response.parsed_body
-        expect(body['article']['id']).to be_a(String)
+        expect(body['article']['page_id']).to be_a(String)
         expect(body['article']['title']).to eq 'New Year celebrations'
-        expect(body['settings']).to be_a(Hash)
       end
     end
   end

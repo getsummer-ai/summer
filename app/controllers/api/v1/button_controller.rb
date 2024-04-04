@@ -9,7 +9,7 @@ module Api
 
       def settings
         @app_path =
-          Rails.env.production? ? '/libs/app.umd.js' : helpers.vite_asset_path('libs/summer.ts')
+          Rails.env.development? ? helpers.vite_asset_path('libs/summer.ts') : '/libs/app.umd.js'
       end
 
       def init
@@ -40,7 +40,8 @@ module Api
           return send_incorrect_domain_response!
         end
 
-        return unless @current_project.paths.find { |path| parsed_url.path.start_with?(path) }.nil?
+        paths = @current_project.paths
+        return if paths.empty? || !paths.find { |path| parsed_url.path.start_with?(path) }.nil?
 
         send_incorrect_path_response!
       end
