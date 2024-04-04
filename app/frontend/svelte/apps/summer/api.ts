@@ -5,11 +5,11 @@ export type ArticleInitInfo = {
   title: string;
 };
 
-export type ProjectServiceType = {
+export type ProjectProductType = {
   uuid: string;
   link: string;
   description: string;
-  title: string;
+  name: string;
   icon: string | null;
 };
 
@@ -92,14 +92,14 @@ const getSummary = (projectId: string, id: string) => {
 };
 
 const getServices = (projectId: string, pageId: string) => {
-  return getFetch<{ services: ProjectServiceType[] } | ErrorCodeType>(
+  return getFetch<{ services: ProjectProductType[] } | ErrorCodeType>(
     `${api_host}/api/v1/pages/${pageId}/products`,
     projectId,
   );
 };
 
 const clickService = (projectId: string, pageId: string, serviceId: string) => {
-  return getFetch<{ services: ProjectServiceType[] } | ErrorCodeType>(
+  return getFetch<{ services: ProjectProductType[] } | ErrorCodeType>(
     `${api_host}/api/v1/pages/${pageId}/products/${serviceId}/click`,
     projectId,
     {},
@@ -113,8 +113,8 @@ let initializedApi: {
   clickService: (
     pageId: string,
     serviceId: string,
-  ) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectServiceType[] }>>;
-  getServices: (pageId: string) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectServiceType[] }>>;
+  ) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectProductType[] }>>;
+  getServices: (pageId: string) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectProductType[] }>>;
   getSummary: (id: string) => { result: Writable<string>; isCompleted: Writable<boolean> };
   subscribe: (pageId: string, id: string) => Promise<ApiResponseType<unknown>>;
 };

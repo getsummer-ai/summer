@@ -16,7 +16,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
-  create_enum "project_article_common_status", ["error", "skipped", "wait", "processing", "completed", "static"]
+  create_enum "project_article_feature_status", ["error", "skipped", "wait", "processing", "completed", "static"]
+  create_enum "project_llm_call_service_name", ["summary", "products", "default"]
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_llm", ["gpt3.5", "gpt4"]
   create_enum "user_project_protocol", ["http", "https"]
@@ -119,26 +120,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
-  create_table "project_article_services", force: :cascade do |t|
+  create_table "project_article_products", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "project_article_id", null: false
-    t.bigint "project_service_id", null: false
-    t.index ["project_article_id", "project_service_id"], name: "idx_on_project_article_id_project_service_id_cba9cb8a1d", unique: true
-    t.index ["project_article_id"], name: "index_project_article_services_on_project_article_id"
-    t.index ["project_service_id"], name: "index_project_article_services_on_project_service_id"
-  end
-
-  create_table "project_article_summaries", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "project_article_id", null: false
-    t.jsonb "info", default: {}, null: false
-    t.integer "in_tokens_count", default: 0, null: false
-    t.text "input"
-    t.enum "llm", null: false, enum_type: "user_project_llm"
-    t.integer "out_tokens_count", default: 0, null: false
-    t.text "summary"
-    t.index ["project_article_id"], name: "index_project_article_summaries_on_project_article_id"
+    t.bigint "project_product_id", null: false
+    t.index ["project_article_id", "project_product_id"], name: "idx_on_project_article_id_project_product_id_4f7270e242", unique: true
+    t.index ["project_article_id"], name: "index_project_article_products_on_project_article_id"
+    t.index ["project_product_id"], name: "index_project_article_products_on_project_product_id"
   end
 
   create_table "project_articles", force: :cascade do |t|
@@ -153,10 +141,32 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
     t.datetime "last_modified_at"
     t.datetime "last_scraped_at"
     t.jsonb "info", default: {}, null: false
-    t.enum "status_summary", default: "wait", null: false, enum_type: "project_article_common_status"
-    t.enum "status_services", default: "wait", null: false, enum_type: "project_article_common_status"
+    t.enum "summary_status", default: "wait", null: false, enum_type: "project_article_feature_status"
+    t.bigint "summary_llm_call_id"
+    t.enum "products_status", default: "wait", null: false, enum_type: "project_article_feature_status"
+    t.bigint "products_llm_call_id"
+    t.index ["products_llm_call_id"], name: "index_project_articles_on_products_llm_call_id"
     t.index ["project_id", "article_hash"], name: "index_project_articles_on_project_id_and_article_hash", unique: true
     t.index ["project_id"], name: "index_project_articles_on_project_id"
+    t.index ["summary_llm_call_id"], name: "index_project_articles_on_summary_llm_call_id"
+  end
+
+  create_table "project_llm_calls", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "project_id", null: false
+    t.string "initializer_type"
+    t.bigint "initializer_id"
+    t.enum "feature", default: "default", null: false, enum_type: "project_llm_call_service_name"
+    t.jsonb "info", default: {}, null: false
+    t.integer "in_tokens_count", default: 0, null: false
+    t.text "input"
+    t.enum "llm", null: false, enum_type: "user_project_llm"
+    t.integer "out_tokens_count", default: 0, null: false
+    t.text "output"
+    t.index ["initializer_type", "initializer_id", "feature"], name: "idx_on_initializer_type_initializer_id_feature_f0de9640c3"
+    t.index ["initializer_type", "initializer_id"], name: "index_project_llm_calls_on_initializer"
+    t.index ["project_id"], name: "index_project_llm_calls_on_project_id"
   end
 
   create_table "project_pages", force: :cascade do |t|
@@ -173,20 +183,20 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
     t.index ["project_id"], name: "index_project_pages_on_project_id"
   end
 
-  create_table "project_services", force: :cascade do |t|
+  create_table "project_products", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "project_id", null: false
-    t.string "title", null: false
+    t.string "name", null: false
     t.string "description", null: false
     t.string "link", null: false
     t.jsonb "info"
     t.binary "icon"
     t.boolean "is_accessible", default: true, null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.index ["project_id", "uuid"], name: "index_project_services_on_project_id_and_uuid"
-    t.index ["project_id"], name: "index_project_services_on_project_id"
-    t.index ["uuid"], name: "index_project_services_on_uuid", unique: true
+    t.index ["project_id", "uuid"], name: "index_project_products_on_project_id_and_uuid"
+    t.index ["project_id"], name: "index_project_products_on_project_id"
+    t.index ["uuid"], name: "index_project_products_on_uuid", unique: true
   end
 
   create_table "project_statistics", force: :cascade do |t|
@@ -276,13 +286,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
   end
 
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "project_article_services", "project_articles", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "project_article_services", "project_services", on_update: :cascade, on_delete: :cascade
-  add_foreign_key "project_article_summaries", "project_articles", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_article_products", "project_articles", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_article_products", "project_products", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_articles", "project_llm_calls", column: "products_llm_call_id"
+  add_foreign_key "project_articles", "project_llm_calls", column: "summary_llm_call_id"
   add_foreign_key "project_articles", "projects"
+  add_foreign_key "project_llm_calls", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_pages", "project_articles", on_update: :cascade
   add_foreign_key "project_pages", "projects", on_update: :cascade
-  add_foreign_key "project_services", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_products", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_statistics", "projects", on_update: :cascade
   add_foreign_key "project_user_emails", "project_pages", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_user_emails", "projects", on_update: :cascade, on_delete: :cascade

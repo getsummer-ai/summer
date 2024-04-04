@@ -41,7 +41,7 @@ module Avo
         end
         field :articles_tokens_avg, as: :text do
           res =
-            record.project_articles.status_summary_completed.pluck(
+            record.project_articles.summary_status_completed.pluck(
               Arel.sql('count(*)'), 'SUM(tokens_count)', 'SUM(tokens_count)',
             )
           res = res.flatten.map(&:to_i)

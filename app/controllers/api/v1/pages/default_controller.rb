@@ -17,7 +17,7 @@ module Api
           @page_id = decoded_info[0]
         end
 
-        # @return [ProjectPage, Enumerator[ProjectPage, ProjectPage]]
+        # @return [ProjectPage]
         def project_page
           @project_page ||= current_project.pages.find(@page_id)
         end

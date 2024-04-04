@@ -26,7 +26,7 @@ class SummarizeArticleService
 
   def summarize
     @model.start_tracking(source: 'SummarizeArticleJob')
-    @model.status_summary_processing!
+    @model.summary_status_processing!
     time = measure { ask_gpt_to_summarize }
     success!({ time: })
   rescue StandardError => e
@@ -54,27 +54,26 @@ class SummarizeArticleService
 
   # @param [Hash] info
   def success!(info)
-    summary = @redis_wrapper.result
-    in_tokens_count = LanguageModelTools.estimate_max_tokens(input)
-    out_tokens_count = LanguageModelTools.estimate_max_tokens(summary)
-
+    output = @redis_wrapper.result
     ProjectArticle.transaction do
-      @model.update!(info_attributes: { summary: info }, status_summary: :completed)
-      @model.summaries.create!(
-        in_tokens_count:,
-        out_tokens_count:,
-        llm:,
-        input:,
-        summary:,
-        info:
-      )
+      call =
+        ProjectLlmCall.save_summary_call!(
+          @model,
+          in_tokens_count: LanguageModelTools.estimate_max_tokens(input),
+          out_tokens_count: LanguageModelTools.estimate_max_tokens(output),
+          llm:,
+          input:,
+          output:,
+          info:,
+        )
+      @model.update!(info_attributes: { summary: info }, summary_status: :completed, summary_llm_call_id: call.id)
     end
   end
 
   # @param [StandardError] error
   def error!(error)
     info_summary = { error: error.to_s, backtrace: error.backtrace&.grep(%r{/app/})&.join("\n") }
-    @model.update!(info_attributes: { summary: info_summary }, status_summary: :error)
+    @model.update!(info_attributes: { summary: info_summary }, summary_status: :error)
   end
 
   def input

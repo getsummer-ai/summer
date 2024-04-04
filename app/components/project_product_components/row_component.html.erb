@@ -1,0 +1,15 @@
+<tr id="<%= dom_id(@product) %>">
+  <td class="font-semibold pl-0">
+    <%=
+      link_to edit_project_product_path(@product.project, @product), data: {'turbo-frame': "modal"} do
+        @product.name.truncate(60)
+      end
+    %>
+  </td>
+  <td class="text-right">
+    <%=number_to_delimited(@product.statistics_by_total&.views || 0) %>
+  </td>
+  <td class="text-right">
+    <%=number_to_delimited(@product.statistics_by_total&.clicks || 0) %>
+  </td>
+</tr>

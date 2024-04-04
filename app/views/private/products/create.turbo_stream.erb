@@ -1,0 +1,11 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.append dom_id(ProjectProduct, :table) do %>
+  <%= render ProjectProductComponents::RowComponent.new(product: @project_product) %>
+<% end %>
+<%= turbo_stream.update "add-new-product-btn" do %>
+  <%= render ProjectProductComponents::AddNewComponent.new(project: @project)  %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
+

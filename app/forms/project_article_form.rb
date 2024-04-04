@@ -56,8 +56,8 @@ class ProjectArticleForm
         tokens_count: tokens,
         last_scraped_at: Time.now.utc,
         image_url: scraped_article.image_url,
-        status_summary: tokens > 500 ? 'wait' : 'skipped',
-        status_services: 'wait',
+        summary_status: tokens > 500 ? 'wait' : 'skipped',
+        products_status: 'wait',
       )
   end
 

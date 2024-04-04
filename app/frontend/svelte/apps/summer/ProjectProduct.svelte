@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { ProjectServiceType } from './api';
+  import type { ProjectProductType } from './api';
   import { initApi } from '@/svelte/apps/summer/api';
 
-  export let service: ProjectServiceType;
+  export let service: ProjectProductType;
   export let pageId: string;
 
   const onLinkClick = () => initApi().clickService(pageId, service.uuid)
@@ -23,7 +23,7 @@
   <div class="flex justify-between items-center">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="ml-5">
-      {service.title}
+      {service.name}
     </span>
   </div>
 

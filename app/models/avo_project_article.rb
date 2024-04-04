@@ -29,27 +29,33 @@ end
 #
 # Table name: project_articles
 #
-#  id               :bigint           not null, primary key
-#  article          :text             not null
-#  article_hash     :string           not null
-#  image_url        :text
-#  info             :jsonb            not null
-#  last_modified_at :datetime
-#  last_scraped_at  :datetime
-#  status_services  :enum             default("wait"), not null
-#  status_summary   :enum             default("wait"), not null
-#  title            :text
-#  tokens_count     :integer          default(0), not null
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  project_id       :bigint           not null
+#  id                   :bigint           not null, primary key
+#  article              :text             not null
+#  article_hash         :string           not null
+#  image_url            :text
+#  info                 :jsonb            not null
+#  last_modified_at     :datetime
+#  last_scraped_at      :datetime
+#  products_status      :enum             default("wait"), not null
+#  summary_status       :enum             default("wait"), not null
+#  title                :text
+#  tokens_count         :integer          default(0), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  products_llm_call_id :bigint
+#  project_id           :bigint           not null
+#  summary_llm_call_id  :bigint
 #
 # Indexes
 #
+#  index_project_articles_on_products_llm_call_id         (products_llm_call_id)
 #  index_project_articles_on_project_id                   (project_id)
 #  index_project_articles_on_project_id_and_article_hash  (project_id,article_hash) UNIQUE
+#  index_project_articles_on_summary_llm_call_id          (summary_llm_call_id)
 #
 # Foreign Keys
 #
+#  fk_rails_...  (products_llm_call_id => project_llm_calls.id)
 #  fk_rails_...  (project_id => projects.id)
+#  fk_rails_...  (summary_llm_call_id => project_llm_calls.id)
 #

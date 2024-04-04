@@ -38,7 +38,7 @@ class Project < ApplicationRecord
   belongs_to :user
   has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
   has_many :articles, dependent: :destroy, class_name: 'ProjectArticle'
-  has_many :services, dependent: :destroy, class_name: 'ProjectService'
+  has_many :products, dependent: :destroy, class_name: 'ProjectProduct'
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
   has_many :all_events, class_name: 'Event'
   has_many :user_emails, class_name: 'ProjectUserEmail', dependent: :destroy

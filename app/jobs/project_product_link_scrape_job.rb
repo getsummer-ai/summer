@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ProjectServiceLinkScrapeJob < ApplicationJob
+class ProjectProductLinkScrapeJob < ApplicationJob
   queue_as :default
   # retry_on StandardError, attempts: 2
 
@@ -9,7 +9,7 @@ class ProjectServiceLinkScrapeJob < ApplicationJob
 
   # @param [Integer] id
   def perform(id)
-    model = ProjectService.skip_retrieving(:icon).find(id)
+    model = ProjectProduct.skip_retrieving(:icon).find(id)
 
     scraped = WebScrapperService.new(model.link).scrape
     model.update!(

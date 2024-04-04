@@ -2,11 +2,11 @@
 class ProjectArticle
   # @!attribute summary
   #   @return [Hash]
-  # @!attribute services
+  # @!attribute products
   #   @return [Hash]
   class Info
     include StoreModel::Model
     attribute :summary, default: -> { {} }
-    attribute :services, default: -> { {} }
+    attribute :products, default: -> { {} }
   end
 end

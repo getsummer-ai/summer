@@ -1,0 +1,15 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.replace dom_id(@project_product) do %>
+  <%= render ProjectProductComponents::RowComponent.new(product: @project_product) %>
+<% end %>
+
+<%#= turbo_stream.replace dom_id(@project_product, :edit) do %>
+  <%#=render 'form' %>
+<%# end %>
+
+<%#= turbo_stream.replace dom_id(@project_product, :errors) do %>
+  <%#='' %>
+<%# end %>
+
+<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

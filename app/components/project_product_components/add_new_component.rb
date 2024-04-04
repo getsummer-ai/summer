@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module ProjectServiceComponents
+module ProjectProductComponents
   class AddNewComponent < ViewComponent::Base
     include ViewComponent::UseHelpers
 

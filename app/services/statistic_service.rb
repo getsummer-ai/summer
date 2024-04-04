@@ -3,7 +3,7 @@
 class StatisticService
 
   # @param [Project] project
-  # @param [ProjectPage, ProjectService] trackable
+  # @param [ProjectPage, ProjectProduct] trackable
   def initialize(project:, trackable:)
     @project = project
     @trackable = trackable

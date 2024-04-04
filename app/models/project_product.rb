@@ -1,22 +1,22 @@
 # frozen_string_literal: true
 
-class ProjectService < ApplicationRecord
+class ProjectProduct < ApplicationRecord
   include EncryptedKey
   include Trackable
 
   belongs_to :project
 
-  validates :title, presence: true
+  validates :name, presence: true
   validates :description, presence: true
   validates :link, domain_url: true, presence: true
 
-  validates :title, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
+  validates :name, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
 
 
   has_many :statistics, as: :trackable, class_name: 'ProjectStatistic', dependent: :destroy
   has_one :statistics_by_total, class_name: 'ProjectStatisticsByTotal', as: :trackable
 
-  scope :only_main_columns, -> { select('id', 'title', 'description', 'uuid', 'link') }
+  scope :only_main_columns, -> { select(%w[id name description uuid link]) }
   scope :icon_as_base64, -> { select("encode(icon, 'base64') as icon") }
   scope :skip_retrieving, ->(*v) { select(column_names.map(&:to_sym) - Array.wrap(v)) }
 
@@ -27,13 +27,13 @@ class ProjectService < ApplicationRecord
   private
 
   def retrieve_url
-    ProjectServiceLinkScrapeJob.perform_later(id)
+    ProjectProductLinkScrapeJob.perform_later(id)
   end
 end
 
 # == Schema Information
 #
-# Table name: project_services
+# Table name: project_products
 #
 #  id            :bigint           not null, primary key
 #  description   :string           not null
@@ -41,7 +41,7 @@ end
 #  info          :jsonb
 #  is_accessible :boolean          default(TRUE), not null
 #  link          :string           not null
-#  title         :string           not null
+#  name          :string           not null
 #  uuid          :uuid             not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
@@ -49,9 +49,9 @@ end
 #
 # Indexes
 #
-#  index_project_services_on_project_id           (project_id)
-#  index_project_services_on_project_id_and_uuid  (project_id,uuid)
-#  index_project_services_on_uuid                 (uuid) UNIQUE
+#  index_project_products_on_project_id           (project_id)
+#  index_project_products_on_project_id_and_uuid  (project_id,uuid)
+#  index_project_products_on_uuid                 (uuid) UNIQUE
 #
 # Foreign Keys
 #

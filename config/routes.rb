@@ -17,21 +17,7 @@ Rails.application.routes.draw do
                }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-    root 'pages#about'
-    get '/about', to: 'pages#about', as: 'about'
-    get '/homepage', to: 'pages#homepage', as: 'homepage'
-    get '/new-year-celebrations', to: 'pages#new_year_celebration', as: 'new_year_celebrations'
-    get '/how-to-make-contracts-more-human',
-        to: 'pages#how_to_make_contracts_more_human',
-        as: 'how_to_make_contracts_more_human'
-
-    resources :modals, only: [] do
-      collection do
-        get 'login'
-        get 'sign_up'
-        get 'restore_password'
-      end
-    end
+    root 'private/app#index'
 
     scope '/app', module: 'private' do
       get '/', to: 'app#index', as: 'user_app'
@@ -45,9 +31,26 @@ Rails.application.routes.draw do
       resources :projects, only: [] do
         resources :pages, only: %i[index update show]
         resources :actions, only: %i[index update]
-        resources :services, only: %i[new create edit update destroy]
+        resources :products, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
         resources :settings, only: [:index]
+      end
+    end
+
+    if Rails.env.development?
+      get '/about', to: 'pages#about', as: 'about'
+      get '/homepage', to: 'pages#homepage', as: 'homepage'
+      get '/new-year-celebrations', to: 'pages#new_year_celebration', as: 'new_year_celebrations'
+      get '/how-to-make-contracts-more-human',
+          to: 'pages#how_to_make_contracts_more_human',
+          as: 'how_to_make_contracts_more_human'
+
+      resources :modals, only: [] do
+        collection do
+          get 'login'
+          get 'sign_up'
+          get 'restore_password'
+        end
       end
     end
   end

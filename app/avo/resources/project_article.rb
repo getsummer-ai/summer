@@ -22,7 +22,7 @@ module Avo
         field :article_hash, as: :text, hide_on: [:index]
         field :title, as: :text
         field :article, as: :textarea
-        field :status_summary,
+        field :summary_status,
               as: :badge,
               options: {
                 success: :completed,

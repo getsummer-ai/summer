@@ -1,9 +1,9 @@
 <turbo-stream action="del-link-from-history"></turbo-stream>
 <turbo-stream action="close-modal"></turbo-stream>
 
-<%= turbo_stream.remove dom_id(@project_service) %>
-<%= turbo_stream.update "add-new-service-btn" do %>
-  <%= render ProjectServiceComponents::AddNewComponent.new(project: @project)  %>
+<%= turbo_stream.remove dom_id(@project_product) %>
+<%= turbo_stream.update "add-new-product-btn" do %>
+  <%= render ProjectProductComponents::AddNewComponent.new(project: @project)  %>
 <% end %>
 
 <%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>

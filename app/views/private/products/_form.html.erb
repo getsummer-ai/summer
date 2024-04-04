@@ -1,9 +1,9 @@
-<%= form_for @project_service,
-             url: @project_service.new_record? ? project_services_path : project_service_path(@current_project, @project_service),
+<%= form_for @project_product,
+             url: @project_product.new_record? ? project_products_path : project_product_path(@current_project, @project_product),
              builder: DaisyBuilder do |f| %>
   <div class="form-control">
-    <%= f.label :title, 'Name' %>
-    <%= f.text_field :title, placeholder: 'Product or service name' %>
+    <%= f.label :name, 'Name' %>
+    <%= f.text_field :name, placeholder: 'Product or service name' %>
   </div>
 
   <div class="form-control mt-4">
@@ -16,9 +16,9 @@
     <%= f.text_area :description, placeholder: 'Product or service description', rows: 3 %>
   </div>
 
-  <% if @project_service.errors.any? %>
-    <div id="<%=dom_id(@project_service, :errors) %>" class="text-xs mt-1">
-      <% @project_service.errors.full_messages.each do |message| %>
+  <% if @project_product.errors.any? %>
+    <div id="<%=dom_id(@project_product, :errors) %>" class="text-xs mt-1">
+      <% @project_product.errors.full_messages.each do |message| %>
         <div><%= message %></div>
       <% end %>
     </div>
@@ -29,10 +29,10 @@
   </div>
 
   <div class="form-control mt-8">
-    <% if @project_service.persisted? %>
+    <% if @project_product.persisted? %>
       <%=
         link_to 'Remove Product',
-                project_service_path(@current_project, @project_service),
+                project_product_path(@current_project, @project_product),
                 class: 'btn btn-summer mb-2 btn-block btn-red',
                 data: {
                   turbo_frame: '_top',
@@ -42,7 +42,7 @@
       %>
     <% end %>
 
-    <%= f.submit @project_service.persisted? ? 'Save' : 'Add product', class: 'btn btn-summer btn-neutral btn-block' %>
+    <%= f.submit @project_product.persisted? ? 'Save' : 'Add product', class: 'btn btn-summer btn-neutral btn-block' %>
   </div>
 <% end %>
 

@@ -1,9 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { initApi } from './api';
-  import type { ArticleInitInfo, SettingsInfo, ProjectServiceType } from './api';
+  import type { ArticleInitInfo, SettingsInfo, ProjectProductType } from './api';
   import Modal from './Modal.svelte';
-  import ProjectService from './ProjectService.svelte';
+  import ProjectProduct from './ProjectProduct.svelte';
   import SubscriptionBlock from './SubscriptionBlock.svelte';
   import markdown from './markdown.js';
 
@@ -13,7 +13,7 @@
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string = '';
-  let services: ProjectServiceType[] = [];
+  let services: ProjectProductType[] = [];
   let isSummaryCompleted: boolean = false;
   // let button: HTMLButtonElement;
   let loading = false;
@@ -104,7 +104,7 @@
 
     {#if settings.features.suggestion === true && services.length > 0}
       {#each services as service}
-        <ProjectService {service} pageId={article.page_id} />
+        <ProjectProduct {service} pageId={article.page_id} />
       {/each}
     {/if}
     <svelte:fragment slot="footer">

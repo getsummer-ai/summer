@@ -51,14 +51,14 @@
           <th class="font-semibold w-24 text-right">Clicked</th>
         </tr>
       </thead>
-      <tbody id="<%= dom_id(ProjectService, :table) %>">
-        <% @services.each do |service|%>
-          <%= render ProjectServiceComponents::RowComponent.new(service:) %>
+      <tbody id="<%= dom_id(ProjectProduct, :table) %>">
+        <% @products.each do |product|%>
+          <%= render ProjectProductComponents::RowComponent.new(product: ) %>
         <% end %>
       </tbody>
     </table>
-    <div class="my-3" id="add-new-service-btn">
-      <%= render ProjectServiceComponents::AddNewComponent.new(project: @current_project) %>
+    <div class="my-3" id="add-new-product-btn">
+      <%= render ProjectProductComponents::AddNewComponent.new(project: @current_project) %>
     </div>
   </div>
 </div>

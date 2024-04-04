@@ -28,9 +28,9 @@ module Private
     end
 
     def knowledge
-      @services =
+      @products =
         @current_project
-          .services
+          .products
           .skip_retrieving(:icon, :info, :uuid, :created_at, :updated_at, :description, :link)
           .eager_load(:statistics_by_total)
           .order(ProjectStatisticsByTotal.arel_table[:views].desc)

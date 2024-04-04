@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
-module ProjectServiceComponents
+module ProjectProductComponents
   class RowComponent < ViewComponent::Base
     include ViewComponent::UseHelpers
     include ActiveSupport::NumberHelper
 
-    # @param [ProjectService] service
-    def initialize(service:)
+    # @param [ProjectProduct] product
+    def initialize(product:)
       super
-      @service = service
+      @product = product
     end
   end
 end

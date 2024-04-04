@@ -10,7 +10,7 @@ module Api
 
         def stream
           article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
-          SummarizeArticleJob.perform_later(article.id) if article.status_summary_wait?
+          SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
           response.headers['Content-Type'] = 'text/event-stream'
           sse = SSE.new(response.stream)
           send_article(sse, article)
@@ -27,9 +27,8 @@ module Api
         #   @param [SSE] sse
         #   @param [ProjectArticle] article
         def send_article(sse, article)
-          if article.status_summary_completed?
-            return sse.write(article.summaries.order(id: :desc).pick(:summary))
-          end
+          return sse.write(article.summary_llm_call.output) if article.summary_status_completed?
+
           subscribe_and_send_from_stream(sse, article)
         end
 
@@ -37,12 +36,12 @@ module Api
         #   @param [ProjectArticle] article
         def subscribe_and_send_from_stream(sse, article)
           # on first message from redis we send the buffered summary
-          channel_name = article.redis_name
+          channel_name = article.redis_summary_name
           redis_subscriber = Redis.new
           redis_buffer = Redis.new
           subscribe_on_channel(sse, redis_subscriber, redis_buffer, channel_name)
         rescue Redis::TimeoutError => e
-          sse.write(article.summary) if article.reload.status_summary
+          sse.write(article.summary_llm_call.output) if article.reload.summary_status_completed?
           Rails.logger.error e.message
           raise
         ensure

@@ -5,7 +5,7 @@ class SummarizeArticleService
     # @param [Redis] redis_instance
     def initialize(model, redis_instance)
       @model = model
-      @channel_name = model.redis_name
+      @channel_name = model.redis_summary_name
       @redis = redis_instance
     end
 
