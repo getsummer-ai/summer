@@ -2,7 +2,7 @@
 
 json.path @app_path
 json.settings do
-  json.theme current_project.settings.theme
+  json.appearance current_project.settings.appearance
   # json.size @current_project.settings_font_size
   json.paths current_project.paths
   json.features do

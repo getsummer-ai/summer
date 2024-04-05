@@ -1,1 +1,51 @@
-<h1 class="text-xl">Setup</h1>
+<h2 class="font-semibold text-xl">Appearance</h2>
+<p class="opacity-50 mt-1">
+  The appearance change will apply automatically, you don’t need to reinstall or edit the code.
+</p>
+
+<div class="flex mt-8 shadow border border-light-gray rounded-xl">
+  <div class="p-10 w-52">
+    <%=
+      form_for @project,
+      url: appearance_project_path(@project),
+      html: {
+        method: :put,
+        class: 'mt-2',
+      } do |f| %>
+      <%= f.fields_for :settings do |settings_fields| %>
+        <%= settings_fields.fields_for :appearance do |appearance_form| %>
+          <%
+            base_radio = 'radio-appearance-summer'
+            light_radio = "#{base_radio} #{base_radio}--light-grey"
+            simple_radio = 'radio radio-lg checked:border-2 checked:border-[#0F43FF]'
+            onchange = 'this.form.requestSubmit()'
+          %>
+
+          <div>
+            <div class="mb-2 font-semibold">Button</div>
+            <%= appearance_form.radio_button :button_theme, 'white', class: base_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :button_theme, 'black', class: light_radio, onchange: onchange %>
+          </div>
+          <div class="mt-6">
+            <div class="mb-2 font-semibold">Frame</div>
+            <%= appearance_form.radio_button :frame_theme, 'white', class: base_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :frame_theme, 'black', class: light_radio, onchange: onchange %>
+          </div>
+          <div class="mt-8">
+            <div class="mb-4 font-semibold">Radius</div>
+            <label class="label cursor-pointer p-0 pl-1 w-[80px]">
+              <%= appearance_form.radio_button :button_radius, 'sm', class: simple_radio, onchange: onchange %>
+              <span class="label-text font-extrabold">SM</span>
+            </label>
+
+            <label class="label cursor-pointer p-0 pl-1 mt-2 w-[80px]">
+              <%= appearance_form.radio_button :button_radius, 'xl', class: simple_radio, onchange: onchange %>
+              <span class="label-text font-extrabold">XL</span>
+            </label>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+  </div>
+  <div class="p-10 w-52 bg-light-gray flex-1"></div>
+</div>

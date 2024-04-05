@@ -41,7 +41,8 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
-            theme: nil, paths: [], features: { suggestion: true, subscription: true }
+            appearance: { button_radius: 'xl', button_theme: 'white', frame_theme: 'white' },
+            paths: [], features: { suggestion: true, subscription: true }
           }            
         )
       end
@@ -61,7 +62,8 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
-            theme: nil, paths: %w[/path1 /path2], features: { suggestion: false, subscription: false }
+            appearance: { button_radius: 'xl', button_theme: 'white', frame_theme: 'white' },
+            paths: %w[/path1 /path2], features: { suggestion: false, subscription: false }
           }
         )
       end

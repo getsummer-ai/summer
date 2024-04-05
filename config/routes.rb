@@ -25,6 +25,7 @@ Rails.application.routes.draw do
         member do
           get :setup
           put :guidelines, action: :update_guidelines
+          put :appearance, action: :update_appearance
           get :knowledge
         end
       end

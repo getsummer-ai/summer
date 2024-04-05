@@ -27,6 +27,22 @@ module Private
       end
     end
 
+    def update_appearance
+      form = params.fetch(:project, {}).permit(
+        settings_attributes: { appearance_attributes: [:frame_theme, :button_theme, :button_radius] }
+      )
+      res = @project.update(form)
+
+      message = res ? 'Appearance setting has changed' : "Appearance settings weren't changed. "
+      message += @project.errors.full_messages.join('. ') if @project.errors.any?
+      flash.now[res ? :notice : :alert] = message
+
+      respond_to do |format|
+        format.html { redirect_to setup_project_path }
+        format.turbo_stream
+      end
+    end
+
     def knowledge
       @products =
         @current_project

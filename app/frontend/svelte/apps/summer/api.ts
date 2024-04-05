@@ -24,7 +24,6 @@ export type ErrorCodeType = {
 };
 
 export type SettingsInfo = {
-  theme: string | null;
   paths: string[];
   features: {
     suggestion: boolean;

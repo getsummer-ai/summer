@@ -154,3 +154,20 @@ html {
     @apply text-lg py-1.5 px-4;
   }
 }
+
+.radio-appearance-summer {
+  @apply radio bg-black w-[32px] h-[32px] m-1.5;
+  border-width: 0;
+
+  &:checked {
+    @apply bg-black w-[42px] h-[42px] border-2 border-[#0F43FF] m-0;
+  }
+
+  &--light-grey {
+    @apply bg-[#EFEFEF];
+
+    &:checked {
+      @apply bg-[#EFEFEF];
+    }
+  }
+}
