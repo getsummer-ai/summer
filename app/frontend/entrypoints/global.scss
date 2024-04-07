@@ -8,6 +8,10 @@ html {
   @apply text-base;
 }
 
+html, body {
+  //min-width: 700px;
+}
+
 .field_with_errors {
   display: flex;
   flex-direction: column;
@@ -170,4 +174,9 @@ html {
       @apply bg-[#EFEFEF];
     }
   }
+}
+
+code[class*="language-"],
+pre[class*="language-"] {
+  font-size: 13px !important;
 }

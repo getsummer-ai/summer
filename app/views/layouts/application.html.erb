@@ -1,17 +1,11 @@
 <!DOCTYPE html>
-<!--<html data-theme="business">-->
 <% html_class = content_for?(:html_class) ? yield(:html_class) : '' %>
 <% body_class = content_for?(:body_class) ? yield(:body_class) : '' %>
-<html class="<%=html_class%>" data-theme="lofi">
-  <!--<html data-theme="emerald">-->
+<html class="<%= html_class.strip %>" data-theme="lofi">
   <head>
     <title>Summer</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <!--    <link rel="preconnect" href="https://fonts.googleapis.com" />-->
-    <!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />-->
-    <!--    <link href="https://fonts.googleapis.com/css2?family=Silkscreen" rel="stylesheet" />-->
     <%= vite_stylesheet_tag 'global.scss' %>
     <%= vite_client_tag %>
     <% if content_for?(:js) %>
@@ -19,18 +13,8 @@
     <% end %>
     <%= vite_client_tag %>
     <%= vite_typescript_tag 'application' %>
-    <!--
-      If using a TypeScript entrypoint file:
-        vite_typescript_tag 'application'
-
-      If using a .jsx or .tsx entrypoint, add the extension:
-        vite_javascript_tag 'application.jsx'
-
-      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
-    -->
   </head>
-  <% environment_hash = { environment: Rails.env } %>
-  <body data-init="<%= environment_hash.to_json %>" class="<%=body_class %>">
+  <body class="<%=body_class.strip %>">
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>

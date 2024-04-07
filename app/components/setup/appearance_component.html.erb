@@ -1,0 +1,24 @@
+<%
+  # @type [Project::ProjectAppearanceSettings]
+  settings = @project_appearance_settings
+  frame_color_class = case settings.frame_theme
+                      when 'white' then 'bg-white'
+                      when 'black' then 'bg-black'
+                      else ''
+                      end
+  button_color_class = case settings.button_theme
+                       when 'white' then 'bg-white'
+                       when 'black' then 'bg-black'
+                       else ''
+                       end
+  button_radius_class = case settings.button_radius
+                        when 'sm' then 'rounded'
+                        when 'xl' then 'rounded-xl'
+                        else ''
+                        end
+
+%>
+<div id="setup-appearance-component" class="p-10 w-52 bg-light-gray flex-1 flex justify-center items-center flex-col">
+  <div class="w-56 h-44 rounded-lg <%=frame_color_class %>"></div>
+  <div class="w-24 h-6 <%=button_color_class %> <%=button_radius_class %> mt-4"></div>
+</div>

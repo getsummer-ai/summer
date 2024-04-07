@@ -30,7 +30,7 @@
     </div>
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
-    <div class="p-10 rounded-2xl bg-white grow min-w-[500px] z-10 overflow-hidden">
+    <div class="p-10 rounded-2xl bg-white grow min-w-[700px] z-10 overflow-hidden">
       <div class="container mx-auto max-w-[768px] pb-10">
         <% if content_for?(:breadcrumbs) %>
           <div class="mt-2"><%= yield(:breadcrumbs) %></div>
@@ -44,9 +44,5 @@
     <%= render 'layouts/shared/alerts' %>
   </div>
 <% end %>
-
-<%# content_for :footer do %>
-  <%#= render 'layouts/shared/footer_small' %>
-<%# end %>
 
 <%= render template: 'layouts/application' %>

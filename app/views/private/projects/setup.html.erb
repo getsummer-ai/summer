@@ -1,4 +1,5 @@
-<h2 class="font-semibold text-xl">Appearance</h2>
+<h2 class="font-semibold text-2xl">Setup</h2>
+<h2 class="font-semibold text-xl mt-10">Appearance</h2>
 <p class="opacity-50 mt-1">
   The appearance change will apply automatically, you don’t need to reinstall or edit the code.
 </p>
@@ -6,8 +7,8 @@
 <div class="flex mt-8 shadow border border-light-gray rounded-xl">
   <div class="p-10 w-52">
     <%=
-      form_for @project,
-      url: appearance_project_path(@project),
+      form_for current_project,
+      url: appearance_project_path(current_project),
       html: {
         method: :put,
         class: 'mt-2',
@@ -23,13 +24,13 @@
 
           <div>
             <div class="mb-2 font-semibold">Button</div>
-            <%= appearance_form.radio_button :button_theme, 'white', class: base_radio, onchange: onchange %>
-            <%= appearance_form.radio_button :button_theme, 'black', class: light_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :button_theme, 'black', class: base_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :button_theme, 'white', class: light_radio, onchange: onchange %>
           </div>
           <div class="mt-6">
             <div class="mb-2 font-semibold">Frame</div>
-            <%= appearance_form.radio_button :frame_theme, 'white', class: base_radio, onchange: onchange %>
-            <%= appearance_form.radio_button :frame_theme, 'black', class: light_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :frame_theme, 'black', class: base_radio, onchange: onchange %>
+            <%= appearance_form.radio_button :frame_theme, 'white', class: light_radio, onchange: onchange %>
           </div>
           <div class="mt-8">
             <div class="mb-4 font-semibold">Radius</div>
@@ -47,5 +48,48 @@
       <% end %>
     <% end %>
   </div>
-  <div class="p-10 w-52 bg-light-gray flex-1"></div>
+  <%=render Setup::AppearanceComponent.new(project_appearance_settings: current_project.settings.appearance) %>
 </div>
+<hr class="my-12">
+<h2 class="font-semibold text-xl">Code Snippet</h2>
+<p class="opacity-50 mt-1">
+  Add this code to your website. Summer will appear automatically on page load.
+</p>
+
+
+<!-- Prism.js theme CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css">
+<!-- Prism.js JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+
+
+<div class="bg-[#141414] mt-8 rounded-lg">
+
+  <div class="p-4">
+    <div class="flex items-center justify-between">
+      <span class="text-gray-500">HTML</span>
+      <button id="copyButton" class="px-5 active:bg-gray-200 font-semibold py-1.5 bg-white text-black rounded-lg">Copy Code</button>
+    </div>
+  </div>
+
+  <div>
+    <% src = "#{ENV['VITE_PRODUCTION_URL']}/libs/init.umd.js" %>
+    <% html_text = "<script type=\"module\" src=\"#{src}\" async></script>\n" %>
+    <% tracker_id_js = "\n\twindow.GetSummer = window.GetSummer || { id: '#{current_project.uuid}' }\n" %>
+    <% tracker_id_html = "<script type=\"text/javascript\">#{tracker_id_js}</script>" %>
+    <pre class="language-html !border-0">
+<code id="getsummer-snippet-code"><%= html_text %><%= tracker_id_html%></code>
+    </pre>
+  </div>
+</div>
+
+<script>
+  document.getElementById('copyButton').addEventListener('click', function() {
+    const textArea = document.createElement('textarea');
+    textArea.value = document.getElementById('getsummer-snippet-code').textContent;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  });
+</script>

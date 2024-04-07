@@ -1,1 +1,3 @@
-<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
+<%= turbo_stream.replace "setup-appearance-component" do %>
+  <%= render Setup::AppearanceComponent.new(project_appearance_settings: current_project.settings.appearance) %>
+<% end %>

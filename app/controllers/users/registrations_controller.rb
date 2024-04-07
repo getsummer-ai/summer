@@ -29,5 +29,9 @@ module Users
     def configure_sign_up_params
       devise_parameter_sanitizer.permit(:sign_up, keys: [:locale])
     end
+
+    def account_update_params
+      devise_parameter_sanitizer.sanitize(:account_update).slice(:password_confirmation, :current_password)
+    end
   end
 end

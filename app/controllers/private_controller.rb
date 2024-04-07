@@ -3,7 +3,7 @@
 #  @return [Project]
 class PrivateController < ApplicationController
   layout 'private'
-  attr_reader :current_project
+  helper_method :current_project
 
   def private_or_turbo_layout
     return 'turbo_rails/frame' if turbo_frame_request?
@@ -18,6 +18,11 @@ class PrivateController < ApplicationController
     return @project if current_user.default_project_id == @project.id
     current_user.update_attribute(:default_project_id, @project.id)
     @project
+  end
+
+  # @return [Project]
+  def current_project
+    @current_project ||= find_project
   end
 
 

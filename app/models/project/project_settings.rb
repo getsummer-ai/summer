@@ -4,6 +4,8 @@ class Project
   #   @return [ProjectSuggestionFeature]
   # @!attribute feature_subscription
   #   @return [ProjectSubscriptionFeature]
+  # @!attribute appearance
+  #   @return [ProjectAppearanceSettings]
   class ProjectSettings
     include StoreModel::Model
 
