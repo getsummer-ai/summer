@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ArticleInitInfo } from '@/svelte/apps/summer/api';
-  import { initApi } from '@/svelte/apps/summer/api';
+  import type { ArticleInitInfo } from './api';
+  import { initApi } from './api';
 
   export let article: ArticleInitInfo;
   let email = '';
