@@ -97,6 +97,15 @@ Rails.application.configure do
 
   Rails.application.config.hosts << ENV.fetch("APP_HOST")
 
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.resend.com',
+    port: 465,
+    user_name: 'resend',
+    password: ENV.fetch('RESEND_API_KEY', nil),
+    tls: true
+  }
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
