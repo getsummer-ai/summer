@@ -7,9 +7,17 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
+      BUTTON_VERSION = '0.0.1-beta'
+
       def settings
         @app_path =
-          Rails.env.development? ? helpers.vite_asset_path('libs/summer.ts') : '/libs/app.umd.js'
+          (
+            if Rails.env.development?
+              helpers.vite_asset_path('libs/summer.ts')
+            else
+              "/libs/app.umd.js?v=#{BUTTON_VERSION}"
+            end
+          )
       end
 
       def init
