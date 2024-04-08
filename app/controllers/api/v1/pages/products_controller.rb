@@ -38,7 +38,7 @@ module Api
         # @return [Boolean]
         def wait_on_redis_channel(article)
           channel_name = article.redis_products_name
-          redis = Redis.new
+          redis = RedisFactory.new
           begin
             redis.subscribe_with_timeout(5, channel_name) do |on|
               on.message { |_event, data| redis.unsubscribe(channel_name) if data == 'done' }

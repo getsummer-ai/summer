@@ -15,7 +15,7 @@ describe 'Test Redis accessibility and test pub/sub' do
 
     thread =
       Thread.new do
-        Redis
+        RedisFactory
           .new
           .subscribe('channel1') do |on|
             on.message do |_channel, m|
@@ -28,7 +28,7 @@ describe 'Test Redis accessibility and test pub/sub' do
     Timeout.timeout(1) do
       sleep 0.1
       expect(message).to be_nil
-      Redis.new.publish('channel1', 'Hello, world!')
+      RedisFactory.new.publish('channel1', 'Hello, world!')
       loop { break if thread.status == false }
       expect(message).to eq('Hello, world!')
       thread.kill

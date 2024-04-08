@@ -19,7 +19,7 @@ class FindProductsInSummaryService
     # @param [Project]
     @project = model.project
     @llm = llm
-    @redis = Redis.new
+    @redis = RedisFactory.new
   end
 
   def summarize

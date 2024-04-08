@@ -37,8 +37,8 @@ module Api
         def subscribe_and_send_from_stream(sse, article)
           # on first message from redis we send the buffered summary
           channel_name = article.redis_summary_name
-          redis_subscriber = Redis.new
-          redis_buffer = Redis.new
+          redis_subscriber = RedisFactory.new
+          redis_buffer = RedisFactory.new
           subscribe_on_channel(sse, redis_subscriber, redis_buffer, channel_name)
         rescue Redis::TimeoutError => e
           sse.write(article.summary_llm_call.output) if article.reload.summary_status_completed?

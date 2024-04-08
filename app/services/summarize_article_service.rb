@@ -21,7 +21,7 @@ class SummarizeArticleService
     @model = model
     @guidelines = guidelines
     @llm = llm
-    @redis_wrapper = RedisWrapper.new(@model, Redis.new)
+    @redis_wrapper = RedisWrapper.new(@model, ::RedisFactory.new)
   end
 
   def summarize
