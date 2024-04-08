@@ -11,8 +11,8 @@
     "test-specs": "bundle exec rspec spec",
     "dev": "./bin/vite dev",
     "build": "./bin/vite build",
-    "build-button-init-app": "vite build --config vite.config.init.lib.mts",
-    "build-button-app": " vite build --config vite.config.app.lib.mts"
+    "build-button-init-app": "NODE_ENV='production' vite build --config vite.config.init.lib.mts",
+    "build-button-app": "NODE_ENV='production' vite build --config vite.config.app.lib.mts"
   },
   "dependencies": {
     "@babel/types": "^7.23.6",

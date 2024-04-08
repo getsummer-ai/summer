@@ -15,7 +15,7 @@
     });
   }
   const r = (t) => {
-    const i = 'http://summer-api.local:3000';
+    const i = 'https://app.getsummer.ai';
     fetch(`${i}/api/v1/button/settings`, {
       mode: 'cors',
       headers: { 'Content-Type': 'application/json', 'Api-Key': t },

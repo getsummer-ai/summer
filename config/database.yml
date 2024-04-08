@@ -82,6 +82,5 @@ test:
 #
 production:
   <<: *default
-  database: summer_production
   url: <%= ENV["DATABASE_URL"] %>
 #  password: <%#= ENV["SUMMER_DATABASE_PASSWORD"] %>
