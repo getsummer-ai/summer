@@ -26,9 +26,9 @@
   function K(e, t) {
     return e != e ? t == t : e !== t || (e && typeof e == 'object') || typeof e == 'function';
   }
-  let ee;
+  let te;
   function Se(e, t) {
-    return e === t ? !0 : (ee || (ee = document.createElement('a')), (ee.href = t), e === ee.href);
+    return e === t ? !0 : (te || (te = document.createElement('a')), (te.href = t), e === te.href);
   }
   function nt(e) {
     return Object.keys(e).length === 0;
@@ -42,7 +42,7 @@
   function Ie(e, t, n, o) {
     return e[1] && o ? P(n.ctx.slice(), e[1](o(t))) : n.ctx;
   }
-  function Te(e, t, n, o) {
+  function $e(e, t, n, o) {
     if (e[2] && o) {
       const s = e[2](o(n));
       if (t.dirty === void 0) return s;
@@ -56,7 +56,7 @@
     }
     return t.dirty;
   }
-  function $e(e, t, n, o, s, c) {
+  function Te(e, t, n, o, s, c) {
     if (s) {
       const r = Ie(t, n, o, c);
       e.p(r, s);
@@ -74,7 +74,7 @@
   function y(e, t) {
     e.appendChild(t);
   }
-  function te(e, t, n) {
+  function ne(e, t, n) {
     const o = ot(e);
     if (!o.getElementById(t)) {
       const s = w('style');
@@ -110,7 +110,7 @@
   function R() {
     return Y(' ');
   }
-  function ne() {
+  function oe() {
     return Y('');
   }
   function L(e, t, n, o) {
@@ -263,23 +263,23 @@
       n = [];
     q.forEach((o) => (e.indexOf(o) === -1 ? t.push(o) : n.push(o))), n.forEach((o) => o()), (q = t);
   }
-  const oe = new Set();
+  const se = new Set();
   let j;
-  function se() {
+  function re() {
     j = { r: 0, c: [], p: j };
   }
-  function re() {
+  function ie() {
     j.r || O(j.c), (j = j.p);
   }
   function x(e, t) {
-    e && e.i && (oe.delete(e), e.i(t));
+    e && e.i && (se.delete(e), e.i(t));
   }
   function S(e, t, n, o) {
     if (e && e.o) {
-      if (oe.has(e)) return;
-      oe.add(e),
+      if (se.has(e)) return;
+      se.add(e),
         j.c.push(() => {
-          oe.delete(e), o && (n && e.d(1), o());
+          se.delete(e), o && (n && e.d(1), o());
         }),
         e.o(t);
     } else o && o();
@@ -294,7 +294,7 @@
   function xe(e) {
     e && e.c();
   }
-  function ie(e, t, n) {
+  function le(e, t, n) {
     const { fragment: o, after_update: s } = e.$$;
     o && o.m(t, n),
       be(() => {
@@ -303,7 +303,7 @@
       }),
       s.forEach(be);
   }
-  function le(e, t) {
+  function ce(e, t) {
     const n = e.$$;
     n.fragment !== null &&
       (_t(n.after_update),
@@ -316,7 +316,7 @@
     e.$$.dirty[0] === -1 && (F.push(e), vt(), e.$$.dirty.fill(0)),
       (e.$$.dirty[(t / 31) | 0] |= 1 << t % 31);
   }
-  function ce(e, t, n, o, s, c, r = null, i = [-1]) {
+  function ue(e, t, n, o, s, c, r = null, i = [-1]) {
     const l = J;
     V(e);
     const u = (e.$$ = {
@@ -361,17 +361,17 @@
         const a = ut(t.target);
         u.fragment && u.fragment.l(a), a.forEach(z);
       } else u.fragment && u.fragment.c();
-      t.intro && x(e.$$.fragment), ie(e, t.target, t.anchor), Oe();
+      t.intro && x(e.$$.fragment), le(e, t.target, t.anchor), Oe();
     }
     V(l);
   }
-  class ue {
+  class ae {
     constructor() {
       B(this, '$$');
       B(this, '$$set');
     }
     $destroy() {
-      le(this, 1), (this.$destroy = b);
+      ce(this, 1), (this.$destroy = b);
     }
     $on(t, n) {
       if (!Ae(n)) return b;
@@ -420,7 +420,7 @@
     }
     return { set: s, update: c, subscribe: r };
   }
-  const ae = 'https://app.getsummer.ai',
+  const W = 'https://app.getsummer.ai',
     fe = async (e, t, n = null) => {
       const o = await fetch(e, {
         method: n == null ? 'GET' : 'POST',
@@ -437,9 +437,9 @@
         }
       return { status: o.status, body: null };
     },
-    wt = async (e, t) => fe(`${ae}/api/v1/button/init`, e, { s: t }),
+    wt = async (e, t) => fe(`${W}/api/v1/button/init`, e, { s: t }),
     zt = (e, t) => {
-      const n = new EventSource(`/api/v1/pages/${t}/summary?key=${e}`),
+      const n = new EventSource(`${W}/api/v1/pages/${t}/summary?key=${e}`),
         o = De(''),
         s = De(!1);
       return (
@@ -452,9 +452,9 @@
         { result: o, isCompleted: s }
       );
     },
-    kt = (e, t) => fe(`${ae}/api/v1/pages/${t}/products`, e),
-    Et = (e, t, n) => fe(`${ae}/api/v1/pages/${t}/products/${n}/click`, e, {}),
-    At = (e, t, n) => fe(`${ae}/api/v1/pages/${t}/subscribe`, e, { email: n });
+    kt = (e, t) => fe(`${W}/api/v1/pages/${t}/products`, e),
+    Et = (e, t, n) => fe(`${W}/api/v1/pages/${t}/products/${n}/click`, e, {}),
+    At = (e, t, n) => fe(`${W}/api/v1/pages/${t}/subscribe`, e, { email: n });
   let pe;
   const ye = (e) => {
     if (!e && pe) return pe;
@@ -470,7 +470,7 @@
     );
   };
   function St(e) {
-    te(
+    ne(
       e,
       'svelte-132zvnp',
       'dialog.svelte-132zvnp.svelte-132zvnp{width:100%;max-width:560px;border:none;border-radius:16px;background:#FFF;font-size:16px;line-height:20px;font-style:normal;font-weight:400}dialog.svelte-132zvnp .gtsm-dialog.svelte-132zvnp{position:relative;padding:60px 0 0}dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp{position:relative;max-height:70vh;overflow-y:auto;padding:0 30px 30px 30px;transition:max-height 0.5s, height 0.5s}@media(max-height: 40px){dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp{max-height:20vh}}@media(max-height: 500px){dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp{max-height:40vh}}@media(max-height: 650px){dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp{max-height:50vh}}dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp ul{margin:0;padding:0 0 0 15px;list-style-type:disc;list-style-position:outside}dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp li{margin:0 0 8px 0;padding:0}dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp p{margin:0 0 8px 0;padding:0}dialog.svelte-132zvnp .gtsm-body.svelte-132zvnp p:first-child{margin-bottom:12px}dialog.svelte-132zvnp .gtsm-footer.svelte-132zvnp{position:relative;z-index:10;min-height:3rem;box-shadow:0px -25px 14px -11px #fff;-webkit-box-shadow:0px -25px 14px -11px #fff;-moz-box-shadow:0px -25px 14px -11px #fff;border-top:1px solid #EFEFEF}dialog.svelte-132zvnp.svelte-132zvnp::backdrop{background:rgba(0, 0, 0, 0.3)}dialog[open].svelte-132zvnp.svelte-132zvnp{animation:svelte-132zvnp-zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)}@keyframes svelte-132zvnp-zoom{from{transform:scale(0.95)}to{transform:scale(1)}}dialog[open].svelte-132zvnp.svelte-132zvnp::backdrop{animation:svelte-132zvnp-fade 0.2s ease-out}@keyframes svelte-132zvnp-fade{from{opacity:0}to{opacity:1}}.gtsm-close.svelte-132zvnp.svelte-132zvnp{position:absolute;top:12px;right:12px;display:inline-block;width:24px;height:24px;text-align:center;cursor:pointer;background:rgba(0, 0, 0, 0.05);border-radius:50%;transition:background-color 0.1s}.gtsm-close.svelte-132zvnp.svelte-132zvnp:hover{background:#e1e1e1}.gtsm-close__x.svelte-132zvnp.svelte-132zvnp{position:relative;top:-1px;left:-0.5px;display:inline-block;width:10px;height:10px}.gtsm-close__x.svelte-132zvnp.svelte-132zvnp::before,.gtsm-close__x.svelte-132zvnp.svelte-132zvnp::after{position:absolute;width:1px;height:10px;content:" ";background-color:black}.gtsm-close__x.svelte-132zvnp.svelte-132zvnp::before{transform:rotate(-45deg)}.gtsm-close__x.svelte-132zvnp.svelte-132zvnp::after{transform:rotate(45deg)}.gtsm-close.svelte-132zvnp:active .gtsm-close__x.svelte-132zvnp{top:-1px;left:-0.5px}.gtsm-close.svelte-132zvnp.svelte-132zvnp:active{top:11px;right:11px;width:26px;height:26px;background:#e1e1e1}',
@@ -525,8 +525,8 @@
             (u = !0));
       },
       p(g, [N]) {
-        f && f.p && (!l || N & 8) && $e(f, a, g, g[3], l ? Te(a, g[3], N, null) : Ne(g[3]), null),
-          m && m.p && (!l || N & 8) && $e(m, h, g, g[3], l ? Te(h, g[3], N, Mt) : Ne(g[3]), He);
+        f && f.p && (!l || N & 8) && Te(f, a, g, g[3], l ? $e(a, g[3], N, null) : Ne(g[3]), null),
+          m && m.p && (!l || N & 8) && Te(m, h, g, g[3], l ? $e(h, g[3], N, Mt) : Ne(g[3]), He);
       },
       i(g) {
         l || (x(f, g), x(m, g), (l = !0));
@@ -539,7 +539,7 @@
       },
     };
   }
-  function Tt(e, t, n) {
+  function $t(e, t, n) {
     let { $$slots: o = {}, $$scope: s } = t;
     const c = gt();
     function r() {
@@ -567,13 +567,13 @@
       [l, r, i, s, o, u, p, a, f]
     );
   }
-  class $t extends ue {
+  class Tt extends ae {
     constructor(t) {
-      super(), ce(this, t, Tt, It, K, { showModal: 2 }, St);
+      super(), ue(this, t, $t, It, K, { showModal: 2 }, St);
     }
   }
   function Nt(e) {
-    te(
+    ne(
       e,
       'svelte-12rmtvo',
       'a.svelte-12rmtvo.svelte-12rmtvo{font-size:16px;border-radius:12px;border:1px solid #e6e6e9;background:#fff;box-shadow:0 2px 4px 0 #e6e6e9;padding:9px 12px;display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:black;margin-top:20px;animation:svelte-12rmtvo-zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1)}a.svelte-12rmtvo img.svelte-12rmtvo{width:auto;max-height:45px;border-radius:4px}a.svelte-12rmtvo.svelte-12rmtvo:not(:first-of-type){margin-top:10px}a.svelte-12rmtvo.svelte-12rmtvo:hover{background-color:#f8f8f8}@keyframes svelte-12rmtvo-zoom{from{opacity:0.2;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}',
@@ -653,13 +653,13 @@
       [o, c, s]
     );
   }
-  class Lt extends ue {
+  class Lt extends ae {
     constructor(t) {
-      super(), ce(this, t, Ct, Pt, K, { service: 0, pageId: 2 }, Nt);
+      super(), ue(this, t, Ct, Pt, K, { service: 0, pageId: 2 }, Nt);
     }
   }
   function Bt(e) {
-    te(
+    ne(
       e,
       'svelte-2b0m9n',
       'div.svelte-2b0m9n{display:flex;justify-content:space-between}input.svelte-2b0m9n{flex-grow:1;height:50px;font-size:14px;padding:10px 20px;background:none;border:none;outline:none;box-shadow:none}button.svelte-2b0m9n{height:50px;padding:0 20px;font-size:14px;font-weight:600;color:#000;background:transparent;border:none;outline:none;cursor:pointer}button.svelte-2b0m9n:hover{color:#555}button.svelte-2b0m9n:focus{color:#0b0bde}',
@@ -721,9 +721,9 @@
       [s, c, o, r]
     );
   }
-  class jt extends ue {
+  class jt extends ae {
     constructor(t) {
-      super(), ce(this, t, Rt, Ot, K, { article: 2 }, Bt);
+      super(), ue(this, t, Rt, Ot, K, { article: 2 }, Bt);
     }
   }
   function qe(e) {
@@ -751,13 +751,13 @@
     function d(_, k) {
       return '<' + _ + '>' + k + '</' + _ + '>';
     }
-    function T(_) {
+    function $(_) {
       return _.replace(r, function (k, I) {
-        return d('blockquote', T(D(I.replace(/^ *&gt; */gm, ''))));
+        return d('blockquote', $(D(I.replace(/^ *&gt; */gm, ''))));
       });
     }
     function et(_) {
-      return _.replace(i, function (k, I, A, $, X, H) {
+      return _.replace(i, function (k, I, A, T, ee, H) {
         var U = d(
           'li',
           D(
@@ -779,12 +779,12 @@
 ` +
           (A
             ? '<ol start="' +
-              ($
+              (T
                 ? A + '">'
                 : parseInt(A, 36) -
                   9 +
                   '" style="list-style-type:' +
-                  (X ? 'low' : 'upp') +
+                  (ee ? 'low' : 'upp') +
                   'er-alpha">') +
               U +
               '</ol>'
@@ -793,15 +793,15 @@
       });
     }
     function D(_) {
-      return _.replace(u, function (k, I, A, $, X, H, U, Gt, tt, Wt) {
+      return _.replace(u, function (k, I, A, T, ee, H, U, Gt, tt, Wt) {
         return (
           I +
           d(
-            $
+            T
               ? tt
                 ? 'strong'
                 : 'em'
-              : X
+              : ee
               ? tt
                 ? 's'
                 : 'sub'
@@ -832,19 +832,19 @@
       M(t, '&lt;'),
       M(n, '&gt;'),
       M(o, '  '),
-      (e = T(e)),
+      (e = $(e)),
       M(c, '<hr/>'),
       (e = et(e)),
       M(l, ''),
-      M(p, function (_, k, I, A, $) {
-        return (ke[--me] = d('pre', d('code', A || $.replace(/^    /gm, '')))), me + '';
+      M(p, function (_, k, I, A, T) {
+        return (ke[--me] = d('pre', d('code', A || T.replace(/^    /gm, '')))), me + '';
       }),
-      M(a, function (_, k, I, A, $, X, H) {
+      M(a, function (_, k, I, A, T, ee, H) {
         return (
-          (ke[--me] = $
+          (ke[--me] = T
             ? I
-              ? '<img src="' + $ + '" alt="' + A + '"/>'
-              : '<a href="' + $ + '">' + ge(D(A)) + '</a>'
+              ? '<img src="' + T + '" alt="' + A + '"/>'
+              : '<a href="' + T + '">' + ge(D(A)) + '</a>'
             : H),
           me + ''
         );
@@ -856,13 +856,13 @@
 ` +
           d(
             'table',
-            k.replace(m, function (A, $) {
+            k.replace(m, function (A, T) {
               return A == I
                 ? ''
                 : d(
                     'tr',
-                    A.replace(g, function (X, H, U) {
-                      return U ? d(I && !$ ? 'th' : 'td', ge(D(H || ''))) : '';
+                    A.replace(g, function (ee, H, U) {
+                      return U ? d(I && !T ? 'th' : 'td', ge(D(H || ''))) : '';
                     }),
                   );
             }),
@@ -882,7 +882,7 @@
     );
   }
   function Dt(e) {
-    te(
+    ne(
       e,
       'svelte-1ympp8s',
       `.getsummer-btn.svelte-1ympp8s{-webkit-user-select:none;-moz-user-select:none;user-select:none;border-radius:1.5rem;font-size:15px;line-height:22px;--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity));padding:4px 12px;position:fixed;transition:opacity 0.3s;left:calc(50% - 50px);bottom:20px;border:1px solid rgba(255, 255, 255, 0.2);background:rgba(0, 0, 0, 0.85);box-shadow:0 36px 60px 0 rgba(0, 0, 0, 0.18), 0 13.902px 18.888px 0 rgba(0, 0, 0, 0.12), 0 6.929px 11.218px 0 rgba(0, 0, 0, 0.1), 0 3.621px 7.444px 0 rgba(0, 0, 0, 0.08), 0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)
@@ -932,7 +932,7 @@
     let c = { $$slots: { footer: [Qt], default: [qt] }, $$scope: { ctx: e } };
     return (
       e[2] !== void 0 && (c.showModal = e[2]),
-      (t = new $t({ props: c })),
+      (t = new Tt({ props: c })),
       G.push(() => je(t, 'showModal', s)),
       t.$on('close', e[9]),
       {
@@ -940,7 +940,7 @@
           xe(t.$$.fragment);
         },
         m(r, i) {
-          ie(t, r, i), (o = !0);
+          le(t, r, i), (o = !0);
         },
         p(r, i) {
           const l = {};
@@ -955,7 +955,7 @@
           S(t.$$.fragment, r), (o = !1);
         },
         d(r) {
-          le(t, r);
+          ce(t, r);
         },
       }
     );
@@ -973,7 +973,7 @@
     return {
       c() {
         for (let r = 0; r < s.length; r += 1) s[r].c();
-        t = ne();
+        t = oe();
       },
       m(r, i) {
         for (let l = 0; l < s.length; l += 1) s[l] && s[l].m(r, i);
@@ -989,8 +989,8 @@
               ? (s[l].p(u, i), x(s[l], 1))
               : ((s[l] = Ke(u)), s[l].c(), x(s[l], 1), s[l].m(t.parentNode, t));
           }
-          for (se(), l = o.length; l < s.length; l += 1) c(l);
-          re();
+          for (re(), l = o.length; l < s.length; l += 1) c(l);
+          ie();
         }
       },
       i(r) {
@@ -1018,7 +1018,7 @@
           xe(t.$$.fragment);
         },
         m(o, s) {
-          ie(t, o, s), (n = !0);
+          le(t, o, s), (n = !0);
         },
         p(o, s) {
           const c = {};
@@ -1031,7 +1031,7 @@
           S(t.$$.fragment, o), (n = !1);
         },
         d(o) {
-          le(t, o);
+          ce(t, o);
         },
       }
     );
@@ -1045,7 +1045,7 @@
       r = e[1].features.suggestion === !0 && e[4].length > 0 && Ue(e);
     return {
       c() {
-        (t = new pt(!1)), (o = R()), r && r.c(), (s = ne()), (t.a = o);
+        (t = new pt(!1)), (o = R()), r && r.c(), (s = oe()), (t.a = o);
       },
       m(i, l) {
         t.m(n, i, l), E(i, o, l), r && r.m(i, l), E(i, s, l), (c = !0);
@@ -1057,11 +1057,11 @@
               ? (r.p(i, l), l & 18 && x(r, 1))
               : ((r = Ue(i)), r.c(), x(r, 1), r.m(s.parentNode, s))
             : r &&
-              (se(),
+              (re(),
               S(r, 1, 1, () => {
                 r = null;
               }),
-              re());
+              ie());
       },
       i(i) {
         c || (x(r), (c = !0));
@@ -1089,7 +1089,7 @@
           xe(t.$$.fragment);
         },
         m(r, i) {
-          ie(t, r, i), (o = !0);
+          le(t, r, i), (o = !0);
         },
         p(r, i) {
           const l = {};
@@ -1102,7 +1102,7 @@
           S(t.$$.fragment, r), (o = !1);
         },
         d(r) {
-          le(t, r);
+          ce(t, r);
         },
       }
     );
@@ -1113,7 +1113,7 @@
       o = e[1].features.subscription === !0 && Ye(e);
     return {
       c() {
-        o && o.c(), (t = ne());
+        o && o.c(), (t = oe());
       },
       m(s, c) {
         o && o.m(s, c), E(s, t, c), (n = !0);
@@ -1124,11 +1124,11 @@
             ? (o.p(s, c), c & 2 && x(o, 1))
             : ((o = Ye(s)), o.c(), x(o, 1), o.m(t.parentNode, t))
           : o &&
-            (se(),
+            (re(),
             S(o, 1, 1, () => {
               o = null;
             }),
-            re());
+            ie());
       },
       i(s) {
         n || (x(o), (n = !0));
@@ -1155,7 +1155,7 @@
           u.c(),
           (n = R()),
           p && p.c(),
-          (o = ne()),
+          (o = oe()),
           v(t, 'class', 'getsummer-btn svelte-1ympp8s'),
           Ce(t, 'opacity', e[7].opacity);
       },
@@ -1176,11 +1176,11 @@
               ? (p.p(a, f), f & 64 && x(p, 1))
               : ((p = Ze(a)), p.c(), x(p, 1), p.m(o.parentNode, o))
             : p &&
-              (se(),
+              (re(),
               S(p, 1, 1, () => {
                 p = null;
               }),
-              re());
+              ie());
       },
       i(a) {
         s || (x(p), (s = !0));
@@ -1222,11 +1222,11 @@
           n(5, (p = !0)), (u = !1);
           try {
             const d = h.getSummary(r.page_id);
-            d.result.subscribe((T) => {
-              n(3, (i += T));
+            d.result.subscribe(($) => {
+              n(3, (i += $));
             }),
-              d.isCompleted.subscribe((T) => {
-                T === !0 && ((u = !0), N());
+              d.isCompleted.subscribe(($) => {
+                $ === !0 && ((u = !0), N());
               }),
               m(100);
           } catch {
@@ -1238,11 +1238,11 @@
         var d;
         if (u)
           try {
-            const T = await h.getServices(r.page_id);
-            console.log(T),
-              (d = T.body) != null && d.hasOwnProperty('services') && n(4, (l = T.body.services));
-          } catch (T) {
-            console.log(T);
+            const $ = await h.getServices(r.page_id);
+            console.log($),
+              (d = $.body) != null && d.hasOwnProperty('services') && n(4, (l = $.body.services));
+          } catch ($) {
+            console.log($);
           }
       },
       we = () => {
@@ -1263,17 +1263,17 @@
       [r, c, o, i, l, p, a, f, g, we, s, ze, M]
     );
   }
-  class Yt extends ue {
+  class Yt extends ae {
     constructor(t) {
-      super(), ce(this, t, Kt, Zt, K, { projectId: 10, settings: 1, article: 0 }, Dt);
+      super(), ue(this, t, Kt, Zt, K, { projectId: 10, settings: 1, article: 0 }, Dt);
     }
   }
-  let W, Je, Ve;
+  let X, Je, Ve;
   const Jt = (e) => {
       console.log(`%c${e}`, 'background: #FFEFE7; padding: 2px 10px;');
     },
     Ge = () => {
-      W && typeof W.$destroy == 'function' && W.$destroy(), (W = void 0);
+      X && typeof X.$destroy == 'function' && X.$destroy(), (X = void 0);
     },
     Vt = (e, t, n) => {
       const o = 'getsummer-' + e;
@@ -1283,7 +1283,7 @@
           ? s.innerHTML !== '' && (s.innerHTML = '')
           : ((s = document.createElement('div')), (s.id = o), document.body.appendChild(s)),
         Ge(),
-        (W = new Yt({ target: s, props: { projectId: e, settings: t, article: n } })),
+        (X = new Yt({ target: s, props: { projectId: e, settings: t, article: n } })),
         o
       );
     },

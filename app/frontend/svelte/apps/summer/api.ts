@@ -67,7 +67,7 @@ export const initButton = async (projectId: string, url: string) => {
 };
 
 const getSummary = (projectId: string, id: string) => {
-  const eventSource = new EventSource(`/api/v1/pages/${id}/summary?key=${projectId}`);
+  const eventSource = new EventSource(`${api_host}/api/v1/pages/${id}/summary?key=${projectId}`);
   const result = writable('');
   const isCompleted = writable(false);
 
