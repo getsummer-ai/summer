@@ -66,6 +66,12 @@ gem "down"
 gem "image_processing", "~> 1.2"
 gem "scenic"
 
+# Monitoring and debugging
+gem "sentry-rails"
+gem "sentry-ruby"
+gem "skylight"
+gem "stackprof"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem 'annotate'

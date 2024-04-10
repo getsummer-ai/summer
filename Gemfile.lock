@@ -437,13 +437,22 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sentry-rails (5.17.2)
+      railties (>= 5.0)
+      sentry-ruby (~> 5.17.2)
+    sentry-ruby (5.17.2)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
     simple_form (5.3.0)
       actionpack (>= 5.2)
       activemodel (>= 5.2)
+    skylight (6.0.4)
+      activesupport (>= 5.2.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
     sqids (0.2.0)
+    stackprof (0.2.26)
     store_model (2.3.0)
       activerecord (>= 5.2)
     stringio (3.1.0)
@@ -554,8 +563,12 @@ DEPENDENCIES
   ruby-openai
   scenic
   selenium-webdriver
+  sentry-rails
+  sentry-ruby
   simple_form
+  skylight
   sqids
+  stackprof
   store_model (~> 2.3)
   turbo-rails (~> 2.0.5)
   tzinfo-data
