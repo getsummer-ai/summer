@@ -10,7 +10,10 @@ export default defineConfig({
   plugins: [
     svelte({
       emitCss: false,
-      preprocess: [vitePreprocess()]
+      preprocess: [vitePreprocess()],
+      compilerOptions: {
+        cssHash: ({ hash, css }) => `getsummer-${hash(css)}`
+      }
     }),
     vue(),
     RubyPlugin()

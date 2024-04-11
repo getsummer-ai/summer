@@ -13,5 +13,5 @@ window.addEventListener('DOMContentLoaded', function () {
 window.addEventListener('turbo:load', () => {
   initApps();
   initSvelteApps();
-  console.log('turbo-load');
+  // console.log('turbo-load');
 });

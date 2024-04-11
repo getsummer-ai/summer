@@ -20,14 +20,14 @@
 </script>
 
 <a target="_blank" href={service.link} on:click={onLinkClick}>
-  <div class="flex justify-between items-center">
+  <div class="body">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
-    <span class="ml-5">
+    <span class="title">
       {service.name}
     </span>
   </div>
 
-  <div>
+  <div class="icon">
     <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M17.208 5.32L12.232 10.296H10.456L14.792 5.944H-0.00799996V4.696H14.824L10.472 0.344H12.248L17.208 5.32Z"
@@ -52,10 +52,19 @@
     color: black;
     margin-top: 20px;
     animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
-    img {
-      width: auto;
-      max-height: 45px;
-      border-radius: 4px;
+
+    .body {
+      @apply flex justify-between items-center;
+
+      img {
+        width: auto;
+        max-height: 45px;
+        border-radius: 4px;
+      }
+
+      .title {
+        @apply ml-5;
+      }
     }
 
     &:not(:first-of-type) {

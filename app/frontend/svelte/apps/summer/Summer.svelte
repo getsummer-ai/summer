@@ -38,7 +38,7 @@
 
   const openModal = (delay = 100) => {
     setTimeout(() => {
-      console.log(settings, summary);
+      // console.log(settings, summary);
       showModal = true;
       buttonStyles.opacity = 0;
     }, delay);
@@ -73,7 +73,7 @@
     if (!isSummaryCompleted) return;
     try {
       const res = await api.getServices(article.page_id);
-      console.log(res);
+      // console.log(res);
       if (res.body?.hasOwnProperty('services')) services = res.body.services;
     } catch (error) {
       console.log(error);
@@ -89,12 +89,16 @@
 
 </script>
 
+<svelte:head>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</svelte:head>
+
 <button class="getsummer-btn" style="opacity: {buttonStyles.opacity};" on:click={onButtonClick}>
   {#if loading}
-    <span class="loading loading-spinner loading-xs" />
-    Summorizing
+    <span class="loading-icon" />
+    Summarizing
   {:else}
-    Summorize
+    Summarize
   {/if}
 </button>
 
@@ -116,8 +120,16 @@
 {/if}
 
 <style lang="scss">
+  :global(*) {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    letter-spacing: -0.01rem;
+  }
+
   .getsummer-btn {
-    @apply rounded-3xl text-base text-white select-none;
+    @apply rounded-3xl text-base text-white select-none cursor-pointer;
     padding: 4px 12px;
     position: fixed;
     transition: opacity 0.3s;
@@ -129,5 +141,9 @@
       0 6.929px 11.218px 0 rgba(0, 0, 0, 0.1), 0 3.621px 7.444px 0 rgba(0, 0, 0, 0.08),
       0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);
     backdrop-filter: blur(4px);
+
+    .loading-icon {
+      @apply loading loading-spinner loading-xs;
+    }
   }
 </style>

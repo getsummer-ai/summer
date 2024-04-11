@@ -7,7 +7,7 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      BUTTON_VERSION = '0.0.2-beta'
+      BUTTON_VERSION = '0.0.3-beta'
 
       def settings
         @app_path =
@@ -26,7 +26,8 @@ module Api
 
         @article = form.find_or_create
         return head :bad_request if @article.nil?
-        return head :not_found if @article.summary_status_skipped? || @article.summary_status_error?
+        return head :ok if @article.summary_status_skipped? || @article.summary_status_error?
+        return head :ok unless form.project_page.is_accessible?
 
         @combined_id =
           BasicEncrypting.encode_array([form.project_page.id, 4.hours.from_now.utc.to_i])

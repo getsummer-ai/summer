@@ -62,6 +62,9 @@ module.exports = {
     //   },
     // },
   },
+  corePlugins: {
+    fontFamily: false,
+  },
   plugins: [require('@tailwindcss/typography'), require('daisyui')],
   daisyui: {
     themes: ['cupcake', 'lofi'],

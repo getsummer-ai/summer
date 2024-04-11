@@ -8,9 +8,6 @@
     <% if content_for?(:meta) %>
       <%= yield(:meta) %>
     <% end %>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Silkscreen" rel="stylesheet">
     <%= vite_stylesheet_tag "global.scss" %>
     <%= vite_client_tag %>
     <%= vite_typescript_tag 'main' %>

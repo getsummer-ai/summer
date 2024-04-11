@@ -21,11 +21,12 @@ const installApp = (projectId: string, settings: SettingsInfo, article: ArticleI
     appElement = document.createElement('div');
     appElement.id = appId;
     document.body.appendChild(appElement);
-  } else if (appElement.innerHTML !== '') {
-    appElement.innerHTML = '';
+  } else {
+    if (appElement.innerHTML !== '') appElement.innerHTML = '';
+    if (appElement.shadowRoot?.innerHTML) appElement.shadowRoot.innerHTML = '';
   }
   destroyApp();
-  buttonApp = new Summer({ target: appElement, props: { projectId, settings, article } });
+  buttonApp = new Summer({ target: appElement.attachShadow({ mode: "open" }), props: { projectId, settings, article } });
   return appId;
 };
 
@@ -53,13 +54,13 @@ export const initApp = (project: { id: string; settings: object }, url: string, 
         const appId = install();
         checkerInterval = setInterval(() => {
           if (document.getElementById(appId) !== null) return;
-          console.log('app destroyed, reinstalling');
+          log('GetSummer: App destroyed, reinstalling');
           destroyApp();
           install();
         }, 2000);
       })
       .catch((e) => {
-        console.error('initApp', e);
+        console.error('GetSummer Init App', e);
       });
   }, timeout);
 };

@@ -21,12 +21,12 @@
   on:click|self={() => dialog.close()}
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
-  <div class="gtsm-dialog" on:click|stopPropagation>
-    <button class="gtsm-close" on:click={() => dialog.close()} tabindex="0"><span class="gtsm-close__x"></span></button>
-    <div class="gtsm-body">
+  <div class="dialog" on:click|stopPropagation>
+    <button class="close" on:click={() => dialog.close()} tabindex="0"><span class="close__x"></span></button>
+    <div class="body">
       <slot />
     </div>
-    <div class="gtsm-footer">
+    <div class="footer">
       <slot name="footer" />
     </div>
   </div>
@@ -35,20 +35,21 @@
   dialog {
     width: 100%;
     max-width: 560px;
+    padding: 0;
     border: none;
     border-radius: 16px;
     background: #FFF;
     font-size: 16px;
-    line-height: 20px;
+    line-height: 22px;
     font-style: normal;
     font-weight: 400;
 
-    .gtsm-dialog {
+    .dialog {
       position: relative;
       padding: 60px 0 0;
     }
 
-    .gtsm-body {
+    .body {
       position: relative;
       max-height: 70vh;
       overflow-y: auto;
@@ -87,7 +88,7 @@
       }
     }
 
-    .gtsm-footer {
+    .footer {
       @apply relative z-10 min-h-12;
       box-shadow: 0px -25px 14px -11px #fff;
       -webkit-box-shadow: 0px -25px 14px -11px #fff;
@@ -121,7 +122,7 @@
     }
   }
 
-  .gtsm-close {
+  .close {
     position: absolute;
     top: 12px;
     right: 12px;
@@ -134,35 +135,31 @@
     border-radius: 50%;
     transition: background-color 0.1s;
   }
-  .gtsm-close:hover {
+  .close:hover {
     background: #e1e1e1;
   }
-  .gtsm-close__x {
+  .close__x {
     position: relative;
-    top: -1px;
+    top: 0;
     left: -0.5px;
     display: inline-block;
     width: 10px;
     height: 10px;
   }
-  .gtsm-close__x::before, .gtsm-close__x::after {
+  .close__x::before, .close__x::after {
     position: absolute;
     width: 1px;
     height: 10px;
     content: " ";
     background-color: black;
   }
-  .gtsm-close__x::before {
+  .close__x::before {
     transform: rotate(-45deg);
   }
-  .gtsm-close__x::after {
+  .close__x::after {
     transform: rotate(45deg);
   }
-  .gtsm-close:active .gtsm-close__x {
-    top: -1px;
-    left: -0.5px;
-  }
-  .gtsm-close:active {
+  .close:active {
     top: 11px;
     right: 11px;
     width: 26px;
