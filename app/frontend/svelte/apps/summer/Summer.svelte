@@ -71,6 +71,7 @@
 
   const retrieveProducts = async () => {
     if (!isSummaryCompleted) return;
+    if (!settings.features.suggestion) return;
     try {
       const res = await api.getServices(article.page_id);
       // console.log(res);
@@ -86,14 +87,19 @@
     showModal = false;
     setTimeout(() => (buttonStyles.opacity = 1), 500);
   };
-
 </script>
 
 <svelte:head>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
 </svelte:head>
 
-<button class="getsummer-btn" style="opacity: {buttonStyles.opacity};" on:click={onButtonClick}>
+<button
+  class="getsummer-btn radius-{settings.appearance.button_radius} theme-{settings.appearance.button_theme}"
+  style="opacity: {buttonStyles.opacity};"
+  on:click={onButtonClick}>
   {#if loading}
     <span class="loading-icon" />
     Summarizing
@@ -106,7 +112,7 @@
   <Modal bind:showModal on:close={closeModal}>
     {@html markdown(summary)}
 
-    {#if settings.features.suggestion === true && services.length > 0}
+    {#if settings.features.suggestion && services.length > 0}
       {#each services as service}
         <ProjectProduct {service} pageId={article.page_id} />
       {/each}
@@ -129,18 +135,41 @@
   }
 
   .getsummer-btn {
-    @apply rounded-3xl text-base text-white select-none cursor-pointer;
+    @apply text-base text-white select-none cursor-pointer;
     padding: 4px 12px;
     position: fixed;
+    z-index: 30;
     transition: opacity 0.3s;
     left: calc(50% - 50px);
     bottom: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(0, 0, 0, 0.85);
     box-shadow: 0 36px 60px 0 rgba(0, 0, 0, 0.18), 0 13.902px 18.888px 0 rgba(0, 0, 0, 0.12),
       0 6.929px 11.218px 0 rgba(0, 0, 0, 0.1), 0 3.621px 7.444px 0 rgba(0, 0, 0, 0.08),
       0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);
     backdrop-filter: blur(4px);
+
+    &.theme-white {
+      @apply text-base text-black;
+      border: 1px solid rgba(255, 255, 255, 0.40);
+      background: linear-gradient(123deg, rgba(242, 242, 242, 0.85) 26.16%, rgba(255, 255, 255, 0.85) 75.51%);
+    }
+
+    &.theme-black {
+      @apply text-base text-white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.85);
+    }
+
+    &.radius-sm {
+      @apply rounded-sm;
+    }
+
+    &.radius-xl {
+      @apply rounded-3xl;
+    }
+
+    &.radius-lg {
+      @apply rounded-xl;
+    }
 
     .loading-icon {
       @apply loading loading-spinner loading-xs;

@@ -10,7 +10,7 @@ export default defineConfig({
       emitCss: false,
       preprocess: [vitePreprocess()],
       compilerOptions: {
-        cssHash: ({ hash, css }) => `getsummer-${hash(css)}`
+        cssHash: ({ hash, css }) => `gs-${hash(css)}`
       }
     }),
   ],

@@ -25,6 +25,11 @@ export type ErrorCodeType = {
 
 export type SettingsInfo = {
   paths: string[];
+  appearance: {
+    button_radius: 'xl' | 'lg' | 'md' | 'sm' | 'xs';
+    button_theme: 'white' | 'black';
+    frame_theme: 'white' | 'black';
+  };
   features: {
     suggestion: boolean;
     subscription: boolean;

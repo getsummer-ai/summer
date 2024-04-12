@@ -6,9 +6,12 @@
     <title>Summer</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <%= vite_stylesheet_tag 'global.scss' %>
     <%= vite_client_tag %>
     <% if content_for?(:js) %>
@@ -17,7 +20,7 @@
     <%= vite_client_tag %>
     <%= vite_typescript_tag 'application' %>
   </head>
-  <body class="<%=body_class.strip %>">
+  <body class="<%= body_class.strip %>">
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>

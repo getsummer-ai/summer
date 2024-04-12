@@ -40,6 +40,11 @@
             </label>
 
             <label class="label cursor-pointer p-0 pl-1 mt-2 w-[80px]">
+              <%= appearance_form.radio_button :button_radius, 'lg', class: simple_radio, onchange: onchange %>
+              <span class="label-text font-extrabold">LG</span>
+            </label>
+
+            <label class="label cursor-pointer p-0 pl-1 mt-2 w-[80px]">
               <%= appearance_form.radio_button :button_radius, 'xl', class: simple_radio, onchange: onchange %>
               <span class="label-text font-extrabold">XL</span>
             </label>
