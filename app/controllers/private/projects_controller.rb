@@ -55,9 +55,12 @@ module Private
     def create
       @project = ProjectForm.new(current_user, project_params)
       res = @project.create
-      return redirect_to(project_pages_url(res), notice: 'Project was successfully created') if res
+      return render(:new, status: :unprocessable_entity) unless res
 
-      render :new, status: :unprocessable_entity
+      respond_to do |format|
+        format.html { redirect_to(project_pages_url(res), notice: 'Project was successfully created') }
+        format.turbo_stream { @redirect_to_url = project_pages_url(res) }
+      end
     end
 
     def destroy

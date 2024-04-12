@@ -4,5 +4,20 @@
       <h2 class="card-title">Create new project</h2>
     </div>
     <%= render "form", project: @project %>
+
+    <div class="mt-5">
+      <%= button_to destroy_user_session_path,
+                    method: :delete,
+                    form: { 'data-turbo' => "false" },
+                    class: 'block w-full text-center',
+                    form_class: 'trigger-submit-form p-1.5 rounded-xl text-ri cursor-pointer hover:bg-black hover:bg-opacity-5' do %>
+        <img
+          src="<%= vite_asset_path('assets/icons/logout.svg') %>"
+          class="summer-icon ml-[-7px]"
+          alt="Logout Icon"
+        />
+        <span class="align-middle">Log Out</span>
+      <% end %>
+    </div>
   </div>
 </div>

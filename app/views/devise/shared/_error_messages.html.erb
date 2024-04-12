@@ -2,7 +2,7 @@
   <div id="error_explanation" class="">
     <ul>
       <% resource.errors.full_messages.each do |message| %>
-        <li class="text-xs bg-warning text-center rounded p-2 text-neutral mt-2"><%= message %></li>
+        <li class="text-xs bg-yellow opacity-60 font-semibold text-center rounded p-2 mt-2"><%= message %></li>
       <% end %>
     </ul>
   </div>

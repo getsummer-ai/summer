@@ -1,18 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 import { useClickOutside } from 'stimulus-use';
+import type { TurboBeforeStreamRenderEvent } from '@/utils/common';
+import { log } from '@/utils/common';
 
-type LogArg = string | number | boolean | null | undefined | HTMLElement;
-const logIsActive = false;
-function log(...args: LogArg[]) {
-  if (logIsActive) console.log(...args);
-}
-
-type TurboBeforeStreamRenderEvent = CustomEvent<{
-  render: (streamElement: { action: string }) => void
-}>
-
-
-  function setModalQueryStringParam(value: string) {
+function setModalQueryStringParam(value: string) {
   const url = window.location;
   const hash = new URLSearchParams(url.hash.substring(1));
   if (hash.get('m') === value) return;
@@ -34,9 +25,6 @@ function removeModalQueryStringParam() {
   window.scroll(0, scrollPosition);
   log('removeModalQueryStringParam END', window.location.href);
 }
-
-
-
 
 export default class TurboModalController extends Controller {
   static targets = ['modal'];
@@ -70,7 +58,7 @@ export default class TurboModalController extends Controller {
     // if (!this.element.parentElement) return log('Modal has benn disconnected without cleaning');
     this.closeModal(false);
     log('Modal disconnect');
-    window.removeEventListener('turbo:before-stream-render', this.localStreamRenderEvent)
+    window.removeEventListener('turbo:before-stream-render', this.localStreamRenderEvent);
   }
 
   closeModal(cleanQueryStringParam = true) {
@@ -99,12 +87,12 @@ export default class TurboModalController extends Controller {
   }
 
   beforeStreamRender(e: Event) {
-    const res = (e as TurboBeforeStreamRenderEvent)
+    const res = e as TurboBeforeStreamRenderEvent;
     const fallbackToDefaultActions = res.detail.render;
 
     res.detail.render = (streamElement) => {
-      log(streamElement.action)
-      if (streamElement.action == 'del-link-from-history') {
+      log('beforeStreamRender - streamElement.action - ', streamElement.action);
+      if (streamElement.action == 'del-hash-from-history') {
         window.history.replaceState(window.history.state, '', window.location.href.split('#')[0]);
         return;
       }
@@ -114,25 +102,8 @@ export default class TurboModalController extends Controller {
     };
   }
 
-  // beforeFetchResponse(e: Event & { detail: { fetchResponse: { response: { url: string, redirected: boolean } } } }) {
-  //   console.log('beforeFetchResponse', e.detail, e.detail.fetchResponse.response.redirected);
-  //   if (!this.allowRedirectValue) return;
-  //   if (typeof (e.detail.fetchResponse) == 'undefined') return;
-  //   const response = e.detail.fetchResponse.response
-  //   if (response.redirected) {
-  //     if (typeof window?.Turbo?.visit == 'function') return window.Turbo.visit(response.url);
-  //     this.closeModal();
-  //     window.location.href = response.url;
-  //   }
-  // }
-
   closeOnEscape(e: KeyboardEvent) {
     if (e.code != 'Escape') return;
     this.closeModal();
   }
-
-  // closeOnClickOutside(e: MouseEvent) {
-  //   if (e.target && this.modalTarget.contains(e.target as Node)) return;
-  //   this.closeModal();
-  // }
 }

@@ -40,6 +40,7 @@
     <li>
       <%= button_to destroy_user_session_path,
                     method: :delete,
+                    form: { 'data-turbo' => "false" },
                     class: 'block w-full text-left',
                     form_class: 'trigger-submit-form p-1.5 pl-3 rounded-xl block hover:bg-black hover:bg-opacity-5' do %>
         <img

@@ -9,7 +9,7 @@
       <%= f.text_field :name %>
     </div>
     <div class="form-control mt-2">
-      <%= f.label :urls, 'Domain Address' %>
+      <%= f.label :urls, 'Domain Address', for: 'project_form_urls_0' %>
       <%
         @project.urls.each_with_index do |item, index|
           if item.present? || index == 0

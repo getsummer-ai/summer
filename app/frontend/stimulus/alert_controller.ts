@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { log } from '@/utils/common';
 
 export default class AlertController extends Controller {
   static values = {
@@ -9,7 +10,7 @@ export default class AlertController extends Controller {
 
 
   connect() {
-    console.log('AlertController -- connect', this.persistentValue);
+    log('AlertController -- connect', this.persistentValue);
     if (!this.persistentValue) {
       setTimeout(() => this.hideAlert(), 3000)
     }

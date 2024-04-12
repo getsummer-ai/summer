@@ -6,7 +6,7 @@
                    # url: user_google_oauth2_omniauth_authorize_path,
                    url: omniauth_authorize_path(resource_name, :google_oauth2),
                    method: :post,
-                   data: { turbo: "false" } do |f| %>
+                   data: { turbo: false } do |f| %>
         <%= f.button(type: 'submit', class: "btn btn-outline btn-input-summer btn-block") do %>
           <svg
             class="w-4 h-4"
