@@ -97,6 +97,7 @@ Rails.application.configure do
 
   Rails.application.config.hosts << ENV.fetch("APP_HOST")
 
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'smtp.resend.com',
