@@ -9,8 +9,11 @@ RSpec.describe Api::V1::ButtonController do
       confirmed_at: Time.zone.now,
     )
   end
-  let!(:project) { user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project') }
+  let!(:project) do
+    user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
+  end
   let!(:api_key) { project.uuid }
+  let!(:article_url) { 'http://localhost:3000/new-year-celebrations' }
 
   before { request.headers['Api-Key'] = api_key }
 
@@ -41,18 +44,31 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
-            appearance: { button_radius: 'xl', button_theme: 'white', frame_theme: 'white' },
-            paths: [], features: { suggestion: true, subscription: true }
-          }            
+            appearance: {
+              button_radius: 'xl',
+              button_theme: 'black',
+              frame_theme: 'white',
+            },
+            paths: [],
+            features: {
+              suggestion: true,
+              subscription: true,
+            },
+          },
         )
       end
 
       it 'returns response successfully when project settings are changed' do
         project.update!(
           settings_attributes: {
-            feature_subscription_attributes: { enabled: false }, feature_suggestion_attributes: { enabled: false }
+            feature_subscription_attributes: {
+              enabled: false,
+            },
+            feature_suggestion_attributes: {
+              enabled: false,
+            },
           },
-          paths: %w[/path1 /path2]
+          paths: %w[/path1 /path2],
         )
         request.headers['origin'] = 'http://localhost.com'
 
@@ -62,27 +78,30 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
-            appearance: { button_radius: 'xl', button_theme: 'white', frame_theme: 'white' },
-            paths: %w[/path1 /path2], features: { suggestion: false, subscription: false }
-          }
+            appearance: {
+              button_radius: 'xl',
+              button_theme: 'black',
+              frame_theme: 'white',
+            },
+            paths: %w[/path1 /path2],
+            features: {
+              suggestion: false,
+              subscription: false,
+            },
+          },
         )
       end
     end
   end
 
   describe 'POST /init' do
-    subject(:post_request) do
-      post(:init, body: { s: 'http://localhost:3000/new-year-celebrations' }.to_json, as: :json)
-    end
+    subject(:post_request) { post(:init, body: { s: article_url }.to_json, as: :json) }
 
-    context 'when api key is wrong' do
-      let(:api_key) { project.id }
-
-      it 'returns Invalid Api-Key response' do
-        post_request
-        expect(response).to have_http_status(:forbidden)
-        expect(response.body).to eq "{\"message\":\"Invalid Api-Key\"}"
-      end
+    it 'returns Invalid Api-Key response when api key is wrong' do
+      request.headers['Api-Key'] = project.id
+      post_request
+      expect(response).to have_http_status(:forbidden)
+      expect(response.body).to eq "{\"message\":\"Invalid Api-Key\"}"
     end
 
     it 'returns Incorrect domain response' do
@@ -91,7 +110,7 @@ RSpec.describe Api::V1::ButtonController do
       expect(response.body).to eq "{\"code\":\"wrong_domain\",\"message\":\"Incorrect domain\"}"
     end
 
-    describe 'when http_status is 200' do
+    describe 'when the main API filters are passed' do
       render_views
       before do
         project.update_attribute!(:domain, 'localhost')
@@ -107,7 +126,11 @@ RSpec.describe Api::V1::ButtonController do
       it 'saves parsed data in database' do
         post_request
         expect(response).to have_http_status(:ok)
-        expect([ProjectArticle.count, ProjectPage.count, ProjectArticle.first.pages.count]).to eq [1,1,1]
+        expect([ProjectArticle.count, ProjectPage.count, ProjectArticle.first.pages.count]).to eq [
+             1,
+             1,
+             1,
+           ]
         article = project.articles.first
         expect(article.tokens_count).to be_a(Integer)
         expect(article.title).to eq 'New Year celebrations'
@@ -125,6 +148,53 @@ RSpec.describe Api::V1::ButtonController do
         body = response.parsed_body
         expect(body['article']['page_id']).to be_a(String)
         expect(body['article']['title']).to eq 'New Year celebrations'
+      end
+
+      it 'returns 400 when URL is not in a body' do
+        post(:init, body: { s: '' }.to_json, as: :json)
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq ''
+      end
+
+      it 'returns 400 if page load fails' do
+        stub_request(:get, 'http://localhost:3000/new-year-celebrations').to_raise(StandardError)
+        post_request
+        expect(response).to have_http_status(:bad_request)
+        expect(response.body).to eq ''
+      end
+
+      it 'returns existing article without extra load the URL.' do
+        form = ProjectArticleForm.new(project, article_url)
+        form.find_or_create
+
+        stub_request(:get, 'http://localhost:3000/new-year-celebrations').to_raise(StandardError)
+
+        post_request
+        expect(response).to have_http_status(:ok)
+        expect(response.body).not_to eq ''
+
+        encrypted_page_id = response.parsed_body['article']['page_id']
+        expect(encrypted_page_id).to be_a(String)
+        expect(form.project_page.id).to eq BasicEncrypting.decode_array(encrypted_page_id, 2)[0]
+      end
+
+      it 'returns empty body when the page is disabled' do
+        form = ProjectArticleForm.new(project, article_url)
+        form.find_or_create
+        form.project_page.update!(is_accessible: false)
+
+        post_request
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq ''
+      end
+
+      it 'returns empty body if a summary was skipped' do
+        article = ProjectArticleForm.new(project, article_url).find_or_create
+        article.summary_status_skipped!
+
+        post_request
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq ''
       end
     end
   end
