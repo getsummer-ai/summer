@@ -1,15 +1,24 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-# Specs in this file have access to a helper object that includes
-# the ProjectsHelper. For example:
-#
-# describe ProjectsHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       expect(helper.concat_strings("this","that")).to eq("this that")
-#     end
-#   end
-# end
 RSpec.describe ProjectsHelper, type: :helper do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe "project_list" do
+    it "returns empty project list when user is not logged in" do
+      allow(helper).to receive_messages(user_signed_in?: false)
+      expect(helper.project_list).to eq []
+    end
+
+    it "returns project list when user is not logged in" do
+      user = User.create(
+        email: 'admin@test.com',
+        password: '12345678',
+        password_confirmation: '12345678',
+        confirmed_at: Time.zone.now
+      )
+      allow(helper).to receive_messages(user_signed_in?: true, current_user: user)
+      user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project 1')
+      user.projects.create!(protocol: 'https', domain: 'localhostyy.com', name: 'Test Project 2')
+      expect(helper.project_list.size).to eq 2
+      expect(helper.project_list).to eq Project.select('id', 'name').where(user_id: user.id).order(:id).all
+    end
+  end
 end
