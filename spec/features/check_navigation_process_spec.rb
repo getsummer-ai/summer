@@ -34,12 +34,7 @@ describe 'the Navigation process' do
       # WebMock.allow_net_connect!
       WebMock.disable_net_connect!(allow: '127.0.0.1')
 
-      user = User.create(
-        email: 'admin@test.com',
-        password: '12345678',
-        password_confirmation: '12345678',
-        confirmed_at: Time.zone.now,
-      )
+      user = create_default_user
       user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
 
       visit "/users/sign_in"

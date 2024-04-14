@@ -1,14 +1,7 @@
 # frozen_string_literal: true
 RSpec.describe Api::V1::ButtonController do
   # ActiveRecord::Base.logger = Logger.new(STDOUT) if defined?(ActiveRecord::Base)
-  let!(:user) do
-    User.create(
-      email: 'admin@test.ru',
-      password: '12345678',
-      password_confirmation: '12345678',
-      confirmed_at: Time.zone.now,
-    )
-  end
+  let!(:user) { create_default_user }
   let!(:project) do
     user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
   end

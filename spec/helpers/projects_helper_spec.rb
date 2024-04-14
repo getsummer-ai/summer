@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe ProjectsHelper, type: :helper do
+  include SpecTestHelper
+
   describe "project_list" do
     it "returns empty project list when user is not logged in" do
       allow(helper).to receive_messages(user_signed_in?: false)
@@ -8,12 +10,7 @@ RSpec.describe ProjectsHelper, type: :helper do
     end
 
     it "returns project list when user is not logged in" do
-      user = User.create(
-        email: 'admin@test.com',
-        password: '12345678',
-        password_confirmation: '12345678',
-        confirmed_at: Time.zone.now
-      )
+      user = create_default_user
       allow(helper).to receive_messages(user_signed_in?: true, current_user: user)
       user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project 1')
       user.projects.create!(protocol: 'https', domain: 'localhostyy.com', name: 'Test Project 2')

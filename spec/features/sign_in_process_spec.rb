@@ -2,12 +2,7 @@
 #
 describe "the SignIn process" do
   before do
-    User.create(
-      email: 'admin@test.com',
-      password: '12345678',
-      password_confirmation: '12345678',
-      confirmed_at: Time.zone.now
-    )
+    create_default_user
   end
 
   it "signs me in" do

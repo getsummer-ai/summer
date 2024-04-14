@@ -54,6 +54,7 @@ RSpec.configure do |config|
   config.use_transactional_fixtures = true
 
   config.include SpecTestHelper, type: :controller
+  config.include SpecTestHelper, type: :feature
 
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponent::SystemTestHelpers, type: :component

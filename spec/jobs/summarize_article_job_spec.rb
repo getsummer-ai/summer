@@ -1,15 +1,12 @@
 # frozen_string_literal: true
 
 describe SummarizeArticleJob do
+  include SpecTestHelper
+
   subject { described_class.perform(article.id) }
 
   let!(:article) do
-    user = User.create(
-      email: 'admin@test.com',
-      password: '12345678',
-      password_confirmation: '12345678',
-      confirmed_at: Time.zone.now
-    )
+    user = create_default_user
     project = user.projects.create(name: 'Test Project', protocol: 'http', domain: 'test.com')
     article = project.articles.create(
       article_hash: '354fdebd51e8fbdfd462dd604e00224b',
