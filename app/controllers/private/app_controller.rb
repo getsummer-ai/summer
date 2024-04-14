@@ -4,7 +4,7 @@ module Private
 
     def index
       project = current_user.default_project || current_user.projects.available.first
-      return redirect_to project_pages_path(project) if project.present?
+      return redirect_to setup_project_path(project) if project.present?
 
       redirect_to(new_project_path)
     end

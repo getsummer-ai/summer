@@ -15,7 +15,7 @@ describe SummarizeArticleJob do
       article_hash: '354fdebd51e8fbdfd462dd604e00224b',
       article: 'On the night of 31 December and the morning of 1 January, people in many countries all over...',
       title: 'New Year celebrations',
-      status_summary: 'wait',
+      summary_status: 'wait',
       tokens_count: 942,
     )
     article
@@ -45,10 +45,10 @@ describe SummarizeArticleJob do
               "event: test\nid: 2\ndata: [DONE]\n\n",
         headers: { 'Content-Type' => 'text/event-stream' }
       )
-      expect { subject }.to change { article.reload.status_summary }.from('wait').to('completed')
-      expect(article.info_summary['time']).to be_a(Float)
-      expect(article.summaries.count).to eq 1
-      expect(article.last_summary.summary).to eq " New Year's traditions..."
+      expect { subject }.to change { article.reload.summary_status }.from('wait').to('completed')
+      expect(article.info.summary['time']).to be_a(Float)
+      expect(article.summary_llm_calls.count).to eq 1
+      expect(article.summary_llm_call.output).to eq " New Year's traditions..."
       expect(article.events.order(id: :asc).pluck(:source)).to \
         eq ['SummarizeArticleJob', 'OpenAI - Begins', 'OpenAI - Ends Successfully', 'SummarizeArticleJob']
       WebMock.allow_net_connect!
