@@ -181,3 +181,8 @@ code[class*="language-"],
 pre[class*="language-"] {
   font-size: 13px !important;
 }
+
+.blur-5xl {
+  @apply blur-[200px];
+  transform: translate3d(0, 0, 0);
+}
