@@ -77,7 +77,7 @@ group :development, :test do
   gem 'annotate'
   gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'prettier'
-  gem 'rspec-rails', '~> 6.0.3'
+  gem 'rspec-rails', '~> 6.1'
 
   gem 'rubocop', require: false
   gem 'rubocop-performance'
@@ -97,10 +97,10 @@ end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
-  gem 'capybara'
+  gem 'capybara', '~> 3.40'
   gem 'database_cleaner-active_record'
   gem "fakeredis", require: "fakeredis/rspec"
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '~> 4.19'
   gem "webmock"
 end
 
