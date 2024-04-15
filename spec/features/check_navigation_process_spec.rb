@@ -5,7 +5,7 @@ describe 'the Navigation process' do
     it 'sign-in redirect' do
       visit '/'
       expect(page).to have_current_path new_user_session_path
-      expect(page).to have_content 'Sign in'
+      expect(page).to have_content 'Sign in5'
       expect(page).to have_content 'Sign up'
       expect(page).to have_content 'Forgot your password?'
     end
