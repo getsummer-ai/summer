@@ -43,13 +43,23 @@ class ProjectArticle < ApplicationRecord
            dependent: :destroy,
            inverse_of: :initializer
 
+  has_many :products_llm_calls,
+           -> { where(feature: 'products') },
+           as: :initializer,
+           class_name: 'ProjectLlmCall',
+           dependent: :destroy,
+           inverse_of: :initializer
+
   has_many :project_article_products, dependent: :destroy
   has_many :related_products,
            through: :project_article_products,
            class_name: 'ProjectProduct',
            source: :product
 
-  belongs_to :summary_llm_call, -> { select(:output) }, class_name: 'ProjectLlmCall', optional: true
+  belongs_to :summary_llm_call,
+             -> { select(:output) },
+             class_name: 'ProjectLlmCall',
+             optional: true
   belongs_to :products_llm_call,
              -> { select(:output) },
              class_name: 'ProjectLlmCall',

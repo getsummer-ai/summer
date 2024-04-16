@@ -34,6 +34,10 @@ class WebScrapperService
     self
   end
 
+  def content
+    @content ||= Boilerpipe::Extractors::ArticleExtractor.text(@response.body)
+  end
+
   private
 
   # @param [String] body
@@ -45,10 +49,6 @@ class WebScrapperService
     @title = meta_title_tag.present? ? meta_title_tag['content'] : nil
     @description = meta_og_desc_tag.present? ? meta_og_desc_tag['content'] : nil
     @image_url = meta_image_tag.present? ? meta_image_tag['content'] : nil
-  end
-
-  def content
-    @content ||= Boilerpipe::Extractors::ArticleExtractor.text(@response.body)
   end
 
   # @param [String] name

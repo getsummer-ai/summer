@@ -27,7 +27,10 @@ class FindProductsInSummaryService
     @model.products_status_processing!
     response = nil
     time = measure { response = ask_gpt_to_summarize }
-    success!({ time:, response: }, response&.dig('choices', 0, 'message', 'content'))
+    content = response&.dig('choices', 0, 'message', 'content')
+    raise "Output is empty #{response.to_json}" if content.blank?
+
+    success!({ time:, response: }, content)
     @redis.publish(@model.redis_products_name, 'done')
   rescue StandardError => e
     error! e
@@ -48,6 +51,7 @@ class FindProductsInSummaryService
   end
 
   # @param [Hash] info
+  # @param [String] output
   def success!(info, output)
     ProjectArticle.transaction do
       call =
