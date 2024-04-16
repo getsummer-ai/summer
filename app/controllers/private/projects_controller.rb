@@ -58,8 +58,8 @@ module Private
       return render(:new, status: :unprocessable_entity) unless res
 
       respond_to do |format|
-        format.html { redirect_to(project_pages_url(res), notice: 'Project was successfully created') }
-        format.turbo_stream { @redirect_to_url = project_pages_url(res) }
+        format.html { redirect_to(setup_project_path(res), notice: 'Project was successfully created') }
+        format.turbo_stream { @redirect_to_url = setup_project_path(res) }
       end
     end
 
