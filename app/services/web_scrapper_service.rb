@@ -34,23 +34,27 @@ class WebScrapperService
     self
   end
 
+  private
+
   # @param [String] body
   def parse_meta_tags(body)
     doc = Nokogiri.HTML(body)
-    meta_title_tag = doc.at('meta[property="og:title"]')
-    meta_image_tag = doc.at('meta[property="og:image"]')
-    meta_og_desc_tag = doc.at('meta[property="og:description"]')
-    meta_desc_tag = doc.at('meta[property="description"]')
+    meta_title_tag = find_meta doc, 'og:title'
+    meta_image_tag = find_meta doc, 'og:image'
+    meta_og_desc_tag = find_meta(doc, 'og:description').presence || doc.at('meta[name="description"]')
     @title = meta_title_tag.present? ? meta_title_tag['content'] : nil
-    @description = if meta_og_desc_tag.present?
-                     meta_og_desc_tag['content']
-                   else
-                     meta_desc_tag.present? ? meta_desc_tag['content'] : nil
-                   end
+    @description = meta_og_desc_tag.present? ? meta_og_desc_tag['content'] : nil
     @image_url = meta_image_tag.present? ? meta_image_tag['content'] : nil
   end
 
   def content
     @content ||= Boilerpipe::Extractors::ArticleExtractor.text(@response.body)
+  end
+
+  # @param [String] name
+  # @param [Nokogiri::XML::Element] doc
+  # @return [Nokogiri::XML::Element]
+  def find_meta(doc, name)
+    doc.at("meta[property=\"#{name}\"]").presence || doc.at("meta[name=\"#{name}\"]")
   end
 end
