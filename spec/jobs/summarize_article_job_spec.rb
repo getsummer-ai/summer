@@ -31,17 +31,12 @@ describe SummarizeArticleJob do
   end
 
   describe '#perform' do
+    include_context 'with gpt requests'
     it 'works well' do
       WebMock.disable_net_connect!
       # We stub request to OPEN AI = OpenAI::Client.new; client.chat
       # @see SummarizeArticleJob#ask_gpt_to_summarize
-      stub_request(:post, %r{/chat/completions}).to_return(
-        body: "event: test\nid: 1\ndata: #{first_event_stream_message.to_json}\n\n" \
-              "event: test\nid: 2\ndata: #{second_event_stream_message.to_json}\n\n" \
-              "event: test\nid: 2\ndata: #{third_event_stream_message.to_json}\n\n" \
-              "event: test\nid: 2\ndata: [DONE]\n\n",
-        headers: { 'Content-Type' => 'text/event-stream' }
-      )
+      stub_gpt_summary_request([' New', " Year's traditions...", ''])
       expect { subject }.to change { article.reload.summary_status }.from('wait').to('completed')
       expect(article.info.summary['time']).to be_a(Float)
       expect(article.summary_llm_calls.count).to eq 1

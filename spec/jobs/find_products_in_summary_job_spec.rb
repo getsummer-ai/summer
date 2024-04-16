@@ -5,6 +5,8 @@ describe FindProductsInSummaryJob do
 
   subject { described_class.perform(article.id) }
 
+  include_context 'with gpt requests'
+
   let!(:user) { create_default_user }
   let!(:project) { user.projects.create(name: 'Test', protocol: 'http', domain: 'test.com') }
   let!(:article) do
@@ -23,41 +25,11 @@ describe FindProductsInSummaryJob do
     "[\n    {\"id\": #{product_1.id}, \"related\": true},\n    {\"id\": #{product_2.id}, \"related\": false}\n]"
   end
 
-  let(:llm_response) do
-    {
-      id: 'chatcmpl-9BtI0AlbEooZON0ytK20CxPcAW5Tj',
-      model: 'gpt-3.5-turbo-0125',
-      usage: {
-        total_tokens: 288,
-        prompt_tokens: 262,
-        completion_tokens: 26,
-      },
-      object: 'chat.completion',
-      choices: [
-        {
-          index: 0,
-          message: {
-            role: 'assistant',
-            content: payload,
-          },
-          logprobs: nil,
-          finish_reason: 'stop',
-        },
-      ],
-      created: 1_712_621_168,
-      system_fingerprint: 'fp_b28b39ffa8',
-    }.to_json
-  end
+  let(:llm_response) { get_gpt_products_response_json_example(payload) }
 
   before do
     allow(ProjectProductLinkScrapeJob).to receive(:perform_later).and_return(true)
-
-    stub_request(:post, %r{/chat/completions}).to_return(
-      body: llm_response,
-      headers: {
-        'Content-Type' => 'application/json',
-      },
-    )
+    stub_gpt_products_request(llm_response)
   end
 
   describe '#perform' do
