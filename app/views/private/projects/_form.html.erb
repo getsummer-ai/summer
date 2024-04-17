@@ -17,6 +17,7 @@
             data_attributes = { 'data-project-form-target': "field" } if index == 0
             concat f.text_field :urls,
                               multiple: true,
+                              placeholder: 'https://example.com/blog',
                               value: item,
                               id: "project_form_urls_#{index}",
                               **data_attributes
