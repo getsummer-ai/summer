@@ -9,10 +9,10 @@ module Api
         include ActionController::Live
 
         def stream
-          article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
-          SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
           response.headers['Content-Type'] = 'text/event-stream'
           sse = SSE.new(response.stream)
+          article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
+          SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
           send_article(sse, article)
           StatisticService.new(project: @current_project, trackable: @project_page).click!
         rescue StandardError => e
