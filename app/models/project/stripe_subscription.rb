@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 class Project
+  # @!attribute cancel_at
+  # @return [Integer]
   class StripeSubscription
     include StoreModel::Model
 

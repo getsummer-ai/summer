@@ -10,6 +10,7 @@
 <% end %>
 
 <% content_for :content do %>
+  <% current_project = current_project || current_user.default_project %>
   <div class="fixed flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] min-w-[250px] bg-default overflow-y-auto">
     <div class="menu-header">
       <div class="logo-part p-1.5">
@@ -31,7 +32,7 @@
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
     <% if current_project.free_plan_suspended? %>
-      <%= render SuspendedInfo::Component.new(project: current_user.default_project) %>
+      <%= render SuspendedInfo::Component.new(project: current_project) %>
     <% end %>
     <div class="p-10 rounded-2xl bg-white grow min-w-[700px] z-10 overflow-hidden">
       <div class="container mx-auto max-w-[768px] pb-10">

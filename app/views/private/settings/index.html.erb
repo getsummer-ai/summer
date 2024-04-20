@@ -18,7 +18,12 @@
 
   <% if current_project.paid_plan?  %>
     <div class="mt-2">
-      Your paid plan is active. You have no limits.
+      Your premium plan
+      <% if current_project.stripe.subscription.cancel_at  %>
+        expires on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+      <% else %>
+        is active. You have no limits.
+      <% end %>
     </div>
   <% end %>
 
@@ -29,7 +34,13 @@
     </p>
   <% end %>
 
-<%= button_to current_project.free_plan_suspended? ? 'Activate plan' : 'Subscription',
+
+<%
+  button_text = current_project.free_plan_suspended? ? 'Activate plan' : 'Subscription'
+  button_text = current_project.stripe.subscription.cancel_at.present? ? 'Reactivate' : button_text
+%>
+
+<%= button_to button_text,
               project_payments_path(@current_project),
               method: :post,
               class: 'btn btn-summer btn-neutral mt-4 w-46',

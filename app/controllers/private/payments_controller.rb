@@ -4,42 +4,29 @@ module Private
     before_action :check_existence, only: :create
 
     def create
-      return open_customer_portal if current_project.paid_plan?
-
       session =
-        Stripe::Checkout::Session.create(
-          customer: stripe_customer,
-          payment_method_types: ['card'],
-            line_items: [{ price: ENV.fetch('STRIPE_PRICE_ID'), quantity: 1},
-          ],
-          metadata: { project_id: current_project.uuid, project_name: current_project.name },
-          mode: 'subscription',
-          success_url:
-            "#{success_project_payments_url(current_project)}?session_id={CHECKOUT_SESSION_ID}",
+        stripe_service.create_session(
+          success_url: success_project_payments_url(current_project),
           cancel_url: cancel_project_payments_url(current_project),
+          return_url: return_project_payments_url(current_project),
         )
-
-      redirect_to session.url, allow_other_host: true
-    end
-
-    def open_customer_portal
-      session =
-        Stripe::BillingPortal::Session.create(
-          { customer: stripe_customer, return_url: project_settings_url(current_project) },
-        )
-
       redirect_to session.url, allow_other_host: true
     end
 
     def success
-      session_id = params[:session_id]
-      retrieve_and_save_info(session_id) if session_id.present?
-      #handle successful payments
-      redirect_to project_settings_path(current_project), notice: 'Purchase Successful'
+      sess_id = params[:session_id]
+      res = sess_id.present? ? stripe_service.session_success_callback(sess_id) : false
+
+      redirect_to project_settings_path(current_project), notice: res ? 'Purchase Successful' : ''
     end
 
     def cancel
-      #handle if the payment is cancelled
+      redirect_to project_settings_path(current_project)
+    end
+
+    def return
+      subscription_info = current_project.stripe.subscription.id
+      stripe_service.update_subscription_info(subscription_info) if subscription_info.present?
       redirect_to project_settings_path(current_project)
     end
 
@@ -94,48 +81,14 @@ module Private
     private
 
     def check_existence
-      return if stripe_customer.present? && !stripe_customer['deleted']
+      return unless stripe_service.stripe_customer['deleted']
 
-      # flash[:notice] = 'Error while creating customer. Please try again later'
       redirect_to project_settings_path(current_project),
                   notice: 'Error while creating subscription. Please try again later'
     end
 
-    def retrieve_and_save_info(session_id)
-      session = Stripe::Checkout::Session.retrieve(session_id)
-      return if session.status != 'complete'
-
-      subscription = Stripe::Subscription.retrieve(session.subscription)
-      current_project.track!(source: 'Stripe Payment', author: current_user) do
-        current_project.update!(
-          stripe_attributes: {
-            subscription_attributes: {
-              id: subscription.id,
-              status: subscription.status,
-              latest_invoice: subscription.latest_invoice,
-              cancel_at: subscription.cancel_at,
-              canceled_at: subscription.canceled_at,
-              start_date: subscription.start_date,
-            }
-          }
-        )
-      end
-    end
-
-    def stripe_customer
-      return @stripe_customer if @stripe_customer.present?
-
-      if current_project.stripe&.customer_id.present?
-        @stripe_customer = Stripe::Customer.retrieve(current_project.stripe.customer_id)
-        return @stripe_customer
-      end
-
-      description = "Project #{current_project.uuid}"
-      @stripe_customer = Stripe::Customer.create({ email: current_user.email, description: })
-      current_project.track!(source: 'Create Stripe Customer', author: current_user) do
-        current_project.update!(stripe_attributes: { customer_id: @stripe_customer.id })
-      end
-      @stripe_customer
+    def stripe_service
+      @stripe_service ||= ProjectStripeService.new(current_project, user: current_user)
     end
   end
 end
