@@ -39,6 +39,11 @@ Rails.application.routes.draw do
             get :success
             get :cancel
             get :return
+
+            if ENV.fetch('STRIPE_TEST_ENVIRONMENT', 'false') == 'true'
+              post :admin_delete_subscription
+              post :admin_suspend_project
+            end
           end
         end
         resources :settings, only: [:index]

@@ -43,10 +43,39 @@
 <%= button_to button_text,
               project_payments_path(@current_project),
               method: :post,
-              class: 'btn btn-summer btn-neutral mt-4 w-46',
+              class: 'btn btn-summer btn-neutral mt-4',
               form: {
                 'data-turbo': false
               } %>
+
+<% if ENV.fetch('STRIPE_TEST_ENVIRONMENT', 'false') == 'true' %>
+  <div class="bg-black text-white p-5 mt-10 rounded-xl">
+    These buttons are only visible in the test environment.
+
+
+    <% if current_project.stripe.subscription.id  %>
+      <%= button_to 'DELETE SUBSCRIPTION',
+                    admin_delete_subscription_project_payments_path(@current_project),
+                    method: :post,
+                    class: 'btn btn-summer btn-red mt-4',
+                    form: {
+                      'data-turbo': false
+                    } %>
+    <% end %>
+
+    <% if !current_project.stripe.subscription.id && @current_project.status_active? %>
+      <%= button_to 'SUSPEND PROJECT',
+                    admin_suspend_project_project_payments_path(@current_project),
+                    method: :post,
+                    class: 'btn btn-summer mt-4',
+                    form: {
+                      'data-turbo': false
+                    } %>
+    <% end %>
+  </div>
+<% end %>
+
+
 <hr class="my-12">
 
 

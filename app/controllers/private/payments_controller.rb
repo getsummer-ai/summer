@@ -78,6 +78,37 @@ module Private
     #     end
     # end
 
+    def admin_delete_subscription
+      if ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
+        if current_project.stripe.customer_id.present?
+          Stripe::Customer.delete(current_project.stripe.customer_id)
+        end
+        current_project.update!(
+          plan: 'free',
+          status: 'active',
+          stripe_attributes: {
+            customer_id: nil,
+            subscription_attributes: {
+              id: nil,
+              status: nil,
+              cancel_at: nil,
+              start_date: nil,
+              canceled_at: nil,
+              latest_invoice: nil,
+            },
+          },
+        )
+      end
+      redirect_to project_settings_path(current_project)
+    end
+
+    def admin_suspend_project
+      if ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
+        current_project.update!(plan: 'free', status: 'suspended')
+      end
+      redirect_to project_settings_path(current_project)
+    end
+
     private
 
     def check_existence
