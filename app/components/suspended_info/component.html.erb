@@ -1,0 +1,15 @@
+<div class="py-5">
+  <span class="p-2 px-5">
+    <img
+      src="<%= vite_asset_path('assets/icons/info.svg') %>"
+      class="summer-icon mr-1.5"
+      alt="Selector Icon"
+    />
+
+    <span class="align-middle">
+      Project suspended.
+      <%= link_to 'Resume', project_settings_path(@project), class: 'link underline underline-offset-2' %>
+    </span>
+  </span>
+</div>
+

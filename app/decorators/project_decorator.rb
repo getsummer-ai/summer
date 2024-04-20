@@ -10,7 +10,9 @@ class ProjectDecorator < Draper::Decorator
   #       object.created_at.strftime("%a %m/%d/%y")
   #     end
   #   end
-  
-  
 
+  def free_plan_left_clicks
+    statistic = ProjectStatisticsViewModel.new(model, { actions: [:total_action_statistics] })
+    [500 - statistic.total_clicks_count, 0].max
+  end
 end

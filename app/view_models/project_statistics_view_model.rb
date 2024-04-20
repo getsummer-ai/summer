@@ -7,10 +7,11 @@ class ProjectStatisticsViewModel
   }.freeze
 
   # @param [Project] project
-  def initialize(project, *preloads)
+  # @param [Array<Symbol>, Hash] preloads
+  def initialize(project, preloads)
     # @type [Project]
     @project = project
-    # @type [Array<Symbol>]
+    # @type [Array<Symbol>, Hash]
     @preloads = preloads
     start_preload_queries if @preloads.any?
   end
@@ -51,6 +52,7 @@ class ProjectStatisticsViewModel
     PRELOAD_QUERIES_SCHEMA.each do |preload, queries|
       next unless @preloads.include?(preload)
 
+      queries = @preloads[preload] if @preloads.is_a?(Hash)
       queries.each { |query| send(query) }
     end
   end

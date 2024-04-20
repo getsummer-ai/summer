@@ -1,7 +1,45 @@
 <h2 class="font-semibold text-2xl">Settings</h2>
+
 <hr class="my-12">
 
-<h3 class="font-semibold text-lg">Domain Addresses</h3>
+<h3 class="font-semibold text-lg mt-4">Billing Information</h3>
+
+  <% if current_project.free_plan_active? %>
+    <div class="mt-2">
+      Your free plan
+      (<span class="font-semibold">500</span> button clicks included) is active.
+      <p class="mt-1">
+      You have
+        <span class="font-semibold"><%=current_project.decorate.free_plan_left_clicks %></span>
+        clicks left.
+      </p>
+    </div>
+  <% end %>
+
+  <% if current_project.paid_plan?  %>
+    <div class="mt-2">
+      Your paid plan is active. You have no limits.
+    </div>
+  <% end %>
+
+  <% if current_project.free_plan_suspended? %>
+    <p class="mt-2">
+      Your free plan has been suspended. <br>
+      Please activate your paid plan to continue using Summer.
+    </p>
+  <% end %>
+
+<%= button_to current_project.free_plan_suspended? ? 'Activate plan' : 'Subscription',
+              project_payments_path(@current_project),
+              method: :post,
+              class: 'btn btn-summer btn-neutral mt-4 w-46',
+              form: {
+                'data-turbo': false
+              } %>
+<hr class="my-12">
+
+
+<h3 class="font-semibold text-lg mt-10">Domain Addresses</h3>
 <p class="opacity-50 mt-1">
   Summer will appear on the pages under this domain(s).
   If you experience issues with the domain or want to change the root address contact support via support@getsummer.ai

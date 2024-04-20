@@ -8,7 +8,7 @@ module Private
     layout :private_or_turbo_layout
 
     def index
-      @statistics = ProjectStatisticsViewModel.new(@current_project, :views, :actions)
+      @statistics = ProjectStatisticsViewModel.new(@current_project, [:views, :actions])
       @pagy, @pages = pagy(
         @current_project
           .pages

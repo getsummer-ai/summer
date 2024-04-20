@@ -19,10 +19,10 @@
         <hr class="border-black border-opacity-10">
       </div>
       <div class="mt-5">
-        <%=render(ProjectSelector::Component.new(current_project: current_user.default_project, projects: project_list)) %>
+        <%=render(ProjectSelector::Component.new(current_project: current_project, projects: project_list)) %>
       </div>
-      <% if current_user.default_project.present? %>
-        <%=render(ProjectMenuComponent.new(project: current_user.default_project)) %>
+      <% if current_project.present? %>
+        <%=render(ProjectMenuComponent.new(project: current_project)) %>
       <% end %>
     </div>
     <div class="menu-footer mt-10">
@@ -30,6 +30,9 @@
     </div>
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
+    <% if current_project.free_plan_suspended? %>
+      <%= render SuspendedInfo::Component.new(project: current_user.default_project) %>
+    <% end %>
     <div class="p-10 rounded-2xl bg-white grow min-w-[700px] z-10 overflow-hidden">
       <div class="container mx-auto max-w-[768px] pb-10">
         <% if content_for?(:breadcrumbs) %>

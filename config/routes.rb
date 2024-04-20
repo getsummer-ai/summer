@@ -34,6 +34,12 @@ Rails.application.routes.draw do
         resources :actions, only: %i[index update]
         resources :products, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
+        resources :payments, only: %i[create] do
+          collection do
+            get :success
+            get :cancel
+          end
+        end
         resources :settings, only: [:index]
       end
     end
