@@ -7,7 +7,7 @@
   <% if current_project.free_plan_active? %>
     <div class="mt-2">
       Your free plan
-      (<span class="font-semibold">500</span> button clicks included) is active.
+      (<span class="font-semibold"><%=ENV['FREE_PLAN_CLICKS_THRESHOLD']%></span> button clicks included) is active.
       <p class="mt-1">
       You have
         <span class="font-semibold"><%=current_project.decorate.free_plan_left_clicks %></span>

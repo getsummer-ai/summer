@@ -88,7 +88,6 @@ class Project < ApplicationRecord
     Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join)
   end
 
-
   def free_plan_active? = free_plan? && status_active?
   def free_plan_suspended? = free_plan? && status_suspended?
   def paid_plan_active? = paid_plan? && status_active?
