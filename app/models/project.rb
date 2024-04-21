@@ -99,6 +99,10 @@ class Project < ApplicationRecord
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
   end
 
+  def decorate
+    ProjectDecorator.new(self)
+  end
+
   private
 
   def validate_paths

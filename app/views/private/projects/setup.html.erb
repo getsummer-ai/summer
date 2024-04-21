@@ -78,7 +78,7 @@
   </div>
 
   <div>
-    <% src = "#{ENV['VITE_PRODUCTION_URL']}/libs/init.umd.js" %>
+    <% src = "#{ENV['ASSETS_HOST']}/libs/init.umd.js" %>
     <% html_text = "<script type=\"module\" src=\"#{src}\" async></script>\n" %>
     <% tracker_id_js = "\n\twindow.GetSummer = window.GetSummer || { id: '#{current_project.uuid}' }\n" %>
     <% tracker_id_html = "<script type=\"text/javascript\">#{tracker_id_js}</script>" %>
