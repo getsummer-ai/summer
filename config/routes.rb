@@ -48,6 +48,8 @@ Rails.application.routes.draw do
         end
         resources :settings, only: [:index]
       end
+
+      resources :billing, only: %i[index]
     end
 
     unless Rails.env.production?

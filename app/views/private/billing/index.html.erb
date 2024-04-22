@@ -1,0 +1,43 @@
+<h2 class="font-semibold text-2xl">Billing information</h2>
+
+<hr class="my-12" />
+
+<div>
+  <div class="overflow-x-auto mt-6">
+    <table class="table table-summer">
+      <thead>
+        <tr class="text-right">
+          <th class="font-semibold text-left w-44">Project</th>
+          <th class="font-semibold text-left w-28">Status</th>
+          <th class="font-semibold text-left w-20">Plan</th>
+          <th class="font-semibold text-left w-32">Views / Clicks</th>
+
+          <th class="font-semibold text-right w-44">Subscription</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @projects.each do |project| %>
+          <% decorated_project = project.decorate %>
+          <tr>
+            <td>
+              <%=
+              link_to project_settings_path(project), class: 'font-semibold' do %>
+                <span class="align-middle"><%= project.name.truncate(19) %></span>
+              <% end %>
+            </td>
+            <td><%=decorated_project.status.humanize %></td>
+            <td><%=decorated_project.plan.humanize %></td>
+            <td class="text-left"><%=decorated_project.total_views %> / <%=decorated_project.total_clicks %></td>
+
+            <td class="text-right">
+
+              <%= render SubscriptionButton::Component.new(project: project, button_classes: '') %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+

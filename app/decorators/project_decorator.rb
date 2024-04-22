@@ -8,9 +8,14 @@ class ProjectDecorator < Draper::Decorator
   end
 
   def total_clicks
-    @total_clicks ||= begin
-      statistic = ProjectStatisticsViewModel.new(model, { actions: [:total_action_statistics] })
-      statistic.total_clicks_count
-    end
+    @total_clicks ||= total_statistics.total_clicks_count
+  end
+
+  def total_views
+    @total_views ||= total_statistics.total_views_count
+  end
+
+  def total_statistics
+    @total_statistics ||= ProjectStatisticsViewModel.new(model, { actions: [:total_action_statistics] })
   end
 end

@@ -1,0 +1,14 @@
+<%
+  button_text = @project.free_plan_suspended? ? 'Activate plan' : 'Subscription'
+  button_text = @project.stripe.subscription.cancel_at.present? ? 'Reactivate' : button_text
+%>
+
+<%=
+  button_to button_text,
+            project_payments_path(@project),
+            method: :post,
+            class: 'btn btn-summer ' + @button_classes,
+            form: {
+              'data-turbo': false,
+            }
+%>

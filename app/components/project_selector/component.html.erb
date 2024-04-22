@@ -11,7 +11,7 @@
     <% @projects.each do |project| %>
       <li>
         <%=
-          link_to project_pages_url(project), class: 'p-1.5 pl-3 hover:bg-gray-100 rounded-xl flex justify-between' do %>
+          link_to project_pages_path(project), class: 'p-1.5 pl-3 hover:bg-gray-100 rounded-xl flex justify-between' do %>
           <span class="align-middle"><%= project.name.truncate(19) %></span>
           <% if @current_project.try(:id) == project.id %>
             <img
