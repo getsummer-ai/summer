@@ -7,6 +7,10 @@ on:
       - main
       - dev
 
+env:
+  MAILER_DEFAULT_FROM: no-reply@getsummer.ai
+  FREE_PLAN_CLICKS_THRESHOLD: 500
+
 jobs:
   rspec:
     runs-on: ubuntu-latest
