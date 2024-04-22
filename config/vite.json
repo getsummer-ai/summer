@@ -1,7 +1,11 @@
 {
   "all": {
     "watchAdditionalPaths": ["app/frontend/libs"],
-    "additionalEntrypoints": ["app/frontend/libs/*.ts", "app/frontend/assets/icons/*"]
+    "additionalEntrypoints": [
+      "app/frontend/libs/*.ts",
+      "app/frontend/assets/icons/*",
+      "app/frontend/assets/images/*"
+    ]
   },
   "production": {
     "publicOutputDir": "dist"
