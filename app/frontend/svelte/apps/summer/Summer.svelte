@@ -99,7 +99,8 @@
 <button
   class="getsummer-btn radius-{settings.appearance.button_radius} theme-{settings.appearance.button_theme}"
   style="opacity: {buttonStyles.opacity};"
-  on:click={onButtonClick}>
+  on:click={onButtonClick}
+>
   {#if loading}
     <span class="loading-icon" />
     Summarizing
@@ -109,17 +110,21 @@
 </button>
 
 {#if showButton}
-  <Modal bind:showModal on:close={closeModal}>
+  <Modal bind:showModal on:close={closeModal} theme={settings.appearance.frame_theme}>
     {@html markdown(summary)}
 
     {#if settings.features.suggestion && services.length > 0}
       {#each services as service}
-        <ProjectProduct {service} pageId={article.page_id} />
+        <ProjectProduct
+          {service}
+          pageId={article.page_id}
+          theme={settings.appearance.frame_theme}
+        />
       {/each}
     {/if}
     <svelte:fragment slot="footer">
       {#if settings.features.subscription === true}
-        <SubscriptionBlock bind:article />
+        <SubscriptionBlock theme={settings.appearance.frame_theme} bind:article />
       {/if}
     </svelte:fragment>
   </Modal>
@@ -148,13 +153,17 @@
     backdrop-filter: blur(4px);
 
     &.theme-white {
-      @apply text-base text-black;
-      border: 1px solid rgba(255, 255, 255, 0.40);
-      background: linear-gradient(123deg, rgba(242, 242, 242, 0.85) 26.16%, rgba(255, 255, 255, 0.85) 75.51%);
+      @apply text-black;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: linear-gradient(
+        123deg,
+        rgba(242, 242, 242, 0.85) 26.16%,
+        rgba(255, 255, 255, 0.85) 75.51%
+      );
     }
 
     &.theme-black {
-      @apply text-base text-white;
+      @apply text-white;
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(0, 0, 0, 0.85);
     }

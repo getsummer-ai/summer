@@ -4,12 +4,12 @@
   const dispatch = createEventDispatcher();
 
   function closeModal() {
-    // () => (showModal = false)
     dispatch('close');
   }
-  export let showModal = false; // boolean
+  export let showModal = false;
+  export let theme = 'light';
 
-  let dialog: HTMLDialogElement; // HTMLDialogElement
+  let dialog: HTMLDialogElement;
 
   $: if (dialog && showModal) dialog.showModal();
 </script>
@@ -19,10 +19,13 @@
   bind:this={dialog}
   on:close={closeModal}
   on:click|self={() => dialog.close()}
+  class="theme-{theme}"
 >
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div class="dialog" on:click|stopPropagation>
-    <button class="close" on:click={() => dialog.close()} tabindex="0"><span class="close__x"></span></button>
+    <button class="close" on:click={() => dialog.close()} tabindex="0"
+      ><span class="close__x" /></button
+    >
     <div class="body">
       <slot />
     </div>
@@ -31,14 +34,16 @@
     </div>
   </div>
 </dialog>
+
 <style lang="scss">
   dialog {
+    $this: &;
     width: 100%;
     max-width: 560px;
     padding: 0;
     border: none;
     border-radius: 16px;
-    background: #FFF;
+
     font-size: 16px;
     line-height: 22px;
     font-style: normal;
@@ -74,12 +79,12 @@
         list-style-type: disc;
         list-style-position: outside;
       }
-      :global(li)  {
+      :global(li) {
         margin: 0 0 8px 0;
         padding: 0;
       }
 
-      :global(p)  {
+      :global(p) {
         margin: 0 0 8px 0;
         padding: 0;
         &:first-child {
@@ -90,10 +95,88 @@
 
     .footer {
       @apply relative z-10 min-h-12;
-      box-shadow: 0px -25px 14px -11px #fff;
-      -webkit-box-shadow: 0px -25px 14px -11px #fff;
-      -moz-box-shadow: 0px -25px 14px -11px #fff;
-      border-top: 1px solid #EFEFEF;
+    }
+
+    .close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      text-align: center;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 50%;
+      transition: background-color 0.1s;
+    }
+    .close:hover {
+      background: #e1e1e1;
+    }
+    .close__x {
+      position: relative;
+      top: 0;
+      left: -0.5px;
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+    }
+    .close__x::before,
+    .close__x::after {
+      position: absolute;
+      width: 1px;
+      height: 10px;
+      content: ' ';
+      background-color: black;
+    }
+    .close__x::before {
+      transform: rotate(-45deg);
+    }
+    .close__x::after {
+      transform: rotate(45deg);
+    }
+    .close:active {
+      top: 11px;
+      right: 11px;
+      width: 26px;
+      height: 26px;
+      background: #e1e1e1;
+    }
+
+    &.theme-white {
+      @apply text-black;
+      background: #fff;
+
+      .footer {
+        box-shadow: 0px -25px 14px -11px #fff;
+        -webkit-box-shadow: 0px -25px 14px -11px #fff;
+        -moz-box-shadow: 0px -25px 14px -11px #fff;
+        border-top: 1px solid #efefef;
+      }
+    }
+
+    &.theme-black {
+      color: #dedede;
+      background: #111;
+
+      .close__x::before,
+      .close__x::after {
+        background-color: white;
+      }
+
+      .close:hover {
+        .close__x::before,
+        .close__x::after {
+          background-color: black;
+        }
+      }
+
+      .footer {
+        box-shadow: 0px -25px 14px -11px #000;
+        -webkit-box-shadow: 0px -25px 14px -11px #000;
+        -moz-box-shadow: 0px -25px 14px -11px #000;
+        border-top: 1px solid #444;
+      }
     }
   }
   dialog::backdrop {
@@ -120,50 +203,5 @@
     to {
       opacity: 1;
     }
-  }
-
-  .close {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    text-align: center;
-    cursor: pointer;
-    background: rgba(0, 0, 0, 0.05);
-    border-radius: 50%;
-    transition: background-color 0.1s;
-  }
-  .close:hover {
-    background: #e1e1e1;
-  }
-  .close__x {
-    position: relative;
-    top: 0;
-    left: -0.5px;
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-  }
-  .close__x::before, .close__x::after {
-    position: absolute;
-    width: 1px;
-    height: 10px;
-    content: " ";
-    background-color: black;
-  }
-  .close__x::before {
-    transform: rotate(-45deg);
-  }
-  .close__x::after {
-    transform: rotate(45deg);
-  }
-  .close:active {
-    top: 11px;
-    right: 11px;
-    width: 26px;
-    height: 26px;
-    background: #e1e1e1;
   }
 </style>

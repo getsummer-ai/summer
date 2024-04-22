@@ -4,8 +4,9 @@
 
   export let service: ProjectProductType;
   export let pageId: string;
+  export let theme: string = 'white';
 
-  const onLinkClick = () => initApi().clickService(pageId, service.uuid)
+  const onLinkClick = () => initApi().clickService(pageId, service.uuid);
 
   const default_image =
     'UklGRu4BAABXRUJQVlA4IOIBAABQDACdASo+AC0APoU4l0elI6IhMrbeYKAQiWoAnTKvOre08kyAEAntg' +
@@ -16,10 +17,10 @@
     '2Rjx+7ZRJ/Xc3OreSBYK02RZ2PeRk/pQd693nLl7zhldpz4lDSZB9tDg5pKjTN5NV4p2H98gYRI0bUoQr' +
     'uYxzpt6zA2v00ooGZDQ27bPeY8eTfw/J5sIMxfxVjCmACIdbsXpVhB0E/pxRy4j+Q3iNqCFcHUiyFIrFMa' +
     '5I6SxrUhPDnrq8FUTtqmmIKs8KQmDY22rv/kKujcH/f5Ga0uTY5g/w9tpXghjN7ex0/3PbEqr4gltm9K2f' +
-    'tzmTtDwo4v78EfmOAAAA=='
+    'tzmTtDwo4v78EfmOAAAA==';
 </script>
 
-<a target="_blank" href={service.link} on:click={onLinkClick}>
+<a target="_blank" class="theme-{theme}" href={service.link} on:click={onLinkClick}>
   <div class="body">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="title">
@@ -31,7 +32,7 @@
     <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M17.208 5.32L12.232 10.296H10.456L14.792 5.944H-0.00799996V4.696H14.824L10.472 0.344H12.248L17.208 5.32Z"
-        fill="black"
+        fill={theme === 'white' ? 'black' : 'white'}
       />
     </svg>
   </div>
@@ -41,15 +42,11 @@
   a {
     font-size: 16px;
     border-radius: 12px;
-    border: 1px solid #e6e6e9;
-    background: #fff;
-    box-shadow: 0 2px 4px 0 #e6e6e9;
     padding: 9px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
-    color: black;
     margin-top: 20px;
     animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 
@@ -70,10 +67,26 @@
     &:not(:first-of-type) {
       margin-top: 10px;
     }
-  }
 
-  a:hover {
-    background-color: #f8f8f8;
+    &.theme-white {
+      background: #fff;
+      color: black;
+      border: 1px solid #e6e6e9;
+      box-shadow: 0 2px 4px 0 #e6e6e9;
+      &:hover {
+        background-color: #f8f8f8;
+      }
+    }
+
+    &.theme-black {
+      background: #1e1f20;
+      color: white;
+      border: 1px solid #222;
+      box-shadow: 0 2px 4px 0 #000;
+      &:hover {
+        background-color: #2e2f30;
+      }
+    }
   }
 
   @keyframes zoom {
