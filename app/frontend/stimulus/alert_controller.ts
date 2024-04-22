@@ -12,7 +12,7 @@ export default class AlertController extends Controller {
   connect() {
     log('AlertController -- connect', this.persistentValue);
     if (!this.persistentValue) {
-      setTimeout(() => this.hideAlert(), 3000)
+      setTimeout(() => this.hideAlert(), 5000)
     }
   }
   hideAlert(e?: PointerEvent) {
