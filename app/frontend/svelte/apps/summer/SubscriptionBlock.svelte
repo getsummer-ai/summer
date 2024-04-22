@@ -12,12 +12,12 @@
 
       if (res.status == 200) {
         email = '';
-        return console.log('success');
+        // return console.log('success');
+        return;
       }
-
-      return console.log('error');
+      // return console.log('error');
     } catch (error) {
-      console.log('error', error);
+      // console.log('error', error);
       return;
     }
   };
