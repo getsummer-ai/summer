@@ -56,7 +56,7 @@ describe 'the Navigation process' do
 
       click_on 'Add product'
 
-      expect(page).to have_content 'Link must be a valid url'
+      expect(page).to have_content 'Link is not a valid URL'
 
       within("#new_project_product") do
         fill_in 'Name', with: 'Test product name'
