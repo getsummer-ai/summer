@@ -17,7 +17,8 @@ module Private
 
     def edit
       return if turbo_frame_request?
-      modal_anchor_to_open = Base64.encode64(project_product_path(@current_project, @project_product))
+      modal_anchor_to_open =
+        Base64.encode64(project_product_path(@current_project, @project_product))
       # @type [ProjectPageDecorator]
       redirect_to knowledge_project_path(anchor: "m=#{modal_anchor_to_open}")
     end
@@ -26,6 +27,7 @@ module Private
       @project_product = ProjectProduct.new(product_params.merge(project: @current_project))
       return render(:new, status: :unprocessable_entity) unless @project_product.save
 
+      ProjectProductLinkScrapeJob.perform_later(@project_product.id)
       flash[:notice] = 'Successfully created'
       respond_to do |format|
         format.html { redirect_to knowledge_project_path }
@@ -37,23 +39,28 @@ module Private
       @project_product.update product_params
       return render(:edit, status: :unprocessable_entity) if @project_product.errors.any?
 
+      if @project_product.link_previously_changed?
+        ProjectProductLinkScrapeJob.perform_later(@project_product.id)
+      end
       respond_to do |format|
         format.html { redirect_to knowledge_project_path, notice: 'Successfully updated' }
-        format.turbo_stream do
-          flash.now[:notice] = 'Successfully updated'
-        end
+        format.turbo_stream { flash.now[:notice] = 'Successfully updated' }
       end
     end
 
     def destroy
       unless @project_product.destroy
-        Rails.logger.error("Error: deleting service (#{@project_product.id}) from project #{@project.id} - " \
-                           + @path_form.errors.full_messages.to_s)
+        Rails.logger.error(
+          "Error: deleting service (#{@project_product.id}) from project #{@project.id} - " +
+            @path_form.errors.full_messages.to_s,
+        )
         return redirect_to(knowledge_project_path, alert: 'Error happened while deleting the path')
       end
 
       respond_to do |format|
-        format.html { redirect_to knowledge_project_path, notice: "#{@project_product.name} was deleted" }
+        format.html do
+          redirect_to knowledge_project_path, notice: "#{@project_product.name} was deleted"
+        end
         format.turbo_stream { flash.now[:notice] = "#{@project_product.name} was deleted" }
       end
     end

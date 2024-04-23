@@ -12,7 +12,6 @@ class ProjectProduct < ApplicationRecord
 
   validates :name, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
 
-
   has_many :statistics, as: :trackable, class_name: 'ProjectStatistic', dependent: :destroy
   has_one :statistics_by_total, class_name: 'ProjectStatisticsByTotal', as: :trackable
 
@@ -21,14 +20,6 @@ class ProjectProduct < ApplicationRecord
   scope :skip_retrieving, ->(*v) { select(column_names.map(&:to_sym) - Array.wrap(v)) }
 
   store :info, accessors: %i[meta], coder: JsonbSerializer
-
-  after_commit :retrieve_url, on: %i[create update], if: :link_previously_changed?
-
-  private
-
-  def retrieve_url
-    ProjectProductLinkScrapeJob.perform_later(id)
-  end
 end
 
 # == Schema Information
