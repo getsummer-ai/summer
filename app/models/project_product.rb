@@ -8,7 +8,7 @@ class ProjectProduct < ApplicationRecord
 
   validates :name, presence: true
   validates :description, presence: true
-  validates :link, domain_url: true, presence: true
+  validates :link, url: true, presence: true
 
   validates :name, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
 
