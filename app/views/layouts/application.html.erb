@@ -3,11 +3,11 @@
 <% body_class = content_for?(:body_class) ? yield(:body_class) : '' %>
 <html class="<%= html_class.strip %>" data-theme="lofi">
   <head>
-    <title>Summer</title>
+    <title>Summer AI | App</title>
+    <meta name="description" content="Transform your blog with AI summary button.">
+    <%= favicon_link_tag vite_asset_path('assets/images/favicon.png') %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
