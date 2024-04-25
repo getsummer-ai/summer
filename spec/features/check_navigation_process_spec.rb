@@ -72,5 +72,64 @@ describe 'the Navigation process' do
         expect(page).to have_content 'Test product name'
       end
     end
+
+    context 'with existing page and article' do
+      include ActionView::RecordIdentifier
+
+      let!(:article) do
+        article = project.articles.create!(
+          article_hash: '123',
+          title: 'Random article title',
+          article: 'Article content',
+          tokens_count: 1000
+        )
+        article
+      end
+      let!(:project_page) do
+        project.pages.create!(url: 'http://localhost.com/new-year', url_hash: '123', project_article_id: article.id)
+      end
+
+      it 'check the pages items on the pages page' do
+        click_on 'Pages'
+        expect(page).to have_content 'Summer will appear on all the pages from your domain link'
+        click_on 'Random article title'
+
+        within(".table.table-page-statistics") do
+          expect(page).to have_no_content 'Summary'
+          expect(page).to have_no_content 'Show'
+        end
+
+        llm_call = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
+        article.update!(summary_status: 'completed', summary_llm_call: llm_call)
+
+        refresh
+
+        within(".table.table-page-statistics") do
+          expect(page).to have_content 'Summary'
+          expect(page).to have_content 'Show'
+        end
+
+        click_on 'Show'
+
+        within("##{dom_id(project_page, :summary)}") do
+          expect(page).to have_content llm_call.output
+        end
+
+        within("#modal") do
+          expect(page).to have_content 'Back'
+          expect(page).to have_button 'Refresh summary'
+          click_on 'Back'
+        end
+
+        within("#modal") do
+          expect(page).to have_button 'Turn off this page'
+          click_on 'Turn off this page'
+        end
+        expect(page).to have_content 'URL was successfully updated'
+
+        click_on 'Dismiss'
+        expect(page).to have_no_content 'Symbols on the page'
+      end
+    end
   end
 end

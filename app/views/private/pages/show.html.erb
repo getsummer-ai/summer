@@ -1,7 +1,7 @@
 <%= turbo_frame_tag "modal" do %>
   <%= render TurboModal::Component.new(title: 'Page', redirect_following: false) do %>
     <div>
-      <% article = @project_page_decorated.article_only_title %>
+      <% article = @project_page_decorated.article %>
       <% if article.title.present? %>
         <label class="label label-summer">Name</label>
         <input
@@ -32,24 +32,26 @@
               <td>Symbols on the page</td>
               <td><%= number_with_delimiter(@project_page_decorated.article_symbols) %></td>
             </tr>
-            <tr>
-              <td>Symbols in summary</td>
-              <td><%= number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
-            </tr>
-            <tr>
-              <td>Summary</td>
-              <td>
-                <%=
-                  link_to 'Show',
-                          summary_project_page_path(@project, @project_page_decorated),
-                          class: 'link',
-                          rel: 'nofollow',
-                          data: {
-                            'turbo-frame': 'modal',
-                          }
-                %>
-              </td>
-            </tr>
+            <% if @project_page_decorated.article.summary_status_completed? %>
+              <tr>
+                <td>Symbols in summary</td>
+                <td><%= number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
+              </tr>
+              <tr>
+                <td>Summary</td>
+                <td>
+                  <%=
+                    link_to 'Show',
+                            summary_project_page_path(@project, @project_page_decorated),
+                            class: 'link',
+                            rel: 'nofollow',
+                            data: {
+                              'turbo-frame': 'modal',
+                            }
+                  %>
+                </td>
+              </tr>
+            <% end %>
           </tbody>
         </table>
       </div>
