@@ -1,0 +1,23 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(
+      title: '',
+      go_back_path: @go_back_path,
+      redirect_following: false,
+      size: 'lg'
+  ) do %>
+    <% title = @project_page_decorated.article_only_title.title.truncate(40) || 'Summary' %>
+    <h3 class="text-lg font-semibold mt-2">
+      <%= link_to title, @project_page_decorated.url, 'target' => '_blank' %>
+    </h3>
+    <div class="summary-html mt-2" id="<%=dom_id(@project_page_decorated, :summary)%>">
+      <%= sanitize @project_page_decorated.summary_html %>
+    </div>
+    <div class="mt-2 text-right">
+      <%= button_to 'Refresh summary',
+            summary_refresh_project_page_path(@current_project, @project_page_decorated),
+            method: :post,
+            class: 'btn btn-summer mt-4'
+      %>
+    </div>
+  <% end %>
+<% end %>

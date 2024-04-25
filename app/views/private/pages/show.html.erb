@@ -4,11 +4,17 @@
       <% article = @project_page_decorated.article_only_title %>
       <% if article.title.present? %>
         <label class="label label-summer">Name</label>
-        <input class="input input-summer w-full cursor-default" value="<%=article.title.truncate(60) || '' %>" />
+        <input
+          class="input input-summer w-full cursor-default"
+          value="<%= article.title.truncate(60) || '' %>"
+        />
         <div class="p-2 bordered rounded-lg border-gray-200"></div>
       <% end %>
       <label class="label label-summer">Link</label>
-      <input class="input input-summer w-full cursor-default" value="<%=@project_page_decorated.url %>" />
+      <input
+        class="input input-summer w-full cursor-default"
+        value="<%= @project_page_decorated.url %>"
+      />
       <h4 class="text-sm font-semibold mt-6">Statistics</h4>
       <div class="mt-2">
         <table class="table table-page-statistics">
@@ -16,30 +22,46 @@
           <tbody>
             <tr>
               <td>Summer shown</td>
-              <td><%=number_with_delimiter(statistic&.views || 0) %></td>
+              <td><%= number_with_delimiter(statistic&.views || 0) %></td>
             </tr>
             <tr>
               <td>Summer clicked</td>
-              <td><%=number_with_delimiter(statistic&.clicks || 0) %></td>
+              <td><%= number_with_delimiter(statistic&.clicks || 0) %></td>
             </tr>
             <tr>
               <td>Symbols on the page</td>
-              <td><%=number_with_delimiter(@project_page_decorated.article_symbols) %></td>
+              <td><%= number_with_delimiter(@project_page_decorated.article_symbols) %></td>
             </tr>
             <tr>
               <td>Symbols in summary</td>
-              <td><%=number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
+              <td><%= number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
+            </tr>
+            <tr>
+              <td>Summary</td>
+              <td>
+                <%=
+                  link_to 'Show',
+                          summary_project_page_path(@project, @project_page_decorated),
+                          class: 'link',
+                          rel: 'nofollow',
+                          data: {
+                            'turbo-frame': 'modal',
+                          }
+                %>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="mt-5 text-center font-bold underline">
-      <%= render ProjectPageComponents::SwitchButtonComponent.new(
-        project: @project,
-        page: @project_page_decorated,
-        is_checkbox: false
-      ) %>
+      <%=
+        render ProjectPageComponents::SwitchButtonComponent.new(
+           project: @project,
+           page: @project_page_decorated,
+           is_checkbox: false,
+         )
+      %>
       <button
         data-action="turbo-modal#closeModal"
         type="button"

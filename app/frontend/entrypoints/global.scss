@@ -186,3 +186,18 @@ pre[class*="language-"] {
   @apply blur-[200px];
   transform: translate3d(0, 0, 0);
 }
+
+
+.summary-html {
+  ul {
+    margin: 0;
+    padding: 0 0 0 15px;
+    list-style-type: disc;
+    list-style-position: outside;
+  }
+
+  li {
+    margin: 0 0 8px 0;
+    padding: 0;
+  }
+}

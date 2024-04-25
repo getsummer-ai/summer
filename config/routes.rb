@@ -30,7 +30,12 @@ Rails.application.routes.draw do
         end
       end
       resources :projects, only: [] do
-        resources :pages, only: %i[index update show]
+        resources :pages, only: %i[index update show] do
+          member do
+            get :summary
+            post 'summary/refresh', action: :summary_refresh
+          end
+        end
         resources :actions, only: %i[index update]
         resources :products, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
