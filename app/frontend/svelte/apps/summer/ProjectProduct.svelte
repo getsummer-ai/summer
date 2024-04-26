@@ -27,40 +27,36 @@
       {service.name}
     </span>
   </div>
-
-  <div class="icon">
-    <svg width="18" height="11" viewBox="0 0 18 11" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M17.208 5.32L12.232 10.296H10.456L14.792 5.944H-0.00799996V4.696H14.824L10.472 0.344H12.248L17.208 5.32Z"
-        fill={theme === 'white' ? 'black' : 'white'}
-      />
-    </svg>
-  </div>
 </a>
 
 <style lang="scss">
   a {
-    font-size: 16px;
-    border-radius: 12px;
-    padding: 9px 12px;
+    font-size: 15px;
+    line-height: 22px;
+    font-weight: 500;
+    border-radius: 16px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
     margin-top: 20px;
+    letter-spacing: normal;
     animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     .body {
       @apply flex justify-between items-center;
+      max-height: 44px;
+      overflow: hidden;
 
       img {
         width: auto;
-        max-height: 45px;
-        border-radius: 4px;
+        max-height: 40px;
+        border-radius: 8px;
       }
 
       .title {
-        @apply ml-5;
+        @apply ml-4;
       }
     }
 
@@ -69,22 +65,18 @@
     }
 
     &.theme-white {
-      background: #fff;
-      color: black;
-      border: 1px solid #e6e6e9;
-      box-shadow: 0 2px 4px 0 #e6e6e9;
+      background: #EFF2F4;
+      color: #1B1B1B;
       &:hover {
-        background-color: #f8f8f8;
+        background: #EDF0F2;
       }
     }
 
     &.theme-black {
-      background: #1e1f20;
+      background: rgba(255, 255, 255, 0.10);
       color: white;
-      border: 1px solid #222;
-      box-shadow: 0 2px 4px 0 #000;
       &:hover {
-        background-color: #2e2f30;
+        background: rgba(255, 255, 255, 0.12);
       }
     }
   }

@@ -38,7 +38,6 @@ RSpec.describe Api::V1::ButtonController do
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
             appearance: {
-              button_radius: 'xl',
               button_theme: 'black',
               frame_theme: 'white',
             },
@@ -72,7 +71,6 @@ RSpec.describe Api::V1::ButtonController do
           path: be_a(String).and(include('/libs/app.umd.js')),
           settings: {
             appearance: {
-              button_radius: 'xl',
               button_theme: 'black',
               frame_theme: 'white',
             },
