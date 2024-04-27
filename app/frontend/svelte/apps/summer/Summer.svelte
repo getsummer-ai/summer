@@ -29,7 +29,7 @@
   function getButtonStyles(width = 109): { width: string, left: number } {
     return {
       width: width === 0 ? 'auto' : `${width}px`,
-      left: (width === 0 ? 145.3 : width) / 2,
+      left: (width === 0 ? 146.3 : width) / 2,
     };
   }
 
@@ -37,7 +37,7 @@
     setTimeout(() => {
       showModal = true;
       resolve();
-      buttonStyles = getButtonStyles(86.5)
+      buttonStyles = getButtonStyles(87.5)
     }, delay);
   });
 
@@ -63,7 +63,7 @@
           isSummaryCompleted = true;
           retrieveProducts();
         });
-        buttonStyles = getButtonStyles(145.3);
+        buttonStyles = getButtonStyles(146.3);
         await openModal(500);
       } catch (error) {
         // console.log(error);

@@ -22,13 +22,27 @@
     class="dialog-overlay"
     on:click|self={() => closeModal()}
   />
-  <div class="dialog theme-{theme} {showModal ? 'shown' : 'hidden'}">
-    <h1> {title} </h1>
-    <div class="body">
-      <slot />
-    </div>
-    <div class="footer">
-      <slot name="footer" />
+  <div class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
+    <div class="dialog-body-wrapper">
+      <div class="dialog-body">
+        <h1> {title} </h1>
+        <div class="content">
+          <slot />
+        </div>
+        <div class="footer">
+          <slot name="footer" />
+          <div class="powered-by">
+            <a href="https://getsummer.ai" target="_blank">
+              <span>Powered by</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
+                <circle cx="6.5" cy="6" r="6" fill="#FECF29"/>
+              </svg>
+              <span>Summer</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-blur"></div>
     </div>
   </div>
 </div>
@@ -56,22 +70,43 @@
     }
   }
 
-  .dialog {
+  .dialog-modal {
     width: 100%;
     border-radius: 16px;
-    font-size: 20px;
-    line-height: 30px;
-    font-style: normal;
-    font-weight: 500;
     position: fixed;
     max-height: 80vh;
     top: 10vh;
     left: calc(50vw - 240px);
-    overflow-y: auto;
     max-width: 480px;
     height: 480px;
-    padding: 0 32px;
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+
+    .dialog-body-wrapper {
+      position: relative;
+      height: 100%;
+      .dialog-body {
+        font-size: 20px;
+        line-height: 30px;
+        font-weight: 500;
+        padding: 0 32px;
+        height: 100%;
+        overflow-y: auto;
+      }
+
+      .scroll-blur {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 80px;
+        background: transparent;
+        left: 0;
+        bottom: 0;
+        pointer-events: none;
+        background-size: 100% 80px;
+        z-index: 101;
+      }
+    }
 
     &.hidden {
       display: none;
@@ -95,13 +130,11 @@
       padding: 32px 0 16px;
       margin: 0;
       font-size: 12px;
-      font-style: normal;
       font-weight: 500;
       line-height: 16px;
     }
 
-    .body {
-      padding: 0 0 32px;
+    .content {
       letter-spacing: -0.2px;
 
       :global(ul) {
@@ -126,21 +159,37 @@
 
     .footer {
       @apply relative z-10 min-h-12;
+      margin-top: 48px;
+      .powered-by {
+        text-align: center;
+        font-size: 10px;
+        line-height: 16px;
+        font-weight: 600;
+        padding: 48px 0 40px;
+        a {
+          text-decoration: none;
+
+          svg {
+            vertical-align: text-bottom;
+          }
+        }
+      }
     }
 
     &.theme-white {
-      @apply text-black;
+      color: rgba(27, 27, 27, 0.90);
       background: #fff;
+
+      .scroll-blur {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 100%);
+      }
+
+      a {
+        color: #1b1b1b;
+      }
 
       h1 {
         color: rgba(27, 27, 27, 0.60);
-      }
-
-      .footer {
-        box-shadow: 0px -25px 14px -11px #fff;
-        -webkit-box-shadow: 0px -25px 14px -11px #fff;
-        -moz-box-shadow: 0px -25px 14px -11px #fff;
-        border-top: 1px solid #efefef;
       }
     }
 
@@ -148,15 +197,16 @@
       color: rgba(255, 255, 255, 0.80);
       background: #242424;
 
-      h1 {
-        color: rgba(255, 255, 255, 0.40);
+      .scroll-blur {
+        background: linear-gradient(180deg, rgba(36, 36, 36, 0.00) 0%, #242424 100%);
       }
 
-      .footer {
-        box-shadow: 0px -25px 14px -11px #000;
-        -webkit-box-shadow: 0px -25px 14px -11px #000;
-        -moz-box-shadow: 0px -25px 14px -11px #000;
-        border-top: 1px solid #444;
+      a {
+        color: #fff;
+      }
+
+      h1 {
+        color: rgba(255, 255, 255, 0.40);
       }
     }
   }
