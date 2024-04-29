@@ -72,6 +72,7 @@
 
 <style lang="scss">
   .dialog-container {
+    z-index: 999;
     width: 100%;
     @keyframes fade {
       from {
@@ -132,7 +133,7 @@
         width: 100%;
         left: 0;
         background: transparent;
-        z-index: 999;
+        pointer-events: none;
 
         &.up {
           top: 0;
