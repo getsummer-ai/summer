@@ -8,13 +8,20 @@ export default defineConfig({
     tsconfigPaths(),
     svelte({
       emitCss: false,
-      preprocess: [vitePreprocess()]
+      preprocess: [vitePreprocess()],
+      compilerOptions: {
+        cssHash: ({ hash, css }) => `gs-${hash(css)}`
+      }
     }),
   ],
+  define: {
+    'process.env': { NODE_ENV: 'production' }
+  },
   build: {
     emptyOutDir: false,
     copyPublicDir: false,
     minify: true,
+    // cssMinify: 'lightningcss',
     lib: {
       formats: ['umd'],
       entry: resolve(__dirname, 'app/frontend/libs/summer.ts'),
@@ -27,5 +34,6 @@ export default defineConfig({
         inlineDynamicImports: true
       }
     },
-  }
+  },
+  esbuild: { legalComments: 'none' },
 });
