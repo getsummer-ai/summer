@@ -1,5 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { lock, unlock } from 'tua-body-scroll-lock';
+  import { onMount } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -10,10 +12,22 @@
   export let theme = 'light';
   export let title = '';
 
-  let dialog: HTMLDialogElement;
+  let dialog: HTMLElement;
 
-  $: if (dialog && showModal) dialog.showModal();
+  $: onChange(showModal, dialog);
+
+  const onChange = (modalShown, dialogHtml) => {
+    if (modalShown && dialogHtml) return lock(dialogHtml);
+    if (modalShown && !dialogHtml) return unlock(dialogHtml);
+    unlock(dialogHtml);
+  };
+
+  onMount(() => {
+    if (showModal) return lock(dialog);
+    unlock(dialog);
+  });
 </script>
+
 <div class="dialog-container">
   <div
     aria-hidden="true"
@@ -22,10 +36,13 @@
     class="dialog-overlay"
     on:click|self={() => closeModal()}
   />
-  <div class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
+  <div bind:this={dialog} class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
     <div class="dialog-body-wrapper">
+      <div class="scroll-blur up">
+        <div aria-hidden="true" class="close-bar" on:touchstart|self={closeModal}><span /></div>
+      </div>
       <div class="dialog-body">
-        <h1> {title} </h1>
+        <h1>{title}</h1>
         <div class="content">
           <slot />
         </div>
@@ -34,15 +51,21 @@
           <div class="powered-by">
             <a href="https://getsummer.ai" target="_blank">
               <span>Powered by</span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">
-                <circle cx="6.5" cy="6" r="6" fill="#FECF29"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="13"
+                height="12"
+                viewBox="0 0 13 12"
+                fill="none"
+              >
+                <circle cx="6.5" cy="6" r="6" fill="#FECF29" />
               </svg>
               <span>Summer</span>
             </a>
           </div>
         </div>
       </div>
-      <div class="scroll-blur"></div>
+      <div class="scroll-blur down" />
     </div>
   </div>
 </div>
@@ -85,38 +108,80 @@
     .dialog-body-wrapper {
       position: relative;
       height: 100%;
+      @media (max-width: 640px) {
+        padding-top: 20px;
+      }
+
       .dialog-body {
         font-size: 20px;
         line-height: 30px;
         font-weight: 500;
         padding: 0 32px;
         height: 100%;
-        overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        overflow-y: scroll;
+        ::-webkit-scrollbar {
+          display: none; /* for Chrome, Safari, and Opera */
+        }
       }
 
       .scroll-blur {
         content: '';
         position: absolute;
         width: 100%;
-        height: 80px;
-        background: transparent;
         left: 0;
-        bottom: 0;
-        pointer-events: none;
-        background-size: 100% 80px;
-        z-index: 101;
+        background: transparent;
+        z-index: 999;
+
+        &.up {
+          top: 0;
+          height: 40px;
+          background-size: 100% 40px;
+          @media (max-width: 640px) {
+            height: 60px;
+            background-size: 100% 60px;
+          }
+        }
+
+        &.down {
+          bottom: 0;
+          height: 80px;
+          background-size: 100% 80px;
+          @media (max-width: 640px) {
+            height: 60px;
+            background-size: 100% 60px;
+          }
+        }
+
+        .close-bar {
+          display: none;
+          @media (max-width: 640px) {
+            padding-top:8px;
+            height: 20px;
+            display: block;
+          }
+
+          span {
+            display: block;
+            margin: 0 auto;
+            width: 56px;
+            height: 4px;
+            border-radius: 100px;
+          }
+        }
       }
     }
 
     &.hidden {
       display: none;
       animation: modal-out 0.2s;
-      @media (max-width: 480px) {
+      @media (max-width: 640px) {
         animation: slide-down 0.3s ease-in-out;
       }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 640px) {
       top: 20vh;
       left: 0;
       height: 80vh;
@@ -132,6 +197,10 @@
       font-size: 12px;
       font-weight: 500;
       line-height: 16px;
+
+      @media (max-width: 640px) {
+        padding-top: 12px;
+      }
     }
 
     .content {
@@ -177,11 +246,21 @@
     }
 
     &.theme-white {
-      color: rgba(27, 27, 27, 0.90);
+      color: rgba(27, 27, 27, 0.9);
       background: #fff;
 
+      .close-bar {
+        span {
+          background: #eff2f4;
+        }
+      }
+
       .scroll-blur {
-        background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 100%);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);
+
+        &.up {
+          background: linear-gradient(180deg, #fff 20%, rgba(255, 255, 255, 0) 100%);
+        }
       }
 
       a {
@@ -189,16 +268,26 @@
       }
 
       h1 {
-        color: rgba(27, 27, 27, 0.60);
+        color: rgba(27, 27, 27, 0.6);
       }
     }
 
     &.theme-black {
-      color: rgba(255, 255, 255, 0.80);
+      color: rgba(255, 255, 255, 0.8);
       background: #242424;
 
+      .close-bar {
+        span {
+          background: #323232;
+        }
+      }
+
       .scroll-blur {
-        background: linear-gradient(180deg, rgba(36, 36, 36, 0.00) 0%, #242424 100%);
+        background: linear-gradient(180deg, rgba(36, 36, 36, 0) 0%, #242424 100%);
+
+        &.up {
+          background: linear-gradient(180deg, #242424 0%, rgba(36, 36, 36, 0) 100%);
+        }
       }
 
       a {
@@ -206,7 +295,7 @@
       }
 
       h1 {
-        color: rgba(255, 255, 255, 0.40);
+        color: rgba(255, 255, 255, 0.4);
       }
     }
   }
@@ -260,5 +349,4 @@
       height: 60vh;
     }
   }
-
 </style>

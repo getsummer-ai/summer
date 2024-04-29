@@ -28,6 +28,7 @@
     "notivue": "^2.1.1",
     "pinia": "^2.1.7",
     "stimulus-use": "^0.52.2",
+    "tua-body-scroll-lock": "^1.5.0",
     "vue": "^3.4.14",
     "vue-query": "^1.26.0",
     "vue-router": "^4.2.5",

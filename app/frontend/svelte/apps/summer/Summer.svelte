@@ -99,7 +99,7 @@
 </svelte:head>
 
 <button
-  class="getsummer-btn theme-{settings.appearance.button_theme}"
+  class="getsummer-btn theme-{settings.appearance.button_theme} {showModal ? 'active' : ''}"
   on:click={onButtonClick} style="--summer-button-width: {buttonStyles.left + 'px'}; width: {buttonStyles.width}"
 >
   {#if showModal}
@@ -176,7 +176,13 @@
     backdrop-filter: blur(4px);
     transition: width 0.3s;
     animation: smooth-appear 400ms ease-in-out;
-    z-index: 101;
+    z-index: 999;
+
+    &.active {
+      @media (max-width: 640px) {
+        display: none;
+      }
+    }
 
     .icon {
       @apply ml-[-9px] mr-1;
