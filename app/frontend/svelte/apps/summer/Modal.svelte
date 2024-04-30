@@ -6,11 +6,19 @@
   const dispatch = createEventDispatcher();
 
   function closeModal() {
+    startTouchY = 0;
+    endTouchY = 0;
     dispatch('close');
+    setTimeout(() => {
+      dialog.style.removeProperty('top')
+      dialog.style.removeProperty('max-height')
+    }, 300);
   }
   export let showModal = false;
   export let theme = 'light';
   export let title = '';
+  let startTouchY = 0;
+  let endTouchY = 0;
 
   let dialog: HTMLElement;
 
@@ -22,10 +30,30 @@
     unlock(dialogHtml);
   };
 
-  onMount(() => {
-    if (showModal) return lock(dialog);
-    unlock(dialog);
-  });
+  const startTouch = (event) => { startTouchY = event.touches[0].clientY };
+
+  const endTouch = () => {
+    if (endTouchY - startTouchY > 80) return closeModal();
+    setHeightToDialog();
+  };
+
+  const setHeightToDialog = (start = 0, end = 0) => {
+    const top = `20vh + ${end - start}px`
+    dialog.style.top = `calc(${top})`;
+    dialog.style.maxHeight = `calc(100vh - (${top}))`;
+  }
+
+  const moveTouch = (event) => {
+    if (startTouchY === 0) return;
+    endTouchY = event.touches[0].clientY;
+
+    if (endTouchY <= startTouchY) return setHeightToDialog();
+
+    setHeightToDialog(startTouchY, endTouchY);
+    if (endTouchY > startTouchY + 120) return closeModal();
+  };
+
+  onMount(() => showModal ? lock(dialog) : unlock(dialog));
 </script>
 
 <div class="dialog-container">
@@ -38,8 +66,15 @@
   />
   <div bind:this={dialog} class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
     <div class="dialog-body-wrapper">
-      <div class="scroll-blur up">
-        <div aria-hidden="true" class="close-bar" on:touchstart|self={closeModal}><span /></div>
+      <div
+        class="scroll-blur up"
+        on:touchmove={moveTouch}
+        on:touchstart={startTouch}
+        on:touchend={endTouch}
+      >
+        <div aria-hidden="true" class="close-bar">
+          <span />
+        </div>
       </div>
       <div class="dialog-body">
         <h1>{title}</h1>
@@ -105,6 +140,7 @@
     height: 480px;
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
+    //transition: top 0.1s, max-height 0.1s;
 
     .dialog-body-wrapper {
       position: relative;
@@ -142,6 +178,7 @@
           @media (max-width: 640px) {
             height: 60px;
             background-size: 100% 60px;
+            pointer-events: auto;
           }
         }
 
@@ -158,7 +195,7 @@
         .close-bar {
           display: none;
           @media (max-width: 640px) {
-            padding-top:8px;
+            padding-top: 8px;
             height: 20px;
             display: block;
           }
@@ -340,14 +377,12 @@
     from {
       display: block;
       opacity: 1;
-      top: 20vh;
-      height: 80vh;
     }
     to {
       opacity: 0;
       display: none;
-      top: 40vh;
-      height: 60vh;
+      top: 70vh;
+      height: 30vh;
     }
   }
 </style>
