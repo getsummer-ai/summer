@@ -7,7 +7,7 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      BUTTON_VERSION = '0.1.3-beta'
+      BUTTON_VERSION = '0.1.4-beta'
 
       def settings
         @app_path =
