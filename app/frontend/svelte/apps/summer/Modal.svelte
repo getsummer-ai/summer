@@ -35,12 +35,14 @@
 
       if (!isLocked) {
         isLocked = true;
-        return lock(dialogBody);
+        lock(dialogBody);
       }
+      return;
     }
 
     if (isLocked === false) return;
 
+    console.log('unlocking');
     isLocked = false;
     setTimeout(() => unlock(dialogBody), 200);
   };
