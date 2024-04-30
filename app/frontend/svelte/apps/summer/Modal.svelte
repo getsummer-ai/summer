@@ -4,6 +4,17 @@
   import { onMount } from 'svelte';
 
   const dispatch = createEventDispatcher();
+  export let showModal = false;
+  export let theme = 'light';
+  export let title = '';
+  let startTouchY = 0;
+  let endTouchY = 0;
+  let isLocked = false;
+
+  let dialog: HTMLElement;
+  let dialogBody: HTMLElement;
+
+  $: onChange(showModal, dialog);
 
   function closeModal() {
     startTouchY = 0;
@@ -14,20 +25,24 @@
       dialog.style.removeProperty('max-height')
     }, 300);
   }
-  export let showModal = false;
-  export let theme = 'light';
-  export let title = '';
-  let startTouchY = 0;
-  let endTouchY = 0;
-
-  let dialog: HTMLElement;
-
-  $: onChange(showModal, dialog);
 
   const onChange = (modalShown, dialogHtml) => {
-    if (modalShown && dialogHtml) return lock(dialogHtml);
-    if (modalShown && !dialogHtml) return unlock(dialogHtml);
-    unlock(dialogHtml);
+    if (modalShown) {
+      if (!dialogHtml) {
+        isLocked = false;
+        return unlock(dialogBody);
+      }
+
+      if (!isLocked) {
+        isLocked = true;
+        return lock(dialogBody);
+      }
+    }
+
+    if (isLocked === false) return;
+
+    isLocked = false;
+    setTimeout(() => unlock(dialogBody), 200);
   };
 
   const startTouch = (event) => { startTouchY = event.touches[0].clientY };
@@ -63,6 +78,9 @@
     ref="overlay"
     class="dialog-overlay"
     on:click|self={() => closeModal()}
+    on:touchmove={moveTouch}
+    on:touchstart={startTouch}
+    on:touchend={endTouch}
   />
   <div bind:this={dialog} class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
     <div class="dialog-body-wrapper">
@@ -76,7 +94,7 @@
           <span />
         </div>
       </div>
-      <div class="dialog-body">
+      <div class="dialog-body" bind:this={dialogBody}>
         <h1>{title}</h1>
         <div class="content">
           <slot />
@@ -215,7 +233,7 @@
       display: none;
       animation: modal-out 0.2s;
       @media (max-width: 640px) {
-        animation: slide-down 0.3s ease-in-out;
+        animation: slide-down 0.3s normal;
       }
     }
 
@@ -379,10 +397,10 @@
       opacity: 1;
     }
     to {
-      opacity: 0;
+      opacity: 0.5;
       display: none;
-      top: 70vh;
-      height: 30vh;
+      top: 100vh;
+      height: 0;
     }
   }
 </style>
