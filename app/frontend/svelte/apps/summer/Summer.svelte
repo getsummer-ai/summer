@@ -118,6 +118,12 @@
 
 {#if showButton}
   <Modal bind:showModal on:close={closeModal} bind:title={article.title} theme={settings.appearance.frame_theme}>
+    {#if summary.length === 0}
+      <div class="loading-block">
+        <span class="loading-icon" />
+      </div>
+    {/if}
+
     {@html markdown(summary)}
 
     {#if settings.features.suggestion && services.length > 0}
@@ -130,7 +136,7 @@
       {/each}
     {/if}
     <svelte:fragment slot="footer">
-      {#if settings.features.subscription === true}
+      {#if summary.length && settings.features.subscription === true}
         <SubscriptionBlock theme={settings.appearance.frame_theme} bind:article />
       {/if}
     </svelte:fragment>
@@ -203,10 +209,19 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
       background: rgba(0, 0, 0, 0.85);
     }
+  }
+
+  .loading-icon {
+    @apply loading loading-spinner loading-sm align-text-bottom mr-1 opacity-80;
+  }
+
+  .loading-block {
+    @apply text-center;
+    margin: 100px 0;
+    opacity: 0.2;
 
     .loading-icon {
-      @apply loading loading-spinner loading-sm align-text-bottom mr-1;
+      @apply loading-lg;
     }
-
   }
 </style>

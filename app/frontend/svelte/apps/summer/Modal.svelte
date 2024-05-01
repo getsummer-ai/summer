@@ -20,10 +20,7 @@
     startTouchY = 0;
     endTouchY = 0;
     dispatch('close');
-    setTimeout(() => {
-      dialog.style.removeProperty('top')
-      dialog.style.removeProperty('max-height')
-    }, 300);
+    setTimeout(() => { dialog.style.removeProperty('height') }, 300);
   }
 
   const onChange = (modalShown, dialogHtml) => {
@@ -41,37 +38,44 @@
     }
 
     if (isLocked === false) return;
-
-    console.log('unlocking');
     isLocked = false;
     setTimeout(() => unlock(dialogBody), 200);
   };
 
-  const startTouch = (event) => { startTouchY = event.touches[0].clientY };
+  const startTouch = (event) => { startTouchY = event.touches[0].pageY };
 
   const endTouch = () => {
-    if (endTouchY - startTouchY > 80) return closeModal();
+    if (!showModal) return;
+    if (endTouchY - startTouchY > 120) return closeModal()
     setHeightToDialog();
   };
 
   const setHeightToDialog = (start = 0, end = 0) => {
-    const top = `20vh + ${end - start}px`
-    dialog.style.top = `calc(${top})`;
-    dialog.style.maxHeight = `calc(100vh - (${top}))`;
+    dialog.style.height = `calc(var(--vh, 1vh) * 80 - ${end - start}px)`;
   }
 
   const moveTouch = (event) => {
+    event.preventDefault();
     if (startTouchY === 0) return;
-    endTouchY = event.touches[0].clientY;
 
+    endTouchY = event.touches[0].pageY;
     if (endTouchY <= startTouchY) return setHeightToDialog();
 
     setHeightToDialog(startTouchY, endTouchY);
-    if (endTouchY > startTouchY + 120) return closeModal();
+    if (endTouchY > startTouchY + 220) return closeModal();
   };
 
-  onMount(() => showModal ? lock(dialog) : unlock(dialog));
+  onMount(() => {
+    setVh();
+    showModal ? lock(dialog) : unlock(dialog)
+  });
+
+  const setVh = () => {
+    if (dialog) dialog.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+  }
 </script>
+
+<svelte:window on:keydown|window={(e) => e.key === 'Escape' && closeModal()} on:resize={setVh} />
 
 <div class="dialog-container">
   <div
@@ -160,7 +164,7 @@
     height: 480px;
     animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
-    //transition: top 0.1s, max-height 0.1s;
+    transition: height 0.05s;
 
     .dialog-body-wrapper {
       position: relative;
@@ -240,9 +244,10 @@
     }
 
     @media (max-width: 640px) {
-      top: 20vh;
+      top: auto;
+      bottom: 0;
       left: 0;
-      height: 80vh;
+      height: calc(var(--vh, 1vh) * 80);
       width: 100%;
       max-width: 100%;
       border-radius: 16px 16px 0 0;
@@ -383,13 +388,11 @@
   @keyframes slide-top {
     from {
       opacity: 0;
-      top: 50vh;
-      height: 50vh;
+      height: calc(var(--vh, 1vh) * 50);
     }
     to {
       opacity: 1;
-      top: 20vh;
-      height: 80vh;
+      height: calc(var(--vh, 1vh) * 80);
     }
   }
 
@@ -401,7 +404,6 @@
     to {
       opacity: 0.5;
       display: none;
-      top: 100vh;
       height: 0;
     }
   }
