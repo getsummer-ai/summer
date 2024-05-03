@@ -9,7 +9,8 @@
   export let title = '';
   let startTouchY = 0;
   let endTouchY = 0;
-  let isLocked = false;
+  let isScrollLocked = false;
+  let hidden = true;
 
   let dialog: HTMLElement;
   let dialogBody: HTMLElement;
@@ -20,39 +21,48 @@
     startTouchY = 0;
     endTouchY = 0;
     dispatch('close');
-    setTimeout(() => { dialog.style.removeProperty('height') }, 300);
+    setTimeout(() => {
+      dialog.style.removeProperty('height');
+    }, 300);
   }
 
   const onChange = (modalShown, dialogHtml) => {
     if (modalShown) {
       if (!dialogHtml) {
-        isLocked = false;
+        isScrollLocked = false;
+        hidden = true;
         return unlock(dialogBody);
       }
 
-      if (!isLocked) {
-        isLocked = true;
+      if (!isScrollLocked) {
+        isScrollLocked = true;
+        hidden = false;
         lock(dialogBody);
       }
       return;
     }
 
-    if (isLocked === false) return;
-    isLocked = false;
-    setTimeout(() => unlock(dialogBody), 200);
+    if (isScrollLocked === false) return;
+    isScrollLocked = false;
+    setTimeout(() => {
+      hidden = true;
+      unlock(dialogBody);
+    }, 200);
   };
 
-  const startTouch = (event) => { startTouchY = event.touches[0].pageY };
+  const startTouch = (event) => {
+    startTouchY = event.touches[0].pageY;
+  };
 
   const endTouch = () => {
     if (!showModal) return;
-    if (endTouchY - startTouchY > 120) return closeModal()
+    if (endTouchY - startTouchY > 120) return closeModal();
     setHeightToDialog();
   };
 
   const setHeightToDialog = (start = 0, end = 0) => {
     dialog.style.height = `calc(var(--vh, 1vh) * 80 - ${end - start}px)`;
-  }
+  };
 
   const moveTouch = (event) => {
     event.preventDefault();
@@ -67,12 +77,12 @@
 
   onMount(() => {
     setVh();
-    showModal ? lock(dialog) : unlock(dialog)
+    showModal ? lock(dialog) : unlock(dialog);
   });
 
   const setVh = () => {
     if (dialog) dialog.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-  }
+  };
 </script>
 
 <svelte:window on:keydown|window={(e) => e.key === 'Escape' && closeModal()} on:resize={setVh} />
@@ -88,7 +98,10 @@
     on:touchstart={startTouch}
     on:touchend={endTouch}
   />
-  <div bind:this={dialog} class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hidden'}">
+  <div
+    bind:this={dialog}
+    class="dialog-modal theme-{theme} {showModal ? 'shown' : 'hide-animation'} {hidden ? 'hidden' : ''}"
+  >
     <div class="dialog-body-wrapper">
       <div
         class="scroll-blur up"
@@ -235,12 +248,15 @@
       }
     }
 
-    &.hidden {
-      display: none;
+    &.hide-animation {
       animation: modal-out 0.2s;
       @media (max-width: 640px) {
         animation: slide-down 0.3s normal;
       }
+    }
+
+    &.hidden {
+      display: none;
     }
 
     @media (max-width: 640px) {
