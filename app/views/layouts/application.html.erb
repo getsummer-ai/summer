@@ -6,6 +6,7 @@
     <title>Summer</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= render 'layouts/shared/google_tag_head' %>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,6 +22,7 @@
     <%= vite_typescript_tag 'application' %>
   </head>
   <body class="<%= body_class.strip %>">
+    <%= render 'layouts/shared/google_tag_body' %>
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>
