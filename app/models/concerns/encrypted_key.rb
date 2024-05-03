@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module EncryptedKey
+  extend ActiveSupport::Concern
+
+  included do
+    def self.decrypt_id(id) = BasicEncrypting.decode(id)
+  end
+
   def to_param
     encrypted_id
   end

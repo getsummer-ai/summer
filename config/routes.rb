@@ -19,8 +19,8 @@ Rails.application.routes.draw do
 
     root 'private/app#index'
 
-    scope '/app', module: 'private' do
-      get '/', to: 'app#index', as: 'user_app'
+    scope '/', module: 'private' do
+      get 'app/(:id)', to: 'app#index', as: 'user_app'
       resources :projects, param: :project_id, only: [:new, :create, :destroy] do
         member do
           get :setup
