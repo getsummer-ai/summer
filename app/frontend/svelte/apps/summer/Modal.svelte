@@ -249,7 +249,7 @@
     }
 
     &.hide-animation {
-      animation: modal-out 0.2s;
+      animation: modal-out 0.3s;
       @media (max-width: 640px) {
         animation: slide-down 0.3s normal;
       }
@@ -307,7 +307,6 @@
 
     .footer {
       @apply relative z-10 min-h-12;
-      margin-top: 48px;
       .powered-by {
         text-align: center;
         font-size: 10px;

@@ -21,7 +21,7 @@
   };
 </script>
 
-<div class="theme-{theme}">
+<div class="subscription theme-{theme}">
   <div>
     Subscribe on weekly summaries:
   </div>
@@ -32,10 +32,11 @@
 </div>
 
 <style lang="scss">
-  div {
+  .subscription {
     font-size: 15px;
     font-weight: 500;
     line-height: 22px;
+    margin-top: 48px;
 
     .wrapper {
       @apply flex justify-between;
