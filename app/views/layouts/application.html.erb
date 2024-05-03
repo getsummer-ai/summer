@@ -8,6 +8,7 @@
     <%= favicon_link_tag vite_asset_path('assets/images/favicon.png') %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= render 'layouts/shared/google_tag_head' %>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
       rel="stylesheet"
@@ -21,6 +22,7 @@
     <%= vite_typescript_tag 'application' %>
   </head>
   <body class="<%= body_class.strip %>">
+    <%= render 'layouts/shared/google_tag_body' %>
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>
