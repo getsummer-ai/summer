@@ -104,7 +104,7 @@ describe 'the Navigation process' do
 
         refresh
 
-        # expect(page).to have_content 'Summer will appear on all the pages from your domain link'
+        expect(page).to have_field(with: article.title, wait: 3)
 
         within_table("table-page-statistics") do
           expect(page).to have_content 'Summary'
