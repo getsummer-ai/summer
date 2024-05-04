@@ -1,4 +1,5 @@
 require "active_support/core_ext/integer/time"
+require Rails.root.join("app/lib/redis_factory")
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
@@ -74,6 +75,15 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
+
+  config.cache_store =
+    :redis_cache_store,
+    {
+    redis: RedisFactory.new(db: 1),
+      error_handler: ->(method:, returning:, exception:) do
+        Sentry.capture_exception exception, level: 'warning', tags: { method:, returning: }
+      end,
+    }
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   # config.active_job.queue_adapter     = :resque
