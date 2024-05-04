@@ -56,6 +56,8 @@ Rails.application.routes.draw do
     end
   end
 
+  get 'health-check', to: ->(_env) { [200, {}, ['OK']] }
+
   namespace :api do
     namespace :v1 do
       get 'button/settings', to: 'button#settings'
