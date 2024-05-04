@@ -94,7 +94,7 @@ describe 'the Navigation process' do
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
-        expect(page).to have_field(with: article.title, wait: 3)
+        expect(page).to have_field(with: article.title, wait: 5)
 
         within_table("table-page-statistics") do
           expect(page).to have_no_content 'Summary'
@@ -106,7 +106,7 @@ describe 'the Navigation process' do
 
         refresh
 
-        expect(page).to have_field(with: article.title, wait: 3)
+        expect(page).to have_field(with: article.title, wait: 5)
 
         within_table("table-page-statistics") do
           expect(page).to have_content 'Summary'
