@@ -51,6 +51,7 @@ gem 'omniauth'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 gem 'pagy', '~> 7.0'
+gem 'rack-attack'
 gem 'rack-cors'
 
 gem "avo", ">= 3.4.0"
