@@ -79,7 +79,7 @@ Rails.application.configure do
   config.cache_store =
     :redis_cache_store,
     {
-      url: RedisFactory.new(db: 1),
+    redis: RedisFactory.new(db: 1),
       error_handler: ->(method:, returning:, exception:) do
         Sentry.capture_exception exception, level: 'warning', tags: { method:, returning: }
       end,
