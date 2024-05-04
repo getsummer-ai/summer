@@ -22,7 +22,6 @@
     <%= vite_typescript_tag 'application' %>
   </head>
   <body class="<%= body_class.strip %>">
-    <%= render 'layouts/shared/google_tag_body' %>
     <%= content_for?(:content) ? yield(:content) : yield %>
   </body>
 </html>
