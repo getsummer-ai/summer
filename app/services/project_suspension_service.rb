@@ -8,7 +8,7 @@ class ProjectSuspensionService
 
   def actualize_status
     return actualize_free_plan_status if @project.free_plan?
-    @project.update!(status: 'active') if @project.paid_plan?
+    @project.update!(status: 'active')
   end
 
   private

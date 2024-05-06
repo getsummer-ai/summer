@@ -18,26 +18,42 @@ class ProjectStripeService
     @user = user
   end
 
-  # @param success_url [String]
-  # @param cancel_url [String]
-  # @param return_url [String]
-  # @return [Stripe::Checkout::Session]
-  def create_session(success_url:, cancel_url:, return_url:)
-    return create_custom_portal_session(return_url) if project.paid_plan? || project.stripe&.subscription&.id.present?
-
-    Stripe::Checkout::Session.create(
-      customer: stripe_customer,
-      payment_method_types: ['card'],
-      line_items: [{ price: ENV.fetch('STRIPE_PRICE_ID'), quantity: 1 }],
-      metadata: {
-        project_id: project.uuid,
-        project_name: project.name,
+  def self.plans
+    {
+      test: {
+        light: {
+          year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
+          month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
+        },
+        pro: {
+          year: 'price_1PBXI6Dm8NzUNvXDk0FfLVtH',
+          month: 'price_1PBXORDm8NzUNvXDoV7gv6Zi',
+        },
       },
-      mode: 'subscription',
-      success_url: "#{success_url}?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url:
-    )
+      live: {
+        light: {
+          year: '',
+          month: '',
+        },
+        pro: {
+          year: '',
+          month: '',
+        },
+      },
+    }
   end
+
+  # @param opts [Hash]
+  # @return [Stripe::Checkout::Session]
+  # def create_session(**opts)
+  #   if !project.free_plan? || project.stripe&.subscription&.id.present?
+  #     return create_custom_portal_session(opts.fetch(:return_url))
+  #   end
+  #
+  #   urls = opts.fetch_values(:success_url, :cancel_url, :price_id)
+  #
+  #   create_checkout_session(*urls)
+  # end
 
   def session_success_callback(session_id)
     session = Stripe::Checkout::Session.retrieve(session_id)
@@ -53,7 +69,7 @@ class ProjectStripeService
     return @stripe_customer if @stripe_customer.present?
 
     if project.stripe&.customer_id.present?
-      return (@stripe_customer = Stripe::Customer.retrieve(project.stripe.customer_id))
+      return(@stripe_customer = Stripe::Customer.retrieve(project.stripe.customer_id))
     end
 
     project.track!(source: 'New Stripe Customer', author: user) do
@@ -66,18 +82,33 @@ class ProjectStripeService
 
   def update_subscription_info(subscription_id)
     subscription = Stripe::Subscription.retrieve(subscription_id)
-    plan = subscription.status == 'active' ? 'paid' : 'free'
+    plan = subscription.status == 'active' ? 'light' : 'free'
     subscription_attributes = useful_subscription_attributes(subscription)
     project.update!(plan:, stripe_attributes: { subscription_attributes: })
 
     ProjectSuspensionService.new(project).actualize_status
   end
 
-  private
-
   def create_custom_portal_session(return_url)
     Stripe::BillingPortal::Session.create({ customer: stripe_customer, return_url: })
   end
+
+  def create_checkout_session(success_url:, cancel_url:, plan_id:)
+    Stripe::Checkout::Session.create(
+      customer: stripe_customer,
+      payment_method_types: ['card'],
+      line_items: [{ price: plan_id, quantity: 1 }],
+      metadata: {
+        project_id: project.uuid,
+        project_name: project.name,
+      },
+      mode: 'subscription',
+      success_url: "#{success_url}?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url:,
+    )
+  end
+
+  private
 
   # @param [Stripe::Subscription] subscription
   def useful_subscription_attributes(subscription)
@@ -85,6 +116,8 @@ class ProjectStripeService
       id: subscription.id,
       status: subscription.status,
       latest_invoice: subscription.latest_invoice,
+      plan_id: subscription.plan.id,
+      plan_interval: subscription.plan.interval,
       cancel_at: subscription.cancel_at,
       canceled_at: subscription.canceled_at,
       start_date: subscription.start_date,

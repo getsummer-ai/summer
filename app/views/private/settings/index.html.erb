@@ -16,7 +16,7 @@
     </div>
   <% end %>
 
-  <% if current_project.paid_plan?  %>
+  <% unless current_project.free_plan?  %>
     <div class="mt-2">
       Your premium plan
       <% if current_project.stripe.subscription.cancel_at  %>

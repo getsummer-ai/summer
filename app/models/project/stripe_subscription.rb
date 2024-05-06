@@ -11,5 +11,8 @@ class Project
     attribute :canceled_at, :integer
     attribute :status, :string
     attribute :latest_invoice, :string
+
+    attribute :plan_id, :string
+    attribute :plan_interval, :string
   end
 end

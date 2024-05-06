@@ -3,14 +3,30 @@ module Private
   class PaymentsController < PrivateController
     before_action :check_existence, only: :create
 
-    def create
+    IS_PLAYGROUND = ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
+
+    def create(stripe_session = nil)
       session =
-        stripe_service.create_session(
-          success_url: success_project_payments_url(current_project),
-          cancel_url: cancel_project_payments_url(current_project),
-          return_url: return_project_payments_url(current_project),
-        )
+        stripe_session.presence ||
+          stripe_service.create_checkout_session(
+            success_url: success_project_payments_url(current_project),
+            cancel_url: cancel_project_payments_url(current_project),
+            plan_id: find_plan,
+          )
+
       redirect_to session.url, allow_other_host: true
+    rescue StandardError => e
+      Rails.logger.error e.message
+      Sentry.capture_exception e
+      redirect_to project_settings_path(current_project),
+                  notice: 'Error happened while creating subscription'
+    end
+
+    def subscription
+      return create if current_project.free_plan?
+
+      session = stripe_service.create_custom_portal_session(return_project_payments_url(current_project))
+      create(session)
     end
 
     def success
@@ -79,7 +95,7 @@ module Private
     # end
 
     def admin_delete_subscription
-      if ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
+      if IS_PLAYGROUND
         if current_project.stripe.customer_id.present?
           Stripe::Customer.delete(current_project.stripe.customer_id)
         end
@@ -103,13 +119,18 @@ module Private
     end
 
     def admin_suspend_project
-      if ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
-        current_project.update!(plan: 'free', status: 'suspended')
-      end
+      current_project.update!(plan: 'free', status: 'suspended') if IS_PLAYGROUND
       redirect_to project_settings_path(current_project)
     end
 
     private
+
+    def find_plan
+      permitted_attributes = %i[plan period]
+      plan, period =
+        params.require(:subscription).permit(permitted_attributes).values_at(*permitted_attributes)
+      ProjectStripeService.plans.dig(IS_PLAYGROUND ? :test : :live, plan&.to_sym, period&.to_sym)
+    end
 
     def check_existence
       return unless stripe_service.stripe_customer['deleted']

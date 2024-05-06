@@ -1,14 +1,51 @@
-<%
-  button_text = @project.free_plan_suspended? ? 'Activate plan' : 'Subscription'
-  button_text = @project.stripe.subscription.cancel_at.present? ? 'Reactivate' : button_text
-%>
+<% if @project.free_plan_suspended? %>
+  <%=
+    button_to 'Activate plan',
+              project_payments_path(@project),
+              method: :post,
+              class: 'btn btn-summer ' + @button_classes,
+              form: {
+                'data-turbo': false,
+              }
+  %>
+<% else %>
+  <%=
+    button_to @project.stripe.subscription.cancel_at.present? ? 'Reactivate' : 'Subscription',
+          subscription_project_payments_path(@project),
+          method: :post,
+          class: 'btn btn-summer ' + @button_classes,
+          form: {
+            'data-turbo': false,
+          }
+  %>
+<% end %>
 
-<%=
-  button_to button_text,
-            project_payments_path(@project),
-            method: :post,
-            class: 'btn btn-summer ' + @button_classes,
-            form: {
-              'data-turbo': false,
-            }
-%>
+<%= form_with scope: :subscription, url: project_payments_path(@project), html: { 'data-turbo': "false" } do |form| %>
+  <%= form.hidden_field :period, value: 'month' %>
+  <%= form.hidden_field :plan, value: 'light' %>
+  <%= form.submit 'Subscribe on light monthly', class: 'btn btn-summer' %>
+<% end %>
+
+
+<%= form_with scope: :subscription, url: project_payments_path(@project), html: { 'data-turbo': "false" } do |form| %>
+  <%= form.hidden_field :period, value: 'year' %>
+  <%= form.hidden_field :plan, value: 'light' %>
+  <%= form.submit 'Subscribe on light yearly', class: 'btn btn-summer' %>
+<% end %>
+
+
+<%= form_with scope: :subscription, url: project_payments_path(@project), html: { 'data-turbo': "false" } do |form| %>
+  <%= form.hidden_field :period, value: 'month' %>
+  <%= form.hidden_field :plan, value: 'pro' %>
+  <%= form.submit 'Subscribe on pro monthly', class: 'btn btn-summer' %>
+<% end %>
+
+
+<%= form_with scope: :subscription, url: project_payments_path(@project), html: { 'data-turbo': "false" } do |form| %>
+  <%= form.hidden_field :period, value: 'year' %>
+  <%= form.hidden_field :plan, value: 'pro' %>
+  <%= form.submit 'Subscribe on pro yearly', class: 'btn btn-summer' %>
+<% end %>
+
+
+

@@ -41,6 +41,7 @@ Rails.application.routes.draw do
         resources :paths, only: %i[new create edit update destroy]
         resources :payments, only: %i[create] do
           collection do
+            post :subscription
             get :success
             get :cancel
             get :return
