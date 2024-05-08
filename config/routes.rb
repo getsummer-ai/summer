@@ -46,7 +46,7 @@ Rails.application.routes.draw do
             get :cancel
             get :return
 
-            if ENV.fetch('STRIPE_TEST_ENVIRONMENT', 'false') == 'true'
+            if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true'
               post :admin_delete_subscription
               post :admin_suspend_project
             end

@@ -3,7 +3,7 @@ module Private
   class PaymentsController < PrivateController
     before_action :check_existence, only: :create
 
-    IS_PLAYGROUND = ENV.fetch('STRIPE_TEST_ENVIRONMENT') == 'true'
+    IS_PLAYGROUND = ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true'
 
     def create(stripe_session = nil)
       session =
