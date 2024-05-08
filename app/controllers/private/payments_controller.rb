@@ -111,6 +111,8 @@ module Private
               start_date: nil,
               canceled_at: nil,
               latest_invoice: nil,
+              plan_id: nil,
+              plan_interval: nil
             },
           },
         )

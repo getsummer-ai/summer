@@ -82,7 +82,12 @@ class ProjectStripeService
 
   def update_subscription_info(subscription_id)
     subscription = Stripe::Subscription.retrieve(subscription_id)
-    plan = subscription.status == 'active' ? 'light' : 'free'
+    
+    plan = if subscription.status == 'active'
+      find_plan_name(subscription.plan).presence || :light
+    else
+      :free
+    end
     subscription_attributes = useful_subscription_attributes(subscription)
     project.update!(plan:, stripe_attributes: { subscription_attributes: })
 
@@ -109,6 +114,20 @@ class ProjectStripeService
   end
 
   private
+
+  def find_plan_name(plan)
+    current_env_plans = self.class.plans[plan.livemode == true ? :live : :test]
+    interval = plan.interval.to_sym
+    res = nil
+    res = :light if current_env_plans.dig(:light, interval) == plan.id
+    res = :pro if current_env_plans.dig(:pro, interval) == plan.id
+    return res if res.present?
+
+    
+    Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
+    Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
+    nil
+  end
 
   # @param [Stripe::Subscription] subscription
   def useful_subscription_attributes(subscription)

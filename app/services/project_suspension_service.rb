@@ -7,13 +7,17 @@ class ProjectSuspensionService
   end
 
   def actualize_status
-    return actualize_free_plan_status if @project.free_plan?
-    @project.update!(status: 'active')
+    return suspend_project if @project.decorate.plan_left_clicks.zero?
+
+    activate_project if @project.status_suspended?
   end
 
-  private
+  def suspend_project(send_email: false)
+    @project.status_suspended!
+    ProjectMailer.suspension_notification(@project.id).deliver_now if send_email
+  end
 
-  def actualize_free_plan_status
-    @project.update!(status: 'suspended') if @project.decorate.free_plan_left_clicks.zero?
+  def activate_project
+    @project.status_active! if @project.status_suspended?
   end
 end

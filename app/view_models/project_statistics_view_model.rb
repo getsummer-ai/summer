@@ -8,7 +8,7 @@ class ProjectStatisticsViewModel
 
   # @param [Project] project
   # @param [Array<Symbol>, Hash] preloads
-  def initialize(project, preloads)
+  def initialize(project, preloads = {})
     # @type [Project]
     @project = project
     # @type [Array<Symbol>, Hash]

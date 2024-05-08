@@ -8,6 +8,11 @@ class Project < ApplicationRecord
   include StoreModel::NestedAttributes
   include Trackable
   include EncryptedKey
+
+  FREE_PLAN_THRESHOLD = ENV.fetch('FREE_PLAN_CLICKS_THRESHOLD').to_i
+  LIGHT_PLAN_THRESHOLD = 5_000
+  PRO_PLAN_THRESHOLD = 25_000
+
   enum plan: { free: 'free', light: 'light', pro: 'pro' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
@@ -99,6 +104,14 @@ class Project < ApplicationRecord
   # @return [Array<ProjectPath>]
   def smart_paths
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
+  end
+
+  def threshold_clicks_amount
+    case plan
+    when 'free' then FREE_PLAN_THRESHOLD
+    when 'light' then LIGHT_PLAN_THRESHOLD
+    when 'pro' then PRO_PLAN_THRESHOLD
+    end
   end
 
   def decorate

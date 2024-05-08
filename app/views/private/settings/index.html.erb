@@ -1,45 +1,41 @@
 <h2 class="font-semibold text-2xl">Settings</h2>
-
 <hr class="my-12">
-
 <h3 class="font-semibold text-lg mt-4">Billing Information</h3>
 
-  <% if current_project.free_plan_active? %>
-    <div class="mt-2">
-      Your free plan
-      (<span class="font-semibold"><%=ENV['FREE_PLAN_CLICKS_THRESHOLD']%></span> button clicks included) is active.
-      <p class="mt-1">
-      You have
-        <span class="font-semibold"><%=current_project.decorate.free_plan_left_clicks %></span>
-        clicks left.
-      </p>
-    </div>
-  <% end %>
-
-  <% unless current_project.free_plan?  %>
-    <div class="mt-2">
-      Your premium plan
-      <% if current_project.stripe.subscription.cancel_at  %>
-        expires on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
-      <% else %>
-        is active. You have no limits.
-      <% end %>
-    </div>
-  <% end %>
-
-  <% if current_project.free_plan_suspended? %>
-    <p class="mt-2">
-      Your free plan has been suspended. <br>
-      Please activate your paid plan to continue using Summer.
-    </p>
-  <% end %>
-
 <div class="mt-4">
+  <div class="text-lg"><b><%=current_project.plan.humanize %> plan</b>
+
+  <% if current_project.status_active? %>
+    <% if current_project.stripe.subscription.cancel_at  %>
+      expires on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+    <% else %>
+      is active.
+    <% end %>
+  <% else %>
+    <% if current_project.stripe.subscription.cancel_at  %>
+      was suspended on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+    <% else %>
+      has been suspended.
+    <% end %>
+  <% end %>
+  </div>
+  <p class="mt-0.5 opacity-65 font-light">
+    The <b><%=current_project.threshold_clicks_amount %></b>
+    button clicks
+
+    <%= current_project.free_plan? ? 'in total' : 'per month' %>
+
+    are included —
+    <b><%=current_project.decorate.plan_left_clicks %></b> clicks left.
+  </p>
+</div>
+
+<div class="mt-5">
   <%=render SubscriptionButton::Component.new(project: @current_project) %>
 </div>
 
 <% if ENV.fetch('STRIPE_TEST_ENVIRONMENT', 'false') == 'true' %>
-  <div class="bg-black text-white p-5 mt-10 rounded-xl">
+  <div class="bg-black text-white p-5 mt-14 rounded-xl">
     These buttons are only visible in the test environment.
 
 
@@ -110,11 +106,21 @@
 <hr class="my-12">
 
 
-<h3 class="font-semibold text-lg">Delete Project</h3>
-<p class="opacity-50 mt-1">
-  You won’t be able to restore the data in case you delete this project.
-</p>
-<%= link_to 'Delete Project',
-            project_path(@current_project),
-            class: "btn btn-summer mt-9 w-36 btn-red",
-            data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
+
+<details tabindex="0" class="collapse collapse-arrow bg-red-50 rounded-2xl">
+  <summary class="collapse-title text-lg font-semibold">
+    Delete Project Section
+  </summary>
+  <div class="collapse-content">
+    <h3 class="font-semibold text-lg">Delete Project</h3>
+    <p class="opacity-50 mt-1">
+      You won’t be able to restore the data in case you delete this project.
+    </p>
+    <%= link_to 'Delete Project',
+                project_path(@current_project),
+                class: "btn btn-summer mt-9 w-36 btn-red",
+                data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
+  </div>
+</details>
+
+

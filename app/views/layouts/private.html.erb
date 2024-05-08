@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :html_class do %>
-  bg-[#E6EFF8]
+  bg-[#F8FBFE]
 <% end %>
 <% content_for :body_class do %>
   bg-default
@@ -31,7 +31,7 @@
     </div>
   </div>
   <div class="pl-[250px] min-h-screen flex flex-col">
-    <% if current_project.free_plan_suspended? %>
+    <% if current_project.status_suspended? %>
       <%= render SuspendedInfo::Component.new(project: current_project) %>
     <% end %>
     <div class="p-10 rounded-2xl bg-white grow min-w-[700px] z-10 overflow-hidden">
