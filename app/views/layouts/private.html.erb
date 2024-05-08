@@ -12,7 +12,7 @@
 <% content_for :content do %>
   <% current_project = current_project || current_user.default_project %>
   <div class="fixed flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] min-w-[250px] bg-default overflow-y-auto">
-    <div class="menu-header">
+    <div class="menu-header" id="sidebar-menu">
       <div class="logo-part p-1.5">
         <%= render LogoComponent.new %>
       </div>

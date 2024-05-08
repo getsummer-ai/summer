@@ -26,7 +26,10 @@ describe 'the Navigation process' do
 
   describe "checking every section", :js do
     it 'check the guidelines on the knowledge page' do
-      click_on 'Knowledge'
+
+      within("#sidebar-menu") do
+        click_on 'Knowledge'
+      end
       expect(page).to have_content 'Knowledge'
       expect(page).to have_content 'Guidelines'
 
@@ -40,7 +43,9 @@ describe 'the Navigation process' do
     end
 
     it 'check the products section on the knowledge page' do
-      click_on 'Knowledge'
+      within("#sidebar-menu") do
+        click_on 'Knowledge'
+      end
       expect(page).to have_content 'Products'
       click_on '+ Add new product'
 
