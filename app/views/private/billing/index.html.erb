@@ -12,7 +12,7 @@
           <th class="font-semibold text-left w-20">Plan</th>
           <th class="font-semibold text-left w-32">Views / Clicks</th>
 
-          <th class="font-semibold text-right w-44">Subscription</th>
+          <th class="font-semibold text-right w-44">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -30,8 +30,14 @@
             <td class="text-left"><%=decorated_project.total_views %> / <%=decorated_project.total_clicks %></td>
 
             <td class="text-right">
-
-              <%= render SubscriptionButton::Component.new(project: project, button_classes: '') %>
+              <% unless project.free_plan? %>
+                <%=render SubscriptionButton::Component.new(project:) %>
+              <% else %>
+                <%=
+                  link_to project_settings_path(project), class: 'font-semibold btn btn-summer' do %>
+                  Get subscription
+                <% end %>
+              <% end %>
             </td>
           </tr>
         <% end %>

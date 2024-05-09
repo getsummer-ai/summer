@@ -1,13 +1,18 @@
 <h2 class="font-semibold text-2xl">Settings</h2>
+<p class="opacity-50 mt-1">
+  Subscription / Domain addresses / Delete project sections <br>
+  If you experience issues contact support via
+  <a href="mailto:support@getsummer.ai?subject=Code installation issue" class="link">support@getsummer.ai</a>
+</p>
 <hr class="my-12">
-<h3 class="font-semibold text-lg mt-4">Billing Information</h3>
+<!--<h3 class="font-semibold text-lg mt-4">Subscription information</h3>-->
 
 <div class="mt-4">
   <div class="text-lg"><b><%=current_project.plan.humanize %> plan</b>
-
   <% if current_project.status_active? %>
-    <% if current_project.stripe.subscription.cancel_at  %>
-      expires on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+    <% expired_at = current_project.decorate.subscription_expiration_time %>
+    <% if expired_at.present?  %>
+      <%= expired_at > Time.now ? 'expires' : 'was expired' %> on <%= expired_at.strftime('%d %B %Y') %>.
     <% else %>
       is active.
     <% end %>
@@ -19,23 +24,26 @@
     <% end %>
   <% end %>
   </div>
-  <p class="mt-0.5 opacity-65 font-light">
-    The <b><%=current_project.threshold_clicks_amount %></b>
+  <p class="mt-0.5 opacity-50">
+    The <%=number_with_delimiter(current_project.threshold_clicks_amount) %>
     button clicks
 
     <%= current_project.free_plan? ? 'in total' : 'per month' %>
 
     are included —
-    <b><%=current_project.decorate.plan_left_clicks %></b> clicks left.
+    <b><%=number_with_delimiter(current_project.decorate.plan_left_clicks) %></b> clicks left.
   </p>
 </div>
 
 <div class="mt-5">
-  <%=render SubscriptionButton::Component.new(project: @current_project) %>
+  <%=render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-neutral') %>
+  <%if current_project.free_plan_suspended? %>
+    <h4 class="mt-2 opacity-50">Get a subscription to continue using the Summary button on your website.</h4>
+  <% end %>
 </div>
 
 <% if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true' %>
-  <div class="bg-black text-white p-5 mt-14 rounded-xl">
+  <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-10">
     These buttons are only visible in the test environment.
 
 

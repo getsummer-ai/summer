@@ -9,6 +9,10 @@ class ProjectDecorator < Draper::Decorator
     0
   end
 
+  def subscription_expiration_time
+    Time.at(model.stripe.subscription.cancel_at).utc if model.stripe.subscription.cancel_at.present?
+  end
+
   def free_plan_left_clicks
     [Project::FREE_PLAN_THRESHOLD - total_clicks, 0].max
   end

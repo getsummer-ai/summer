@@ -96,10 +96,6 @@ class Project < ApplicationRecord
 
   def free_plan_active? = free_plan? && status_active?
   def free_plan_suspended? = free_plan? && status_suspended?
-  def light_plan_active? = light_plan? && status_active?
-  def light_plan_suspended? = light_plan? && status_suspended?
-  def pro_plan_active? = pro_plan? && status_active?
-  def pro_plan_suspended? = pro_plan? && status_suspended?
 
   # @return [Array<ProjectPath>]
   def smart_paths

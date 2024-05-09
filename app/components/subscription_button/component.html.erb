@@ -1,6 +1,10 @@
 <% if @project.stripe.customer_id.present? && !@project.free_plan? %>
+  <%
+    cancel_time = @project.decorate.subscription_expiration_time
+    button_text = cancel_time.present? && cancel_time < Time.now ? 'Reactivate' : 'Subscription'
+  %>
   <%=
-    button_to @project.stripe.subscription.cancel_at.present? ? 'Reactivate' : 'Subscription',
+    button_to button_text,
           subscription_project_payments_path(@project),
           method: :post,
           class: 'btn btn-summer ' + @button_classes,
@@ -12,7 +16,7 @@
 <% end %>
 
 <% if @project.stripe.customer_id.nil? || @project.free_plan? %>
-  <div class="flex mt-12">
+  <div class="flex mt-2">
     <div>
       <h3 class="text-lg font-semibold">Light Plan</h3>
       <div class="opacity-50">5 000 button clicks every month</div>
@@ -57,5 +61,4 @@
       </div>
     </div>
   </div>
-
 <% end %>
