@@ -99,41 +99,45 @@ describe 'the Navigation process' do
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
-        expect(page).to have_field(with: article.title, wait: 10)
+        expect(page).to have_content 'Dismiss', wait: 5
+        within('#modal') do
+          expect(page).to have_field(with: article.title)
 
-        within_table("table-page-statistics") do
-          expect(page).to have_no_content 'Summary'
-          expect(page).to have_no_content 'Show'
+          within_table("table-page-statistics") do
+            expect(page).to have_no_content 'Summary'
+            expect(page).to have_no_content 'Show'
+          end
         end
+
 
         llm_call = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh
 
-        expect(page).to have_field(with: article.title, wait: 10)
+        expect(page).to have_content 'Dismiss', wait: 5
+        within('#modal') do
+          expect(page).to have_field(with: article.title)
 
-        within_table("table-page-statistics") do
-          expect(page).to have_content 'Summary'
-          expect(page).to have_content 'Show'
-        end
+          within_table("table-page-statistics") do
+            expect(page).to have_content 'Summary'
+            expect(page).to have_content 'Show'
+          end
 
-        click_on 'Show'
+          click_on 'Show'
 
-        within("##{dom_id(project_page, :summary)}") do
-          expect(page).to have_content llm_call.output
-        end
+          within("##{dom_id(project_page, :summary)}") do
+            expect(page).to have_content llm_call.output
+          end
 
-        within("#modal") do
           expect(page).to have_content 'Back'
           expect(page).to have_button 'Refresh summary'
           click_on 'Back'
-        end
 
-        within("#modal") do
           expect(page).to have_button 'Turn off this page'
           click_on 'Turn off this page'
         end
+
         expect(page).to have_content 'URL was successfully updated'
 
         click_on 'Dismiss'
