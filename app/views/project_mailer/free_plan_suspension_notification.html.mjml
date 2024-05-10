@@ -1,0 +1,43 @@
+<mj-text>
+  Hey! Your Summer button is currently inactive 😟 since you are out of free clicks. <br>
+  Take a look what you’ve achieved with your free trial:
+  <ul>
+    <li>
+      Button Shown:
+      <%=@project.total_views_count %>
+    </li>
+    <li>
+      Button Clicked:
+      <%=@project.total_clicks_count %>
+      (<%=(@project.total_clicks_count * 100 / @project.total_views_count).round(1) %>%)
+    </li>
+    <li>
+      Products Shown:
+      <%=@project.total_product_views %>
+    </li>
+    <li>
+      Readers Subscribed:
+      <%=@project.user_emails.count %>
+    </li>
+  </ul>
+</mj-text>
+<mj-text>
+  If you'd like to view more statistics, they're readily available
+  <%= link_to 'here', project_pages_url(project_id: @project.encrypted_id) %>.
+</mj-text>
+<mj-text>
+  Impressive, hah? If yes and you want to keep the momentum going - simply
+  <%= link_to 'upgrade to a Light plan', project_settings_url(project_id: @project.encrypted_id) %>.
+  It will cost you only 9$ monthly and will immediately reactivate the button.
+</mj-text>
+<mj-text>
+  Need help? Reply to this email — we’re here for you.
+</mj-text>
+
+<mj-spacer height="20px"></mj-spacer>
+<mj-text>
+  Best regards, <br>
+
+  The Summer Team
+</mj-text>
+<mj-spacer height="20px"></mj-spacer>

@@ -27,7 +27,7 @@
             </td>
             <td><%=decorated_project.status.humanize %></td>
             <td><%=decorated_project.plan.humanize %></td>
-            <td class="text-left"><%=decorated_project.total_views %> / <%=decorated_project.total_clicks %></td>
+            <td class="text-left"><%=decorated_project.total_views_count %> / <%=decorated_project.total_clicks_count %></td>
 
             <td class="text-right">
               <% unless project.free_plan? %>

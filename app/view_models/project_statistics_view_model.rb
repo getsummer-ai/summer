@@ -26,6 +26,9 @@ class ProjectStatisticsViewModel
     current_month_pages_statistics.value || 0
   end
 
+  def total_product_views
+    products_total_statistics.value.dig(0, 0) || 0
+  end
   # @return [Integer]
   def total_views_count
     total_action_statistics.value.dig(0, 0) || 0
@@ -66,6 +69,15 @@ class ProjectStatisticsViewModel
   def current_month_pages_statistics
     @current_month_pages_statistics ||=
       @project.pages.where(created_at: Time.now.utc.all_month).async_count
+  end
+
+  # @return [ActiveRecord::Promise]
+  def products_total_statistics
+    @products_total_statistics ||=
+    begin
+      columns = Arel.sql('SUM(views)::BIGINT, SUM(clicks)::BIGINT')
+      @project.statistics.by_products.group(:project_id).async_pluck(columns)
+    end
   end
 
   # @return [ActiveRecord::Promise]

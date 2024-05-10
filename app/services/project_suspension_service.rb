@@ -14,7 +14,7 @@ class ProjectSuspensionService
 
   def suspend_project(send_email: false)
     @project.status_suspended!
-    ProjectMailer.suspension_notification(@project.id).deliver_now if send_email
+    ProjectMailer.suspension_notification(@project.id, @project.plan).deliver_now if send_email
   end
 
   def activate_project

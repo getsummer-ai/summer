@@ -1,6 +1,0 @@
-<mj-text>Project <b><%= @project.name %></b> has been paused.</mj-text>
-<mj-text>The <%= @project.name %>'s button has been clicked <b><%= @project.total_clicks %></b> times  <br>
-  and has reached its <%= @project.plan %> plan limit. <br>
-  To continue using the Summer button - Subscribe to the Light/Pro plan. </mj-text>
-<mj-text><%= link_to 'Purchase subscription', project_settings_url(project_id: @project.encrypted_id) %></mj-text>
-<mj-spacer height="20px"></mj-spacer>
