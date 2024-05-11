@@ -99,8 +99,11 @@ describe 'the Navigation process' do
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
+        using_wait_time 3 do
+          expect(page).to have_content 'Dismiss'
+        end
+
         within('#modal') do
-          expect(page).to have_content 'Dismiss', wait: 5
           expect(page).to have_field(with: article.title)
 
           within_table("table-page-statistics") do
@@ -115,8 +118,11 @@ describe 'the Navigation process' do
 
         refresh
 
+        using_wait_time 3 do
+          expect(page).to have_content 'Dismiss'
+        end
+
         within('#modal') do
-          expect(page).to have_content 'Dismiss', wait: 5
           expect(page).to have_field(with: article.title)
 
           within_table("table-page-statistics") do
