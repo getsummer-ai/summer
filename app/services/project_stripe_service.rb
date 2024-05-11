@@ -32,12 +32,12 @@ class ProjectStripeService
       },
       live: {
         light: {
-          year: '',
-          month: '',
+          year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
+          month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
         },
         pro: {
-          year: '',
-          month: '',
+          year: 'price_1PFK16Dm8NzUNvXDZcLnQSWa',
+          month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
         },
       },
     }
