@@ -96,12 +96,12 @@ describe 'the Navigation process' do
 
       it 'check the pages items on the pages page' do
         click_on 'Pages'
+        sleep(0.5)
+
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
-        using_wait_time 3 do
-          expect(page).to have_content 'Dismiss'
-        end
+        expect(page).to have_content 'Dismiss'
 
         within('#modal') do
           expect(page).to have_field(with: article.title)
@@ -117,10 +117,9 @@ describe 'the Navigation process' do
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh
+        sleep(0.5)
 
-        using_wait_time 3 do
-          expect(page).to have_content 'Dismiss'
-        end
+        expect(page).to have_content 'Dismiss'
 
         within('#modal') do
           expect(page).to have_field(with: article.title)
