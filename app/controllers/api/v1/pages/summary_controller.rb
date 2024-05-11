@@ -7,9 +7,9 @@ module Api
       #
       class SummaryController < DefaultController
         include ActionController::Live
+        before_action :set_headers
 
         def stream
-          response.headers['Content-Type'] = 'text/event-stream'
           sse = SSE.new(response.stream)
           article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
           SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
@@ -23,6 +23,11 @@ module Api
         end
 
         private
+
+        def set_headers
+          response.headers['Content-Type'] = 'text/event-stream'
+          response.headers["Last-Modified"] = Time.now.httpdate
+        end
 
         #   @param [SSE] sse
         #   @param [ProjectArticle] article

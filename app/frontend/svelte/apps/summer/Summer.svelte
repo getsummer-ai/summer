@@ -182,7 +182,7 @@
     backdrop-filter: blur(4px);
     transition: width 0.3s;
     animation: smooth-appear 400ms ease-in-out;
-    z-index: 999;
+    z-index: 9999;
 
     &.active {
       @media (max-width: 640px) {

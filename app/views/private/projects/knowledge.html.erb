@@ -19,8 +19,14 @@
                  'data-controller': "project-guidelines-form"
                },
                builder: DaisyBuilder do |f| %>
+    <%
+      placeholder = "Your guidelines are placed here."
+      placeholder += "\ne.g. Use “#{@project.name}” in the first sentence of the summary."
+      placeholder += "\ne.g. Start the summary with phrase: “Here's a little summary for another impatient person :)”"
+      placeholder += "\ne.g. End with a friendly, “Consider a paid blog subscription to support the writer”"
+    %>
     <%= f.text_area :guidelines,
-                    placeholder: 'Your guidelines...',
+                    placeholder:,
                     rows: 4,
                     'data-project-guidelines-form-target': "input",
                     'data-action': "input->project-guidelines-form#change"
@@ -38,8 +44,6 @@
   Summer will suggest your products to your customers in the right context. Add products and they
   will appear in the summary window when the description matches the content.
 </p>
-
-<hr class="my-12" />
 
 <div>
   <div class="overflow-x-auto mt-6">

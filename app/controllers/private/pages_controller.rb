@@ -15,7 +15,7 @@ module Private
           .pages
           .preload(:article_only_title)
           .eager_load(:statistics_by_total)
-          .order(ProjectStatisticsByTotal.arel_table[:views].desc),
+          .order(ProjectStatisticsByTotal.arel_table[:views].desc.nulls_last),
         items: 30,
         link_extra: 'data-turbo-frame="pages"'
       )
