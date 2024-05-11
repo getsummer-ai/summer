@@ -144,6 +144,7 @@
 
 <style lang="scss">
   .dialog-container {
+    position: relative;
     z-index: 9999;
     width: 100%;
     @keyframes fade {
