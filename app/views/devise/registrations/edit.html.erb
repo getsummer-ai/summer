@@ -1,11 +1,25 @@
-<div class="w-96">
+<div>
+  <h2 class="font-semibold text-2xl">User Settings</h2>
+  <p class="opacity-50 mt-1">
+    If you experience issues contact support via
+    <a href="mailto:support@getsummer.ai" class="link">support@getsummer.ai</a>
+  </p>
+  <div class="mt-1">
+    <a class="link-footer" href="https://getsummer.ai/terms-of-use" target="_blank">Terms of Use</a>
+     · 
+    <a class="link-footer" href="https://getsummer.ai/privacy-policy" target="_blank">Privacy Policy</a>
+  </div>
+  <hr class="my-6" />
   <span class="badge badge-lg badge-neutral"><%=current_user.email %></span>
   <% if current_user.provider.nil? %>
-    <%= render 'devise/registrations/change_pass_form' %>
+    <div class="w-96">
+      <%= render 'devise/registrations/change_pass_form' %>
+    </div>
   <% else %>
     <div class="mt-4">
       You've been registered via Google
       <%= vite_image_tag "assets/icons/google.svg", class: 'inline-block w-5 ml-1', width: '30px' %>
     </div>
   <% end %>
+
 </div>
