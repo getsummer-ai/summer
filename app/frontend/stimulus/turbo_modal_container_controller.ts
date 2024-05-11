@@ -1,9 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-type LogArg = string | number | boolean | null | undefined | HTMLElement;
-const logIsActive = false;
-function log(...args: LogArg[]) {
-  if (logIsActive) console.log(...args);
-}
+import { log } from '@/utils/common';
 
 export default class TurboModalContainerController extends Controller {
   static targets = ['modal'];
@@ -45,7 +41,8 @@ export default class TurboModalContainerController extends Controller {
 
     try {
       const modalUrlPath = atob(modal_url_param);
-      if (this.modalTarget.getAttribute('src')?.includes(modalUrlPath)) return;
+      log('Compare and load the link', this.modalTarget.getAttribute('src'), modalUrlPath);
+      if (this.modalTarget.getAttribute('src') === modalUrlPath) return;
       log("this.modalTarget.setAttribute('src', modalUrlPath)");
       this.modalTarget.setAttribute('src', modalUrlPath);
     } catch (error) {

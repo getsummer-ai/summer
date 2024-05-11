@@ -461,6 +461,7 @@ GEM
     store_model (2.3.0)
       activerecord (>= 5.2)
     stringio (3.1.0)
+    stripe (11.2.0)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
     syntax_tree-haml (4.0.3)
@@ -577,6 +578,7 @@ DEPENDENCIES
   sqids
   stackprof
   store_model (~> 2.3)
+  stripe
   turbo-rails (~> 2.0.5)
   tzinfo-data
   validate_url

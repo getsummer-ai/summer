@@ -2,7 +2,7 @@
   window.GetSummer = window.GetSummer || { id: '<%=example_project_id %>' }
 </script>
 <% if Rails.env.production? %>
-  <script type="module" src="<%=ENV['VITE_API_URL']%>/libs/init.umd.js" async></script>
+  <script type="module" src="<%=ENV['ASSETS_HOST']%>/libs/init.umd.js" async></script>
 <% else %>
   <%= vite_typescript_tag 'libs/init.ts' %>
 <% end %>

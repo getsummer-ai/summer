@@ -1,49 +1,11 @@
-<div class="w-96 mx-auto">
-  <h2 class="text-xl font-bold mb-4">
-    <span class="border-b-8 border-accent">Change password</span>
-  </h2>
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }, builder: DaisyBuilder) do |f| %>
-
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-    <% end %>
-
-    <div class="mt-8">
-      <div class="font-medium">Password settings</div>
-      <div class="form-control mt-2">
-        <%= f.label :password, class: 'label pb-1' do %>
-          <span class="label-text">New password</span>
-          <% if @minimum_password_length %>
-            <span class="label-text-alt">(<%= @minimum_password_length %> characters minimum)</span>
-          <% end %>
-        <% end %>
-
-        <%= f.password_field :password, autocomplete: 'new-password' %>
-        <%= f.label :password, class: 'label pb-1' do %>
-        <% end %>
-      </div>
-
-      <div class="form-control mt-2">
-        <%= f.label :password_confirmation %>
-        <%= f.password_field :password_confirmation, autocomplete: 'new-password' %>
-      </div>
-    </div>
-
-
-    <div class="form-control mt-6">
-      <%= f.label :current_password %>
-      <%= f.password_field :current_password, autocomplete: 'current-password' %>
-      <%= f.label class: 'label pb-1' do %>
-        <%= content_tag(:span, '(we need your current password to confirm your changes)', class: 'label-text-alt') %>
-      <% end %>
-    </div>
-
+<div class="w-96">
+  <span class="badge badge-lg badge-neutral"><%=current_user.email %></span>
+  <% if current_user.provider.nil? %>
+    <%= render 'devise/registrations/change_pass_form' %>
+  <% else %>
     <div class="mt-4">
-      <%= render 'devise/shared/error_messages', resource: resource %>
-    </div>
-
-    <div class="form-control mt-8">
-      <%= f.submit 'Update' %>
+      You've been registered via Google
+      <%= vite_image_tag "assets/icons/google.svg", class: 'inline-block w-5 ml-1', width: '30px' %>
     </div>
   <% end %>
 </div>

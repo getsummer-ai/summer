@@ -1,11 +1,16 @@
 <%
+  setup_route = { name: 'Setup', path: setup_project_path(@project), icon: vite_asset_path('assets/icons/puzzle.svg') }
+  pages_route = { name: 'Pages', path: project_pages_path(@project), icon: vite_asset_path('assets/icons/pages.svg') }
+  pages_exist = @project.pages.exists?
+
   routes = [
-    { name: 'Setup', path: setup_project_path(@project), icon: vite_asset_path('assets/icons/puzzle.svg') },
+    pages_exist ? pages_route : setup_route,
     { name: 'Knowledge', path: knowledge_project_path(@project), icon: vite_asset_path('assets/icons/brain.svg') },
-    { name: 'Pages', path: project_pages_path(@project), icon: vite_asset_path('assets/icons/pages.svg') },
+    !pages_exist ? pages_route : nil,
     { name: 'Actions', path: project_actions_path(@project), icon: vite_asset_path('assets/icons/actions.svg') },
+    pages_exist ? setup_route : nil,
     { name: 'Settings', path: project_settings_path(@project), icon: vite_asset_path('assets/icons/settings.svg') }
-  ]
+  ].compact!
 %>
 
 <ul class="mt-4 text-black">

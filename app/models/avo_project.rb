@@ -42,6 +42,7 @@ end
 #  protocol    :string           not null
 #  settings    :jsonb            not null
 #  status      :enum             default("active"), not null
+#  stripe      :jsonb            not null
 #  uuid        :uuid             not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null

@@ -11,8 +11,8 @@
     "test-specs": "bundle exec rspec spec",
     "dev": "./bin/vite dev",
     "build": "./bin/vite build",
-    "build-button-init-app": "NODE_ENV='production' vite build --config vite.config.init.lib.mts",
-    "build-button-app": "NODE_ENV='production' vite build --config vite.config.app.lib.mts"
+    "build-button-init-app": "vite build --config vite.config.init.lib.mts --mode=production",
+    "build-button-app": "vite build --config vite.config.app.lib.mts --mode=production"
   },
   "dependencies": {
     "@babel/types": "^7.23.6",
@@ -28,6 +28,7 @@
     "notivue": "^2.1.1",
     "pinia": "^2.1.7",
     "stimulus-use": "^0.52.2",
+    "tua-body-scroll-lock": "^1.5.0",
     "vue": "^3.4.14",
     "vue-query": "^1.26.0",
     "vue-router": "^4.2.5",

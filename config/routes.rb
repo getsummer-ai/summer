@@ -19,8 +19,8 @@ Rails.application.routes.draw do
 
     root 'private/app#index'
 
-    scope '/app', module: 'private' do
-      get '/', to: 'app#index', as: 'user_app'
+    scope '/', module: 'private' do
+      get 'app/(:id)', to: 'app#index', as: 'user_app'
       resources :projects, param: :project_id, only: [:new, :create, :destroy] do
         member do
           get :setup
@@ -30,12 +30,32 @@ Rails.application.routes.draw do
         end
       end
       resources :projects, only: [] do
-        resources :pages, only: %i[index update show]
+        resources :pages, only: %i[index update show] do
+          member do
+            get :summary
+            post 'summary/refresh', action: :summary_refresh
+          end
+        end
         resources :actions, only: %i[index update]
         resources :products, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
+        resources :payments, only: %i[create] do
+          collection do
+            post :subscription
+            get :success
+            get :cancel
+            get :return
+
+            if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true'
+              post :admin_delete_subscription
+              post :admin_suspend_project
+            end
+          end
+        end
         resources :settings, only: [:index]
       end
+
+      resources :billing, only: %i[index]
     end
 
     unless Rails.env.production?

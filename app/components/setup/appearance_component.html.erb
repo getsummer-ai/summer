@@ -11,15 +11,9 @@
                        when 'black' then 'bg-black'
                        else ''
                        end
-  button_radius_class = case settings.button_radius
-                        when 'sm' then 'rounded-sm'
-                        when 'lg' then 'rounded-lg'
-                        when 'xl' then 'rounded-3xl'
-                        else ''
-                        end
 
 %>
 <div id="setup-appearance-component" class="p-10 w-52 bg-light-gray flex-1 flex justify-center items-center flex-col">
   <div class="w-56 h-44 rounded-lg <%=frame_color_class %>"></div>
-  <div class="w-24 h-6 <%=button_color_class %> <%=button_radius_class %> mt-4"></div>
+  <div class="w-24 h-6 <%=button_color_class %> rounded-3xl mt-4"></div>
 </div>

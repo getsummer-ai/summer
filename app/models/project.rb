@@ -2,11 +2,18 @@
 
 # @!attribute settings
 #  @return [ProjectSettings]
+# @!attribute stripe
+#  @return [ProjectStripeDetails]
 class Project < ApplicationRecord
   include StoreModel::NestedAttributes
   include Trackable
   include EncryptedKey
-  enum plan: { free: 'free', paid: 'paid' }, _suffix: true
+
+  FREE_PLAN_THRESHOLD = ENV.fetch('FREE_PLAN_CLICKS_THRESHOLD').to_i
+  LIGHT_PLAN_THRESHOLD = 5_000
+  PRO_PLAN_THRESHOLD = 25_000
+
+  enum plan: { free: 'free', light: 'light', pro: 'pro' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
@@ -22,10 +29,16 @@ class Project < ApplicationRecord
   # attribute :feature_subscription, :jsonb
 
   attribute :settings, ProjectSettings.to_type
+  attribute :stripe, ProjectStripeDetails.to_type
   accepts_nested_attributes_for :settings, allow_destroy: false
+  accepts_nested_attributes_for :stripe, allow_destroy: false
 
   def settings_attributes=(attributes)
     settings.assign_attributes(attributes)
+  end
+
+  def stripe_attributes=(attributes)
+    stripe.assign_attributes(attributes)
   end
 
   track_changes_formatter_for :settings do |old_value, new_value|
@@ -44,8 +57,10 @@ class Project < ApplicationRecord
   has_many :user_emails, class_name: 'ProjectUserEmail', dependent: :destroy
 
   scope :available, -> { where.not(status: :deleted) }
+  scope :by_encrypted_id, ->(encrypted_id) { find(decrypt_id(encrypted_id)) }
 
   validates :settings, store_model: { merge_errors: true }
+  validates :stripe, store_model: { merge_errors: true }
 
   validates :name,
             presence: true,
@@ -79,9 +94,24 @@ class Project < ApplicationRecord
     Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join)
   end
 
+  def free_plan_active? = free_plan? && status_active?
+  def free_plan_suspended? = free_plan? && status_suspended?
+
   # @return [Array<ProjectPath>]
   def smart_paths
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
+  end
+
+  def threshold_clicks_amount
+    case plan
+    when 'free' then FREE_PLAN_THRESHOLD
+    when 'light' then LIGHT_PLAN_THRESHOLD
+    when 'pro' then PRO_PLAN_THRESHOLD
+    end
+  end
+
+  def decorate
+    ProjectDecorator.new(self)
   end
 
   private
@@ -110,6 +140,7 @@ end
 #  protocol    :string           not null
 #  settings    :jsonb            not null
 #  status      :enum             default("active"), not null
+#  stripe      :jsonb            not null
 #  uuid        :uuid             not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null

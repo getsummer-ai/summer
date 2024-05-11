@@ -29,7 +29,7 @@ module Private
 
     def update_appearance
       form = params.fetch(:project, {}).permit(
-        settings_attributes: { appearance_attributes: [:frame_theme, :button_theme, :button_radius] }
+        settings_attributes: { appearance_attributes: [:frame_theme, :button_theme] }
       )
       @project.update(form)
       # res = @project.update(form)

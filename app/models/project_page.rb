@@ -2,6 +2,8 @@
 
 class ProjectPage < ApplicationRecord
   include Trackable
+  include EncryptedKey
+
   belongs_to :project
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
 

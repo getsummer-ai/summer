@@ -11,8 +11,7 @@ function addScript(src: string) {
 }
 
 const start = (key: string) => {
-  const apiUrl = import.meta.env.VITE_API_URL as string;
-  fetch(`${apiUrl}/api/v1/button/settings`, {
+  fetch(`${import.meta.env.VITE_API_URL}/api/v1/button/settings`, {
     mode: 'cors',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +22,7 @@ const start = (key: string) => {
     .then((data: { message?: string; path: string; settings: object }) => {
       if (!data.path) return console.error('GetSummer - ' + (data.message || 'No applications found'))
       window.GetSummer.settings = data.settings;
-      addScript(apiUrl + data.path).catch(console.log);
+      addScript(import.meta.env.VITE_ASSETS_URL + data.path).catch(console.log);
     }).catch((e) => {
       console.error(e);
       console.error('GetSummer - Failed to fetch version');

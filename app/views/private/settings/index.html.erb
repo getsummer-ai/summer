@@ -1,7 +1,79 @@
 <h2 class="font-semibold text-2xl">Settings</h2>
+<p class="opacity-50 mt-1">
+  Subscription / Domain addresses / Delete project sections <br>
+  If you experience issues contact support via
+  <a href="mailto:support@getsummer.ai?subject=Code installation issue" class="link">support@getsummer.ai</a>
+</p>
+<hr class="my-12">
+<!--<h3 class="font-semibold text-lg mt-4">Subscription information</h3>-->
+
+<div class="mt-4">
+  <div class="text-lg"><b><%=current_project.plan.humanize %> plan</b>
+  <% if current_project.status_active? %>
+    <% expired_at = current_project.decorate.subscription_expiration_time %>
+    <% if expired_at.present?  %>
+      <%= expired_at > Time.now ? 'expires' : 'was expired' %> on <%= expired_at.strftime('%d %B %Y') %>.
+    <% else %>
+      is active.
+    <% end %>
+  <% else %>
+    <% if current_project.stripe.subscription.cancel_at  %>
+      was suspended on <%=  Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+    <% else %>
+      has been suspended.
+    <% end %>
+  <% end %>
+  </div>
+  <p class="mt-0.5 opacity-50">
+    The <%=number_with_delimiter(current_project.threshold_clicks_amount) %>
+    button clicks
+
+    <%= current_project.free_plan? ? 'in total' : 'per month' %>
+
+    are included —
+    <b><%=number_with_delimiter(current_project.decorate.plan_left_clicks) %></b> clicks left.
+  </p>
+</div>
+
+<div class="mt-5">
+  <%=render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-neutral') %>
+  <%if current_project.free_plan_suspended? %>
+    <h4 class="mt-2 opacity-50">Get a subscription to continue using the Summary button on your website.</h4>
+  <% end %>
+</div>
+
+<% if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true' %>
+  <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-10">
+    These buttons are only visible in the test environment.
+
+
+    <% if current_project.stripe.subscription.id  %>
+      <%= button_to 'DELETE SUBSCRIPTION',
+                    admin_delete_subscription_project_payments_path(@current_project),
+                    method: :post,
+                    class: 'btn btn-summer btn-red mt-4',
+                    form: {
+                      'data-turbo': false
+                    } %>
+    <% end %>
+
+    <% if !current_project.stripe.subscription.id && @current_project.status_active? %>
+      <%= button_to 'SUSPEND PROJECT',
+                    admin_suspend_project_project_payments_path(@current_project),
+                    method: :post,
+                    class: 'btn btn-summer mt-4',
+                    form: {
+                      'data-turbo': false
+                    } %>
+    <% end %>
+  </div>
+<% end %>
+
+
 <hr class="my-12">
 
-<h3 class="font-semibold text-lg">Domain Addresses</h3>
+
+<h3 class="font-semibold text-lg mt-10">Domain Addresses</h3>
 <p class="opacity-50 mt-1">
   Summer will appear on the pages under this domain(s).
   If you experience issues with the domain or want to change the root address contact support via support@getsummer.ai
@@ -42,11 +114,21 @@
 <hr class="my-12">
 
 
-<h3 class="font-semibold text-lg">Delete Project</h3>
-<p class="opacity-50 mt-1">
-  You won’t be able to restore the data in case you delete this project.
-</p>
-<%= link_to 'Delete Project',
-            project_path(@current_project),
-            class: "btn btn-summer mt-9 w-36 btn-red",
-            data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
+
+<details tabindex="0" class="collapse collapse-arrow bg-red-50 rounded-2xl">
+  <summary class="collapse-title text-lg font-semibold">
+    Delete Project Section
+  </summary>
+  <div class="collapse-content">
+    <h3 class="font-semibold text-lg">Delete Project</h3>
+    <p class="opacity-50 mt-1">
+      You won’t be able to restore the data in case you delete this project.
+    </p>
+    <%= link_to 'Delete Project',
+                project_path(@current_project),
+                class: "btn btn-summer mt-9 w-36 btn-red",
+                data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
+  </div>
+</details>
+
+

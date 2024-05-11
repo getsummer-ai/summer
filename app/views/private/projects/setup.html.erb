@@ -1,5 +1,25 @@
 <h2 class="font-semibold text-2xl">Setup</h2>
-<h2 class="font-semibold text-xl mt-10">Appearance</h2>
+<p class="opacity-50 mt-1">
+  Here you can find setup instructions and change the appearance of the button even after installing the code.
+</p>
+
+
+<div class="p-6 mt-4 shadow-md border border-gray-200 rounded-2xl">
+  <h3 class="font-semibold text-lg">Setup checklist</h3>
+  <ul class="mt-4 list-disc list-inside">
+    <li class="mt-2">Setup <a href="#appearance">the appearance</a>. Change it any time later. <span class="opacity-40">30 sec</span></li>
+    <li class="mt-2">Embed code on your website. <span class="opacity-40">5 min</span></li>
+    <li class="mt-2">
+      Check the status in the <%= link_to 'Pages section', project_pages_path, class: 'link' %>
+      after the first button loads. <span class="opacity-40">30 sec</span>
+    </li>
+    <li class="mt-2">Add custom instructions and your products to <%= link_to 'Knowledge', project_pages_path, class: 'link' %>. <span class="opacity-40">Optional</span></li>
+  </ul>
+</div>
+
+<hr class="my-12">
+
+<h2 id="appearance" class="font-semibold text-xl">Appearance</h2>
 <p class="opacity-50 mt-1">
   The appearance change will apply automatically, you don’t need to reinstall or edit the code.
 </p>
@@ -18,7 +38,6 @@
           <%
             base_radio = 'radio-appearance-summer'
             light_radio = "#{base_radio} #{base_radio}--light-grey"
-            simple_radio = 'radio radio-lg checked:border-2 checked:border-[#0F43FF]'
             onchange = 'this.form.requestSubmit()'
           %>
 
@@ -32,23 +51,6 @@
             <%= appearance_form.radio_button :frame_theme, 'black', class: base_radio, onchange: onchange %>
             <%= appearance_form.radio_button :frame_theme, 'white', class: light_radio, onchange: onchange %>
           </div>
-          <div class="mt-8">
-            <div class="mb-4 font-semibold">Radius</div>
-            <label class="label cursor-pointer p-0 pl-1 w-[80px]">
-              <%= appearance_form.radio_button :button_radius, 'sm', class: simple_radio, onchange: onchange %>
-              <span class="label-text font-extrabold">SM</span>
-            </label>
-
-            <label class="label cursor-pointer p-0 pl-1 mt-2 w-[80px]">
-              <%= appearance_form.radio_button :button_radius, 'lg', class: simple_radio, onchange: onchange %>
-              <span class="label-text font-extrabold">LG</span>
-            </label>
-
-            <label class="label cursor-pointer p-0 pl-1 mt-2 w-[80px]">
-              <%= appearance_form.radio_button :button_radius, 'xl', class: simple_radio, onchange: onchange %>
-              <span class="label-text font-extrabold">XL</span>
-            </label>
-          </div>
         <% end %>
       <% end %>
     <% end %>
@@ -56,14 +58,21 @@
   <%=render Setup::AppearanceComponent.new(project_appearance_settings: current_project.settings.appearance) %>
 </div>
 <hr class="my-12">
-<h2 class="font-semibold text-xl">Code Snippet</h2>
-<p class="opacity-50 mt-1">
-  Add this code to your website. Summer will appear automatically on page load.
+
+
+<h2 class="font-semibold text-xl  mt-10">Code Snippet</h2>
+<p class="opacity-60 mt-1">
+  Below is the Summer button code for this project. Copy and paste it in the code of every page of your website,
+  somewhere after the <b><%='<head>' %></b> element. <b>Don’t add more than one Summer button to each page.</b>
+  <br><br>
+  Once you add the code to your website,
+  the Summer button will appear automatically on pages with an article
+  or some information that is possible to summarize.
 </p>
 
 
 <!-- Prism.js theme CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css">
 <!-- Prism.js JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
@@ -78,7 +87,7 @@
   </div>
 
   <div>
-    <% src = "#{ENV['VITE_PRODUCTION_URL']}/libs/init.umd.js" %>
+    <% src = "#{ENV['ASSETS_HOST']}/libs/init.umd.js" %>
     <% html_text = "<script type=\"module\" src=\"#{src}\" async></script>\n" %>
     <% tracker_id_js = "\n\twindow.GetSummer = window.GetSummer || { id: '#{current_project.uuid}' }\n" %>
     <% tracker_id_html = "<script type=\"text/javascript\">#{tracker_id_js}</script>" %>
@@ -98,3 +107,9 @@
     document.body.removeChild(textArea);
   });
 </script>
+<%= render Notice::Component.new(container_class: 'mt-6') do %>
+  <div class="text-sm leading-4 mt-1">
+    Have an issue or need help? Reach out to
+    <a href="mailto:support@getsummer.ai?subject=Code installation issue" class="link">support@getsummer.ai</a>
+  </div>
+<% end %>

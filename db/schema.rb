@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,7 +22,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
   create_enum "user_project_llm", ["gpt3.5", "gpt4"]
   create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
-  create_enum "user_project_type", ["free", "paid"]
+  create_enum "user_project_type", ["free", "light", "pro"]
 
   create_table "events", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -243,6 +243,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_01_153000) do
     t.enum "plan", default: "free", null: false, enum_type: "user_project_type"
     t.enum "default_llm", default: "gpt3.5", null: false, enum_type: "user_project_llm"
     t.text "guidelines", default: ""
+    t.jsonb "stripe", default: {}, null: false
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"

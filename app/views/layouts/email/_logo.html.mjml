@@ -3,11 +3,11 @@
   <mj-spacer height="20px"></mj-spacer>
 <% else %>
   <mj-column width="100%">
-    <mj-text css-class="sans-serif">
-      <div class="logo">
-        <%=render LogoComponent.new %>
-      </div>
-    </mj-text>
+    <mj-image
+      src="<%= absolute_url(vite_asset_url('assets/images/logo.png')) %>"
+      align="left"
+      width="120px"
+    ></mj-image>
     <mj-spacer height="20px"></mj-spacer>
   </mj-column>
 <% end %>

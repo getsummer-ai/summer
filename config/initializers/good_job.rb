@@ -4,8 +4,8 @@ Rails.application.configure do
   config.good_job.enable_cron = true
   config.good_job.cron = {
     close_replicate_requests: {
-      cron: '* * * * *',
-      class: 'AutoStopUserRequestsProcessingJob'
+      cron: '*/10 * * * *',
+      class: 'SuspendProjectsJob'
     }
   }
 end

@@ -13,7 +13,7 @@ describe WebScrapperService do
 
     expect(result.title).to eq 'New Year celebrations'
     expect(result.description).to be_nil
-    expect(result.image_url).to be_nil
+    expect(result.image_url).to eq '/og_images/default.png'
   end
 
   it 'scrapes and retrieve meta tags from the page' do
