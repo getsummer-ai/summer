@@ -1,8 +1,10 @@
-<% content_for :meta do %>
-  <title>Summer AI | Login</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Transform your blog with AI summary button.">
-  <meta property="og:title" content="Summer AI | Login">
+<% unless content_for?(:meta) %>
+  <% content_for :meta do %>
+    <title>Summer AI | Login</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Transform your blog with AI summary button.">
+    <meta property="og:title" content="Summer AI | Login">
+  <% end %>
 <% end %>
 
 <% content_for :js do %>

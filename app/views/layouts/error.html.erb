@@ -1,21 +1,8 @@
-<% content_for :content do %>
-  <%= render 'layouts/shared/header' %>
-  <% if content_for?(:breadcrumbs) %>
-    <div class="mt-2">
-      <%= yield(:breadcrumbs) %>
-    </div>
-  <% end %>
-  <div class="mt-4">
-    <%= render 'layouts/shared/alerts' %>
-  </div>
-  <div class="mt-8">
-    <%= yield %>
-  </div>
+<% content_for :meta do %>
+  <title>Summer AI | Error</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Transform your blog with AI summary button.">
+  <meta property="og:title" content="Summer AI | Error">
 <% end %>
 
-<% content_for :footer do %>
-  <%= render 'layouts/shared/footer' %>
-  <%#= render 'layouts/shared/footer_small' %>
-<% end %>
-
-<%= render template: "layouts/application" %>
+<%= render template: "layouts/login" %>

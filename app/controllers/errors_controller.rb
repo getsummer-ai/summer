@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class ErrorsController < ApplicationController
   skip_before_action :authenticate_user!, :update_user_locale!
-  layout 'basic'
+  layout :custom_layout
 
   # Overloading the default switch_locale
   def switch_locale(&)
@@ -22,5 +22,11 @@ class ErrorsController < ApplicationController
       format.html { render status: :internal_server_error }
       format.json { render json: { error: "internal_server_error" }, status: :internal_server_error }
     end
+  end
+
+
+  def custom_layout
+    return 'private' if current_user.present?
+    'error'
   end
 end
