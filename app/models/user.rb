@@ -31,7 +31,7 @@ class User < ApplicationRecord
         u.password = Devise.friendly_token
         u.locale = locale if User.locales.value?(locale.to_s)
       end
-    user.update(provider: auth.provider, uid: auth.uid) if user.provider.empty?
+    user.update(provider: auth.provider, uid: auth.uid) if user.provider.blank?
     user
   end
 
