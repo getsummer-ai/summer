@@ -60,9 +60,14 @@ jobs:
       - name: Yarn install
         run: yarn install
 
-      - name: Setup DB, Run tests
+      - name: Setup DB, Precompile assets
         env:
-          CAPYBARA_JS_DRIVER: selenium_chrome_headless
           RAILS_ENV: test
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
-        run: bin/rails db:setup spec
+        run: bin/rails db:setup assets:precompile
+
+      - name: Run specs
+        env:
+          RAILS_ENV: test
+          CAPYBARA_JS_DRIVER: selenium_chrome_headless
+        run: bin/rails spec
