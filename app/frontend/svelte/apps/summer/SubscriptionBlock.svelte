@@ -37,6 +37,7 @@
     font-weight: 500;
     line-height: 22px;
     margin-top: 48px;
+    animation: opacity-appear 0.2s ease-in-out;
 
     .wrapper {
       @apply flex justify-between;
@@ -104,6 +105,15 @@
         color: #242424;
         background: rgba(255, 255, 255, 0.90);
       }
+    }
+  }
+
+  @keyframes opacity-appear {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
     }
   }
 </style>

@@ -1,3 +1,12 @@
+<% unless content_for?(:meta) %>
+  <% content_for :meta do %>
+    <title>Summer AI | Login</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Transform your blog with AI summary button.">
+    <meta property="og:title" content="Summer AI | Login">
+  <% end %>
+<% end %>
+
 <% content_for :js do %>
   <%= vite_typescript_tag 'login' %>
 <% end %>
@@ -10,14 +19,10 @@
     <div class="image bg-[#2FA8FF] md:w-1/2 relative overflow-hidden flex flex-col justify-between text-white">
       <div class="w-[1240px] h-[1240px] left-0 top-[-750px] absolute bg-[#FFCF24] blur-5xl rounded-full z-0"></div>
       <div class="m-4 z-0">
-        <%=render LogoComponent.new(color: 'white') %>
+        <a href="https://getsummer.ai">
+          <%=render LogoComponent.new(color: 'white') %>
+        </a>
       </div>
-      <!--      <div class="m-6 mt-2 md:m-8 md:mb-14 z-0">-->
-      <!--        <blockquote class="text-xl md:text-4xl max-w-[608px] font-semibold text-white">-->
-      <!--          “Our users can’t simply read our blog anymore they just click this magic button.”-->
-      <!--        </blockquote>-->
-      <!--        <p class="opacity-50 text-xs md:text-base mt-2">Kirill Zheleznov, CEO at Enty</p>-->
-      <!--      </div>-->
     </div>
     <div class="md:w-1/2 bg-white flex flex-column justify-center items-center md:min-h-screen flex-grow">
       <div class="w-96 pb-5">

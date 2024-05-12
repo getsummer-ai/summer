@@ -6,6 +6,11 @@ module Private
 
     # GET /projects/new
     def new
+      if !turbo_frame_request? && any_project_exist?
+        anchor = generate_modal_anchor(new_project_path)
+        return redirect_to billing_index_path(anchor:)
+      end
+
       @project = ProjectForm.new(current_user)
       render(:new_modal) if turbo_frame_request?
     end
@@ -83,8 +88,12 @@ module Private
 
     def set_new_project_layout
       return 'turbo_rails/frame' if turbo_frame_request?
-      return 'login' unless current_user.projects.exists?
+      return 'login' unless any_project_exist?
       'private'
+    end
+
+    def any_project_exist?
+      @any_project_exist ||= current_user.projects.exists?
     end
 
     # Only allow a list of trusted parameters through.

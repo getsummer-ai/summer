@@ -3,11 +3,16 @@
 <% body_class = content_for?(:body_class) ? yield(:body_class) : '' %>
 <html class="<%= html_class.strip %>" data-theme="lofi">
   <head>
-    <title>Summer AI | App</title>
-    <meta name="description" content="Transform your blog with AI summary button.">
+    <% if content_for?(:meta) %>
+      <%= yield(:meta) %>
+    <% else %>
+      <title>Summer AI | App</title>
+      <meta name="description" content="Transform your blog with AI summary button.">
+    <% end %>
     <%= favicon_link_tag vite_asset_path('assets/images/favicon.png') %>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+
     <%= render 'layouts/shared/google_tag_head' %>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
