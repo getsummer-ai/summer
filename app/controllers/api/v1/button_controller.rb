@@ -7,7 +7,7 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      BUTTON_APP = if Rails.env.production?
+      BUTTON_APP = unless Rails.env.development?
          manifest = JSON.parse(Rails.public_path.join('libs/.vite/manifest.json').read)
          manifest["app/frontend/libs/summer.ts"]["file"]
       end
