@@ -35,7 +35,7 @@ RSpec.describe Api::V1::ButtonController do
         get(:settings)
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(
-          path: be_a(String).and(include('/libs/app.umd.js')),
+          path: be_a(String).and(include('/libs/app.')),
           settings: {
             appearance: {
               button_theme: 'black',
@@ -68,7 +68,7 @@ RSpec.describe Api::V1::ButtonController do
 
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(
-          path: be_a(String).and(include('/libs/app.umd.js')),
+          path: be_a(String).and(include('/libs/app.')),
           settings: {
             appearance: {
               button_theme: 'black',

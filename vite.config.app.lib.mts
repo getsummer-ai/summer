@@ -21,6 +21,7 @@ export default defineConfig({
     emptyOutDir: false,
     copyPublicDir: false,
     minify: true,
+    manifest: true,
     // cssMinify: 'lightningcss',
     lib: {
       formats: ['umd'],
@@ -31,6 +32,7 @@ export default defineConfig({
     outDir: resolve(__dirname, "public/libs"),
     rollupOptions: {
       output: {
+        entryFileNames: 'app.[hash].js',
         inlineDynamicImports: true
       }
     },

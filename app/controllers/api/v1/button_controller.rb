@@ -7,7 +7,10 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      BUTTON_VERSION = '0.2.0'
+      BUTTON_APP = unless Rails.env.development?
+         manifest = JSON.parse(Rails.public_path.join('libs/.vite/manifest.json').read)
+         manifest["app/frontend/libs/summer.ts"]["file"]
+      end
 
       def settings
         @app_path =
@@ -15,7 +18,7 @@ module Api
             if Rails.env.development?
               helpers.vite_asset_path('libs/summer.ts')
             else
-              "/libs/app.umd.js?v=#{BUTTON_VERSION}"
+              "/libs/#{BUTTON_APP}"
             end
           )
       end
