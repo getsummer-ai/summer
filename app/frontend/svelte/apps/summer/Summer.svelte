@@ -217,8 +217,12 @@
 
   .loading-block {
     @apply text-center;
-    margin: 100px 0;
+    padding-top: 80px;
     opacity: 0.2;
+
+    @media (max-width: 640px) {
+      padding-top: 120px;
+    }
 
     .loading-icon {
       @apply loading-lg;

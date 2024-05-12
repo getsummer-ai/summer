@@ -114,26 +114,28 @@
         </div>
       </div>
       <div class="dialog-body" bind:this={dialogBody}>
-        <h1>{title}</h1>
-        <div class="content">
-          <slot />
-        </div>
-        <div class="footer">
-          <slot name="footer" />
-          <div class="powered-by">
-            <a href="https://getsummer.ai" target="_blank">
-              <span>Powered by</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="13"
-                height="12"
-                viewBox="0 0 13 12"
-                fill="none"
-              >
-                <circle cx="6.5" cy="6" r="6" fill="#FECF29" />
-              </svg>
-              <span>Summer</span>
-            </a>
+        <div class="container">
+          <h1>{title}</h1>
+          <div class="content">
+            <slot />
+          </div>
+          <div class="footer">
+            <slot name="footer" />
+            <div class="powered-by">
+              <a href="https://getsummer.ai" target="_blank">
+                <span>Powered by</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="13"
+                  height="12"
+                  viewBox="0 0 13 12"
+                  fill="none"
+                >
+                  <circle cx="6.5" cy="6" r="6" fill="#FECF29" />
+                </svg>
+                <span>Summer</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -198,6 +200,13 @@
         overflow-y: scroll;
         ::-webkit-scrollbar {
           display: none; /* for Chrome, Safari, and Opera */
+        }
+
+        .container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          min-height: 100%;
         }
       }
 
@@ -284,6 +293,7 @@
     }
 
     .content {
+      flex-grow: 1;
       letter-spacing: -0.2px;
 
       :global(ul) {
