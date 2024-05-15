@@ -9,15 +9,31 @@
     <h3 class="text-lg font-semibold mt-2">
       <%= link_to title, @project_page_decorated.url, 'target' => '_blank' %>
     </h3>
-    <div class="summary-html mt-2" id="<%=dom_id(@project_page_decorated, :summary)%>">
+    <div class="summary-html mt-2" id="<%= dom_id(@project_page_decorated, :summary) %>">
       <%= sanitize @project_page_decorated.summary_html %>
     </div>
     <div class="mt-2 text-right">
-      <%= button_to 'Refresh summary',
-            summary_refresh_project_page_path(@current_project, @project_page_decorated),
-            method: :post,
-            class: 'btn btn-summer mt-4'
+      <%=
+        button_to 'Refresh summary',
+                  summary_refresh_project_page_path(@current_project, @project_page_decorated),
+                  method: :post,
+                  class: 'btn btn-summer mt-4'
       %>
     </div>
+
+    <% if ENV.fetch('PLAYGROUND_MODE', nil) == 'true' %>
+      <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-15">
+        These buttons are only visible in playground mode.
+
+        <% if current_project.stripe.subscription.id  %>
+          <%=
+            button_to 'DELETE SUMMARY',
+                      summary_admin_delete_project_page_path(@current_project, @project_page_decorated),
+                      method: :post,
+                      class: 'btn btn-summer btn-red mt-4'
+          %>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>

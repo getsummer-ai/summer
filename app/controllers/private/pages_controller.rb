@@ -3,10 +3,12 @@ module Private
   class PagesController < PrivateController
     include Pagy::Backend
     before_action :find_project
-    before_action :set_url, only: %i[show update summary summary_refresh]
-    before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh]
+    before_action :set_url, only: %i[show update summary summary_refresh summary_admin_delete]
+    before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh summary_admin_delete]
 
     layout :private_or_turbo_layout
+
+    IS_PLAYGROUND = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
 
     def index
       @statistics = ProjectStatisticsViewModel.new(@current_project, [:views, :actions])
@@ -50,6 +52,13 @@ module Private
 
       SummarizeArticleJob.perform_now(@article.id)
       @error_message = nil
+    end
+
+    def summary_admin_delete
+      return head(:forbidden) unless IS_PLAYGROUND
+
+      @article = ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
+      @article.update(summary_llm_call_id: nil, summary_status: 'wait')
     end
 
     def update

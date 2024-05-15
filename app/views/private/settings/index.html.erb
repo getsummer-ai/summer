@@ -42,9 +42,9 @@
   <% end %>
 </div>
 
-<% if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true' %>
+<% if ENV.fetch('PLAYGROUND_MODE', nil) == 'true' %>
   <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-15">
-    These buttons are only visible in the test environment.
+    These buttons are only visible in playground mode.
 
 
     <% if current_project.stripe.subscription.id  %>

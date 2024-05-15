@@ -17,6 +17,8 @@ Rails.application.routes.draw do
                }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
+    is_playground_mode = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
+
     root 'private/app#index'
 
     scope '/', module: 'private' do
@@ -34,6 +36,7 @@ Rails.application.routes.draw do
           member do
             get :summary
             post 'summary/refresh', action: :summary_refresh
+            post('summary/admin-delete', action: :summary_admin_delete) if is_playground_mode
           end
         end
         resources :actions, only: %i[index update]
@@ -46,7 +49,7 @@ Rails.application.routes.draw do
             get :cancel
             get :return
 
-            if ENV.fetch('STRIPE_TEST_ENVIRONMENT', nil) == 'true'
+            if is_playground_mode
               post :admin_delete_subscription
               post :admin_suspend_project
             end
