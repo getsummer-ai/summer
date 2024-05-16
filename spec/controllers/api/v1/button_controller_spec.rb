@@ -21,17 +21,38 @@ RSpec.describe Api::V1::ButtonController do
       end
     end
 
-    it 'returns incorrect domain response' do
+    it 'returns incorrect domain response when there is no origin or referrer header' do
       get(:settings)
       expect(response).to have_http_status(:forbidden)
       expect(response.body).to eq "{\"code\":\"wrong_domain\",\"message\":\"Incorrect domain\"}"
     end
 
-    context 'when http_status is 200' do
+    it 'returns ok when an origin header includes the www subdomain' do
+      request.headers['origin'] = 'http://www.localhost.com'
+      get(:settings)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns ok when a project\'s domain includes the www subdomain' do
+      project.update!(domain: 'www.localhost.com')
+      request.headers['origin'] = 'http://localhost.com'
+      get(:settings)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns ok when there is only a referer header' do
+      request.headers['referer'] = 'https://www.localhost.com/'
+      get(:settings)
+      expect(response).to have_http_status(:ok)
+    end
+
+    context 'when the domain check passes' do
       render_views
+      before do
+        request.headers['origin'] = 'http://localhost.com'
+      end
 
       it 'returns response successfully' do
-        request.headers['origin'] = 'http://localhost.com'
         get(:settings)
         expect(response).to have_http_status(:ok)
         expect(response.parsed_body).to include(
@@ -62,7 +83,6 @@ RSpec.describe Api::V1::ButtonController do
           },
           paths: %w[/path1 /path2],
         )
-        request.headers['origin'] = 'http://localhost.com'
 
         get(:settings)
 

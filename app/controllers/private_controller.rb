@@ -25,9 +25,13 @@ class PrivateController < ApplicationController
     @current_project ||= find_project
   end
 
-
   # @param [String] path
   def generate_modal_anchor(path)
+    self.class.generate_modal_anchor(path)
+  end
+
+  # @param [String] path
+  def self.generate_modal_anchor(path)
     modal_anchor_to_open = Base64.encode64(path)
     "m=#{modal_anchor_to_open}"
   end

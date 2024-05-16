@@ -22,6 +22,14 @@ class CheckProjectRequestForm
     return false if errors.any?
     request_from_url = @origin.presence || @referer.presence
 
-    Project.parse_url(request_from_url)&.host == @project.domain
+    request_host = Project.parse_url(request_from_url)&.host
+
+    clean_from_www(request_host) == clean_from_www(@project.domain)
+  end
+
+  # @param [String, nil] domain
+  def clean_from_www(domain)
+    return domain.gsub('www.', '') if domain&.include?('www')
+    domain
   end
 end
