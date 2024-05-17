@@ -29,7 +29,8 @@ class CheckProjectRequestForm
 
   # @param [String, nil] domain
   def clean_from_www(domain)
-    return domain.gsub('www.', '') if domain&.include?('www')
-    domain
+    # return domain.to_s.delete_prefix('www.') if domain.to_s.start_with?('www.')
+    # domain
+    domain.to_s.delete_prefix('www.')
   end
 end
