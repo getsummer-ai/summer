@@ -13,6 +13,8 @@ class Project < ApplicationRecord
   LIGHT_PLAN_THRESHOLD = 5_000
   PRO_PLAN_THRESHOLD = 25_000
 
+  ALREADY_TAKEN_ERROR = 'is already taken'
+
   enum plan: { free: 'free', light: 'light', pro: 'pro' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
@@ -67,17 +69,17 @@ class Project < ApplicationRecord
             uniqueness: {
               scope: :user_id,
               case_sensitive: false,
-              conditions: -> { where.not(status: :deleted) },
-              message: 'is already taken',
+              conditions: -> { available },
+              message: ALREADY_TAKEN_ERROR,
             }
   validates :domain,
             domain_url: true,
             presence: true,
             uniqueness: {
               scope: :user_id,
-              case_sensitive: false,
-              conditions: -> { where.not(status: :deleted) },
-              message: 'is already taken',
+              # case_sensitive: false,
+              conditions: -> { available },
+              message: ALREADY_TAKEN_ERROR,
             },
             if: -> { domain_changed? }
 
@@ -85,6 +87,7 @@ class Project < ApplicationRecord
   validates :guidelines, length: { maximum: 500 }
 
   normalizes :name, with: ->(name) { name.strip }
+  normalizes :domain, with: ->(domain) { domain.downcase }
 
   before_save if: -> { domain_changed? } do |project|
     project.domain = Project.parse_url(domain)&.host
