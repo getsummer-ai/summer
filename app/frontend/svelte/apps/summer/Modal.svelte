@@ -66,6 +66,7 @@
 
   const moveTouch = (event) => {
     event.preventDefault();
+    event.stopPropagation();
     if (startTouchY === 0) return;
 
     endTouchY = event.touches[0].pageY;
