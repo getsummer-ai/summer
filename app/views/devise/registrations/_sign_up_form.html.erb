@@ -6,7 +6,7 @@
                    # url: user_google_oauth2_omniauth_authorize_path,
                    url: omniauth_authorize_path(resource_name, :google_oauth2),
                    method: :post,
-                   data: { turbo: "false" } do |form| %>
+                   data: { turbo: false } do |form| %>
         <%= form.button(type: 'submit', class: "btn btn-outline btn-input-summer btn-block rounded-lg") do %>
           <%= vite_image_tag "assets/icons/google.svg", class: 'inline-block w-4 h-4' %>
           <%= t('.sign_up_via_google') %>

@@ -17,7 +17,12 @@
 
   <div class="divider my-6 text-sm text-gray-500"><%= t('.or') %></div>
 
-  <%= form_for(resource, as: resource_name, url: session_path(resource_name), builder: DaisyBuilder) do |f| %>
+  <%= form_for(resource, 
+        as: resource_name,
+        url: session_path(resource_name),
+        data: { turbo: is_turbo ? 'true' : 'false' },
+        builder: DaisyBuilder
+      ) do |f| %>
     <div class="form-control">
       <%= f.label :email, t('.email') %>
       <%= f.email_field :email, required: true, autocomplete: 'email' %>
