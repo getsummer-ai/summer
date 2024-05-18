@@ -1,12 +1,12 @@
-<% if @error_message.nil? %>
+<% if @article.errors.empty? %>
   <%= turbo_stream.update dom_id(@project_page, :summary) do %>
-    <%= sanitize @project_page.decorate.summary_html %>
+    <%= '' %>
   <% end %>
-  <% flash.now[:alert] = 'The summary has been updated' %>
+  <% flash.now[:alert] = 'The summary has been deleted' %>
   <%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
 <%
 else
-  flash.now[:alert] = @error_message
+  flash.now[:alert] = @article.errors.full_messages.join(", ")
   concat turbo_stream.prepend "flash", partial: "layouts/shared/alerts"
 end
 %>

@@ -9,13 +9,28 @@ class ProjectForm
   validates :name, presence: true, length: 3..50
   validates :urls, url: { accept_array: true }
   validate :validate_urls, if: -> { errors.empty? }
+  validate :validate_first_host, if: -> { errors.empty? }
+
+  MUST_MATCH_ERROR = 'must have the same domain name'
 
   def validate_urls
-    return errors.add(:urls, :invalid) unless urls.is_a?(Array)
+    return errors.add(:urls, :invalid) if !urls.is_a?(Array) || urls.empty? || first_host.nil?
 
-    host = parsed_urls[0].host&.downcase
-    errors.add(:urls, :invalid) if host.nil?
-    parsed_urls.each { |url| errors.add(:urls, :invalid) if host != url.host&.downcase }
+    parsed_urls.each do |url|
+      errors.add(:urls, MUST_MATCH_ERROR) if first_host != url.host&.downcase
+    end
+  end
+
+  def validate_first_host
+    the_host = first_host.to_s
+    host_with_prefix = the_host.start_with?('www.') ? the_host : "www.#{the_host}"
+    uniqueness_query =
+      @user.projects.available.where(
+        domain: [the_host.delete_prefix('www.'), host_with_prefix].uniq,
+      )
+    return unless uniqueness_query.exists?
+
+    errors.add(:domain, Project::ALREADY_TAKEN_ERROR)
   end
 
   # @param [User] user
@@ -41,7 +56,7 @@ class ProjectForm
     return nil if invalid?
     model = generate_new_project
     if model.invalid?
-      model.errors.full_messages.each{ |msg| errors.add(:base, msg) }
+      model.errors.full_messages.each { |msg| errors.add(:base, msg) }
       return nil
     end
 
@@ -55,15 +70,20 @@ class ProjectForm
 
   private
 
+  def first_host
+    @first_host ||= parsed_urls[0].host&.downcase
+  end
+
   # @return [Project]
   def generate_new_project
-    model = Project.new(
-      user_id: @user.id,
-      name:,
-      protocol:,
-      domain:,
-      paths: parsed_urls.filter_map(&:path)
-    )
+    model =
+      Project.new(
+        user_id: @user.id,
+        name:,
+        protocol:,
+        domain:,
+        paths: parsed_urls.filter_map(&:path),
+      )
     model.start_tracking(source: 'Create Project Form', author: @user)
     model
   end

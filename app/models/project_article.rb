@@ -75,6 +75,7 @@ class ProjectArticle < ApplicationRecord
               id
               project_id
               title
+              info
               summary_status
               products_status
               summary_llm_call_id
