@@ -1,9 +1,14 @@
-# Rails.application.config.middleware.use OmniAuth::Builder do
-#   provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET']
-# end
+# frozen_string_literal: true
 #
-# OmniAuth.config.allowed_request_methods = %i[get]
-
+# Errors from authentication may crash because no Devise mapping is defined
+# for the callback path. To work around this we manually set the failure
+# callback to Users::OmniauthCallbacksController.failure().
+#
+# See https://github.com/plataformatec/devise/issues/2004#issuecomment-7466322
+# for more information.
 OmniAuth.config.on_failure = proc do |env|
-  "Users::OmniauthCallbacksController".constantize.action(:failure).call(env)
+  env["devise.mapping"] = Devise.mappings[:user]
+  controller_name = ActiveSupport::Inflector.camelize(env["devise.mapping"].controllers[:omniauth_callbacks])
+  controller_klass = ActiveSupport::Inflector.constantize("#{controller_name}Controller")
+  controller_klass.action(:failure).call(env)
 end
