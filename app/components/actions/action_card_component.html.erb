@@ -23,14 +23,17 @@
         <%= @description %>
       </p>
 
-      <div class="text-black opacity-60 mt-4 cursor-pointer">
+      <a class="text-black opacity-60 mt-4 inline-block cursor-pointer"
+         href="<%= @link %>"
+         target="_blank"
+      >
         <img
           src="<%= vite_asset_path('assets/icons/play.svg') %>"
           class="summer-icon-xs mr-0.5"
           alt="Action icon"
         />
         <span class="align-middle">How it works?</span>
-      </div>
+      </a>
     </div>
 
     <div>

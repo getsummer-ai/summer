@@ -7,13 +7,15 @@
 <div class="p-6 mt-6 shadow-md border border-gray-200 rounded-2xl">
   <h3 class="font-semibold text-lg">Setup checklist</h3>
   <ul class="mt-4 list-decimal list-inside">
-    <li class="mt-2">Setup <a href="#appearance" class="link">the appearance</a>. Change it any time later. <span class="opacity-40">30 sec</span></li>
-    <li class="mt-2"><a href="#code_snippet" class="link">Embed code</a> on your website. <span class="opacity-40">5 min</span></li>
+    <li class="mt-2">Setup <a href="#appearance" class="link underline-offset-4">the appearance</a>. Change it any time later. <span class="opacity-40">30 sec</span></li>
+    <li class="mt-2"><a href="#code_snippet" class="link underline-offset-4">Embed code</a> on your website. <span class="opacity-40">5 min</span></li>
     <li class="mt-2">
-      Check the status in the <%= link_to 'Pages section', project_pages_path, class: 'link' %>
+      Check the status in the <%= link_to 'Pages section', project_pages_path, class: 'link underline-offset-4' %>
       after the first button loads. <span class="opacity-40">30 sec</span>
     </li>
-    <li class="mt-2">Add custom instructions and your products to <%= link_to 'Knowledge', knowledge_project_path, class: 'link' %>. <span class="opacity-40">Optional</span></li>
+    <li class="mt-2">Add custom instructions and your products to
+      <%= link_to 'Knowledge', knowledge_project_path, class: 'link underline-offset-4' %>.
+      <span class="opacity-40">Optional</span></li>
   </ul>
 </div>
 
@@ -105,6 +107,8 @@
     textArea.select();
     document.execCommand('copy');
     document.body.removeChild(textArea);
+    this.innerText = 'Copied!';
+    setTimeout(() => { this.innerText = 'Copy Code';}, 5000);
   });
 </script>
 <%= render Notice::Component.new(container_class: 'mt-6') do %>
