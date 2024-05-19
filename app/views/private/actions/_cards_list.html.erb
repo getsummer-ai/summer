@@ -2,6 +2,7 @@
     title: 'Summary',
     color: 'pink',
     description: 'Gives user a summary of the content on the page.',
+    link: 'https://www.getsummer.ai/features#summary'
     ) do %>
   <input
     class="toggle toggle-summer toggle-lg"
@@ -16,6 +17,7 @@
     title: 'Product Suggestions',
     color: 'blue',
     description: 'Offers your product when it is relevant to the context of the summary.',
+    link: 'https://www.getsummer.ai/features#suggestions'
     ) do %>
   <%=
     form_with model: @project,
@@ -37,6 +39,7 @@
     title: 'Subscription',
     color: 'green',
     description: 'Offers a weekly email subscription to your latest articles summaries.',
+    link: 'https://www.getsummer.ai/features#subscription'
     ) do %>
   <%=
     form_with model: @project,
@@ -58,6 +61,7 @@
          title: 'Context',
          color: 'yellow',
          description: 'Provides extended context to selected fragment of the page.',
+         link: 'https://www.getsummer.ai/features#context'
        ) do %>
   <div class="badge-summer badge-xl">Coming Soon</div>
 <% end %>

@@ -53,7 +53,7 @@ module Users
     end
 
     def account_update_params
-      devise_parameter_sanitizer.sanitize(:account_update).slice(:password_confirmation, :current_password)
+      devise_parameter_sanitizer.sanitize(:account_update).slice(:password, :password_confirmation, :current_password)
     end
   end
 end

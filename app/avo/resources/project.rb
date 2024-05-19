@@ -24,7 +24,7 @@ module Avo
         # field :plan, as: :select, enum: ::Project.plans
         field :plan, as: :badge, options: { success: :paid, neutral: :free }
         field :status, as: :select, enum: ::Project.statuses
-        field :settings, as: :key_value, hide_on: [:index], show_on: :preview
+        # field :settings, as: :key_value, hide_on: [:index], show_on: :preview
         # field :settings, as: :code, language: 'javascript', hide_on: [:index], show_on: :preview
         field :default_llm,
               as: :select,
@@ -33,19 +33,20 @@ module Avo
               show_on: :preview
         field :views_clicks, as: :text do
           res =
-            ProjectArticleStatistic.where(
-              project_article_id: AvoProjectArticle.select(:id).where(project_id: record.id),
+            ProjectStatistic.where(
+              trackable_type: 'ProjectPage',
+              trackable_id: AvoProjectPage.select(:id).where(project_id: record.id),
             ).pluck('SUM(views)', 'SUM(clicks)')
           res = res.flatten.map(&:to_i)
-          "#{res[0]} - #{res[1]} / #{(res[1] * 100 / res[0]).round(2)}%"
+          "#{res[0]} - #{res[1]} / #{(res[1] * 100 / ((res[0]).zero? ? 1 :  res[0])).round(2)}%"
         end
         field :articles_tokens_avg, as: :text do
           res =
             record.project_articles.summary_status_completed.pluck(
-              Arel.sql('count(*)'), 'SUM(tokens_count)', 'SUM(tokens_count)',
+              Arel.sql('count(*)'), 'SUM(tokens_count)',
             )
           res = res.flatten.map(&:to_i)
-          "#{res[0]} / #{res[1] + res[2]} / #{(res[1] + res[2]) / res[0]}"
+          "#{res[0]} / #{res[1] / (res[0].zero? ? 1: res[0])}"
         end
         field :created_at, as: :date_time, show_on: :preview, hide_on: [:index]
         field :deleted_at, as: :date_time, hide_on: [:index]

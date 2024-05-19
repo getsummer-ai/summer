@@ -8,18 +8,6 @@ GIT
       activesupport (>= 6.1.5)
       i18n
 
-GIT
-  remote: https://github.com/heartcombo/devise.git
-  revision: 95ed7d3dd86257c8a62619563f8bac74d481ed9f
-  branch: 4-stable
-  specs:
-    devise (4.9.3)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -159,6 +147,12 @@ GEM
     debug (1.9.1)
       irb (~> 1.10)
       reline (>= 0.3.8)
+    devise (4.9.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     diff-lcs (1.5.1)
     docile (1.4.0)
     dotenv (2.8.1)
@@ -534,7 +528,7 @@ DEPENDENCIES
   capybara (~> 3.40)
   database_cleaner-active_record
   debug
-  devise!
+  devise (>= 4.9.4)
   dotenv-rails
   down
   draper
