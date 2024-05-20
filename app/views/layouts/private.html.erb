@@ -1,3 +1,10 @@
+<% unless content_for?(:meta) %>
+  <% content_for :meta do %>
+    <title>Summer AI | App</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <% end %>
+<% end %>
+
 <% content_for :js do %>
   <%#= vite_typescript_tag 'application' %>
 <% end %>
@@ -11,8 +18,11 @@
 
 <% content_for :content do %>
   <% current_project = current_project || current_user.default_project %>
-  <div class="fixed flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] min-w-[250px] bg-default overflow-y-auto">
-    <div class="menu-header" id="sidebar-menu">
+  <div
+    id="sidebar-menu"
+    class="hidden fixed z-20 md:flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] min-w-[250px] bg-default overflow-y-auto"
+  >
+    <div class="menu-header text-base">
       <div class="logo-part p-1.5">
         <%= render LogoComponent.new %>
       </div>
@@ -30,11 +40,26 @@
       <%=render(UserMenuComponent.new(user: current_user)) %>
     </div>
   </div>
-  <div class="pl-[250px] min-h-screen flex flex-col">
+  <div class="md:pl-[250px] min-h-screen flex flex-col relative z-10">
+    <div class="flex items-center justify-between md:hidden">
+      <div class="flex items-center">
+        <div class="logo-part pl-4">
+          <%= render LogoComponent.new %>
+        </div>
+      </div>
+      <div class="p-2" data-controller="menu-sidebar">
+        <label data-action="click->menu-sidebar#toggleMenu"
+               class="btn btn-circle swap swap-rotate">
+          <input data-menu-sidebar-target="checkbox" type="checkbox" />
+          <svg class="swap-off fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/></svg>
+          <svg class="swap-on fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/></svg>
+        </label>
+      </div>
+    </div>
     <% if current_project.status_suspended? %>
       <%= render SuspendedInfo::Component.new(project: current_project) %>
     <% end %>
-    <div class="p-10 rounded-2xl bg-white grow min-w-[700px] z-10 overflow-hidden">
+    <div class="p-4 md:p-10 rounded-2xl bg-white grow z-10">
       <div class="container mx-auto max-w-[768px] pb-10">
         <% if content_for?(:breadcrumbs) %>
           <div class="mt-2"><%= yield(:breadcrumbs) %></div>
@@ -44,7 +69,7 @@
     </div>
   </div>
   <%= render TurboModalContainer::Component.new %>
-  <div id="flash" class="fixed bottom-5 right-5 w-100 z-10">
+  <div id="flash" class="fixed bottom-5 right-5 w-100 z-50">
     <%= render 'layouts/shared/alerts' %>
   </div>
 <% end %>

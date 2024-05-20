@@ -19,7 +19,7 @@
         end
       %>
     </span>
-    <span class="ml-2 overflow-hidden font-semibold text-ellipsis"><%= @user.name || @user.email + @user.email  %></span>
+    <span class="ml-2 overflow-hidden font-semibold text-ellipsis"><%= @user.name || @user.email  %></span>
   </div>
   <ul tabindex="0" class="dropdown-content z-[1] p-2 shadow bg-white rounded-2xl w-52">
     <% routes.each do |route|

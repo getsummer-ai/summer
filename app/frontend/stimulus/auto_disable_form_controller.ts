@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-export default class AutoDisableForm extends Controller {
+export default class AutoDisableFormController extends Controller {
   static values = { with: String }
 
   declare hasWithValue: boolean;

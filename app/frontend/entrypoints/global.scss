@@ -5,7 +5,9 @@
 @tailwind utilities;
 
 html {
-  @apply text-base;
+  font-size: 14px;
+  line-height: 20px;
+  @apply md:text-base;
   font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
