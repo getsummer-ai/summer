@@ -89,8 +89,8 @@
 <% end %>
 
 <div>
-  <div class="overflow-x-auto mt-6">
-    <table class="table table-summer">
+  <div class="overflow-x-auto mt-6 -mx-4 px-4 md:mx-0 md:px-0">
+    <table class="table table-summer min-w-[500px]">
       <thead>
       <tr class="text-right">
         <th class="font-semibold text-left">URL Address</th>
@@ -126,7 +126,7 @@
     </p>
     <%= link_to 'Delete Project',
                 project_path(@current_project),
-                class: "btn btn-summer mt-9 w-36 btn-red",
+                class: "btn btn-summer mt-9 w-44 md:w-36 btn-red",
                 data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
   </div>
 </details>

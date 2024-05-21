@@ -6,16 +6,16 @@ describe "the Sign In process" do
     it 'redirects to the sign-in page' do
       visit '/'
       expect(page).to have_current_path new_user_session_path
-      expect(page).to have_content 'Sign in'
-      expect(page).to have_content 'Sign up'
-      expect(page).to have_content 'Forgot your password?'
+      expect(page).to have_content 'Create an account'
+      expect(page).to have_content 'Restore password'
+      expect(page).to have_button("Sign in")
     end
 
     it 'checks sign-up link' do
       visit new_user_session_path
-      click_on 'Sign up'
+      click_on 'Create an account'
       expect(page).to have_current_path new_user_registration_path
-      expect(page).to have_content 'Log in'
+      expect(page).to have_content 'Sign in'
       expect(page).to have_button("Create Account")
     end
   end
