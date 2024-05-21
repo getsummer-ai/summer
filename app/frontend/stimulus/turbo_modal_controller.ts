@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { useClickOutside } from 'stimulus-use';
+import { lock, unlock } from 'tua-body-scroll-lock';
 import type { TurboBeforeStreamRenderEvent } from '@/utils/common';
 import { log } from '@/utils/common';
 
@@ -40,14 +41,14 @@ export default class TurboModalController extends Controller {
   localStreamRenderEvent: (e: Event) => void = () => {};
 
   connect() {
-    useClickOutside(this, { element: this.modalTarget, events: ['touchend', 'mousedown'] });
+    useClickOutside(this, { element: this.modalTarget, events: ['touchend', 'mouseup'] });
     const src = this.element.parentElement?.getAttribute('src');
     if (!src) return;
     log('Modal connect', src);
     this.localStreamRenderEvent = this.beforeStreamRender.bind(this);
     window.removeEventListener('turbo:before-stream-render', this.localStreamRenderEvent);
     window.addEventListener('turbo:before-stream-render', this.localStreamRenderEvent);
-
+    lock(this.modalTarget);
     if (!this.allowHashChangesValue) return;
 
     const url = new URL(src);
@@ -70,6 +71,7 @@ export default class TurboModalController extends Controller {
       // this.element.parentElement.removeAttribute('complete');
       this.element.parentElement.focus();
     }
+    unlock(this.modalTarget);
     this.element.remove();
   }
 
