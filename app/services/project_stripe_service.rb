@@ -57,7 +57,7 @@ class ProjectStripeService
 
   def session_success_callback(session_id)
     session = Stripe::Checkout::Session.retrieve(session_id)
-    return false if session.status != 'complete'
+    return false if session.status != 'complete' || session.metadata&.project_id != @project.uuid
 
     project.track!(source: 'Stripe Success Callback', author: user) do
       update_subscription_info(session.subscription)
