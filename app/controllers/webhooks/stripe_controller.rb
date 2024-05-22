@@ -49,7 +49,7 @@ module Webhooks
       @event = nil
 
       begin
-        @event = Stripe::Webhook.construct_event(payload, sig_header, WEBHOOK_SECRET)
+        @event = Stripe::Webhook.construct_event(request.body.read, sig_header, WEBHOOK_SECRET)
       rescue JSON::ParserError
         status 400
       rescue Stripe::SignatureVerificationError => e
