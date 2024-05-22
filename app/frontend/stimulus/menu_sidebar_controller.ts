@@ -1,0 +1,58 @@
+import { Controller } from '@hotwired/stimulus'
+import { useClickOutside } from 'stimulus-use'
+import { lock, unlock } from 'tua-body-scroll-lock';
+
+export default class MenuSidebarController extends Controller {
+  static targets = ['checkbox'];
+  declare readonly checkboxTarget: HTMLInputElement;
+  declare menu: HTMLDivElement;
+  declare hidden: boolean;
+
+  connect() {
+    useClickOutside(this);
+    const menu = document.getElementById('sidebar-menu')
+    if (menu) this.menu = menu as HTMLDivElement;
+    this.hidden = this.menu?.classList.contains('hidden') || true;
+  }
+
+  toggleMenu(e?: PointerEvent) {
+    e?.preventDefault();
+    e?.stopPropagation();
+    this.closeOpen();
+  }
+
+  closeOpen() {
+    this.checkboxTarget.checked = !this.checkboxTarget.checked;
+    this.menu.classList.toggle('hidden');
+    this.menu.classList.toggle('flex');
+    if (this.checkboxTarget.checked) {
+      this.menu.classList.remove('hidden');
+      this.menu.classList.add('flex');
+      lock(this.menu);
+    } else {
+      this.menu.classList.add('hidden');
+      this.menu.classList.remove('flex');
+      unlock(this.menu);
+    }
+  }
+
+  clickOutside(e: PointerEvent) {
+    if (!this.checkboxTarget.checked) return;
+    const target = e.target as HTMLElement | null;
+    // console.log(this.checkboxTarget.checked, target?.tagName, target?.parentElement?.tagName);
+
+    const contains = this.menu.contains(target);
+    const isLink = target?.tagName == 'A' || target?.parentElement?.tagName == 'A';
+
+    if (!contains || isLink) {
+      // console.log('clickOutside', this.closeOpen);
+      this.closeOpen();
+      if (isLink && target) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (target.tagName == 'A') return target.click();
+        target.parentElement?.click();
+      }
+    }
+  }
+}

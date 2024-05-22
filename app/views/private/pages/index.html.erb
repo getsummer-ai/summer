@@ -1,11 +1,11 @@
-<h2 class="font-semibold text-2xl">Pages</h2>
+<h2 class="font-semibold text-xl md:text-2xl">Pages</h2>
 <p class="opacity-50 mt-1">
   Summer will appear on all the pages from your domain link with more than 500 symbols.
   Each page is added to the list after the first Summer appearance.
   Turn Summer on and off manually per page if needed.
 </p>
 
-<div class="grid gap-4 grid-flow-col grid-cols-3 mt-12">
+<div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-12">
   <%=
     render 'private/pages/metric_card',
            title: 'Pages',
@@ -32,8 +32,8 @@
 
   <div class="mt-12">
     <%=turbo_frame_tag 'pages', target: "_top", 'data-turbo-action': 'advance' do %>
-      <div class="overflow-x-auto mt-6">
-        <table class="table tracking-tight table-summer">
+      <div class="overflow-x-auto mt-6 -mx-4 px-4 md:mx-0 md:px-0">
+        <table class="table tracking-tight table-summer min-w-[500px]">
           <thead>
             <tr>
               <th class="font-semibold pl-0">Page</th>

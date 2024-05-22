@@ -1,4 +1,4 @@
-<h2 class="font-semibold text-2xl">Settings</h2>
+<h2 class="font-semibold text-xl md:text-2xl">Settings</h2>
 <p class="opacity-50 mt-1">
   Subscription / Domain addresses / Delete project sections <br>
   If you experience issues contact support via
@@ -35,10 +35,10 @@
   </p>
 </div>
 
-<div class="mt-5">
+<div class="mt-8 md:mt-5">
   <%=render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-neutral') %>
   <%if current_project.free_plan_suspended? %>
-    <h4 class="mt-2 opacity-50">Get a subscription to continue using the Summary button on your website.</h4>
+    <h4 class="mt-8 md:mt-2 opacity-50">Get a subscription to continue using the Summary button on your website.</h4>
   <% end %>
 </div>
 
@@ -89,8 +89,8 @@
 <% end %>
 
 <div>
-  <div class="overflow-x-auto mt-6">
-    <table class="table table-summer">
+  <div class="overflow-x-auto mt-6 -mx-4 px-4 md:mx-0 md:px-0">
+    <table class="table table-summer min-w-[500px]">
       <thead>
       <tr class="text-right">
         <th class="font-semibold text-left">URL Address</th>
@@ -126,7 +126,7 @@
     </p>
     <%= link_to 'Delete Project',
                 project_path(@current_project),
-                class: "btn btn-summer mt-9 w-36 btn-red",
+                class: "btn btn-summer mt-9 w-44 md:w-36 btn-red",
                 data: { "turbo-method": :delete, turbo_confirm: "Are you sure?" }  %>
   </div>
 </details>
