@@ -3,15 +3,15 @@
 # @!attribute project
 #  @return [Project]
 # @!attribute user
-#  @return [User]
+#  @return [User, nil]
 # @!attribute return_url
 #  @return [String]
 class ProjectStripeService
   attr_reader :project, :user, :return_url
 
   # @param project [Project]
-  # @param user [User]
-  def initialize(project, user:)
+  # @param user [User, nil]
+  def initialize(project, user: nil)
     # @type [Project]
     @project = project
     # @type [User]
@@ -55,13 +55,15 @@ class ProjectStripeService
   #   create_checkout_session(*urls)
   # end
 
+
+  # It is called after the successful payment. Updates info if webhook has not updated the info yet
+  #
+  # @param session_id [String]
   def session_success_callback(session_id)
     session = Stripe::Checkout::Session.retrieve(session_id)
     return false if session.status != 'complete' || session.metadata&.project_id != @project.uuid
 
-    project.track!(source: 'Stripe Success Callback', author: user) do
-      update_subscription_info(session.subscription)
-    end
+    update_subscription_info(session.subscription)
     true
   end
 
@@ -89,7 +91,10 @@ class ProjectStripeService
       :free
     end
     subscription_attributes = useful_subscription_attributes(subscription)
-    project.update!(plan:, stripe_attributes: { subscription_attributes: })
+
+    project.track!(source: 'Stripe Update Subscription Info', author: user) do
+      project.update!(plan:, stripe_attributes: { subscription_attributes: })
+    end
 
     ProjectSuspensionService.new(project).actualize_status
   end

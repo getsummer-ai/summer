@@ -61,6 +61,10 @@ Rails.application.routes.draw do
       resources :billing, only: %i[index]
     end
 
+    namespace :webhooks do
+      post '/stripe', to: 'stripe#webhook'
+    end
+
     unless Rails.env.production?
       get '/about', to: 'pages#about', as: 'about'
       get '/homepage', to: 'pages#homepage', as: 'homepage'

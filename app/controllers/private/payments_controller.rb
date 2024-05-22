@@ -29,6 +29,10 @@ module Private
       create(session)
     end
 
+    #
+    # Stripe Webhook catcher performs the same action when subscription is created
+    # so this method is used to update subscription info in case webhook is not working
+    #
     def success
       sess_id = params[:session_id]
       res = sess_id.present? ? stripe_service.session_success_callback(sess_id) : false
@@ -41,58 +45,14 @@ module Private
     end
 
     def return
-      subscription_info = current_project.stripe.subscription.id
-      stripe_service.update_subscription_info(subscription_info) if subscription_info.present?
+      # We don't need to update subscription info here
+      # because it will be updated by webhook. Just redirect to settings
+      #
+      # subscription_info = current_project.stripe.subscription.id
+      # stripe_service.update_subscription_info(subscription_info) if subscription_info.present?
+      #
       redirect_to project_settings_path(current_project)
     end
-
-    # def webhook
-    #     # Replace this endpoint secret with your endpoint's unique secret
-    #     # If you are testing with the CLI, find the secret by running 'stripe listen'
-    #     # If you are using an endpoint defined with the API or dashboard, look in your webhook settings
-    #     # at https://dashboard.stripe.com/webhooks
-    #     webhook_secret = 'whsec_12345'
-    #     payload = request.body.read
-    #     if !webhook_secret.empty?
-    #       # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
-    #       sig_header = request.env['HTTP_STRIPE_SIGNATURE']
-    #       event = nil
-    #
-    #       begin
-    #         event = Stripe::Webhook.construct_event(payload, sig_header, webhook_secret)
-    #       rescue JSON::ParserError => e
-    #         status 400
-    #         return
-    #       rescue Stripe::SignatureVerificationError => e
-    #         puts '⚠️  Webhook signature verification failed.'
-    #         status 400
-    #         return
-    #       end
-    #     else
-    #       data = JSON.parse(payload, symbolize_names: true)
-    #       event = Stripe::Event.construct_from(data)
-    #     end
-    #     # Get the type of webhook event sent - used to check the status of PaymentIntents.
-    #     event_type = event['type']
-    #     data = event['data']
-    #     data_object = data['object']
-    #
-    #     if event_type == 'customer.subscription.deleted'
-    #       puts "Subscription canceled: #{event.id}"
-    #     end
-    #
-    #     if event_type == 'customer.subscription.updated'
-    #       puts "Subscription updated: #{event.id}"
-    #     end
-    #
-    #     if event_type == 'customer.subscription.created'
-    #       puts "Subscription created: #{event.id}"
-    #     end
-    #
-    #     if event_type == 'customer.subscription.trial_will_end'
-    #       puts "Subscription trial will end: #{event.id}"
-    #     end
-    # end
 
     def admin_delete_subscription
       if IS_PLAYGROUND
