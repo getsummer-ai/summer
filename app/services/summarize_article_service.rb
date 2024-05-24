@@ -12,7 +12,7 @@ class SummarizeArticleService
     "— Make structure clear and easy, use bullet points;\n" +
     "Please, make it good, it is extremely important for me: \n"
 
-  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4' }.freeze
+  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
 
   # @param [ProjectArticle] model
   # @param [Symbol] llm

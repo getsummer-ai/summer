@@ -11,7 +11,7 @@ class FindProductsInSummaryJob < ApplicationJob
   def perform(id)
     # @type [ProjectArticle]
     model = ProjectArticle.includes(:project).find(id)
-    model_wrapper = FindProductsInSummaryService.new(model:, llm: model.project.default_llm)
+    model_wrapper = FindProductsInSummaryService.new(model:)
     model_wrapper.summarize
   end
 end
