@@ -10,11 +10,11 @@ class FindProductsInSummaryService
     "Please take a look at the product list: \n"
   POSTFIX = "\nPlease respond as a JSON array, in the following format: [{\"id\": number, \"related\": bool}]\n"
 
-  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4' }.freeze
+  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
 
   # @param [ProjectArticle] model
   # @param [Symbol] llm
-  def initialize(model:, llm:)
+  def initialize(model:, llm: :gpt3)
     @model = model
     # @param [Project]
     @project = model.project

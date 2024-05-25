@@ -82,6 +82,7 @@ class ProjectForm
         name:,
         protocol:,
         domain:,
+        default_llm: 'gpt4',
         paths: parsed_urls.filter_map(&:path),
       )
     model.start_tracking(source: 'Create Project Form', author: @user)
