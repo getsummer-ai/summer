@@ -5,12 +5,12 @@ class SummarizeArticleService
   attr_reader :model, :guidelines, :llm
 
   PREFIX =
-    "Below you will find an article, please make a summary for me. Please follow the following instruction:\n"+
+    "Below you will find an article, please make a summary for me. Please follow the instructions:\n"+
     "— %{guidelines};\n" +
     "— Don't include things that look like promotion;\n" +
-    "— Keep the same language as in the original article;\n" +
-    "— Make structure clear and easy, use bullet points;\n" +
-    "Please, make it good, it is extremely important for me: \n"
+    "— Don't put the title at the beginning of the summary;\n" +
+    "— Try to keep the same language as in the original article;\n" +
+    "— Make structure clear and easy, you can use bullet points;\n"
 
   LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
 
