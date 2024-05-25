@@ -51,8 +51,6 @@
   };
 
   const startTouch = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
     startTouchY = event.touches[0].pageY;
   };
 
