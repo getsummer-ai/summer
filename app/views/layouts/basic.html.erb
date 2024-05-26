@@ -20,7 +20,7 @@
   <% environment_hash = { environment: Rails.env, locale: I18n.locale } %>
   <body class="light" data-init="<%= environment_hash.to_json %>">
     <div class="min-h-screen flex flex-col justify-between dark:bg-black">
-      <div class="container mx-auto pt-5 sm:pt-10 px-2">
+      <div class="container mx-auto pt-24 px-2">
         <% if content_for?(:header) %>
           <%= yield(:header) %>
         <% end %>

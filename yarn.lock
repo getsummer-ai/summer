@@ -4294,11 +4294,6 @@ tsconfig-paths@^3.15.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tua-body-scroll-lock@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/tua-body-scroll-lock/-/tua-body-scroll-lock-1.5.0.tgz#2a11765a0315fe98c6bb5fcb5115c8d145376200"
-  integrity sha512-+DjX4NIjqhqkEpTdMlln12UBC90aTqIqZvrjnpUc2kUpO6nrAYy6ho5z1jL12wjeeRJftlZDARlZlwiVlVjvTQ==
-
 type-check@^0.4.0, type-check@~0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/type-check/-/type-check-0.4.0.tgz#07b8203bfa7056c0657050e3ccd2c37730bab8f1"

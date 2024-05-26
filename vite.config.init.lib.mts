@@ -14,6 +14,11 @@ export default defineConfig({
       }
     }),
   ],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, 'app/frontend')
+    }
+  },
   build: {
     emptyOutDir: false,
     copyPublicDir: false,

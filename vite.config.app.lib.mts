@@ -14,8 +14,10 @@ export default defineConfig({
       }
     }),
   ],
-  define: {
-    'process.env': { NODE_ENV: 'production' }
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, 'app/frontend')
+    }
   },
   build: {
     emptyOutDir: false,

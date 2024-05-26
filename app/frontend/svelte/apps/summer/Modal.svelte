@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  import { lock, unlock } from 'tua-body-scroll-lock';
-  import { onMount } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { lock as BSLock, unlock } from '@/utils/body-scroll-lock';
 
   const dispatch = createEventDispatcher();
   export let showModal = false;
@@ -16,6 +15,8 @@
   let dialogBody: HTMLElement;
 
   $: onChange(showModal, dialog);
+
+  const lock = (el: HTMLElement) => BSLock(el, { skipIfScrollbarVisuallyExists: true });
 
   function closeModal() {
     startTouchY = 0;
@@ -198,6 +199,7 @@
         height: 100%;
         -ms-overflow-style: none;
         scrollbar-width: none;
+        overscroll-behavior: contain;
         overflow-y: scroll;
         ::-webkit-scrollbar {
           display: none; /* for Chrome, Safari, and Opera */

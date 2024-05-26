@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { useClickOutside } from 'stimulus-use'
-import { lock, unlock } from 'tua-body-scroll-lock';
+import { lock, unlock } from '@/utils/body-scroll-lock';
 
 export default class MenuSidebarController extends Controller {
   static targets = ['checkbox'];

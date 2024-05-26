@@ -29,17 +29,4 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'import/order': 'error',
   },
-  // settings: {
-  //   'import/resolver': {
-  //     'eslint-import-resolver-custom-alias': {
-  //       alias: {
-  //         '@': path.resolve(__dirname, '../../frontend'),
-  //       },
-  //       extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue', '.d.ts'],
-  //     },
-  //     node: {
-  //       extensions: ['.js', '.jsx', '.ts', '.tsx', '.vue'],
-  //     },
-  //   },
-  // },
 };
