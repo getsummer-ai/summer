@@ -62,12 +62,14 @@
   };
 
   const setHeightToDialog = (start = 0, end = 0) => {
-    dialog.style.height = `calc(var(--vh, 1vh) * 80 - ${end - start}px)`;
+    const height = window.innerHeight * 0.01 * 80 - (end - start);
+    dialog.style.height = `${height}px`;
   };
 
   const moveTouch = (event) => {
     event.preventDefault();
     event.stopPropagation();
+    // console.log('moveTouch', startTouchY, endTouchY);
     if (startTouchY === 0) return;
 
     endTouchY = event.touches[0].pageY;
