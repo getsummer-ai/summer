@@ -67,14 +67,15 @@
   };
 
   const moveTouch = (event) => {
-    event.preventDefault();
     if (startTouchY === 0) return;
-
     endTouchY = event.touches[0].pageY;
-    if (endTouchY <= startTouchY) return setHeightToDialog();
 
-    setHeightToDialog(startTouchY, endTouchY);
-    if (endTouchY > startTouchY + 220) return closeModal();
+    requestAnimationFrame(() => {
+      if (endTouchY <= startTouchY) return setHeightToDialog();
+
+      setHeightToDialog(startTouchY, endTouchY);
+      if (endTouchY > startTouchY + 220) return closeModal();
+    });
   };
 
   onMount(() => {
@@ -96,7 +97,7 @@
     ref="overlay"
     class="dialog-overlay"
     on:click|self={() => closeModal()}
-    on:touchmove|nonpassive={moveTouch}
+    on:touchmove|passive={moveTouch}
     on:touchstart={startTouch}
     on:touchend={endTouch}
   />
@@ -107,7 +108,7 @@
     <div class="dialog-body-wrapper">
       <div
         class="scroll-blur up"
-        on:touchmove|nonpassive={moveTouch}
+        on:touchmove|passive={moveTouch}
         on:touchstart={startTouch}
         on:touchend={endTouch}
       >
