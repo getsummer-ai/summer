@@ -68,8 +68,6 @@
 
   const moveTouch = (event) => {
     event.preventDefault();
-    event.stopPropagation();
-    // console.log('moveTouch', startTouchY, endTouchY);
     if (startTouchY === 0) return;
 
     endTouchY = event.touches[0].pageY;
@@ -98,7 +96,7 @@
     ref="overlay"
     class="dialog-overlay"
     on:click|self={() => closeModal()}
-    on:touchmove={moveTouch}
+    on:touchmove|nonpassive={moveTouch}
     on:touchstart={startTouch}
     on:touchend={endTouch}
   />
@@ -109,7 +107,7 @@
     <div class="dialog-body-wrapper">
       <div
         class="scroll-blur up"
-        on:touchmove={moveTouch}
+        on:touchmove|nonpassive={moveTouch}
         on:touchstart={startTouch}
         on:touchend={endTouch}
       >
