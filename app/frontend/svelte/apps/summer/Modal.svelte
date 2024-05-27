@@ -57,8 +57,10 @@
 
   const endTouch = () => {
     if (!showModal) return;
-    if (endTouchY - startTouchY > 120) return closeModal();
-    setHeightToDialog();
+    requestAnimationFrame(() => {
+      if (endTouchY - startTouchY > 120) return closeModal();
+      setHeightToDialog();
+    });
   };
 
   const setHeightToDialog = (start = 0, end = 0) => {
