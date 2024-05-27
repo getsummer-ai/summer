@@ -69,11 +69,10 @@
   const moveTouch = (event) => {
     event.preventDefault();
     if (startTouchY === 0) return;
-
     endTouchY = event.touches[0].pageY;
-    if (endTouchY <= startTouchY) return setHeightToDialog();
 
     requestAnimationFrame(() => {
+      if (endTouchY <= startTouchY) return setHeightToDialog();
       setHeightToDialog(startTouchY, endTouchY);
       if (endTouchY > startTouchY + 220) return closeModal();
     });
