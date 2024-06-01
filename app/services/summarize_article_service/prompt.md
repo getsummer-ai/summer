@@ -11,7 +11,7 @@ ALWAYS follow these instructions:
 - Do NOT include things that look like promotion, sales materials, or materials not relevant to the article;
 
 - Make the summary short. The ideal length would be around 800 characters. Do NOT exceed 1200 characters.
-- Do NOT use lists and bullet points unless the original article has a clear list structure that must be followed to keep the summary consistent. In rare cases when using a list is necessary, keep the items short and make the majority of the summary in plain text before and/or after the list.
+- Do NOT use lists and bullet points unless the original article has a clear list structure that must be followed to keep the summary consistent. In rare cases when using a list is necessary, keep the items short.
 - Make it good, it’s extremely important to our customers and business.
 - %{guidelines}
 
