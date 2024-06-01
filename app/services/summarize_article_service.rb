@@ -4,15 +4,8 @@ class SummarizeArticleService
   # @return [ProjectArticle]
   attr_reader :model, :guidelines, :llm
 
-  PREFIX =
-    "Below you will find an article, please make a summary for me. Please follow the instructions:\n"+
-    "— %{guidelines};\n" +
-    "— Don't include things that look like promotion;\n" +
-    "— Don't put the title at the beginning of the summary;\n" +
-    "— Try to keep the same language as in the original article;\n" +
-    "— Make structure clear and easy, you can use bullet points;\n"
-
   LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
+  PROMPT = File.read(File.join(File.dirname(__FILE__), './summarize_article_service/prompt.md')).freeze
 
   # @param [ProjectArticle] model
   # @param [Symbol] llm
@@ -77,7 +70,7 @@ class SummarizeArticleService
   end
 
   def input
-    @input ||= format(PREFIX, guidelines:) + @model.article
+    @input ||= format(PROMPT, guidelines:, article: @model.article)
   end
 
   def measure
