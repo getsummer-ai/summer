@@ -63,7 +63,8 @@ module Api
           redis_subscriber.subscribe_with_timeout(5, channel_name) do |on|
             on.message do |_event, data|
               if message.zero? && redis_buffer.exists?(channel_name)
-                sse.write redis_buffer.get(channel_name)
+                buffered = redis_buffer.get(channel_name)
+                sse.write(buffered.start_with?(data) ? data : buffered)
               elsif data == 'done'
                 redis_subscriber.unsubscribe(channel_name)
               else

@@ -12,8 +12,9 @@ class SummarizeArticleService
     def stream_function
       @stream_function ||= proc do |chunk, _bytesize|
         content = chunk.dig('choices', 0, 'delta', 'content')
-        # Rails.logger.debug content
         @redis.append(@channel_name, content)
+        next if content == ''
+
         @redis.publish(@channel_name, content)
       end
     end
