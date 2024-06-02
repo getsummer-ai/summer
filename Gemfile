@@ -73,7 +73,7 @@ gem "scenic"
 # Monitoring and debugging
 gem "sentry-rails"
 gem "sentry-ruby"
-gem "skylight"
+# gem "skylight"
 gem "stackprof"
 
 group :development, :test do
