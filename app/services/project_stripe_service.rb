@@ -18,7 +18,7 @@ class ProjectStripeService
     @user = user
   end
 
-  def self.plans
+  PLANS = 
     {
       test: {
         light: {
@@ -40,21 +40,8 @@ class ProjectStripeService
           month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
         },
       },
-    }
-  end
-
-  # @param opts [Hash]
-  # @return [Stripe::Checkout::Session]
-  # def create_session(**opts)
-  #   if !project.free_plan? || project.stripe&.subscription&.id.present?
-  #     return create_custom_portal_session(opts.fetch(:return_url))
-  #   end
-  #
-  #   urls = opts.fetch_values(:success_url, :cancel_url, :price_id)
-  #
-  #   create_checkout_session(*urls)
-  # end
-
+    }.freeze
+  
 
   # It is called after the successful payment. Updates info if webhook has not updated the info yet
   #
@@ -121,7 +108,7 @@ class ProjectStripeService
   private
 
   def find_plan_name(plan)
-    current_env_plans = self.class.plans[plan.livemode == true ? :live : :test]
+    current_env_plans = PLANS[plan.livemode == true ? :live : :test]
     interval = plan.interval.to_sym
     res = nil
     res = :light if current_env_plans.dig(:light, interval) == plan.id

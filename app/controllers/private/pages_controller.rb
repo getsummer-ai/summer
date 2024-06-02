@@ -8,8 +8,6 @@ module Private
 
     layout :private_or_turbo_layout
 
-    IS_PLAYGROUND = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
-
     def index
       @statistics = ProjectStatisticsViewModel.new(@current_project, [:views, :actions])
       @pagy, @pages = pagy(

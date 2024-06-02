@@ -3,8 +3,6 @@ module Private
   class PaymentsController < PrivateController
     before_action :check_existence, only: :create
 
-    IS_PLAYGROUND = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
-
     def create(stripe_session = nil)
       session =
         stripe_session.presence ||
@@ -91,7 +89,7 @@ module Private
       permitted_attributes = %i[plan period]
       plan, period =
         params.require(:subscription).permit(permitted_attributes).values_at(*permitted_attributes)
-      ProjectStripeService.plans.dig(IS_PLAYGROUND ? :test : :live, plan&.to_sym, period&.to_sym)
+      ProjectStripeService::PLANS.dig(IS_PLAYGROUND ? :test : :live, plan&.to_sym, period&.to_sym)
     end
 
     def check_existence

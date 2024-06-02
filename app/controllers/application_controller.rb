@@ -3,6 +3,8 @@
 class ApplicationController < ActionController::Base
   include LocaleConcern
 
+  IS_PLAYGROUND = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
+
   before_action :authenticate_user!
   before_action :update_user_locale!
 
