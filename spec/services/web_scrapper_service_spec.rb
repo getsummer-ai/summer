@@ -5,7 +5,7 @@ describe WebScrapperService do
     stub_request(:get, 'http://localhost:3000/new-year-celebrations').to_return(
       body: Rails.root.join('spec/fixtures/html/new-year-celebrations.html').read,
       headers: {
-      'Content-Type' => 'text/html',
+        'Content-Type' => 'text/html',
       },
     )
     

@@ -3,8 +3,6 @@
 describe SummarizeArticleJob do
   include SpecTestHelper
 
-  subject { described_class.perform(article.id) }
-
   let!(:article) do
     user = create_default_user
     project = user.projects.create(name: 'Test Project', protocol: 'http', domain: 'test.com')
@@ -18,32 +16,19 @@ describe SummarizeArticleJob do
     article
   end
 
-  let(:first_event_stream_message) do
-    { choices: [{ delta: { content: " New" } }] }
-  end
-
-  let(:second_event_stream_message) do
-    { choices: [{ delta: { content: " Year's traditions..." } }] }
-  end
-
-  let(:third_event_stream_message) do
-    { choices: [{ delta: { content: "" } }] }
-  end
-
   describe '#perform' do
-    include_context 'with gpt requests'
-    it 'works well' do
-      WebMock.disable_net_connect!
-      # We stub request to OPEN AI = OpenAI::Client.new; client.chat
-      # @see SummarizeArticleJob#ask_gpt_to_summarize
-      stub_gpt_summary_request([' New', " Year's traditions...", ''])
-      expect { subject }.to change { article.reload.summary_status }.from('wait').to('completed')
-      expect(article.info.summary['time']).to be_a(Float)
-      expect(article.summary_llm_calls.count).to eq 1
-      expect(article.summary_llm_call.output).to eq " New Year's traditions..."
-      expect(article.events.order(id: :asc).pluck(:source)).to \
-        eq ['SummarizeArticleJob', 'OpenAI - Begins', 'OpenAI - Ends Successfully', 'SummarizeArticleJob']
-      WebMock.allow_net_connect!
+    it 'executes the service properly' do
+      service = instance_double(SummarizeArticleService)
+      allow(SummarizeArticleService).to receive(:new).with(
+        model: article,
+        llm: article.project.default_llm,
+        guidelines: article.project.guidelines
+      ).and_return(service)
+      allow(service).to receive(:summarize).and_return(true)
+
+      described_class.perform(article.id)
+
+      expect(service).to have_received(:summarize)
     end
   end
 end
