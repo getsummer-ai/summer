@@ -117,6 +117,10 @@ class Project < ApplicationRecord
     ProjectDecorator.new(self)
   end
 
+  def valid_host?(host)
+    host.to_s.delete_prefix('www.') == domain.to_s.delete_prefix('www.')
+  end
+
   private
 
   def validate_paths

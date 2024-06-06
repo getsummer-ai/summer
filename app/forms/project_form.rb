@@ -42,11 +42,6 @@ class ProjectForm
     @project = params[:project]
   end
 
-  def self.from_project(project)
-    urls = project.paths.map { |path| "#{project.protocol}://#{project.domain}#{path}" }
-    new(project.user_id, name: project.name, urls:)
-  end
-
   def to_key
     @project&.id || nil
   end
@@ -80,8 +75,8 @@ class ProjectForm
       Project.new(
         user_id: @user.id,
         name:,
-        protocol:,
-        domain:,
+        protocol: parsed_urls[0].scheme,
+        domain: first_host,
         default_llm: 'gpt4',
         paths: parsed_urls.filter_map(&:path),
       )
@@ -92,15 +87,5 @@ class ProjectForm
   # @return [Array<URI::Generic>]
   def parsed_urls
     @parsed_urls ||= @urls.uniq.map { |url| URI.parse(url) }
-  end
-
-  # @return [String, nil]
-  def protocol
-    parsed_urls[0].scheme
-  end
-
-  # @return [String, nil]
-  def domain
-    parsed_urls[0].host
   end
 end

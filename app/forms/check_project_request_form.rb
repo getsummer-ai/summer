@@ -24,13 +24,6 @@ class CheckProjectRequestForm
 
     request_host = Project.parse_url(request_from_url)&.host
 
-    clean_from_www(request_host) == clean_from_www(@project.domain)
-  end
-
-  # @param [String, nil] domain
-  def clean_from_www(domain)
-    # return domain.to_s.delete_prefix('www.') if domain.to_s.start_with?('www.')
-    # domain
-    domain.to_s.delete_prefix('www.')
+    @project.valid_host?(request_host)
   end
 end

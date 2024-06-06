@@ -88,5 +88,11 @@ RSpec.describe ProjectForm do
       expect(form.create).to be_nil
       expect(form.errors.full_messages).to include 'Domain is already taken'
     end
+
+    it 'returns an error as the domain does not have host' do
+      form = described_class.new(user, { name: 'Test Project', urls: ['http:///'] })
+      expect(form.create).to be_nil
+      expect(form.errors.full_messages).to match ["Domain must be a valid url", "Domain can't be blank"]
+    end
   end
 end

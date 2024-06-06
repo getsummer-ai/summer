@@ -2,18 +2,22 @@
 class ProjectArticleForm
   include ActiveModel::Validations
 
-  attr_accessor :url
-  attr_reader :project_page, :url_hash
+  attr_reader :project_page, :dirty_url
 
-  validates :url, url: true
+  validates :dirty_url, url: true
+  validate do
+    next if errors.any?
+    unless @project.valid_host?(parsed_url&.host)
+      errors.add(:base, "The URL must belong to #{@project.domain}")
+    end
+  end
 
   # @param [Project] project
-  # @param [String] url
-  def initialize(project, url)
+  # @param [String] dirty_url
+  def initialize(project, dirty_url)
     # @type [Project]
     @project = project
-    @url = url.to_s.gsub(/&?utm_.+?(&|$)/, '').chomp('?')
-    @url_hash = Hashing.md5(@url)
+    @dirty_url = dirty_url&.downcase
   end
 
   # @return [ProjectArticle, nil]
@@ -29,7 +33,28 @@ class ProjectArticleForm
     nil
   end
 
+  # @return [String]
+  def url_hash
+    @url_hash ||= Hashing.md5(url)
+  end
+
+  # @return [String]
+  def url
+    return @url if defined?(@url)
+    prefix = parsed_url.scheme ? "#{parsed_url.scheme}://" : ''
+    # host = parsed_url.host.to_s.delete_prefix('www.')
+    host = parsed_url.host
+    port = [80, 443, nil].include?(parsed_url.port) ? '' : ":#{parsed_url.port}"
+    path = parsed_url.path.sub(%r{(/)+$},'')
+    @url = [prefix, host, port, path].join
+  end
+
   private
+
+  # @return [Addressable::URI]
+  def parsed_url
+    @parsed_url ||= Addressable::URI.parse(@dirty_url)
+  end
 
   # @return [ProjectArticle, nil]
   def create_article_and_url
