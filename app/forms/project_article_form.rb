@@ -88,6 +88,13 @@ class ProjectArticleForm
 
   # @return [::WebScrapperService]
   def scraped_article
-    @scraped_article ||= WebScrapperService.new(url).scrape
+    @scraped_article ||= begin
+      # The clean URL we store in DB does not have a trailing slash.
+      # But if the dirty (incoming) URL ends with a slash -
+      # add a slash to the URL we're going to parse to avoid 301 redirects and make a query faster.
+      initial_url_has_slash = parsed_url.path.end_with?('/')
+      scrape_request_url = initial_url_has_slash ? "#{url}/" : url
+      WebScrapperService.new(scrape_request_url).scrape
+    end
   end
 end
