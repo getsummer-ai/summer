@@ -531,9 +531,9 @@ DEPENDENCIES
   down
   draper
   fakeredis
-  faraday
   good_job (~> 3.19)
   haml
+  httparty
   image_processing (~> 1.2)
   jbuilder
   js-routes

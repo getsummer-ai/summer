@@ -24,12 +24,7 @@ class WebScrapperService
 
   # @return [WebScrapperService]
   def scrape
-    @response =
-      Faraday.get(@url) do |req|
-        req.options.timeout = @timeout
-        req.headers['User-Agent'] = USER_AGENT
-      end
-
+    @response = HTTParty.get(@url, headers: { 'User-Agent' => USER_AGENT }, timeout: @timeout)
     parse_meta_tags(@response.body)
     self
   end

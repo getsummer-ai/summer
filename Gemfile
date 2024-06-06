@@ -16,7 +16,7 @@ gem 'puma', '~> 6.0'
 gem 'sqids'
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem 'boilerpipe-ruby', require: 'boilerpipe'
-gem 'faraday'
+gem 'httparty'
 gem 'nokogiri'
 gem 'redcarpet'
 gem 'turbo-rails', '~> 2.0.5'
