@@ -27,7 +27,7 @@ gem 'jbuilder'
 gem 'pundit'
 gem 'store_model', '~> 2.3'
 
-gem 'passive_columns', '~> 0.1.3'
+gem 'passive_columns', '~> 0.2'
 gem 'stripe'
 
 # Use Redis adapter to run Action Cable in production
