@@ -291,6 +291,9 @@ GEM
     parser (3.3.0.4)
       ast (~> 2.4.1)
       racc
+    passive_columns (0.1.3)
+      activerecord (>= 7.0)
+      activesupport (>= 7.0)
     pg (1.5.4)
     prettier (4.0.4)
       syntax_tree (>= 4.0.1)
@@ -543,6 +546,7 @@ DEPENDENCIES
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   pagy (~> 7.0)
+  passive_columns (~> 0.1.3)
   pg (~> 1.1)
   prettier
   propshaft

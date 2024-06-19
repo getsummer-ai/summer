@@ -8,6 +8,7 @@ class Project < ApplicationRecord
   include StoreModel::NestedAttributes
   include Trackable
   include EncryptedKey
+  include PassiveColumns
 
   FREE_PLAN_THRESHOLD = ENV.fetch('FREE_PLAN_CLICKS_THRESHOLD').to_i
   LIGHT_PLAN_THRESHOLD = 5_000
@@ -19,21 +20,12 @@ class Project < ApplicationRecord
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
 
-  # I'm using the overhead way because the IDE does not show the highlight on store_accessor.
-  # store_accessor :settings, %i[theme font_size container_id], prefix: true
-  # store :settings, accessors: %i[theme container_id], coder: JsonbSerializer, prefix: true
-  # store_accessor :settings, :feature_suggestion, :feature_subscription
-
-  # store_accessor :feature_suggestion, :enabled, prefix: true
-  # store_accessor :feature_subscription, :enabled, prefix: true
-
-  # attribute :feature_suggestion, :jsonb
-  # attribute :feature_subscription, :jsonb
-
   attribute :settings, ProjectSettings.to_type
   attribute :stripe, ProjectStripeDetails.to_type
   accepts_nested_attributes_for :settings, allow_destroy: false
   accepts_nested_attributes_for :stripe, allow_destroy: false
+
+  passive_columns :settings, :guidelines, :stripe
 
   def settings_attributes=(attributes)
     settings.assign_attributes(attributes)
