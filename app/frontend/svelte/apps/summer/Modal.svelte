@@ -152,7 +152,7 @@
 <style lang="scss">
   .dialog-container {
     position: relative;
-    z-index: 9998;
+    z-index: 10000;
     width: 100%;
     @keyframes fade {
       from {
