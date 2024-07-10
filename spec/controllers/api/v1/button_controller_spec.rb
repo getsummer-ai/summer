@@ -195,7 +195,7 @@ RSpec.describe Api::V1::ButtonController do
         form.project_page.update!(is_accessible: false)
 
         post_request
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:no_content)
         expect(response.body).to eq ''
       end
 
@@ -204,7 +204,7 @@ RSpec.describe Api::V1::ButtonController do
         article.summary_status_skipped!
 
         post_request
-        expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:no_content)
         expect(response.body).to eq ''
       end
     end

@@ -29,8 +29,8 @@ module Api
 
         @article = form.find_or_create
         return head :bad_request if @article.nil?
-        return head :ok if @article.summary_status_skipped? || @article.summary_status_error?
-        return head :ok unless form.project_page.is_accessible?
+        return head :no_content if @article.summary_status_skipped? || @article.summary_status_error?
+        return head :no_content unless form.project_page.is_accessible?
 
         @combined_id =
           BasicEncrypting.encode_array([form.project_page.id, 4.hours.from_now.utc.to_i])
