@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { initApi } from './api';
   import type { ArticleInitInfo, SettingsInfo, ProjectProductType } from './api';
   import Modal from './Modal.svelte';
@@ -10,6 +10,7 @@
   /* eslint svelte/no-at-html-tags: 0 */
   let showModal = false;
   export let projectId: string;
+  export let rootDivId: string;
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   let summary: string = '';
@@ -18,15 +19,29 @@
   let loading = false;
   let showButton = false;
   let buttonStyles = getButtonStyles();
-
+  const rootDiv = document.getElementById(rootDivId);
   const api = initApi(projectId);
+
+  const mousewheelEvent = (e: WheelEvent) => {
+    const target = e.target as HTMLElement;
+    // console.log('mousewheel', e);
+    if (showModal && target?.id === rootDivId) {
+      // console.log('stopPropagation');
+      return e.stopPropagation();
+    }
+  };
 
   onMount(async () => {
     if (showButton) return;
     showButton = true;
+    rootDiv.addEventListener('mousewheel', mousewheelEvent);
   });
 
-  function getButtonStyles(width = 109): { width: string, left: number } {
+  onDestroy(() => {
+    rootDiv.removeEventListener('mousewheel', mousewheelEvent)
+  });
+
+  function getButtonStyles(width = 109): { width: string; left: number } {
     return {
       width: width === 0 ? 'auto' : `${width}px`,
       left: (width === 0 ? 146.3 : width) / 2,
