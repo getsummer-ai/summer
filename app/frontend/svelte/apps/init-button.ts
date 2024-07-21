@@ -58,7 +58,7 @@ export const initApp = (project: { id: string; settings: object }, url: string, 
           if (deleteAppContainerIfExists(appId)) destroyApp();
           buttonApp = new Summer({
             target: createAppContainer(appId).attachShadow({ mode: 'open' }),
-            props: { projectId: project.id, settings, article: body.article },
+            props: { projectId: project.id, rootDivId: appId, settings, article: body.article },
           });
         };
 
