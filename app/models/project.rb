@@ -25,7 +25,7 @@ class Project < ApplicationRecord
   accepts_nested_attributes_for :settings, allow_destroy: false
   accepts_nested_attributes_for :stripe, allow_destroy: false
 
-  passive_columns :settings, :guidelines, :stripe
+  passive_columns :guidelines, :stripe
 
   def settings_attributes=(attributes)
     settings.assign_attributes(attributes)
