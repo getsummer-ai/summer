@@ -6,13 +6,20 @@
   export let theme: string = 'white';
   let email = '';
   let loading = false;
+  let subscribeState = false;
 
   const subscribeUser = async () => {
     if (!email || loading) return;
     loading = true;
     try {
       const res = await initApi().subscribe(article.page_id, email);
-      if (res.status == 200) email = '';
+      if (res.status == 204) {
+        email = '';
+        subscribeState = true;
+        setTimeout(() => {
+          subscribeState = false;
+        }, 1000);
+      }
     } catch (error) {
       // console.log('error', error);
     } finally {
@@ -27,7 +34,11 @@
   </div>
   <div class="wrapper">
     <input placeholder="Your Email..." type="text" bind:value={email} />
-    <button on:click={subscribeUser}>Subscribe</button>
+    {#if subscribeState}
+      <button class="subscribed-state">Subscribed!</button>
+    {:else}
+      <button on:click={subscribeUser}>Subscribe</button>
+    {/if}
   </div>
 </div>
 
@@ -72,6 +83,11 @@
       }
       &:focus {
         color: #0b0bde;
+      }
+
+      &.subscribed-state {
+        background: #0FA36E !important;
+        color: #fff !important;
       }
     }
 
