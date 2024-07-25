@@ -13,11 +13,11 @@ module Api
           return head(:unprocessable_entity) if existed_model.present?
 
           email = params[:email]
-          return head(:ok) if @current_project.user_emails.exists?(email:)
+          return head(:no_content) if @current_project.user_emails.exists?(email:)
 
           @model = @current_project.user_emails.new(email:, encrypted_page_id: params[:page_id], project_page:)
           @model.save
-          head(@model.errors.empty? ? :ok : :unprocessable_entity)
+          head(@model.errors.empty? ? :no_content : :unprocessable_entity)
         end
       end
     end

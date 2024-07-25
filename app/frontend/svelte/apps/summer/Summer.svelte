@@ -5,6 +5,7 @@
   import Modal from './Modal.svelte';
   import ProjectProduct from './ProjectProduct.svelte';
   import SubscriptionBlock from './SubscriptionBlock.svelte';
+  import ErrorBlock from './components/ErrorBlock.svelte';
   import markdown from './markdown.js';
 
   /* eslint svelte/no-at-html-tags: 0 */
@@ -22,6 +23,8 @@
   const rootDiv = document.getElementById(rootDivId);
   const api = initApi(projectId);
 
+  $: isError = summary.includes('--ERROR--');
+
   const mousewheelEvent = (e: WheelEvent) => {
     const target = e.target as HTMLElement;
     // console.log('mousewheel', e);
@@ -38,7 +41,7 @@
   });
 
   onDestroy(() => {
-    rootDiv.removeEventListener('mousewheel', mousewheelEvent)
+    rootDiv.removeEventListener('mousewheel', mousewheelEvent);
   });
 
   function getButtonStyles(width = 109): { width: string; left: number } {
@@ -48,13 +51,14 @@
     };
   }
 
-  const openModal = async (delay = 100) => new Promise((resolve) => {
-    setTimeout(() => {
-      showModal = true;
-      resolve();
-      buttonStyles = getButtonStyles(87.5)
-    }, delay);
-  });
+  const openModal = async (delay = 100) =>
+    new Promise((resolve) => {
+      setTimeout(() => {
+        showModal = true;
+        resolve();
+        buttonStyles = getButtonStyles(87.5);
+      }, delay);
+    });
 
   const onButtonClick = async () => {
     if (loading) return;
@@ -85,7 +89,7 @@
       } finally {
         loading = false;
       }
-    }, 300)
+    }, 300);
   };
 
   const retrieveProducts = async () => {
@@ -115,12 +119,29 @@
 
 <button
   class="getsummer-btn theme-{settings.appearance.button_theme} {showModal ? 'active' : ''}"
-  on:click={onButtonClick} style="--summer-button-width: {buttonStyles.left + 'px'}; width: {buttonStyles.width}"
+  on:click={onButtonClick}
+  style="--summer-button-width: {buttonStyles.left + 'px'}; width: {buttonStyles.width}"
 >
   {#if showModal}
-    <svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 8L12 12M12 12L8 16M12 12L16 16M12 12L16 8" stroke={settings.appearance.button_theme === 'white' ? 'black' : 'white'}/>
-      <circle cx="12" cy="12" r="10.5" stroke={settings.appearance.button_theme === 'white' ? 'black' : 'white'} stroke-opacity="0.2"/>
+    <svg
+      class="icon"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M8 8L12 12M12 12L8 16M12 12L16 16M12 12L16 8"
+        stroke={settings.appearance.button_theme === 'white' ? 'black' : 'white'}
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="10.5"
+        stroke={settings.appearance.button_theme === 'white' ? 'black' : 'white'}
+        stroke-opacity="0.2"
+      />
     </svg>
     <span>Close</span>
   {:else if loading === true}
@@ -132,24 +153,34 @@
 </button>
 
 {#if showButton}
-  <Modal bind:showModal on:close={closeModal} bind:title={article.title} theme={settings.appearance.frame_theme}>
-    {#if summary.length === 0}
-      <div class="loading-block">
-        <span class="loading-icon" />
-      </div>
+  <Modal
+    bind:showModal
+    on:close={closeModal}
+    bind:title={article.title}
+    theme={settings.appearance.frame_theme}
+  >
+    {#if isError}
+      <ErrorBlock />
+    {:else}
+      {#if summary.length === 0}
+        <div class="loading-block">
+          <span class="loading-icon" />
+        </div>
+      {/if}
+
+      {@html markdown(summary)}
+
+      {#if settings.features.suggestion && services.length > 0}
+        {#each services as service}
+          <ProjectProduct
+            {service}
+            pageId={article.page_id}
+            theme={settings.appearance.frame_theme}
+          />
+        {/each}
+      {/if}
     {/if}
 
-    {@html markdown(summary)}
-
-    {#if settings.features.suggestion && services.length > 0}
-      {#each services as service}
-        <ProjectProduct
-          {service}
-          pageId={article.page_id}
-          theme={settings.appearance.frame_theme}
-        />
-      {/each}
-    {/if}
     <svelte:fragment slot="footer">
       {#if summary.length && settings.features.subscription === true}
         <SubscriptionBlock theme={settings.appearance.frame_theme} bind:article />
@@ -167,14 +198,15 @@
   }
 
   @keyframes smooth-appear {
-    0%, 50% {
+    0%,
+    50% {
       bottom: 10px;
       opacity: 0;
     }
 
     100% {
       bottom: 20px;
-      opacity:1;
+      opacity: 1;
     }
   }
 

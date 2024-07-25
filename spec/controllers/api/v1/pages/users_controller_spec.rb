@@ -28,8 +28,7 @@ RSpec.describe Api::V1::Pages::UsersController do
     render_views
     it 'returns ok when an email address is valid' do
       get :subscribe, params: { page_id: 'random-encrypted-data', email: 'example@example.com', format: :json }
-      expect(response.headers['Content-Type']).to eq('application/json')
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
     end
 
     it 'returns unprocessable_entity when an email address is invalid' do
@@ -53,8 +52,7 @@ RSpec.describe Api::V1::Pages::UsersController do
       project.user_emails.create!(encrypted_page_id:, email: 'example@example.com', project_page:)
 
       get :subscribe, params: { page_id: 'random-encrypted-page-2', email: 'example@example.com', format: :json }
-      expect(response.headers['Content-Type']).to eq('application/json')
-      expect(response).to have_http_status(:ok)
+      expect(response).to have_http_status(:no_content)
     end
   end
 end
