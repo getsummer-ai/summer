@@ -189,6 +189,7 @@
     line-height: 22px;
     text-align: left;
     height: 32px;
+    word-break: keep-all;
     left: calc(50% - var(--summer-button-width));
     bottom: 20px;
     box-shadow: 0 36px 60px 0 rgba(0, 0, 0, 0.18), 0 13.902px 18.888px 0 rgba(0, 0, 0, 0.12),
