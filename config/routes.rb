@@ -17,7 +17,7 @@ Rails.application.routes.draw do
                }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-    is_playground_mode = ENV.fetch('PLAYGROUND_MODE', nil) == 'true'
+    is_playground_mode = Rails.configuration.summer[:IS_PLAYGROUND]
 
     root 'private/app#index'
 

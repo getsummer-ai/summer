@@ -21,7 +21,7 @@
       %>
     </div>
 
-    <% if ENV.fetch('PLAYGROUND_MODE', nil) == 'true' %>
+    <% if Rails.configuration.summer[:IS_PLAYGROUND] %>
       <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-15">
         These buttons are only visible in playground mode.
         <%=
