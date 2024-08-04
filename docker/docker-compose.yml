@@ -92,7 +92,7 @@ services:
     <<: *app
     command: bundle exec vite dev
     ports:
-      - '3036:3036'
+      - 3036
     volumes:
       - ..:/app:cached
       - bundle:/usr/local/bundle

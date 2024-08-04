@@ -13,7 +13,7 @@ cd ./docker
 #### 2 - Prepare the app
 
 ```sh
-docker compose run rails bundle install && bundle exec rails db:setup && yarn install
+docker compose run --rm rails bundle install && docker compose run --rm rails db:setup && docker compose run --rm yarn install
 ```
 
 #### 3 - Run the app via docker compose
@@ -25,3 +25,15 @@ docker compose up
 #### 4 - Open browser and enjoy the app
 
 `http://localhost:3000/`
+
+#### 5 - Turn off the app
+
+```sh
+docker compose down
+```
+
+#### 6 - To run rails console within the app
+
+```sh
+docker compose run --rm rails bundle exec rails c
+```
