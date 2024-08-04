@@ -16,6 +16,7 @@
 #
 default: &default
   adapter: postgresql
+  url: <%= ENV.fetch("DATABASE_URL", 'postgres://postgres:@localhost:5432') %>
   database: summer
   encoding: utf8
   # For details on connection pooling, see Rails configuration guide
@@ -25,7 +26,7 @@ default: &default
 
 development:
   <<: *default
-  url: <%= ENV.fetch("DATABASE_URL") %>
+
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
   # When left blank, postgres will use the default role. This is
@@ -59,7 +60,6 @@ development:
 test:
   <<: *default
   database: summer_test
-  url: <%= ENV.fetch("DATABASE_URL") %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -83,5 +83,6 @@ test:
 #
 production:
   <<: *default
+  database: summer_production
   url: <%= ENV["DATABASE_URL"] %>
 #  password: <%#= ENV["SUMMER_DATABASE_PASSWORD"] %>
