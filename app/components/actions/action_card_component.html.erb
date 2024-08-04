@@ -13,9 +13,9 @@
     <div class="cursor-default">
       <div class="font-semibold">
         <img
-          src="<%= vite_asset_path('assets/icons/action.svg') %>"
+          src="<%= vite_asset_path("assets/icons/#{@icon}.svg") %>"
           class="summer-icon mr-0.5"
-          alt="Action icon"
+          alt="<%= @icon %> icon"
         />
         <span><%= @title %></span>
       </div>
