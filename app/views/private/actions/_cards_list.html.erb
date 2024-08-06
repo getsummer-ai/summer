@@ -1,6 +1,7 @@
 <%= render Actions::ActionCardComponent.new(
     title: 'Summary',
     color: 'pink',
+    icon: 'feature-summary',
     description: 'Gives user a summary of the content on the page.',
     link: 'https://www.getsummer.ai/features#summary'
     ) do %>
@@ -16,6 +17,7 @@
 <%= render Actions::ActionCardComponent.new(
     title: 'Product Suggestions',
     color: 'blue',
+    icon: 'feature-products',
     description: 'Offers your product when it is relevant to the context of the summary.',
     link: 'https://www.getsummer.ai/features#suggestions'
     ) do %>
@@ -38,6 +40,7 @@
   render Actions::ActionCardComponent.new(
     title: 'Subscription',
     color: 'green',
+    icon: 'feature-subscription',
     description: 'Offers a weekly email subscription to your latest articles summaries.',
     link: 'https://www.getsummer.ai/features#subscription'
     ) do %>
@@ -60,6 +63,7 @@
   render Actions::ActionCardComponent.new(
          title: 'Context',
          color: 'yellow',
+         icon: 'feature-context',
          description: 'Provides extended context to selected fragment of the page.',
          link: 'https://www.getsummer.ai/features#context'
        ) do %>

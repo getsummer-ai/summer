@@ -41,7 +41,7 @@ export default class TurboModalController extends Controller {
   localStreamRenderEvent: (e: Event) => void = () => {};
 
   connect() {
-    useClickOutside(this, { element: this.modalTarget, events: ['touchend', 'mouseup'] });
+    useClickOutside(this, { element: this.modalTarget, events: ['touchend', 'dblclick'] });
     const src = this.element.parentElement?.getAttribute('src');
     if (!src) return;
     log('Modal connect', src);
