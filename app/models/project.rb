@@ -18,7 +18,12 @@ class Project < ApplicationRecord
 
   enum plan: { free: 'free', light: 'light', pro: 'pro' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
-  enum default_llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
+  enum default_llm: {
+         gpt_35_turbo: 'gpt-3.5-turbo',
+         gpt_4o: 'gpt-4o',
+         gpt_4o_mini: 'gpt-4o-mini',
+       },
+       _prefix: true
 
   attribute :settings, ProjectSettings.to_type
   attribute :stripe, ProjectStripeDetails.to_type
@@ -99,9 +104,12 @@ class Project < ApplicationRecord
 
   def threshold_clicks_amount
     case plan
-    when 'free' then FREE_PLAN_THRESHOLD
-    when 'light' then LIGHT_PLAN_THRESHOLD
-    when 'pro' then PRO_PLAN_THRESHOLD
+    when 'free'
+      FREE_PLAN_THRESHOLD
+    when 'light'
+      LIGHT_PLAN_THRESHOLD
+    when 'pro'
+      PRO_PLAN_THRESHOLD
     end
   end
 
@@ -129,7 +137,7 @@ end
 # Table name: projects
 #
 #  id          :bigint           not null, primary key
-#  default_llm :enum             default("gpt3"), not null
+#  default_llm :enum             default("gpt_4o_mini"), not null
 #  deleted_at  :datetime
 #  domain      :string           not null
 #  guidelines  :text             default("")

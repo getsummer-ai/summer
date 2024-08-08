@@ -18,7 +18,7 @@ RSpec.describe Api::V1::Pages::ProductsController do
   end
 
   let!(:project_page) do
-    call_id = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
+    call_id = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
     article.update!(summary_llm_call: call_id)
     project.pages.create!(
       url: 'http://localhost.com/new-year',

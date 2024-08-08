@@ -32,7 +32,7 @@ end
 # Table name: projects
 #
 #  id          :bigint           not null, primary key
-#  default_llm :enum             default("gpt3"), not null
+#  default_llm :enum             default("gpt_4o_mini"), not null
 #  deleted_at  :datetime
 #  domain      :string           not null
 #  guidelines  :text             default("")

@@ -35,7 +35,7 @@ RSpec.shared_context 'with gpt requests' do
   def get_gpt_products_response_json_example(content = nil)
     {
       id: 'chatcmpl-9BtI0AlbEooZON0ytK20CxPcAW5Tj',
-      model: 'gpt-3.5-turbo-0125',
+      model: 'gpt-4o-mini',
       usage: {
         total_tokens: 288,
         prompt_tokens: 262,

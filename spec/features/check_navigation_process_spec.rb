@@ -113,7 +113,7 @@ describe 'the Navigation process' do
         end
 
 
-        llm_call = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
+        llm_call = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh

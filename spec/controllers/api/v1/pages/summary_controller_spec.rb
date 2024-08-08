@@ -68,7 +68,7 @@ RSpec.describe Api::V1::Pages::SummaryController do
     context 'when a summary already exists' do
       before do
         project_article.summary_status_completed!
-        call_id = project_article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B. C')
+        call_id = project_article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B. C')
         project_article.update!(summary_llm_call: call_id)
       end
 

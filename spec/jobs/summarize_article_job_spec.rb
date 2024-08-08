@@ -21,7 +21,7 @@ describe SummarizeArticleJob do
       service = instance_double(SummarizeArticleService)
       allow(SummarizeArticleService).to receive(:new).with(
         model: article,
-        llm: article.project.default_llm,
+        llm: Project.default_llms[article.project.default_llm],
         guidelines: article.project.guidelines
       ).and_return(service)
       allow(service).to receive(:summarize).and_return(true)
