@@ -104,7 +104,7 @@ class Project < ApplicationRecord
   def threshold_clicks_amount
     case plan
     when 'free'
-      FREE_PLAN_THRESHOLD
+      free_clicks_threshold
     when 'light'
       LIGHT_PLAN_THRESHOLD
     when 'pro'
