@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_08_201000) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_09_172000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -244,6 +244,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_08_201000) do
     t.enum "default_llm", default: "gpt-4o-mini", null: false, enum_type: "user_project_llm"
     t.text "guidelines", default: ""
     t.jsonb "stripe", default: {}, null: false
+    t.integer "free_clicks_threshold", default: 500, null: false
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"

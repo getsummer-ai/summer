@@ -45,9 +45,10 @@ Rails.application.configure do
 
   # Rails.application.routes.default_url_options[:host] = 'lvh.me'
   # Rails.application.routes.default_url_options[:port] = port
+  Rails.application.routes.default_url_options = { host: 'localhost', port: 3000 }
 
   # config.action_mailer.asset_host = "http://lvh.me:#{port}"
-  # config.action_mailer.default_url_options = Rails.application.routes.default_url_options
+  config.action_mailer.default_url_options = Rails.application.routes.default_url_options
   config.action_controller.raise_on_open_redirects = false
   config.action_controller.default_url_options = {
     # host: 'lvh.me',

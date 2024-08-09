@@ -14,7 +14,7 @@ class ProjectDecorator < Draper::Decorator
   end
 
   def free_plan_left_clicks
-    [Project::FREE_PLAN_THRESHOLD - total_clicks_count, 0].max
+    [project.free_clicks_threshold - total_clicks_count, 0].max
   end
 
   def light_plan_left_clicks

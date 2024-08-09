@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'Project' do
+describe Project do
   include SpecTestHelper
 
   let!(:user) { create_default_user }
