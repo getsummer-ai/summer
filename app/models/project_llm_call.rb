@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ProjectLlmCall < ApplicationRecord
-  enum llm: { gpt3: 'gpt3.5', gpt4: 'gpt4' }, _prefix: true
-
   belongs_to :project
   belongs_to :initializer, polymorphic: true
 

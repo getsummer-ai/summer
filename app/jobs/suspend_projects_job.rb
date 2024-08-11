@@ -30,8 +30,8 @@ class SuspendProjectsJob < ApplicationJob
       ProjectPage
         .joins(:statistics_by_total, :project)
         .where(project: { plan: 'free', status: 'active' })
-        .group('project_id')
-        .having('SUM(project_statistics_by_totals.clicks) > ?', Project::FREE_PLAN_THRESHOLD)
+        .group('project_id', '"project"."free_clicks_threshold"')
+        .having('SUM(project_statistics_by_totals.clicks) > "project"."free_clicks_threshold"')
         .pluck('project_id')
 
     Project.where(id: ids).find_each { |project| suspend_project(project) }

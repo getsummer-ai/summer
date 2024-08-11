@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_11_000937) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
   create_enum "project_article_feature_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "project_llm_call_service_name", ["summary", "products", "default"]
   create_enum "user_locale", ["en", "es"]
-  create_enum "user_project_llm", ["gpt3.5", "gpt4"]
+  create_enum "user_project_llm", ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
   create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "light", "pro"]
@@ -68,13 +68,18 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
     t.datetime "finished_at"
     t.text "error"
     t.integer "error_event", limit: 2
+    t.text "error_backtrace", array: true
+    t.uuid "process_id"
+    t.interval "duration"
     t.index ["active_job_id", "created_at"], name: "index_good_job_executions_on_active_job_id_and_created_at"
+    t.index ["process_id", "created_at"], name: "index_good_job_executions_on_process_id_and_created_at"
   end
 
   create_table "good_job_processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.jsonb "state"
+    t.integer "lock_type", limit: 2
   end
 
   create_table "good_job_settings", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -107,6 +112,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
     t.text "job_class"
     t.integer "error_event", limit: 2
     t.text "labels", array: true
+    t.uuid "locked_by_id"
+    t.datetime "locked_at"
     t.index ["active_job_id", "created_at"], name: "index_good_jobs_on_active_job_id_and_created_at"
     t.index ["batch_callback_id"], name: "index_good_jobs_on_batch_callback_id", where: "(batch_callback_id IS NOT NULL)"
     t.index ["batch_id"], name: "index_good_jobs_on_batch_id", where: "(batch_id IS NOT NULL)"
@@ -115,7 +122,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
     t.index ["cron_key", "cron_at"], name: "index_good_jobs_on_cron_key_and_cron_at_cond", unique: true, where: "(cron_key IS NOT NULL)"
     t.index ["finished_at"], name: "index_good_jobs_jobs_on_finished_at", where: "((retried_good_job_id IS NULL) AND (finished_at IS NOT NULL))"
     t.index ["labels"], name: "index_good_jobs_on_labels", where: "(labels IS NOT NULL)", using: :gin
+    t.index ["locked_by_id"], name: "index_good_jobs_on_locked_by_id", where: "(locked_by_id IS NOT NULL)"
+    t.index ["priority", "created_at"], name: "index_good_job_jobs_for_candidate_lookup", where: "(finished_at IS NULL)"
     t.index ["priority", "created_at"], name: "index_good_jobs_jobs_on_priority_created_at_when_unfinished", order: { priority: "DESC NULLS LAST" }, where: "(finished_at IS NULL)"
+    t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
@@ -241,9 +251,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_06_152000) do
     t.enum "status", default: "active", null: false, enum_type: "user_project_status"
     t.datetime "deleted_at"
     t.enum "plan", default: "free", null: false, enum_type: "user_project_type"
-    t.enum "default_llm", default: "gpt3.5", null: false, enum_type: "user_project_llm"
+    t.enum "default_llm", default: "gpt-4o-mini", null: false, enum_type: "user_project_llm"
     t.text "guidelines", default: ""
     t.jsonb "stripe", default: {}, null: false
+    t.integer "free_clicks_threshold", default: 500, null: false
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"

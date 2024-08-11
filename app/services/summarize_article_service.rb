@@ -4,13 +4,14 @@ class SummarizeArticleService
   # @return [ProjectArticle]
   attr_reader :model, :guidelines, :llm
 
-  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
   PROMPT = File.read(File.join(File.dirname(__FILE__), './summarize_article_service/prompt.md')).freeze
 
   # @param [ProjectArticle] model
-  # @param [Symbol] llm
+  # @param [String] llm
   # @param [String] guidelines
   def initialize(model:, llm:, guidelines:)
+    raise("Unknown LLM model: #{llm}") unless Project.default_llms.value?(llm)
+
     @model = model
     @guidelines = guidelines
     @llm = llm
@@ -32,13 +33,10 @@ class SummarizeArticleService
   private
 
   def ask_gpt_to_summarize
-    llm_model = LLM_MODEL_MAPPING[llm.to_sym]
-    raise("Unknown LLM model: #{llm}") if llm_model.nil?
-
     client = OpenAI::Client.new
     client.chat(
       parameters: {
-        model: llm_model,
+        model: llm,
         messages: [{ role: 'user', content: input }],
         stream: @redis_wrapper.stream_function,
       },

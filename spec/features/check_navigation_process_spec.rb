@@ -78,6 +78,33 @@ describe 'the Navigation process' do
       end
     end
 
+    it 'check the settings page' do
+      within("#sidebar-menu") do
+        click_on 'Settings'
+      end
+      expect(page).to have_content 'Free plan is active.'
+      expect(page).to have_content 'The 500 button clicks in total are included — 500 clicks left.'
+      click_on '+ Add new address'
+
+      using_wait_time 3 do
+        expect(page).to have_content 'Domain Address'
+      end
+
+      within("#new_project_path_form") do
+        fill_in 'Address', with: 'd'
+      end
+
+      click_on 'Add Domain'
+
+      expect(page).to have_content 'Value is not a valid URL'
+
+      within("#new_project_path_form") do
+        fill_in 'Address', with: 'http://localhost.com/blog'
+      end
+      click_on 'Add Domain'
+      expect(page).to have_content 'http://localhost.com/blog'
+    end
+
     context 'with existing page and article' do
       include ActionView::RecordIdentifier
 
@@ -113,7 +140,7 @@ describe 'the Navigation process' do
         end
 
 
-        llm_call = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
+        llm_call = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh

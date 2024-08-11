@@ -5,3 +5,15 @@
 #
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
+
+user =
+  User.create(
+    email: 'app@getsummer.ai',
+    password: 'app@getsummer.ai',
+    password_confirmation: 'app@getsummer.ai',
+  )
+
+user
+  .projects
+  .build(name: 'localhost', domain: 'localhost', paths: [''], protocol: 'http', plan: 'free')
+  .save!(validate: false)

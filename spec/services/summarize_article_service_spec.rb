@@ -5,9 +5,9 @@ describe SummarizeArticleService do
 
   subject do
     described_class.new(
-    model: article,
-    llm: article.project.default_llm,
-    guidelines: article.project.guidelines,
+      model: article,
+      llm: Project.default_llms[article.project.default_llm],
+      guidelines: article.project.guidelines,
     ).summarize
   end
 

@@ -3,10 +3,13 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.1.3'
+ruby '3.3.3'
+
+# Needed until Ruby 3.3.4 is released https://github.com/ruby/ruby/pull/11006
+gem 'net-pop', github: 'ruby/net-pop'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '~> 7.1'
+gem 'rails', '=7.1.2'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
@@ -109,7 +112,7 @@ group :test do
   gem "webmock"
 end
 
-gem 'good_job', '~> 3.19'
+gem 'good_job', '~> 4.1'
 
 gem 'mjml-rails'
 gem 'view_component', '~> 3.5'

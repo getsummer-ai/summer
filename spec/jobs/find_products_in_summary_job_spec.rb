@@ -7,7 +7,7 @@ describe FindProductsInSummaryJob do
   let!(:project) { user.projects.create(name: 'Test', protocol: 'http', domain: 'test.com') }
   let!(:article) do
     article = project.articles.create!(article_hash: '354', article: 'On the...')
-    call_id = article.summary_llm_calls.create!(llm: 'gpt3.5', project:, input: 'A.', output: 'B.')
+    call_id = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
     article.update!(summary_llm_call: call_id)
     article
   end

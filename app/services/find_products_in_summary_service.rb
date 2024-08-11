@@ -10,11 +10,11 @@ class FindProductsInSummaryService
     "Please take a look at the product list: \n"
   POSTFIX = "\nPlease respond as a JSON array, in the following format: [{\"id\": number, \"related\": bool}]\n"
 
-  LLM_MODEL_MAPPING = { gpt3: 'gpt-3.5-turbo', gpt4: 'gpt-4o' }.freeze
-
   # @param [ProjectArticle] model
-  # @param [Symbol] llm
-  def initialize(model:, llm: :gpt3)
+  # @param [String] llm
+  def initialize(model:, llm: Project.default_llms[:gpt_4o_mini])
+    raise("Unknown LLM model: #{llm}") unless Project.default_llms.value?(llm)
+
     @model = model
     # @param [Project]
     @project = model.project
@@ -43,11 +43,8 @@ class FindProductsInSummaryService
 
   # @return [Hash]
   def ask_gpt_to_summarize
-    llm_model = LLM_MODEL_MAPPING[llm.to_sym]
-    raise("Unknown LLM model: #{llm}") if llm_model.nil?
-
     client = OpenAI::Client.new
-    client.chat(parameters: { model: llm_model, messages: [{ role: 'user', content: input }] })
+    client.chat(parameters: { model: llm, messages: [{ role: 'user', content: input }] })
   end
 
   # @param [Hash] info

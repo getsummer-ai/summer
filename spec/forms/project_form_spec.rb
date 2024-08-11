@@ -9,6 +9,16 @@ RSpec.describe ProjectForm do
       form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
       expect(form.valid?).to be true
     end
+
+    it 'creates a new project' do
+      stub_const("ENV", ENV.to_hash.merge(
+        'FREE_PLAN_CLICKS_THRESHOLD' => '30',
+      ))
+      form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
+      form.create
+      expect(Project.count).to eq 1
+      expect(Project.first.free_clicks_threshold).to eq 30
+    end
   end
 
   context 'when the form is invalid' do
