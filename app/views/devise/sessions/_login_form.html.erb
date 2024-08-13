@@ -20,7 +20,11 @@
   <%= form_for(resource, 
         as: resource_name,
         url: session_path(resource_name),
-        data: { turbo: is_turbo ? 'true' : 'false' },
+        data: {
+          turbo: is_turbo ? 'true' : 'false',
+          controller: 'auto-disable-form',
+          'auto-disable-form-with-value': 'Signing in...'
+        },
         builder: DaisyBuilder
       ) do |f| %>
     <div class="form-control">
@@ -34,7 +38,7 @@
     </div>
 
     <% unless is_turbo %>
-      <div class="mt-1 text-sm">
+      <div class="mt-1.5 text-sm">
         <%= link_to t('.restore_password'),
                     new_password_path('user'),
                     class: 'link-summer' %>
@@ -58,7 +62,7 @@
     <% end %>
 
     <div class="form-control mt-7">
-      <%= f.submit t('.sign_in'), class: 'btn btn-summer btn-neutral btn-block' %>
+      <%= f.submit t('.sign_in'), class: 'btn btn-summer btn-black btn-block' %>
     </div>
   <% end %>
 

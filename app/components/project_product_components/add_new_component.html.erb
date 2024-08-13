@@ -2,7 +2,7 @@
   if @project.products.count <= 5
     concat link_to(
       '+ Add new product', new_project_product_path,
-      class: 'btn btn-summer btn-neutral',
+      class: 'btn btn-summer btn-black',
       data: {'turbo-frame': "modal"}
     )
   end

@@ -117,6 +117,14 @@ html, body {
       @apply opacity-50;
     }
   }
+
+  &.btn-black {
+    @apply bg-black text-white hover:opacity-80;
+    &[disabled] {
+      @apply opacity-50;
+    }
+  }
+
   &:hover {
     @apply border-0;
   }
