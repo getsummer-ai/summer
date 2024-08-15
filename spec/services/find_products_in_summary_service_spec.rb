@@ -45,6 +45,17 @@ describe FindProductsInSummaryService do
          ]
     end
 
+    context 'when payload is json but wrapped with markdown tag' do
+      let(:payload) do
+        "```json\n[\n{\"id\":#{product_1.id},\"related\":true},\n{\"id\":#{product_2.id},\"related\":false}\n]\n```"
+      end
+
+      it 'throws error if the response is incorrect' do
+        expect { subject }.to change { article.reload.products_status }.from('wait').to('completed')
+        expect(article.info.products['time']).to be_a(Float)
+      end
+    end
+
     context 'when a wrong json is returned' do
       let(:llm_response) { 'wrong' }
 
