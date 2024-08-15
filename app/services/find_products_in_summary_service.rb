@@ -74,6 +74,7 @@ class FindProductsInSummaryService
 
   # @return [Array<Integer>]
   def parse_result_get_ids(output)
+    output = output.split("\n")[1..-2].join("\n") if output.start_with?('```json')
     result = JSON.parse(output)
     result.filter_map { |p| p['id'] if p['related'] == true }
   rescue JSON::ParserError
