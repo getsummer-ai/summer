@@ -137,7 +137,10 @@
     {:else}
       {#if summary.length === 0}
         <div class="loading-block">
-          <LoadingIcon width={40} {strokeColor} />
+          <LoadingIcon
+            width={40}
+            strokeColor={settings.appearance.frame_theme === 'white' ? 'black' : 'white'}
+          />
         </div>
       {/if}
 
