@@ -5,6 +5,7 @@ class Project
 
     attribute :frame_theme, :string, default: 'white'
     attribute :button_theme, :string, default: 'black'
+    attribute :z_index, :integer, default: 10_000
 
     validates :frame_theme, inclusion: { in: %w[black white] }
     validates :button_theme, inclusion: { in: %w[black white] }

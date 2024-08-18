@@ -61,6 +61,7 @@ RSpec.describe Api::V1::ButtonController do
             appearance: {
               button_theme: 'black',
               frame_theme: 'white',
+              z_index: 10_000,
             },
             paths: [],
             features: {
@@ -93,6 +94,7 @@ RSpec.describe Api::V1::ButtonController do
             appearance: {
               button_theme: 'black',
               frame_theme: 'white',
+              z_index: 10_000,
             },
             paths: %w[/path1 /path2],
             features: {

@@ -7,20 +7,17 @@ module Api
     class ButtonController < Api::V1::ApplicationController
       before_action :validate_init_request, only: :init
 
-      BUTTON_APP = unless Rails.env.development?
-         manifest = JSON.parse(Rails.public_path.join('libs/.vite/manifest.json').read)
-         manifest["app/frontend/libs/summer.ts"]["file"]
-      end
+      FULL_PATH_TO_BUTTON_APP =
+        if Rails.env.development?
+          helpers.vite_asset_path('libs/summer.ts')
+        else
+          manifest = JSON.parse(Rails.public_path.join('libs/.vite/manifest.json').read)
+          manifest['app/frontend/libs/summer.ts']['file']
+          "/libs/#{manifest['app/frontend/libs/summer.ts']['file']}"
+        end
 
       def settings
-        @app_path =
-          (
-            if Rails.env.development?
-              helpers.vite_asset_path('libs/summer.ts')
-            else
-              "/libs/#{BUTTON_APP}"
-            end
-          )
+        @app_path = FULL_PATH_TO_BUTTON_APP
       end
 
       def init
@@ -29,7 +26,9 @@ module Api
 
         @article = form.find_or_create
         return head :bad_request if @article.nil?
-        return head :no_content if @article.summary_status_skipped? || @article.summary_status_error?
+        if @article.summary_status_skipped? || @article.summary_status_error?
+          return head :no_content
+        end
         return head :no_content unless form.project_page.is_accessible?
 
         @combined_id =

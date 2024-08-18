@@ -28,6 +28,7 @@ export type SettingsInfo = {
   appearance: {
     button_theme: 'white' | 'black';
     frame_theme: 'white' | 'black';
+    z_index: number;
   };
   features: {
     suggestion: boolean;

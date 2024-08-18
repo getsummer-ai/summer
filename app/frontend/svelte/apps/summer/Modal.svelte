@@ -92,7 +92,7 @@
 
 <svelte:window on:keydown|window={(e) => e.key === 'Escape' && closeModal()} on:resize={setVh} />
 
-<div class="dialog-container">
+<div class="dialog-container" style={$$restProps.style ?? ''}>
   <div
     aria-hidden="true"
     hidden={!showModal}
@@ -152,7 +152,6 @@
 <style lang="scss">
   .dialog-container {
     position: relative;
-    z-index: 10000;
     width: 100%;
     @keyframes fade {
       from {

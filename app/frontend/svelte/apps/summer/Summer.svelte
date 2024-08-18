@@ -112,6 +112,7 @@
 <button
   bind:this={button}
   class="getsummer-btn theme-{settings.appearance.button_theme} {showModal ? 'active' : ''}"
+  style={`z-index: ${settings.appearance.z_index + 1}`}
   on:click={onButtonClick}
 >
   {#if showModal}
@@ -129,8 +130,9 @@
   <Modal
     bind:showModal
     on:close={closeModal}
-    bind:title={article.title}
+    title={article.title}
     theme={settings.appearance.frame_theme}
+    style={`z-index: ${settings.appearance.z_index}`}
   >
     {#if isError}
       <ErrorBlock />
@@ -210,7 +212,6 @@
       0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);
     backdrop-filter: blur(4px);
     animation: smooth-appear 400ms ease-in-out;
-    z-index: 10001;
 
     &.active {
       @media (max-width: 640px) {
