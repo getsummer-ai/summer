@@ -115,15 +115,19 @@
   style={`z-index: ${settings.appearance.z_index + 1}`}
   on:click={onButtonClick}
 >
-  {#if showModal}
-    <CloseIcon class="btn-icon" {strokeColor} />
-    <span>Close</span>
-  {:else if loading === true}
-    <LoadingIcon class="btn-icon" {strokeColor} />
-    <span>Summarizing</span>
-  {:else}
-    Summarize
-  {/if}
+  {#key showModal || loading}
+    <span>
+      {#if showModal}
+        <CloseIcon class="btn-icon" {strokeColor} />
+        <span>Close</span>
+      {:else if loading === true}
+        <LoadingIcon class="btn-icon" {strokeColor} />
+        <span>Summarizing</span>
+      {:else}
+        Summarize
+      {/if}
+    </span>
+  {/key}
 </button>
 
 {#if showButton}
@@ -193,17 +197,9 @@
   }
 
   .getsummer-btn {
-    @apply text-white select-none cursor-pointer rounded-3xl;
+    @apply rounded-3xl;
     position: fixed;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 4px 12px;
-    font-size: 16px;
-    line-height: 22px;
-    text-align: left;
-    height: 32px;
-    word-break: keep-all;
+    padding: 0;
     left: 50%;
     transform: translateX(-50%);
     bottom: 20px;
@@ -212,6 +208,19 @@
       0 1.769px 4.735px 0 rgba(0, 0, 0, 0.06), 0 0.664px 2.345px 0 rgba(0, 0, 0, 0.03);
     backdrop-filter: blur(4px);
     animation: smooth-appear 400ms ease-in-out;
+
+    > span {
+      @apply select-none cursor-pointer;
+      padding: 4px 12px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      font-size: 16px;
+      line-height: 22px;
+      text-align: left;
+      word-break: keep-all;
+    }
 
     &.active {
       @media (max-width: 640px) {
