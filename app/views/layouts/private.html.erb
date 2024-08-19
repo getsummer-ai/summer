@@ -56,7 +56,7 @@
         </label>
       </div>
     </div>
-    <% if current_project.status_suspended? %>
+    <% if current_project&.status_suspended? %>
       <%= render SuspendedInfo::Component.new(project: current_project) %>
     <% end %>
     <div class="p-4 md:p-10 rounded-2xl bg-white grow z-10">
