@@ -1,13 +1,12 @@
 <script lang="ts">
   export let strokeColor: string;
   export let width: number = 24;
-  console.log($$restProps.class)
 </script>
 
 <svg
-  class={ 'animate ' + ($$restProps.class ?? '') }
+  class={'animate ' + ($$restProps.class ?? '')}
   xmlns="http://www.w3.org/2000/svg"
-  width={width}
+  {width}
   height={width}
   viewBox="0 0 24 24"
   fill="none"

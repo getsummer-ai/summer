@@ -1,4 +1,5 @@
 import { Writable, writable } from 'svelte/store';
+import { MessagesType } from '@/svelte/apps/helpers/use-i18n';
 
 export type ArticleInitInfo = {
   page_id: string;
@@ -25,6 +26,7 @@ export type ErrorCodeType = {
 
 export type SettingsInfo = {
   paths: string[];
+  lang: keyof MessagesType<{ [key: string]: string }>;
   appearance: {
     button_theme: 'white' | 'black';
     frame_theme: 'white' | 'black';
@@ -118,7 +120,9 @@ let initializedApi: {
     pageId: string,
     serviceId: string,
   ) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectProductType[] }>>;
-  getServices: (pageId: string) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectProductType[] }>>;
+  getServices: (
+    pageId: string,
+  ) => Promise<ApiResponseType<ErrorCodeType | { services: ProjectProductType[] }>>;
   getSummary: (id: string) => { result: Writable<string>; isCompleted: Writable<boolean> };
   subscribe: (pageId: string, id: string) => Promise<ApiResponseType<unknown>>;
 };

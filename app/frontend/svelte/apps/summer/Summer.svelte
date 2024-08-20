@@ -9,7 +9,7 @@
   import CloseIcon from './components/CloseIcon.svelte';
   import LoadingIcon from './components/LoadingIcon.svelte';
   import markdown from './markdown.js';
-
+  import { useI18n } from '../helpers/use-i18n.js';
   /* eslint svelte/no-at-html-tags: 0 */
   let showModal = false;
   export let projectId: string;
@@ -25,6 +25,28 @@
   const rootDiv = document.getElementById(rootDivId);
   const api = initApi(projectId);
 
+  const messages = {
+    en: {
+      summarize: 'Summarize',
+      summarizing: 'Summarizing',
+      close: 'Close',
+      something_went_wrong: 'Whooops, something went wrong.',
+      cant_be_displayed: 'The summary can’t be displayed now.',
+      try_again_later: 'Try again or check the full article.',
+      powered_by: 'Powered by',
+    },
+    es: {
+      summarize: 'Resumir',
+      summarizing: 'Resumiendo',
+      close: 'Cerrar',
+      something_went_wrong: 'Ups, algo salió mal.',
+      cant_be_displayed: 'El resumen no se puede mostrar ahora',
+      try_again_later: 'Inténtalo de nuevo o revisa el artículo completo.',
+      powered_by: 'Desarrollado por',
+    },
+  };
+
+  $: t = useI18n(messages, settings.lang);
   $: isError = summary.includes('--ERROR--');
   $: strokeColor = settings.appearance.button_theme === 'white' ? 'black' : 'white';
 
@@ -119,12 +141,12 @@
     <span>
       {#if showModal}
         <CloseIcon class="btn-icon" {strokeColor} />
-        <span>Close</span>
+        <span>{t('close')}</span>
       {:else if loading === true}
         <LoadingIcon class="btn-icon" {strokeColor} />
-        <span>Summarizing</span>
+        <span>{t('summarizing')}</span>
       {:else}
-        Summarize
+        {t('summarize')}
       {/if}
     </span>
   {/key}
@@ -133,13 +155,18 @@
 {#if showButton}
   <Modal
     bind:showModal
+    poweredByText={t('powered_by')}
     on:close={closeModal}
     title={article.title}
     theme={settings.appearance.frame_theme}
     style={`z-index: ${settings.appearance.z_index}`}
   >
     {#if isError}
-      <ErrorBlock />
+      <ErrorBlock>
+        {t('something_went_wrong')} <br />
+        {t('cant_be_displayed')} <br />
+        {t('try_again_later')}
+      </ErrorBlock>
     {:else}
       {#if summary.length === 0}
         <div class="loading-block">
@@ -165,7 +192,7 @@
 
     <svelte:fragment slot="footer">
       {#if summary.length && settings.features.subscription === true}
-        <SubscriptionBlock theme={settings.appearance.frame_theme} bind:article />
+        <SubscriptionBlock bind:article {settings} />
       {/if}
     </svelte:fragment>
   </Modal>

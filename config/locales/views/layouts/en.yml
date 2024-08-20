@@ -1,0 +1,18 @@
+en:
+  layouts:
+    main:
+      header:
+        name: Summer
+        description: Let users get an article summary.
+      menu:
+        about: About
+        homepage: Homepage
+      login_button:
+        sign_in: Sign in
+        logout: Logout
+
+    shared:
+      footer_small:
+        contact: Contact
+        terms_of_use: Terms of use
+        privacy_policy: Privacy policy

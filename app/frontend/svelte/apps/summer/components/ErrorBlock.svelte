@@ -1,9 +1,7 @@
 <script lang="ts"></script>
 
 <div class="error-block">
-  Whooops, something went wrong. <br>
-  The summary can’t be displayed now. <br>
-  Try again or check the full article.
+  <slot />
 </div>
 
 <style lang="scss">

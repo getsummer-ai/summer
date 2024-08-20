@@ -58,6 +58,7 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.')),
           settings: {
+            lang: 'en',
             appearance: {
               button_theme: 'black',
               frame_theme: 'white',
@@ -91,6 +92,7 @@ RSpec.describe Api::V1::ButtonController do
         expect(response.parsed_body).to include(
           path: be_a(String).and(include('/libs/app.')),
           settings: {
+            lang: 'en',
             appearance: {
               button_theme: 'black',
               frame_theme: 'white',

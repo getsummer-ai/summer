@@ -1,12 +1,30 @@
 <script lang="ts">
-  import type { ArticleInitInfo } from './api';
+  import type { ArticleInitInfo, SettingsInfo } from './api';
   import { initApi } from './api';
+  import { defineMessages, useI18n } from '@/svelte/apps/helpers/use-i18n';
 
   export let article: ArticleInitInfo;
-  export let theme: string = 'white';
+  export let settings: SettingsInfo;
   let email = '';
   let loading = false;
   let subscribeState = false;
+
+  const messages = defineMessages({
+    en: {
+      subscribe_on_weekly: 'Subscribe on weekly summaries:',
+      your_email: 'Your Email...',
+      subscribed: 'Subscribed!',
+      subscribe: 'Subscribe',
+    },
+    es: {
+      subscribe_on_weekly: 'Suscríbete a resúmenes semanales:',
+      your_email: 'Tu Email...',
+      subscribed: 'Subscrito!',
+      subscribe: 'Suscribirse',
+    },
+  });
+
+  export const t = useI18n(messages, settings.lang);
 
   const subscribeUser = async () => {
     if (!email || loading) return;
@@ -28,16 +46,16 @@
   };
 </script>
 
-<div class="subscription theme-{theme}">
+<div class="subscription theme-{settings.appearance.frame_theme}">
   <div>
-    Subscribe on weekly summaries:
+    {t('subscribe_on_weekly')}
   </div>
   <div class="wrapper">
-    <input placeholder="Your Email..." type="text" bind:value={email} />
+    <input placeholder={t('your_email')} type="text" bind:value={email} />
     {#if subscribeState}
-      <button class="subscribed-state">Subscribed!</button>
+      <button class="subscribed-state"> {t('subscribed')} </button>
     {:else}
-      <button on:click={subscribeUser}>Subscribe</button>
+      <button on:click={subscribeUser}>{t('subscribe')}</button>
     {/if}
   </div>
 </div>
@@ -86,40 +104,40 @@
       }
 
       &.subscribed-state {
-        background: #0FA36E !important;
+        background: #0fa36e !important;
         color: #fff !important;
       }
     }
 
     &.theme-white {
-      color: rgba(27, 27, 27, 0.50);
+      color: rgba(27, 27, 27, 0.5);
       .wrapper {
-        background: #EFF2F4;
+        background: #eff2f4;
       }
 
       input {
-        color: rgba(27, 27, 27, 0.60);
+        color: rgba(27, 27, 27, 0.6);
       }
 
       button {
-        color: #FFF;
-        background: rgba(27, 27, 27, 0.90);
+        color: #fff;
+        background: rgba(27, 27, 27, 0.9);
       }
     }
 
     &.theme-black {
-      color: rgba(255, 255, 255, 0.40);
+      color: rgba(255, 255, 255, 0.4);
       .wrapper {
         background: #323232;
       }
 
       input {
-        color: rgba(255, 255, 255, 0.40);
+        color: rgba(255, 255, 255, 0.4);
       }
 
       button {
         color: #242424;
-        background: rgba(255, 255, 255, 0.90);
+        background: rgba(255, 255, 255, 0.9);
       }
     }
   }

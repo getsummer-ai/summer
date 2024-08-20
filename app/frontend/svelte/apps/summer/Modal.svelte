@@ -6,6 +6,7 @@
   export let showModal = false;
   export let theme = 'light';
   export let title = '';
+  export let poweredByText = '';
   let startTouchY = 0;
   let endTouchY = 0;
   let isScrollLocked = false;
@@ -128,7 +129,7 @@
             <slot name="footer" />
             <div class="powered-by">
               <a href="https://getsummer.ai" target="_blank">
-                <span>Powered by</span>
+                <span>{poweredByText}</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="13"

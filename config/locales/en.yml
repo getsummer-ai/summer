@@ -34,43 +34,6 @@ en:
     errors:
       messages:
         inclusion: is not included in the list of valid values
-
-  layouts:
-    main:
-      header:
-        name: Summer
-        description: Let users get an article summary.
-      menu:
-        about: About
-        homepage: Homepage
-      login_button:
-        sign_in: Sign in
-        logout: Logout
-
-    shared:
-      footer_small:
-        contact: Contact
-        terms_of_use: Terms of use
-        privacy_policy: Privacy policy
-
-  modals:
-    restore_password:
-      sign_in: Sign In
-      sign_up: Sign Up
-      restore_password: Restore Password
-    login:
-      sign_in: Sign In
-      sign_up: Sign Up
-      restore_password: Restore Password
-    sign_up:
-      sign_in: Sign In
-      sign_up: Sign Up
-    shared:
-      go_back: Back
-  pages:
-    shared:
-      examples:
-        upload_photos: Upload photos
   errors:
     shared:
       go_home: Go Back Home

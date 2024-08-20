@@ -1,0 +1,15 @@
+en:
+  modals:
+    restore_password:
+      sign_in: Sign In
+      sign_up: Sign Up
+      restore_password: Restore Password
+    login:
+      sign_in: Sign In
+      sign_up: Sign Up
+      restore_password: Restore Password
+    sign_up:
+      sign_in: Sign In
+      sign_up: Sign Up
+    shared:
+      go_back: Back
