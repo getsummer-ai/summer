@@ -7,13 +7,23 @@
                       else ''
                       end
   button_color_class = case settings.button_theme
-                       when 'white' then 'bg-white'
-                       when 'black' then 'bg-black'
+                       when 'white' then 'bg-white text-black'
+                       when 'black' then 'bg-black text-white'
+                       else ''
+                       end
+  button_text = case @lang
+                       when 'en' then 'Summarize'
+                       when 'es' then 'Resumir'
                        else ''
                        end
 
 %>
 <div id="setup-appearance-component" class="p-6 md:p-10 w-52 bg-default flex-1 flex justify-center items-center flex-col">
-  <div class="w-48 h-36 md:w-56 md:h-44 rounded-lg <%=frame_color_class %>"></div>
-  <div class="w-16 md:w-24 h-6 <%=button_color_class %> rounded-3xl mt-4"></div>
+  <div class="w-40 h-40 md:w-[188px] md:h-[180px] rounded-lg border <%=frame_color_class %>"></div>
+  <div
+    class="py-1 px-3 cursor-default text-opacity-85 border text-center text-xs text-[11px]
+          <%=button_color_class %> rounded-3xl mt-6"
+  >
+    <%= button_text %>
+  </div>
 </div>

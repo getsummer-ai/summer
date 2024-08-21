@@ -33,31 +33,43 @@
       url: appearance_project_path(current_project),
       html: {
         method: :put,
-        class: 'mt-2',
+        class: 'mt-0',
       } do |f| %>
       <%= f.fields_for :settings do |settings_fields| %>
+        <%
+          base_radio = 'radio-appearance-summer'
+          light_radio = "#{base_radio} #{base_radio}--light-grey"
+          onchange = 'this.form.requestSubmit()'
+        %>
         <%= settings_fields.fields_for :appearance do |appearance_form| %>
-          <%
-            base_radio = 'radio-appearance-summer'
-            light_radio = "#{base_radio} #{base_radio}--light-grey"
-            onchange = 'this.form.requestSubmit()'
-          %>
-
           <div>
             <div class="mb-2 font-semibold">Button</div>
             <%= appearance_form.radio_button :button_theme, 'black', class: base_radio, onchange: onchange %>
             <%= appearance_form.radio_button :button_theme, 'white', class: light_radio, onchange: onchange %>
           </div>
-          <div class="mt-6">
+          <div class="mt-4">
             <div class="mb-2 font-semibold">Frame</div>
             <%= appearance_form.radio_button :frame_theme, 'black', class: base_radio, onchange: onchange %>
             <%= appearance_form.radio_button :frame_theme, 'white', class: light_radio, onchange: onchange %>
           </div>
         <% end %>
+        <div class="mt-6">
+          <div class="mb-2 font-semibold">Language</div>
+          <%= settings_fields.select(
+                :lang,
+                [["English", 'en'], ["Spanish", 'es']],
+                {},
+                { class: 'select select-bordered rounded-lg select-xs w-full', onchange: onchange }
+              )
+          %>
+        </div>
       <% end %>
     <% end %>
   </div>
-  <%=render Setup::AppearanceComponent.new(project_appearance_settings: current_project.settings.appearance) %>
+  <%=render Setup::AppearanceComponent.new(
+    lang: current_project.settings.lang,
+    project_appearance_settings: current_project.settings.appearance
+  ) %>
 </div>
 <hr class="my-12">
 
