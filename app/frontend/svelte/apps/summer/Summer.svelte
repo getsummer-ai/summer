@@ -22,7 +22,7 @@
   let isSummaryCompleted: boolean = false;
   let loading = false;
   let showButton = false;
-  const rootDiv = document.getElementById(rootDivId);
+  const rootDiv = document.getElementById(rootDivId) as HTMLDivElement;
   const api = initApi(projectId);
 
   const messages = {
@@ -31,7 +31,7 @@
       summarizing: 'Summarizing',
       close: 'Close',
       something_went_wrong: 'Whooops, something went wrong.',
-      cant_be_displayed: 'The summary can’t be displayed now.',
+      cant_be_displayed: "The summary can't be displayed now.",
       try_again_later: 'Try again or check the full article.',
       powered_by: 'Powered by',
     },
@@ -50,7 +50,7 @@
   $: isError = summary.includes('--ERROR--');
   $: strokeColor = settings.appearance.button_theme === 'white' ? 'black' : 'white';
 
-  const mousewheelEvent = (e: WheelEvent) => {
+  const wheelEvent = (e: WheelEvent) => {
     const target = e.target as HTMLElement;
     // console.log('mousewheel', e);
     if (showModal && target?.id === rootDivId) {
@@ -62,18 +62,18 @@
   onMount(async () => {
     if (showButton) return;
     showButton = true;
-    rootDiv.addEventListener('mousewheel', mousewheelEvent);
+    rootDiv.addEventListener('wheel', wheelEvent);
   });
 
   onDestroy(() => {
-    rootDiv.removeEventListener('mousewheel', mousewheelEvent);
+    rootDiv.removeEventListener('wheel', wheelEvent);
   });
 
   const openModal = async (delay = 100) =>
     new Promise((resolve) => {
       setTimeout(() => {
         showModal = true;
-        resolve();
+        resolve(true);
       }, delay);
     });
 
@@ -112,7 +112,9 @@
     if (!settings.features.suggestion) return;
     try {
       const res = await api.getServices(article.page_id);
-      if (res.body?.hasOwnProperty('services')) services = res.body.services;
+      if (res.body && 'services' in res.body) {
+        services = res.body.services;
+      }
     } catch (error) {
       console.log(error);
     }

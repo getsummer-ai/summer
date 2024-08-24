@@ -14,19 +14,5 @@ module.exports = {
         parser: '@typescript-eslint/parser'
       }
     }
-  ],
-  // settings: {
-  //   'import/no-unused-modules': ['error', { 'unusedExports': true }],
-  //   'import/resolver': {
-  //     'eslint-import-resolver-custom-alias': {
-  //       alias: {
-  //         '@': path.resolve(__dirname, '../../frontend'),
-  //       },
-  //       extensions: ['.ts', '.js', '.tsx', '.d.ts', '.svelte'],
-  //     },
-  //     node: {
-  //       extensions: [".ts", ".tsx", '.js', ".svelte"]
-  //     }
-  //   },
-  // }
+  ]
 };
