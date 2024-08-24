@@ -7,11 +7,12 @@ class ProjectPathForm
   validates :value, presence: true
   validates :value, url: true, if: -> { errors.empty? }
   validate :check_domain_correctness, if: -> { errors.empty? }
+  validate :check_path_uniqueness, if: -> { errors.empty? }
   validate :check_paths_max_count, on: %i[create], if: -> { errors.empty? }
 
   validates :path, presence: true, allow_blank: true, on: %i[update destroy]
   validate :check_path_existence, on: %i[update destroy]
-  validate :check_path_uniqueness, if: -> { errors.empty? }
+  validate :check_if_path_is_last, on: %i[destroy], if: -> { errors.empty? }
 
   def check_domain_correctness
     return if parsed_value&.host == @project.domain
@@ -24,8 +25,13 @@ class ProjectPathForm
     errors.add(:base, 'URL already exists')
   end
 
+  def check_if_path_is_last
+    return if @project.paths.count > 1
+    errors.add(:base, 'You cannot delete the last URL')
+  end
+
   def check_paths_max_count
-    return if @project.paths.count <= 5
+    return if @project.paths.count < 5
     errors.add(:base, 'Max URL amount is 5')
   end
 
