@@ -100,9 +100,14 @@ Rails.application.routes.draw do
 
   authenticate :user, ->(user) { user&.is_admin? } do
     mount GoodJob::Engine => 'good_jobs'
-    # mount Avo::Engine, at: '/avo'
-    # mount Avo::Engine => '/avo'
     mount Avo::Engine, at: Avo.configuration.root_path
+
+    namespace :admin do
+      resources :users, only: [:index] do
+        post :impersonate, on: :member
+        post :stop_impersonating, on: :collection
+      end
+    end
   end
 
   match '/404', to: 'errors#not_found', via: :all

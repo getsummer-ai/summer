@@ -28,6 +28,7 @@ gem 'pundit'
 gem 'store_model', '~> 2.3'
 
 gem 'passive_columns'
+gem "pretender"
 gem 'stripe'
 
 # Use Redis adapter to run Action Cable in production

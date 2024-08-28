@@ -1,0 +1,16 @@
+<% unless content_for?(:meta) %>
+  <% content_for :meta do %>
+    <title>Admin</title>
+  <% end %>
+<% end %>
+
+<% content_for :content do %>
+  <div class="w-[800px] m-auto">
+    <div class="my-4 text-right">
+      <%=link_to 'Personal area', root_path, 'data-turbo': "false", class: 'btn btn-summer btn-black' %>
+    </div>
+    <%= yield %>
+  </div>
+<% end %>
+
+<%= render template: 'layouts/application' %>

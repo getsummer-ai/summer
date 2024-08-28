@@ -56,6 +56,9 @@
         </label>
       </div>
     </div>
+    <% if true_user.is_admin? %>
+      <%= render Admin::AdminToolbox::Component.new(current_user:, true_user:) %>
+    <% end %>
     <% if current_project&.status_suspended? %>
       <%= render SuspendedInfo::Component.new(project: current_project) %>
     <% end %>

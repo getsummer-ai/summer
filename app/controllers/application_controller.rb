@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include LocaleConcern
+  impersonates :user
 
   IS_PLAYGROUND = Rails.configuration.summer[:IS_PLAYGROUND]
 

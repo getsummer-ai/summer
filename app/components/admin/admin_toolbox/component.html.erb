@@ -1,0 +1,19 @@
+<div class="p-3">
+  <span>
+    You're an admin and logged in as <b><%= @true_user.email %></b>
+    <%= link_to 'See all users', admin_users_path, class: 'btn btn-summer ml-2', data: { turbo: false } %>
+  </span>
+  <% if @current_user != @true_user %>
+    <div class="mt-5 border-l-2 pl-5 pb-4">
+      You are signed in as <b><%= @current_user.email %></b>
+      <%=
+        button_to "Back to #{@true_user.email}",
+                  stop_impersonating_admin_users_path,
+                  data: {
+                    turbo: false,
+                  },
+                  class: 'btn btn-summer btn-black mt-2'
+      %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,18 @@
+<tr id="<%= dom_id(@user) %>">
+  <td>
+    <%=@user.id %>
+  </td>
+  <td class="font-semibold pl-0">
+    <%=
+      button_to impersonate_admin_user_path(@user), data: { turbo: false } do
+        @user.email
+      end
+    %>
+  </td>
+  <td>
+    <%=@user.default_project&.domain %>
+  </td>
+  <td>
+    <%=@user.default_project_id %>
+  </td>
+</tr>
