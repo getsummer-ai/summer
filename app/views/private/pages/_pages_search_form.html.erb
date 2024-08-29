@@ -1,0 +1,23 @@
+<%=
+  form_with(
+    model: form,
+    url: project_pages_path(current_project),
+    method: :get,
+    data: {
+      controller: "auto-submit-input-form",
+      turbo_action: "advance",
+      turbo_stream: true }
+  ) do |f|
+%>
+  <div class="mb-0">
+    <%=
+      f.text_field :search,
+        class: 'input input-sm input-search-summer pl-0 w-full',
+        placeholder: 'Search by title or URL',
+        data: {
+          auto_submit_input_form_target: 'input',
+          action: 'input->auto-submit-input-form#debouncedSubmit',
+        }
+    %>
+  </div>
+<% end %>

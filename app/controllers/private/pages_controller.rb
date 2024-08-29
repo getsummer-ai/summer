@@ -9,16 +9,19 @@ module Private
     layout :private_or_turbo_layout
 
     def index
-      @statistics = ProjectStatisticsViewModel.new(@current_project, [:views, :actions])
-      @pagy, @pages = pagy(
-        @current_project
-          .pages
-          .preload(:article_only_title)
-          .eager_load(:statistics_by_total)
-          .order(ProjectStatisticsByTotal.arel_table[:views].desc.nulls_last),
-        items: 30,
-        link_extra: 'data-turbo-frame="pages"'
-      )
+      @form = ProjectPagesQueryForm.new(@current_project, query_pages_form_permitted_params)
+      @pagy, @pages =
+        pagy_countless(@form.query, items: 15, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
+
+      respond_to do |format|
+        format.turbo_stream do
+          locals = { project: @current_project, pages: @pages, pagy: @pagy }
+          render turbo_stream: turbo_stream.replace('pages_table', partial: 'pages_table', locals:)
+        end
+        format.html do
+          @statistics = ProjectStatisticsViewModel.new(@current_project, %i[views actions])
+        end
+      end
     end
 
     def show
@@ -71,6 +74,10 @@ module Private
     end
 
     private
+
+    def query_pages_form_permitted_params
+      params.fetch(:project_pages_query_form, {}).permit(:search, :order)
+    end
 
     def set_url
       pages_query = current_project.pages

@@ -144,6 +144,23 @@ html, body {
   }
 }
 
+.input-search-summer {
+  @apply outline-0 border-0 h-[22px] border-l-2 border-gray-600 font-black;
+  padding-left: 9px;
+  transition: padding-left 0.1s;
+
+
+  &:placeholder-shown {
+    @apply border-l-0 border-gray-300 placeholder-opacity-20 placeholder-black;
+    padding-left: 0;
+  }
+
+  &:focus {
+    @apply outline-0 border-0 border-l-2 border-gray-600;
+    padding-left: 9px;
+  }
+}
+
 .label-summer {
   @apply font-medium pb-1.5 pl-0 text-sm;
   .label-text {

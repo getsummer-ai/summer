@@ -30,39 +30,10 @@
 </div>
 
 
-  <div class="mt-12">
-    <%=turbo_frame_tag 'pages', target: "_top", 'data-turbo-action': 'advance' do %>
-      <div class="overflow-x-auto mt-6 -mx-4 px-4 md:mx-0 md:px-0">
-        <table class="table tracking-tight table-summer min-w-[500px]">
-          <thead>
-            <tr>
-              <th class="font-semibold pl-0">Page</th>
-              <th class="font-semibold w-24 text-right">Shown</th>
-              <th class="font-semibold w-24 text-right">Clicked</th>
-              <th class="font-semibold w-24 text-right">On/Off</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if @pages.length == 0 %>
-              <tr>
-                <td colspan="4" class="opacity-60 text-center py-24">
-                  There are no pages yet. <br>
-                  Each page will appear here after first Summer appearance.
-                </td>
-              </tr>
-            <% end %>
-            <% @pages.each_with_index do |page, i|%>
-              <%= render ProjectPageComponents::RowComponent.new(project: @current_project, page:) %>
-            <% end %>
-
-          </tbody>
-        </table>
-      </div>
-      <% if @pagy.pages > 1 %>
-        <div class="mt-6">
-          <%== pagy_nav(@pagy) %>
-        </div>
-      <% end %>
-    <% end %>
-  </div>
+<div class="mt-12">
+  <% if @pages.length >= 15 || @form.enabled_filters? %>
+    <%= render 'pages_search_form', form: @form, current_project: @current_project %>
+  <% end %>
+  <%= render 'pages_table', project: @current_project, pages: @pages, pagy: @pagy %>
+</div>
 

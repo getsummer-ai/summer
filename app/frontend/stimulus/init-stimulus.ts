@@ -6,6 +6,7 @@ import ProjectFormController from './project_form_controller';
 import ProjectGuidelinesFormController from './project_guidelines_form_controller';
 import AutoDisableFormController from './auto_disable_form_controller';
 import MenuSidebarController from './menu_sidebar_controller';
+import AutoSubmitInputFormController from './input_auto_submit_controller';
 
 const Stimulus = Application.start();
 Stimulus.register('turbo-modal-container', TurboModalContainerController);
@@ -15,3 +16,4 @@ Stimulus.register('project-form', ProjectFormController);
 Stimulus.register('project-guidelines-form', ProjectGuidelinesFormController);
 Stimulus.register('auto-disable-form', AutoDisableFormController);
 Stimulus.register('menu-sidebar', MenuSidebarController);
+Stimulus.register('auto-submit-input-form', AutoSubmitInputFormController);
