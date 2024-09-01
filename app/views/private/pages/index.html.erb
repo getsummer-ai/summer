@@ -1,39 +1,43 @@
 <h2 class="font-semibold text-xl md:text-2xl">Pages</h2>
 <p class="opacity-50 mt-1">
-  Summer will appear on all the pages from your domain link with more than 500 symbols.
-  Each page is added to the list after the first Summer appearance.
-  Turn Summer on and off manually per page if needed.
+  Summer will appear on all the pages from your domain link with more than 500 symbols. Each page is
+  added to the list after the first Summer appearance. Turn Summer on and off manually per page if
+  needed.
 </p>
 
 <div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-12">
   <%=
     render 'private/pages/metric_card',
-           title: 'Pages',
-           icon_src: vite_asset_path('assets/icons/pages.svg'),
-           number: @statistics.total_pages_count,
-           comment: "+#{number_with_delimiter(@statistics.current_month_new_pages_count)} pages this month"
+       title: 'Pages',
+       icon_src: vite_asset_path('assets/icons/pages.svg'),
+       number: @statistics.total_pages_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_pages_count)} pages this month"
   %>
   <%=
     render 'private/pages/metric_card',
-           title: 'Button Showed',
-           icon_src: vite_asset_path('assets/icons/eye.svg'),
-           number: @statistics.total_views_count,
-           comment: "+#{number_with_delimiter(@statistics.current_month_new_views_count)} new views this month"
+       title: 'Button Showed',
+       icon_src: vite_asset_path('assets/icons/eye.svg'),
+       number: @statistics.total_views_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_views_count)} new views this month"
   %>
   <%=
     render 'private/pages/metric_card',
-           title: 'Button Clicked',
-           icon_src: vite_asset_path('assets/icons/click.svg'),
-           number: @statistics.total_clicks_count,
-           comment: "+#{number_with_delimiter(@statistics.current_month_new_clicks_count)} new clicks this month"
+       title: 'Button Clicked',
+       icon_src: vite_asset_path('assets/icons/click.svg'),
+       number: @statistics.total_clicks_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_clicks_count)} new clicks this month"
   %>
 </div>
-
 
 <div class="mt-12">
-  <% if @pages.length >= 15 || @form.enabled_filters? %>
-    <%= render 'pages_search_form', form: @form, current_project: @current_project %>
-  <% end %>
+  <%=
+    render 'pages_form',
+           form: @form,
+           show_search: @pages.length >= 15 || @form.enabled_filters?,
+           current_project: @current_project
+  %>
   <%= render 'pages_table', project: @current_project, pages: @pages, pagy: @pagy %>
 </div>
-

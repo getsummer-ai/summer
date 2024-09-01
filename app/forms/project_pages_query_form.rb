@@ -5,7 +5,7 @@ class ProjectPagesQueryForm
   attr_accessor :search, :order
   validates :order,
             inclusion: {
-              in: %w[views_desc views_asc actions_desc actions_asc],
+              in: %w[views_desc views_asc clicks_desc clicks_asc],
             },
             allow_nil: true
   validates :search, length: { maximum: 500 }
@@ -15,7 +15,7 @@ class ProjectPagesQueryForm
   def initialize(current_project, params)
     @current_project = current_project
     @search = params[:search]
-    @order = params[:order]
+    @order = params[:order] || 'views_desc'
   end
 
   def query
@@ -44,10 +44,10 @@ class ProjectPagesQueryForm
     case order
     when 'views_asc'
       pages.order(ProjectStatisticsByTotal.arel_table[:views].asc.nulls_last)
-    when 'actions_desc'
-      pages.order(ProjectStatisticsByTotal.arel_table[:actions].desc.nulls_last)
-    when 'actions_asc'
-      pages.order(ProjectStatisticsByTotal.arel_table[:actions].asc.nulls_last)
+    when 'clicks_desc'
+      pages.order(ProjectStatisticsByTotal.arel_table[:clicks].desc.nulls_last)
+    when 'clicks_asc'
+      pages.order(ProjectStatisticsByTotal.arel_table[:clicks].asc.nulls_last)
     else
       pages.order(ProjectStatisticsByTotal.arel_table[:views].desc.nulls_last)
     end

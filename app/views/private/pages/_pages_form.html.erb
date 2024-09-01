@@ -1,0 +1,42 @@
+<%=
+  form_with(
+    model: form,
+    url: project_pages_path(current_project),
+    method: :get,
+    data: { controller: "auto-submit-input-form", turbo_stream: true }
+  ) do |f|
+%>
+  <div class="flex justify-between">
+    <div>
+      <% if show_search %>
+        <%=
+          f.text_field :search,
+                 class: 'input input-sm input-search-summer pl-0 w-full',
+                 placeholder: 'Search by title or URL',
+                 data: {
+                   auto_submit_input_form_target: 'input',
+                   action: 'input->auto-submit-input-form#debouncedSubmit',
+                 }
+        %>
+      <% end %>
+    </div>
+    <div>
+      <%=
+        f.select(
+          :order,
+          [
+            ['By Shown - Desc', 'views_desc'],
+            ['By Shown - Asc', 'views_asc'],
+            ['By Clicked - Desc', 'clicks_desc'],
+            ['By Clicked - Asc', 'clicks_asc'],
+          ],
+          {},
+          {
+            class: 'select select-bordered rounded-lg select-xs w-full',
+            onchange: 'this.form.requestSubmit()',
+          },
+        )
+      %>
+    </div>
+  </div>
+<% end %>
