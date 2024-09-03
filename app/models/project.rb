@@ -15,7 +15,7 @@ class Project < ApplicationRecord
 
   ALREADY_TAKEN_ERROR = 'is already taken'
 
-  enum plan: { free: 'free', light: 'light', pro: 'pro' }, _suffix: true
+  enum plan: { free: 'free', light: 'light', pro: 'pro', enterprise: 'enterprise' }, _suffix: true
   enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
   enum default_llm: {
          gpt_35_turbo: 'gpt-3.5-turbo',
@@ -103,12 +103,14 @@ class Project < ApplicationRecord
 
   def threshold_clicks_amount
     case plan
-    when 'free'
-      free_clicks_threshold
     when 'light'
       LIGHT_PLAN_THRESHOLD
     when 'pro'
       PRO_PLAN_THRESHOLD
+    when 'enterprise'
+      Float::INFINITY
+    else
+      free_clicks_threshold
     end
   end
 

@@ -1,4 +1,5 @@
-<% if @project.stripe.customer_id.present? && !@project.free_plan? %>
+<% stripe_customer_id_exists = @project.stripe.customer_id.present? %>
+<% if stripe_customer_id_exists && !@project.free_plan? %>
   <%
     cancel_time = @project.decorate.subscription_expiration_time
     button_text = cancel_time.present? && cancel_time < Time.now ? 'Reactivate' : 'Subscription'
@@ -15,7 +16,7 @@
   %>
 <% end %>
 
-<% if @project.stripe.customer_id.nil? || @project.free_plan? %>
+<% if !@project.enterprise_plan? && (!stripe_customer_id_exists || @project.free_plan?) %>
   <div class="flex mt-2 flex-col md:flex-row">
     <div>
       <h3 class="text-lg font-semibold">Light Plan</h3>

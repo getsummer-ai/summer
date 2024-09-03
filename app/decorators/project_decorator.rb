@@ -6,6 +6,7 @@ class ProjectDecorator < Draper::Decorator
     return free_plan_left_clicks if model.free_plan?
     return light_plan_left_clicks if model.light_plan?
     return pro_plan_left_clicks if model.pro_plan?
+    return Float::INFINITY if model.enterprise_plan?
     0
   end
 

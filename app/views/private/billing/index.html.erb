@@ -12,7 +12,7 @@
           <th class="font-semibold text-left w-44">Project</th>
           <th class="font-semibold text-left w-28">Status</th>
           <th class="font-semibold text-left w-20">Plan</th>
-          <th class="font-semibold text-left w-32">Views / Clicks</th>
+          <th class="font-semibold text-right w-32">Views / Clicks</th>
 
           <th class="font-semibold text-right w-44">Actions</th>
         </tr>
@@ -29,7 +29,7 @@
             </td>
             <td><%=decorated_project.status.humanize %></td>
             <td><%=decorated_project.plan.humanize %></td>
-            <td class="text-left"><%=decorated_project.total_views_count %> / <%=decorated_project.total_clicks_count %></td>
+            <td class="text-right"><%=decorated_project.total_views_count %> / <%=decorated_project.total_clicks_count %></td>
 
             <td class="text-right">
               <% unless project.free_plan? %>
