@@ -21,22 +21,24 @@
       <% end %>
     </div>
     <div>
-      <%=
-        f.select(
-          :order,
-          [
-            ['By Shown - Desc', 'views_desc'],
-            ['By Shown - Asc', 'views_asc'],
-            ['By Clicked - Desc', 'clicks_desc'],
-            ['By Clicked - Asc', 'clicks_asc'],
-          ],
-          {},
-          {
-            class: 'select select-bordered rounded-lg select-xs w-full',
-            onchange: 'this.form.requestSubmit()',
-          },
-        )
-      %>
+      <% if show_order %>
+        <%=
+          f.select(
+            :order,
+            [
+              ['↓ By Shown', 'views_desc'],
+              ['↑ By Shown', 'views_asc'],
+              ['↓ By Clicked', 'clicks_desc'],
+              ['↑ By Clicked', 'clicks_asc'],
+            ],
+            {},
+            {
+              class: 'select select-bordered rounded-lg select-xs w-full',
+              onchange: 'this.form.requestSubmit()',
+            },
+          )
+        %>
+      <% end %>
     </div>
   </div>
 <% end %>
