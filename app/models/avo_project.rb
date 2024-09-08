@@ -47,11 +47,13 @@ end
 #  uuid                  :uuid             not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  subscription_id       :bigint
 #  user_id               :bigint           not null
 #
 # Indexes
 #
 #  index_projects_on_created_at          (created_at)
+#  index_projects_on_subscription_id     (subscription_id)
 #  index_projects_on_user_id             (user_id)
 #  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
 #  index_projects_on_user_id_and_name    (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
@@ -59,5 +61,6 @@ end
 #
 # Foreign Keys
 #
+#  fk_rails_...  (subscription_id => project_subscriptions.id) ON DELETE => restrict ON UPDATE => cascade
 #  fk_rails_...  (user_id => users.id) ON UPDATE => cascade
 #

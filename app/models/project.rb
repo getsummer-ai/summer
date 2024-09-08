@@ -15,14 +15,13 @@ class Project < ApplicationRecord
 
   ALREADY_TAKEN_ERROR = 'is already taken'
 
-  enum plan: { free: 'free', light: 'light', pro: 'pro', enterprise: 'enterprise' }, _suffix: true
-  enum status: { active: 'active', suspended: 'suspended', deleted: 'deleted' }, _prefix: true
-  enum default_llm: {
+  enum :plan, { free: 'free', light: 'light', pro: 'pro', enterprise: 'enterprise' }, suffix: true
+  enum :status, { active: 'active', suspended: 'suspended', deleted: 'deleted' }, prefix: true
+  enum :default_llm, {
          gpt_35_turbo: 'gpt-3.5-turbo',
          gpt_4o: 'gpt-4o',
          gpt_4o_mini: 'gpt-4o-mini',
-       },
-       _prefix: true
+       }, prefix: true
 
   attribute :settings, ProjectSettings.to_type
   attribute :stripe, ProjectStripeDetails.to_type
@@ -47,6 +46,8 @@ class Project < ApplicationRecord
   alias project_id id
 
   belongs_to :user
+  belongs_to :subscription, class_name: 'ProjectSubscription', optional: true
+  has_many :subscriptions, dependent: :destroy, class_name: 'ProjectSubscription'
   has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
   has_many :articles, dependent: :destroy, class_name: 'ProjectArticle'
   has_many :products, dependent: :destroy, class_name: 'ProjectProduct'
@@ -153,11 +154,13 @@ end
 #  uuid                  :uuid             not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
+#  subscription_id       :bigint
 #  user_id               :bigint           not null
 #
 # Indexes
 #
 #  index_projects_on_created_at          (created_at)
+#  index_projects_on_subscription_id     (subscription_id)
 #  index_projects_on_user_id             (user_id)
 #  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
 #  index_projects_on_user_id_and_name    (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
@@ -165,5 +168,6 @@ end
 #
 # Foreign Keys
 #
+#  fk_rails_...  (subscription_id => project_subscriptions.id) ON DELETE => restrict ON UPDATE => cascade
 #  fk_rails_...  (user_id => users.id) ON UPDATE => cascade
 #

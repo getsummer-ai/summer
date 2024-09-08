@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_02_203457) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_08_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -23,6 +23,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_203457) do
   create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "light", "pro", "enterprise"]
+
+  create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
 
   create_table "events", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -225,6 +228,21 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_203457) do
     t.index ["trackable_type", "trackable_id"], name: "index_project_statistics_on_trackable"
   end
 
+  create_table "project_subscriptions", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "project_id", null: false
+    t.enum "plan", null: false, enum_type: "user_project_type"
+    t.datetime "start_at", precision: 0, null: false
+    t.datetime "end_at", precision: 0, null: false
+    t.datetime "cancel_at", precision: 0
+    t.jsonb "stripe", default: {}, null: false
+    t.integer "summarize_usage", null: false
+    t.integer "summarize_limit", null: false
+    t.index ["project_id", "start_at", "end_at"], name: "idx_on_project_id_start_at_end_at_7316c90a1e", unique: true
+    t.index ["project_id"], name: "index_project_subscriptions_on_project_id"
+  end
+
   create_table "project_user_emails", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -255,7 +273,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_203457) do
     t.text "guidelines", default: ""
     t.jsonb "stripe", default: {}, null: false
     t.integer "free_clicks_threshold", default: 500, null: false
+    t.bigint "subscription_id"
     t.index ["created_at"], name: "index_projects_on_created_at"
+    t.index ["subscription_id"], name: "index_projects_on_subscription_id"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id"], name: "index_projects_on_user_id"
@@ -308,8 +328,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_02_203457) do
   add_foreign_key "project_pages", "projects", on_update: :cascade
   add_foreign_key "project_products", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_statistics", "projects", on_update: :cascade
+  add_foreign_key "project_subscriptions", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_user_emails", "project_pages", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_user_emails", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "projects", "project_subscriptions", column: "subscription_id", on_update: :cascade, on_delete: :restrict
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 
