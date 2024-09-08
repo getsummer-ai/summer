@@ -6,7 +6,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '3.3.4'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem 'rails', '=7.1.2'
+gem 'rails', '~> 7.2'
 
 # Use postgresql as the database for Active Record
 gem 'pg', '~> 1.1'
@@ -25,11 +25,12 @@ gem 'validate_url'
 gem 'draper'
 gem 'jbuilder'
 gem 'pundit'
-gem 'store_model', '~> 2.3'
+gem 'store_model', '~> 4.0'
 
 gem 'passive_columns'
 gem "pretender"
 gem 'stripe'
+gem 'data_migrate'
 
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'
