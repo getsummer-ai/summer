@@ -14,7 +14,7 @@ module Api
           article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
           SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
           send_article(sse, article)
-          StatisticService.new(project: @current_project, trackable: @project_page).click!
+          StatisticService.new(project: @current_project, trackable: project_page).click!
         rescue StandardError => e
           sse&.write('--ERROR--')
           Rails.logger.error e.message

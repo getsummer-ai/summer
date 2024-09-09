@@ -51,12 +51,14 @@ class ProjectForm
     return nil if invalid?
     model = generate_new_project
     if model.invalid?
-      model.errors.full_messages.each { |msg| errors.add(:base, msg) }
-      return nil
+      model.errors.full_messages.each { |msg| errors.add(:base, msg) } and return nil
     end
-
-    res = model.save(validate: false)
-    return nil unless res
+    Project.transaction do
+      model.save!(validate: false)
+      subscription = create_free_subscription_for_project! model
+      # set the free subscription to the project as the default subscription
+      model.update!(subscription:)
+    end
     model
   rescue StandardError => e
     Rails.logger.error e.message
@@ -77,12 +79,23 @@ class ProjectForm
         name:,
         protocol: parsed_urls[0].scheme,
         domain: first_host,
-        free_clicks_threshold: ENV.fetch('FREE_PLAN_CLICKS_THRESHOLD', 100).to_i,
+        free_clicks_threshold: 0,
         default_llm: 'gpt-4o',
         paths: parsed_urls.filter_map(&:path),
       )
     model.start_tracking(source: 'Create Project Form', author: @user)
     model
+  end
+
+  # @param [Project] model
+  def create_free_subscription_for_project!(model)
+    model.subscriptions.create!(
+      plan: 'free',
+      start_at: model.created_at,
+      end_at: '2038-01-01 00:00:00',
+      summarize_usage: 0,
+      summarize_limit: ENV.fetch('FREE_PLAN_CLICKS_THRESHOLD', 100).to_i,
+    )
   end
 
   # @return [Array<URI::Generic>]

@@ -2,24 +2,6 @@
 RSpec.describe ProjectForm do
   include SpecTestHelper
   let(:user) { create_default_user }
-  # before(:all) { user = create_default_user }
-
-  context 'when the form is valid' do
-    it 'passes the validation' do
-      form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
-      expect(form.valid?).to be true
-    end
-
-    it 'creates a new project' do
-      stub_const("ENV", ENV.to_hash.merge(
-        'FREE_PLAN_CLICKS_THRESHOLD' => '30',
-      ))
-      form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
-      form.create
-      expect(Project.count).to eq 1
-      expect(Project.first.free_clicks_threshold).to eq 30
-    end
-  end
 
   context 'when the form is invalid' do
     it 'returns errors as there is no name' do
@@ -102,7 +84,33 @@ RSpec.describe ProjectForm do
     it 'returns an error as the domain does not have host' do
       form = described_class.new(user, { name: 'Test Project', urls: ['http:///'] })
       expect(form.create).to be_nil
-      expect(form.errors.full_messages).to match ["Domain must be a valid url", "Domain can't be blank"]
+      expect(form.errors.full_messages).to match [
+              'Domain must be a valid url',
+              "Domain can't be blank",
+            ]
+    end
+  end
+
+  context 'when the form is valid' do
+    it 'passes the validation' do
+      form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
+      expect(form.valid?).to be true
+    end
+
+    it 'creates a new project' do
+      stub_const('ENV', ENV.to_hash.merge('FREE_PLAN_CLICKS_THRESHOLD' => '30'))
+      form = described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] })
+      form.create
+      expect(Project.count).to eq 1
+      project = Project.first
+      expect(project.free_clicks_threshold).to eq 0
+      expect(project.subscriptions.count).to eq 1
+      expect(project.subscription.start_at).to eq project.created_at.change(usec: 0)
+      expect(project.subscription.end_at).to eq '2038-01-01 00:00:00'
+      expect(project.plan).to eq 'free'
+      expect(project.subscription.plan).to eq 'free'
+      expect(project.subscription.summarize_usage).to eq 0
+      expect(project.subscription.summarize_limit).to eq 30
     end
   end
 end

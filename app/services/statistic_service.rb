@@ -15,7 +15,10 @@ class StatisticService
   end
 
   def click!
+    # if trackable is a ProjectPage, then we increase clicks counter for it
+    # and for the project subscription info
     model.increase_clicks_counter!
+    update_subscription_summarize_usage_info if @trackable.is_a?(ProjectPage)
   end
 
   private
@@ -27,5 +30,13 @@ class StatisticService
       date: @time.to_date,
       hour: @time.hour
     )
+  end
+
+  def update_subscription_summarize_usage_info
+    # no need to update subscription info if project doesn't have subscription
+    # for example, if a project has an enterprise subscription
+    return if @project.subscription_id.nil?
+
+    ProjectSubscription.update_counters(@project.subscription_id, summarize_usage: 1)
   end
 end
