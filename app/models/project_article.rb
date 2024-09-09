@@ -15,23 +15,21 @@ class ProjectArticle < ApplicationRecord
     info.assign_attributes(attributes)
   end
 
-  enum summary_status: {
+  enum :summary_status, {
          error: 'error',
          skipped: 'skipped',
          wait: 'wait',
          processing: 'processing',
          completed: 'completed',
-       },
-       _prefix: true
+       }, prefix: true
 
-  enum products_status: {
+  enum :products_status, {
          error: 'error',
          skipped: 'skipped',
          wait: 'wait',
          processing: 'processing',
          completed: 'completed',
-       },
-       _prefix: true
+       }, prefix: true
 
   belongs_to :project
   has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
