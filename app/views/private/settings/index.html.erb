@@ -32,10 +32,10 @@
   <p class="mt-0.5 opacity-50">
     <%
       included_clicks_text =
-        if current_project.threshold_clicks_amount == Float::INFINITY
+        if current_project.subscription_id.nil?
           'unlimited'
         else
-          number_with_delimiter(current_project.threshold_clicks_amount)
+          number_with_delimiter(current_project.subscription.summarize_limit)
         end
     %>
     The <%= included_clicks_text %> button clicks

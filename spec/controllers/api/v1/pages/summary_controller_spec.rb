@@ -92,6 +92,20 @@ RSpec.describe Api::V1::Pages::SummaryController do
         expect { get :stream, params: { page_id: 'random', format: 'text/event-stream' } }.to \
           change { project.reload.subscription.summarize_usage }.by(1)
       end
+
+      it 'does not change the subscription usage if the project has no linked subscription' do
+        project.subscriptions.create!(
+          plan: 'free',
+          start_at: project.created_at,
+          end_at: '2038-01-01 00:00:00',
+          summarize_usage: 0,
+          summarize_limit: 30,
+        )
+
+        expect do
+          get :stream, params: { page_id: 'random', format: 'text/event-stream' }
+        end.not_to(change { project.subscriptions.first.reload.summarize_usage })
+      end
     end
 
     context 'when a summary does not exist yet' do

@@ -94,25 +94,11 @@ class Project < ApplicationRecord
     Addressable::URI.parse([url.start_with?('http') ? '' : 'http://', url].join)
   end
 
-  def free_plan_active? = free_plan? && status_active?
   def free_plan_suspended? = free_plan? && status_suspended?
 
   # @return [Array<ProjectPath>]
   def smart_paths
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
-  end
-
-  def threshold_clicks_amount
-    case plan
-    when 'light'
-      LIGHT_PLAN_THRESHOLD
-    when 'pro'
-      PRO_PLAN_THRESHOLD
-    when 'enterprise'
-      Float::INFINITY
-    else
-      free_clicks_threshold
-    end
   end
 
   def decorate

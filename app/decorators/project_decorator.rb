@@ -3,27 +3,13 @@ class ProjectDecorator < Draper::Decorator
   delegate_all
 
   def plan_left_clicks
-    return free_plan_left_clicks if model.free_plan?
-    return light_plan_left_clicks if model.light_plan?
-    return pro_plan_left_clicks if model.pro_plan?
-    return Float::INFINITY if model.enterprise_plan?
-    0
+    return Float::INFINITY if model.subscription_id.nil?
+    subscription = model.subscription
+    [subscription.summarize_limit - subscription.summarize_usage, 0].max
   end
 
   def subscription_expiration_time
-    Time.at(model.stripe.subscription.cancel_at).utc if model.stripe.subscription.cancel_at.present?
-  end
-
-  def free_plan_left_clicks
-    [project.free_clicks_threshold - total_clicks_count, 0].max
-  end
-
-  def light_plan_left_clicks
-    [Project::LIGHT_PLAN_THRESHOLD - current_month_new_clicks_count, 0].max
-  end
-
-  def pro_plan_left_clicks
-    [Project::PRO_PLAN_THRESHOLD - current_month_new_clicks_count, 0].max
+    model.subscription.cancel_at if model.subscription&.cancel_at.present?
   end
 
   delegate :total_product_views, to: :total_statistics

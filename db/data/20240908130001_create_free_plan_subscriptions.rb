@@ -10,7 +10,7 @@ class CreateFreePlanSubscriptions < ActiveRecord::Migration[7.1]
           summarize_usage: project.decorate.total_clicks_count,
           summarize_limit: project.free_clicks_threshold,
         )
-        project.update!(subscription:)
+        project.update!(subscription:) unless project.enterprise_plan?
       end
     end
   end
