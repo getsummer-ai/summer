@@ -1,8 +1,8 @@
 <mj-text>Your project <b><%= @project.name %></b> has been paused.</mj-text>
 <mj-text>
   The Summer button has been clicked
-  <b><%= number_with_delimiter(@project.current_month_new_clicks_count) %></b> times this month. <br>
-  The Light plan includes a <%=number_with_delimiter(Project::LIGHT_PLAN_THRESHOLD) %> clicks limit.
+  <b><%= number_with_delimiter(@project.subscription.summarize_usage) %></b> times this month. <br>
+  The Light plan includes a <%=number_with_delimiter(@project.subscription.summarize_limit) %> clicks limit.
 </mj-text>
 <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
 <mj-text>

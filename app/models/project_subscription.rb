@@ -5,6 +5,15 @@ class ProjectSubscription < ApplicationRecord
   include Trackable
 
   belongs_to :project
+
+  def active? = clicks? && running?
+
+  def clicks? = summarize_limit > summarize_usage
+
+  def running?
+    time = Time.current.utc
+    end_at > time && (cancel_at.nil? || cancel_at > time)
+  end
 end
 
 # == Schema Information

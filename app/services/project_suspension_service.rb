@@ -12,9 +12,9 @@ class ProjectSuspensionService
     activate_project if @project.status_suspended?
   end
 
-  def suspend_project(send_email: false)
+  def suspend_project(send_out_of_clicks_email: false)
     @project.status_suspended!
-    ProjectMailer.suspension_notification(@project.id, @project.plan).deliver_now if send_email
+    ProjectMailer.out_of_clicks_suspension_notification(@project.id).deliver_now if send_out_of_clicks_email
   end
 
   def activate_project
