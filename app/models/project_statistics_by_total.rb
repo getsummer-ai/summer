@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ProjectStatisticsByTotal < ApplicationRecord
-  # self.primary_key = :project_url_id
+  self.primary_key = [:trackable_type, :trackable_id]
   belongs_to :project
   belongs_to :trackable, polymorphic: true
 
