@@ -63,8 +63,9 @@ describe "the Sign In process" do
     end
 
     it "redirects to the setup page if a project already exists" do
-      create_default_user
-      project = login_as_default_user(project_exists: true)
+      user = create_default_user
+      project = create_default_project_for(user)
+      login_as_default_user
 
       expect(page).to have_current_path setup_project_path(project)
       expect(page).to have_content 'Code Snippet'

@@ -17,4 +17,19 @@ module SpecTestHelper
     sign_in user
     user
   end
+
+  def create_default_project_for(user)
+    user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
+  end
+
+  # @project [Project]
+  def create_default_subscription_for(project)
+    project.subscriptions.create!(
+      plan: 'free',
+      start_at: Time.zone.now,
+      end_at: 10.years.from_now,
+      summarize_usage: 0,
+      summarize_limit: 500
+    ).tap { |s| project.update!(subscription: s) }
+  end
 end

@@ -2,14 +2,18 @@
 #
 describe 'the Navigation process' do
   include_context 'user login'
+  
+  let!(:user) { create_default_user }
+  let!(:project) do
+    project = user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project')
+    create_default_subscription_for(project)
+    project
+  end
 
   before do
     WebMock.disable_net_connect!(allow: '127.0.0.1')
-    create_default_user
-    login_as_default_user(project_exists: true)
+    login_as_default_user
   end
-
-  let(:project) { Project.take }
 
   it 'checks menu links' do
     # expect(find_by_id('try-button')[:href]).to include '#/app'
