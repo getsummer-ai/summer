@@ -70,7 +70,7 @@ module Webhooks
     end
 
     def check_event_type
-      return if %w[customer.subscription.updated].include? event['type']
+      return if %w[customer.subscription.updated customer.subscription.deleted].include? event['type']
 
       head(:ok)
     end
