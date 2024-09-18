@@ -12,7 +12,8 @@ class ProjectArticle < ApplicationRecord
 
   # Fix for StoreModel gem
   # TODO: remove this check after new StoreModel version release
-  if ProjectArticle.table_exists?
+  if (ActiveRecord::Base.connection_pool.with_connection(&:active?) rescue false) &&
+    ActiveRecord::Base.connection.table_exists?('project_articles')
     accepts_nested_attributes_for :info
   end
 
