@@ -5,7 +5,10 @@ require 'rails'
 # require 'rails/all'
 
 require 'active_record/railtie'
-# require 'active_storage/engine'
+
+# Enabled only because of the avo 3.12.0 version
+# https://github.com/avo-hq/avo/pull/3215
+require 'active_storage/engine'
 require 'action_controller/railtie'
 require 'action_view/railtie'
 require 'action_mailer/railtie'
