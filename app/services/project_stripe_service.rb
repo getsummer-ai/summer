@@ -18,30 +18,30 @@ class ProjectStripeService
     @user = user
   end
 
-  PLANS = 
-    {
-      test: {
-        light: {
-          year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
-          month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
-        },
-        pro: {
-          year: 'price_1PBXI6Dm8NzUNvXDk0FfLVtH',
-          month: 'price_1PBXORDm8NzUNvXDoV7gv6Zi',
-        },
+  PLAN_LIMITS = { light: 5_000, pro: 25_000 }.freeze
+
+  PLANS = {
+    test: {
+      light: {
+        year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
+        month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
       },
-      live: {
-        light: {
-          year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
-          month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
-        },
-        pro: {
-          year: 'price_1PFK16Dm8NzUNvXDZcLnQSWa',
-          month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
-        },
+      pro: {
+        year: 'price_1PBXI6Dm8NzUNvXDk0FfLVtH',
+        month: 'price_1PBXORDm8NzUNvXDoV7gv6Zi',
       },
-    }.freeze
-  
+    },
+    live: {
+      light: {
+        year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
+        month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
+      },
+      pro: {
+        year: 'price_1PFK16Dm8NzUNvXDZcLnQSWa',
+        month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
+      },
+    },
+  }.freeze
 
   # It is called after the successful payment. Updates info if webhook has not updated the info yet
   #
@@ -70,17 +70,22 @@ class ProjectStripeService
   end
 
   def update_subscription_info(subscription_id)
-    subscription = Stripe::Subscription.retrieve(subscription_id)
-    
-    plan = if subscription.status == 'active'
-      find_plan_name(subscription.plan).presence || :light
-    else
-      :free
-    end
-    subscription_attributes = useful_subscription_attributes(subscription)
+    stripe_subscription = Stripe::Subscription.retrieve(subscription_id)
+    plan = find_plan_name(stripe_subscription.plan)
 
-    project.track!(source: 'Stripe Update Subscription Info', author: user) do
-      project.update!(plan:, stripe_attributes: { subscription_attributes: })
+    ProjectSubscription.transaction do
+      subscription = nil
+      subscription = find_or_create_subscription!(stripe_subscription, plan) if plan.present?
+      stripe_attributes = {
+        subscription_attributes: useful_subscription_attributes(stripe_subscription),
+      }
+      project.track!(source: 'Stripe Update Subscription Info', author: user) do
+        project.update!(
+          plan: plan.nil? && project.enterprise_plan? ? 'enterprise' : plan,
+          subscription:,
+          stripe_attributes:,
+        )
+      end
     end
 
     ProjectSuspensionService.new(project).actualize_status
@@ -107,6 +112,31 @@ class ProjectStripeService
 
   private
 
+  # @param stripe_subscription [Stripe::Subscription]
+  # @param plan [Symbol]
+  # @return [ProjectSubscription]
+  def find_or_create_subscription!(stripe_subscription, plan)
+    start_at = Time.at(stripe_subscription.current_period_start).utc
+    end_at = Time.at(stripe_subscription.current_period_end).utc
+    project_subscription =
+      project.subscriptions.find_or_initialize_by(start_at:, end_at:) { |s| s.summarize_usage = 0 }
+
+    project_subscription.track!(
+      source: "Project Subscription #{project_subscription.new_record? ? 'Create' : 'Update'}",
+      author: user,
+    ) do
+      project_subscription.update!(
+        plan:,
+        stripe: stripe_subscription.to_json,
+        summarize_limit: PLAN_LIMITS[plan],
+        cancel_at:
+          stripe_subscription.cancel_at.present? ? Time.at(stripe_subscription.cancel_at).utc : nil,
+      )
+    end
+
+    project_subscription
+  end
+
   def find_plan_name(plan)
     current_env_plans = PLANS[plan.livemode == true ? :live : :test]
     interval = plan.interval.to_sym
@@ -115,7 +145,6 @@ class ProjectStripeService
     res = :pro if current_env_plans.dig(:pro, interval) == plan.id
     return res if res.present?
 
-    
     Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
     Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
     nil
