@@ -23,10 +23,15 @@ class Project < ApplicationRecord
          gpt_4o_mini: 'gpt-4o-mini',
        }, prefix: true
 
-  attribute :settings, ProjectSettings.to_type
-  attribute :stripe, ProjectStripeDetails.to_type
-  accepts_nested_attributes_for :settings, allow_destroy: false
-  accepts_nested_attributes_for :stripe, allow_destroy: false
+  attribute :settings, Project::ProjectSettings.to_type
+  attribute :stripe, Project::ProjectStripeDetails.to_type
+
+  # Fix for StoreModel gem
+  # TODO: remove this check after new StoreModel version release
+  if Project.table_exists?
+    accepts_nested_attributes_for :settings
+    accepts_nested_attributes_for :stripe
+  end
 
   passive_columns :guidelines, :stripe
 

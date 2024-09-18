@@ -9,7 +9,12 @@ class ProjectArticle < ApplicationRecord
   non_trackable_params(%i[article])
 
   attribute :info, ProjectArticle::Info.to_type
-  accepts_nested_attributes_for :info, allow_destroy: false
+
+  # Fix for StoreModel gem
+  # TODO: remove this check after new StoreModel version release
+  if ProjectArticle.table_exists?
+    accepts_nested_attributes_for :info
+  end
 
   def info_attributes=(attributes)
     info.assign_attributes(attributes)
