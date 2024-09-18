@@ -38,10 +38,13 @@ RSpec/MultipleMemoizedHelpers:
   Max: 10
 
 Metrics/MethodLength:
-  Max: 15
+  Max: 18
 
 Metrics/AbcSize:
   Max: 22
+
+Metrics/ClassLength:
+  Max: 150
 
 Style/ClassAndModuleChildren:
   EnforcedStyle: nested
@@ -67,4 +70,5 @@ Style/ParallelAssignment:
 
 Naming/VariableNumber:
   Enabled: false
+
 

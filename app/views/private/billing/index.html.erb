@@ -32,13 +32,13 @@
             <td class="text-right"><%=decorated_project.total_views_count %> / <%=decorated_project.total_clicks_count %></td>
 
             <td class="text-right">
-              <% unless project.free_plan? %>
-                <%=render SubscriptionButton::Component.new(project:) %>
-              <% else %>
+              <% if project.free_plan? %>
                 <%=
                   link_to project_settings_path(project), class: 'font-semibold btn btn-summer' do %>
                   Get subscription
                 <% end %>
+              <% else %>
+                <%=render SubscriptionButton::Component.new(project:) %>
               <% end %>
             </td>
           </tr>
