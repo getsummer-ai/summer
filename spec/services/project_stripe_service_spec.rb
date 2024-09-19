@@ -129,7 +129,7 @@ describe ProjectStripeService do
       expect(project.subscription.summarize_limit).to eq 25_000
       expect(project.subscription.summarize_usage).to eq 777
       expect(project.subscription.plan).to eq 'pro'
-      expect(project.subscription.stripe).to eq stripe_subscription.to_json
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
       expect(project.subscriptions.count).to eq 1
     end
   end
@@ -184,7 +184,7 @@ describe ProjectStripeService do
       expect(project.subscription.summarize_limit).to eq 5_000
       expect(project.subscription.summarize_usage).to eq 0
       expect(project.subscription.plan).to eq 'light'
-      expect(project.subscription.stripe).to eq stripe_subscription.to_json
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
       expect(project.subscriptions.count).to eq 2
     end
   end

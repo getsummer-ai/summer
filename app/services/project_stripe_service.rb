@@ -127,7 +127,7 @@ class ProjectStripeService
     ) do
       project_subscription.update!(
         plan:,
-        stripe: stripe_subscription.to_json,
+        stripe: stripe_subscription.as_json,
         summarize_limit: PLAN_LIMITS[plan],
         cancel_at:
           stripe_subscription.cancel_at.present? ? Time.at(stripe_subscription.cancel_at).utc : nil,
