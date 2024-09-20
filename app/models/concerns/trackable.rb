@@ -46,10 +46,12 @@ module Trackable
 
     # @yieldparam [String, Boolean, Hash, SmartSettings, Number] old_value
     # @yieldparam [String, Boolean, Hash, SmartSettings, Number] new_value
-    # @param [Symbol] attribute
-    def track_changes_formatter_for(attribute, &block)
+    # @param [Array<Symbol>] attributes
+    def track_changes_formatter_for(*attributes, &block)
       self._custom_change_formatters ||= {}
-      self._custom_change_formatters[attribute] = block
+      attributes.each do |attribute|
+        self._custom_change_formatters[attribute] = block
+      end
       yield
     end
   end

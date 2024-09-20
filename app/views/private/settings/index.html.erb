@@ -12,21 +12,25 @@
 <div class="mt-4">
   <div class="text-lg">
     <b><%= current_project.plan.humanize %> plan</b>
+    <% expire_at = current_project.decorate.subscription_expiration_time %>
+
     <% if current_project.status_active? %>
-      <% expired_at = current_project.decorate.subscription_expiration_time %>
-      <% if expired_at.present?  %>
-        <%= expired_at > Time.now ? 'expires' : 'was expired' %> on
-        <%= expired_at.strftime('%d %B %Y') %>.
+
+      <% if expire_at.present?  %>
+        <%= expire_at > Time.now ? 'expires' : 'was expired' %> on
+        <%= expire_at.strftime('%d %B %Y') %>.
       <% else %>
         is active.
       <% end %>
+
     <% else %>
-      <% if current_project.stripe.subscription.cancel_at  %>
-        was suspended on
-        <%= Time.at(current_project.stripe.subscription.cancel_at).strftime('%d %B %Y') %>.
+
+      <% if expire_at.present?  %>
+        was suspended on <%= expire_at.strftime('%d %B %Y') %>.
       <% else %>
         has been suspended.
       <% end %>
+
     <% end %>
   </div>
   <p class="mt-0.5 opacity-50">

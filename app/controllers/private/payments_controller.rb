@@ -4,13 +4,7 @@ module Private
     before_action :check_existence, only: :create
 
     def create(stripe_session = nil)
-      session =
-        stripe_session.presence ||
-          stripe_service.create_checkout_session(
-            success_url: success_project_payments_url(current_project),
-            cancel_url: cancel_project_payments_url(current_project),
-            plan_id: find_plan,
-          )
+      session = stripe_session.presence || create_checkout_session_with_plan(find_plan)
 
       redirect_to session.url, allow_other_host: true
     rescue StandardError => e
@@ -23,8 +17,18 @@ module Private
     def subscription
       return create if current_project.free_plan?
 
-      session = stripe_service.create_custom_portal_session(return_project_payments_url(current_project))
-      create(session)
+      sub = current_project.subscription
+      if sub.running?
+        session = stripe_service.create_custom_portal_session(return_project_payments_url(current_project))
+        return create(session)
+      end
+
+      plan_id = ProjectStripeService::PLANS.dig(
+        IS_PLAYGROUND ? :test : :live,
+        sub.plan.to_sym,
+        sub.stripe['plan']['interval']&.to_sym
+      )
+      create(create_checkout_session_with_plan(plan_id))
     end
 
     #
@@ -84,6 +88,14 @@ module Private
     end
 
     private
+
+    def create_checkout_session_with_plan(plan_id)
+      stripe_service.create_checkout_session(
+        success_url: success_project_payments_url(current_project),
+        cancel_url: cancel_project_payments_url(current_project),
+        plan_id:,
+      )
+    end
 
     def find_plan
       permitted_attributes = %i[plan period]
