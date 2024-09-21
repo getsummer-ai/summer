@@ -46,12 +46,8 @@
     <%= current_project.free_plan? ? 'in total' : 'per month' %>
 
     <%
-      clicks_left_text =
-        if current_project.decorate.plan_left_clicks == Float::INFINITY
-          'unlimited'
-        else
-          number_with_delimiter(current_project.decorate.plan_left_clicks)
-        end
+      clicks_left = current_project.decorate.plan_left_clicks
+      clicks_left_text = clicks_left == Float::INFINITY ? 'unlimited' : number_with_delimiter(clicks_left)
     %>
 
     are included — <b><%= clicks_left_text %></b> clicks left.

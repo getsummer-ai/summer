@@ -23,13 +23,14 @@ module SpecTestHelper
   end
 
   # @project [Project]
-  def create_default_subscription_for(project)
-    project.subscriptions.create!(
-      plan: 'free',
-      start_at: Time.zone.now,
-      end_at: 10.years.from_now,
-      summarize_usage: 0,
-      summarize_limit: 500
-    ).tap { |s| project.update!(subscription: s) }
+  def create_default_subscription_for(project, **options)
+    sub = {
+        plan: 'free',
+        start_at: Time.zone.now,
+        end_at: 10.years.from_now,
+        summarize_usage: 0,
+        summarize_limit: 500
+    }.merge(options)
+    project.subscriptions.create!(sub).tap { |s| project.update!(subscription: s) }
   end
 end

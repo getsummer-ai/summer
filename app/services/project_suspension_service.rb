@@ -7,9 +7,14 @@ class ProjectSuspensionService
   end
 
   def actualize_status
-    return suspend_project if @project.decorate.plan_left_clicks.zero?
+    if @project.subscription_id.nil?
+      Rails.logger.warn("ProjectSuspensionService: project without subscription: #{@project.domain}")
+      return
+    end
 
-    activate_project if @project.status_suspended?
+    return suspend_project unless @project.subscription.active?
+
+    activate_project
   end
 
   def suspend_project(send_out_of_clicks_email: false)
