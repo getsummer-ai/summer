@@ -23,6 +23,11 @@ describe ProjectStripeService do
     project
   end
 
+  let(:stripe_subscription_interval) { :month }
+  let(:stripe_subscription_plan) { :light }
+  let(:stripe_subscription_period_start) { 1_727_022_567 }
+  let(:stripe_subscription_period_end) { 1_729_614_567 }
+
   let(:stripe_subscription) do
     OpenStruct.new(
       id: 'sub_1P8ozmDm8NzUNvXDqCFVlxRQ',
@@ -31,14 +36,17 @@ describe ProjectStripeService do
       plan:
         OpenStruct.new(
           livemode: false,
-          id: ProjectStripeService::PLANS[:test][:light][:month],
-          interval: 'month',
+          id:
+            ProjectStripeService::PLANS[:test][stripe_subscription_plan][
+              stripe_subscription_interval
+            ],
+          interval: stripe_subscription_interval.to_s,
         ),
       cancel_at: nil,
       canceled_at: nil,
-      current_period_start: 1_726_677_658,
-      current_period_end: 1_726_687_658,
-      start_date: 1_726_677_658,
+      current_period_start: stripe_subscription_period_start,
+      current_period_end: stripe_subscription_period_end,
+      start_date: stripe_subscription_period_start,
     )
   end
 
@@ -87,8 +95,8 @@ describe ProjectStripeService do
         .subscriptions
         .create!(
           plan: 'light',
-          start_at: Time.at(1_726_677_658).utc,
-          end_at: Time.at(1_726_687_658).utc,
+          start_at: Time.at(stripe_subscription_period_start).utc,
+          end_at: Time.at(stripe_subscription_period_end).utc,
           summarize_usage: 777,
           summarize_limit: 5000,
         )
@@ -96,24 +104,7 @@ describe ProjectStripeService do
       project
     end
 
-    let(:stripe_subscription) do
-      OpenStruct.new(
-        id: 'sub_1P8ozmDm8NzUNvXDqCFVlxRQ',
-        status: 'active',
-        latest_invoice: 'in_1PJhJ7Dm8NzUNvXDjaFQrPni',
-        plan:
-          OpenStruct.new(
-            livemode: false,
-            id: ProjectStripeService::PLANS[:test][:pro][:month],
-            interval: 'month',
-          ),
-        cancel_at: nil,
-        canceled_at: nil,
-        current_period_start: 1_726_677_658,
-        current_period_end: 1_726_687_658,
-        start_date: 1_726_777_658,
-      )
-    end
+    let(:stripe_subscription_plan) { :pro }
 
     it 'works well' do
       expect(project.plan).to eq('light')
@@ -151,25 +142,6 @@ describe ProjectStripeService do
       project
     end
 
-    let(:stripe_subscription) do
-      OpenStruct.new(
-        id: 'sub_1P8ozmDm8NzUNvXDqCFVlxRQ',
-        status: 'active',
-        latest_invoice: 'in_1PJhJ7Dm8NzUNvXDjaFQrPni',
-        plan:
-          OpenStruct.new(
-            livemode: false,
-            id: ProjectStripeService::PLANS[:test][:light][:month],
-            interval: 'month',
-          ),
-        cancel_at: nil,
-        canceled_at: nil,
-        current_period_start: 1_726_687_658,
-        current_period_end: 1_726_887_658,
-        start_date: 1_726_777_658,
-      )
-    end
-
     it 'works well' do
       expect(project.plan).to eq('light')
       expect(project.subscription.summarize_limit).to eq 5000
@@ -182,6 +154,62 @@ describe ProjectStripeService do
       expect(project.stripe.subscription.id).to eq stripe_subscription.id
       expect(project.plan).to eq 'light'
       expect(project.subscription.summarize_limit).to eq 5_000
+      expect(project.subscription.summarize_usage).to eq 0
+      expect(project.subscription.plan).to eq 'light'
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
+      expect(project.subscriptions.count).to eq 2
+    end
+  end
+
+  describe 'creates one year new project subscription with calculated summarize limit' do
+    let(:stripe_subscription_interval) { :year }
+    let(:stripe_subscription_plan) { :pro }
+    let(:stripe_subscription_period_start) { Time.now.to_i }
+    let(:stripe_subscription_period_end) { 1.year.from_now.to_i }
+
+    it 'works well' do
+      expect(project.plan).to eq('free')
+      expect(project.subscriptions.count).to eq 1
+      expect(Rails.logger).not_to receive(:error)
+
+      subject.update_subscription_info('random')
+
+      expect(project.stripe.subscription.id).to eq stripe_subscription.id
+      expect(project.plan).to eq 'pro'
+      expect(project.subscription.summarize_limit).to eq 25_000 * 12
+      expect(project.subscription.summarize_usage).to eq 0
+      expect(project.subscription.plan).to eq 'pro'
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
+      expect(project.subscriptions.count).to eq 2
+    end
+  end
+
+  describe 'creates one year new project subscription with with a warning due to the wrong interval' do
+    let(:stripe_subscription_period_start) { Time.now.to_i }
+    let(:stripe_subscription_period_end) { 7.months.from_now.to_i }
+
+    it 'calculated clicks limit properly and sends an error to the sentry' do
+      expect(project.plan).to eq('free')
+      expect(project.subscriptions.count).to eq 1
+
+      expect(Sentry).to receive(:capture_message).with(
+        'Wrong summarize limit',
+        extra: {
+          project_id: project.id,
+          plan: :light,
+          months: 7,
+        },
+      )
+
+      expect(Rails.logger).to receive(:error).with(
+        "Wrong summarize limit for project #{project.id} plan light months 7",
+      )
+
+      subject.update_subscription_info('random')
+
+      expect(project.stripe.subscription.id).to eq stripe_subscription.id
+      expect(project.plan).to eq 'light'
+      expect(project.subscription.summarize_limit).to eq 5_000 * 7
       expect(project.subscription.summarize_usage).to eq 0
       expect(project.subscription.plan).to eq 'light'
       expect(project.subscription.stripe).to eq stripe_subscription.as_json

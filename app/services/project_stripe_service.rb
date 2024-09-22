@@ -18,6 +18,21 @@ class ProjectStripeService
     @user = user
   end
 
+  # There is a problem with subscription logic which I'm not going to solve right now.
+  #
+  # The problem is following:
+  #
+  # When a user changes interval of subscription from month to year or vice versa -
+  # a new project_subscription row is created so the limit of usage is reset.
+  #
+  # Foe example.
+  # Somebody paid 90$ for 60_000 clicks per year. He had spent 60_000 clicks in first month and decided to
+  # change Stripe interval to the monthly. -> He will have 5_000 clicks per month and will be paying
+  # nothing for the next 11 months.
+  # If the user reaches the limit of 5_000 clicks in the first month,
+  # his project will be suspended, and the user will be able to change interval to yearly again,
+  # and he will get 60_000 clicks for the next 12 months again. In total he will pay only 90$ + (90/12)$
+  # 
   PLAN_LIMITS = { light: 5_000, pro: 25_000 }.freeze
 
   PLANS = {
@@ -128,7 +143,7 @@ class ProjectStripeService
       project_subscription.update!(
         plan:,
         stripe: stripe_subscription.as_json,
-        summarize_limit: PLAN_LIMITS[plan],
+        summarize_limit: find_summarize_limit(plan, start_at, end_at),
         cancel_at:
           stripe_subscription.cancel_at.present? ? Time.at(stripe_subscription.cancel_at).utc : nil,
       )
@@ -137,6 +152,7 @@ class ProjectStripeService
     project_subscription
   end
 
+  # @param [Stripe::Plan] plan
   def find_plan_name(plan)
     current_env_plans = PLANS[plan.livemode == true ? :live : :test]
     interval = plan.interval.to_sym
@@ -148,6 +164,20 @@ class ProjectStripeService
     Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
     Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
     nil
+  end
+
+  # @param [Symbol] plan
+  # @param [Time] start_at
+  # @param [Time] end_at
+  # @return [Integer]
+  def find_summarize_limit(plan, start_at, end_at)
+    months = ((end_at - start_at) / 1.month).round
+    res = (PLAN_LIMITS[plan] * months).to_i
+    if months != 1 && months != 12
+      Sentry.capture_message('Wrong summarize limit', extra: { project_id: project.id, plan:, months: })
+      Rails.logger.error("Wrong summarize limit for project #{project.id} plan #{plan} months #{months}")
+    end
+    res
   end
 
   # @param [Stripe::Subscription] subscription
