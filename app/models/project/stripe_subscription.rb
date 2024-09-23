@@ -9,6 +9,7 @@ class Project
     attribute :start_date, :integer
     attribute :cancel_at, :integer
     attribute :canceled_at, :integer
+    attribute :ended_at, :integer
     attribute :status, :string
     attribute :latest_invoice, :string
 

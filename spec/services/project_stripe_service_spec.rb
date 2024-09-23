@@ -27,6 +27,8 @@ describe ProjectStripeService do
   let(:stripe_subscription_plan) { :light }
   let(:stripe_subscription_period_start) { 1_727_022_567 }
   let(:stripe_subscription_period_end) { 1_729_614_567 }
+  let(:cancel_at) { nil }
+  let(:ended_at) { nil }
 
   let(:stripe_subscription) do
     OpenStruct.new(
@@ -42,7 +44,8 @@ describe ProjectStripeService do
             ] || 'random-id-lkhlkhklhk',
           interval: stripe_subscription_interval.to_s,
         ),
-      cancel_at: nil,
+      cancel_at:,
+      ended_at:,
       canceled_at: nil,
       current_period_start: stripe_subscription_period_start,
       current_period_end: stripe_subscription_period_end,
@@ -218,6 +221,77 @@ describe ProjectStripeService do
       expect(project.plan).to eq 'enterprise'
       expect(project.subscription_id).to eq nil
       expect(project.subscriptions.count).to eq 1
+    end
+  end
+
+  describe 'cancel subscription knowing the cancel_at time' do
+    let(:stripe_subscription_plan) { :pro }
+    let(:stripe_subscription_interval) { :year }
+    let(:stripe_subscription_period_end) { 1.year.from_now.to_i }
+    let(:cancel_at) { 1.month.from_now.to_i }
+    let!(:project) do
+      project =
+        user.projects.create(name: 'Test', plan: 'pro', protocol: 'http', domain: 'test.com')
+      project
+        .subscriptions
+        .create!(
+          plan: 'pro',
+          start_at: Time.at(stripe_subscription_period_start).utc,
+          end_at: Time.at(stripe_subscription_period_end).utc,
+          summarize_usage: 777,
+          summarize_limit: 300_000,
+        )
+        .tap { |s| project.update!(subscription: s) }
+      project
+    end
+
+    it 'works well' do
+      subject.update_subscription_info('random')
+
+      expect(project.stripe.subscription.id).to eq stripe_subscription.id
+      expect(project.plan).to eq 'pro'
+      expect(project.subscription.summarize_limit).to eq 300_000
+      expect(project.subscription.summarize_usage).to eq 777
+      expect(project.subscription.plan).to eq 'pro'
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
+      expect(project.subscriptions.count).to eq 1
+      expect(project.subscription.cancel_at).to eq Time.at(cancel_at).utc
+    end
+  end
+
+  describe 'cancel subscription knowing the ended_at time' do
+    let(:stripe_subscription_plan) { :pro }
+    let(:stripe_subscription_interval) { :year }
+    let(:stripe_subscription_period_end) { 1.year.from_now.to_i }
+    let(:cancel_at) { nil }
+    let(:ended_at) { 1.month.from_now.to_i }
+    let!(:project) do
+      project =
+        user.projects.create(name: 'Test', plan: 'pro', protocol: 'http', domain: 'test.com')
+      project
+        .subscriptions
+        .create!(
+          plan: 'pro',
+          start_at: Time.at(stripe_subscription_period_start).utc,
+          end_at: Time.at(stripe_subscription_period_end).utc,
+          summarize_usage: 777,
+          summarize_limit: 300_000,
+        )
+        .tap { |s| project.update!(subscription: s) }
+      project
+    end
+
+    it 'works well' do
+      subject.update_subscription_info('random')
+
+      expect(project.stripe.subscription.id).to eq stripe_subscription.id
+      expect(project.plan).to eq 'pro'
+      expect(project.subscription.summarize_limit).to eq 300_000
+      expect(project.subscription.summarize_usage).to eq 777
+      expect(project.subscription.plan).to eq 'pro'
+      expect(project.subscription.stripe).to eq stripe_subscription.as_json
+      expect(project.subscriptions.count).to eq 1
+      expect(project.subscription.cancel_at).to eq Time.at(ended_at).utc
     end
   end
 end

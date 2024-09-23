@@ -85,17 +85,6 @@ class ProjectStripeService
 
   private
 
-  # @param [Stripe::Plan] plan
-  # @return [ProjectStripeService::Plan, nil]
-  def find_plan(plan)
-    plan_info = ProjectStripeService::Plan.find_by_stripe_plan(plan)
-    return plan_info if plan_info.present?
-
-    Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
-    Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
-    nil
-  end
-
   # @param [Stripe::Subscription] stripe_sub
   # @param [ProjectStripeService::Plan] plan
   # @return [ProjectSubscription]
@@ -107,17 +96,30 @@ class ProjectStripeService
           s.summarize_usage = 0
         end
     source = "Project Subscription #{sub.new_record? ? 'Create' : 'Update'}"
+    cancel_at = stripe_sub.cancel_at || stripe_sub.ended_at
+
     sub.track!(source:, author: user) do
       sub.update!(
         plan: plan.name,
         stripe: stripe_sub.as_json,
         summarize_limit: plan.summarize_limit,
         end_at: Time.at(stripe_sub.current_period_end).utc,
-        cancel_at: stripe_sub.cancel_at.present? ? Time.at(stripe_sub.cancel_at).utc : nil,
+        cancel_at: cancel_at.present? ? Time.at(cancel_at).utc : nil,
       )
     end
 
     sub
+  end
+
+  # @param [Stripe::Plan] plan
+  # @return [ProjectStripeService::Plan, nil]
+  def find_plan(plan)
+    plan_info = ProjectStripeService::Plan.find_by_stripe_plan(plan)
+    return plan_info if plan_info.present?
+
+    Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
+    Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
+    nil
   end
 
   # @param [Stripe::Subscription] subscription
@@ -129,6 +131,7 @@ class ProjectStripeService
       plan_id: subscription.plan.id,
       plan_interval: subscription.plan.interval,
       cancel_at: subscription.cancel_at,
+      ended_at: subscription.ended_at,
       canceled_at: subscription.canceled_at,
       start_date: subscription.start_date,
     }
