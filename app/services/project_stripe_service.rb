@@ -18,46 +18,6 @@ class ProjectStripeService
     @user = user
   end
 
-  # There is a problem with subscription logic which I'm not going to solve right now.
-  #
-  # The problem is following:
-  #
-  # When a user changes interval of subscription from month to year or vice versa -
-  # a new project_subscription row is created so the limit of usage is reset.
-  #
-  # Foe example.
-  # Somebody paid 90$ for 60_000 clicks per year. He had spent 60_000 clicks in first month and decided to
-  # change Stripe interval to the monthly. -> He will have 5_000 clicks per month and will be paying
-  # nothing for the next 11 months.
-  # If the user reaches the limit of 5_000 clicks in the first month,
-  # his project will be suspended, and the user will be able to change interval to yearly again,
-  # and he will get 60_000 clicks for the next 12 months again. In total he will pay only 90$ + (90/12)$
-  # 
-  PLAN_LIMITS = { light: 5_000, pro: 25_000 }.freeze
-
-  PLANS = {
-    test: {
-      light: {
-        year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
-        month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
-      },
-      pro: {
-        year: 'price_1PBXI6Dm8NzUNvXDk0FfLVtH',
-        month: 'price_1PBXORDm8NzUNvXDoV7gv6Zi',
-      },
-    },
-    live: {
-      light: {
-        year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
-        month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
-      },
-      pro: {
-        year: 'price_1PFK16Dm8NzUNvXDZcLnQSWa',
-        month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
-      },
-    },
-  }.freeze
-
   # It is called after the successful payment. Updates info if webhook has not updated the info yet
   #
   # @param session_id [String]
@@ -86,19 +46,17 @@ class ProjectStripeService
 
   def update_subscription_info(subscription_id)
     stripe_subscription = Stripe::Subscription.retrieve(subscription_id)
-    plan = find_plan_name(stripe_subscription.plan)
+    plan = find_plan(stripe_subscription.plan)
 
     ProjectSubscription.transaction do
-      subscription = nil
-      subscription = find_or_create_subscription!(stripe_subscription, plan) if plan.present?
-      stripe_attributes = {
-        subscription_attributes: useful_subscription_attributes(stripe_subscription),
-      }
+      subscription = plan.present? ? find_or_create_subscription!(stripe_subscription, plan) : nil
       project.track!(source: 'Stripe Update Subscription Info', author: user) do
         project.update!(
-          plan: plan.nil? && project.enterprise_plan? ? 'enterprise' : plan,
+          plan: plan.nil? ? 'enterprise' : plan.name.to_s,
           subscription:,
-          stripe_attributes:,
+          stripe_attributes: {
+            subscription_attributes: useful_subscription_attributes(stripe_subscription),
+          },
         )
       end
     end
@@ -127,57 +85,39 @@ class ProjectStripeService
 
   private
 
-  # @param stripe_subscription [Stripe::Subscription]
-  # @param plan [Symbol]
-  # @return [ProjectSubscription]
-  def find_or_create_subscription!(stripe_subscription, plan)
-    start_at = Time.at(stripe_subscription.current_period_start).utc
-    end_at = Time.at(stripe_subscription.current_period_end).utc
-    project_subscription =
-      project.subscriptions.find_or_initialize_by(start_at:, end_at:) { |s| s.summarize_usage = 0 }
-
-    project_subscription.track!(
-      source: "Project Subscription #{project_subscription.new_record? ? 'Create' : 'Update'}",
-      author: user,
-    ) do
-      project_subscription.update!(
-        plan:,
-        stripe: stripe_subscription.as_json,
-        summarize_limit: find_summarize_limit(plan, start_at, end_at),
-        cancel_at:
-          stripe_subscription.cancel_at.present? ? Time.at(stripe_subscription.cancel_at).utc : nil,
-      )
-    end
-
-    project_subscription
-  end
-
   # @param [Stripe::Plan] plan
-  def find_plan_name(plan)
-    current_env_plans = PLANS[plan.livemode == true ? :live : :test]
-    interval = plan.interval.to_sym
-    res = nil
-    res = :light if current_env_plans.dig(:light, interval) == plan.id
-    res = :pro if current_env_plans.dig(:pro, interval) == plan.id
-    return res if res.present?
+  # @return [ProjectStripeService::Plan, nil]
+  def find_plan(plan)
+    plan_info = ProjectStripeService::Plan.find_by_stripe_plan(plan)
+    return plan_info if plan_info.present?
 
     Sentry.capture_message("Can't find a plan", extra: { project_id: project.id, plan_id: plan.id })
     Rails.logger.error("Can't find a plan #{plan.id} for project #{project.id}")
     nil
   end
 
-  # @param [Symbol] plan
-  # @param [Time] start_at
-  # @param [Time] end_at
-  # @return [Integer]
-  def find_summarize_limit(plan, start_at, end_at)
-    months = ((end_at - start_at) / 1.month).round
-    res = (PLAN_LIMITS[plan] * months).to_i
-    if months != 1 && months != 12
-      Sentry.capture_message('Wrong summarize limit', extra: { project_id: project.id, plan:, months: })
-      Rails.logger.error("Wrong summarize limit for project #{project.id} plan #{plan} months #{months}")
+  # @param [Stripe::Subscription] stripe_sub
+  # @param [ProjectStripeService::Plan] plan
+  # @return [ProjectSubscription]
+  def find_or_create_subscription!(stripe_sub, plan)
+    sub =
+      project
+        .subscriptions
+        .find_or_initialize_by(start_at: Time.at(stripe_sub.current_period_start).utc) do |s|
+          s.summarize_usage = 0
+        end
+    source = "Project Subscription #{sub.new_record? ? 'Create' : 'Update'}"
+    sub.track!(source:, author: user) do
+      sub.update!(
+        plan: plan.name,
+        stripe: stripe_sub.as_json,
+        summarize_limit: plan.summarize_limit,
+        end_at: Time.at(stripe_sub.current_period_end).utc,
+        cancel_at: stripe_sub.cancel_at.present? ? Time.at(stripe_sub.cancel_at).utc : nil,
+      )
     end
-    res
+
+    sub
   end
 
   # @param [Stripe::Subscription] subscription
