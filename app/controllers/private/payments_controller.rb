@@ -72,6 +72,7 @@ module Private
               cancel_at: nil,
               start_date: nil,
               canceled_at: nil,
+              ended_at: nil,
               latest_invoice: nil,
               plan_id: nil,
               plan_interval: nil

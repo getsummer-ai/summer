@@ -130,10 +130,10 @@ class ProjectStripeService
       latest_invoice: subscription.latest_invoice,
       plan_id: subscription.plan.id,
       plan_interval: subscription.plan.interval,
-      cancel_at: subscription.cancel_at,
-      ended_at: subscription.ended_at,
-      canceled_at: subscription.canceled_at,
       start_date: subscription.start_date,
+      cancel_at: subscription.cancel_at,
+      canceled_at: subscription.canceled_at,
+      ended_at: subscription.ended_at
     }
   end
 end
