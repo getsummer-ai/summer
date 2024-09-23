@@ -23,7 +23,7 @@ module Private
         return create(session)
       end
 
-      plan_id = ProjectStripeService::PLANS.dig(
+      plan_id = ProjectStripeService::Plan::PLAN_IDS.dig(
         IS_PLAYGROUND ? :test : :live,
         sub.plan.to_sym,
         sub.stripe['plan']['interval']&.to_sym
@@ -101,7 +101,7 @@ module Private
       permitted_attributes = %i[plan period]
       plan, period =
         params.require(:subscription).permit(permitted_attributes).values_at(*permitted_attributes)
-      ProjectStripeService::PLANS.dig(IS_PLAYGROUND ? :test : :live, plan&.to_sym, period&.to_sym)
+      ProjectStripeService::Plan::PLAN_IDS.dig(IS_PLAYGROUND ? :test : :live, plan&.to_sym, period&.to_sym)
     end
 
     def check_existence
