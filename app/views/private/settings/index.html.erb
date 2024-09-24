@@ -43,7 +43,9 @@
         end
     %>
     The <%= included_clicks_text %> button clicks
-    <%= current_project.free_plan? ? 'in total' : 'per month' %>
+
+    <% plan_interval = current_project.stripe.subscription.plan_interval %>
+    <%= current_project.free_plan? || plan_interval == 'year' ? 'in total' : 'per month' %>
 
     <%
       clicks_left = current_project.decorate.plan_left_clicks
