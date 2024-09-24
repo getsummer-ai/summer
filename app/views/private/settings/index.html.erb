@@ -7,27 +7,26 @@
   >
 </p>
 <hr class="my-12" />
-<!--<h3 class="font-semibold text-lg mt-4">Subscription information</h3>-->
 
 <div class="mt-4">
   <div class="text-lg">
     <b><%= current_project.plan.humanize %> plan</b>
-    <% expire_at = current_project.decorate.subscription_expiration_time %>
+    <% cancel_at = current_project.subscription_cancellation_time %>
 
     <% if current_project.status_active? %>
 
-      <% if expire_at.present?  %>
-        <%= expire_at > Time.now ? 'expires' : 'was expired' %> on
-        <%= expire_at.strftime('%d %B %Y') %>.
+      <% if cancel_at.present?  %>
+        <%= cancel_at > Time.now ? 'expires' : 'was expired' %> on
+        <%= cancel_at.strftime('%d %B %Y') %>.
       <% else %>
         is active.
       <% end %>
 
     <% else %>
 
-      <% if expire_at.present?  %>
-        <%= expire_at > Time.now ? 'ends' : 'was suspended' %> on
-        <%= expire_at.strftime('%d %B %Y') %>.
+      <% if cancel_at.present?  %>
+        <%= cancel_at > Time.now ? 'ends' : 'was suspended' %> on
+        <%= cancel_at.strftime('%d %B %Y') %>.
       <% else %>
         has been suspended.
       <% end %>

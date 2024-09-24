@@ -18,7 +18,7 @@ module Private
       return create if current_project.free_plan?
 
       sub = current_project.subscription
-      if sub.running?
+      if sub.nil? || sub.running?
         session = stripe_service.create_custom_portal_session(return_project_payments_url(current_project))
         return create(session)
       end

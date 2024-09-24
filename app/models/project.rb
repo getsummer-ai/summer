@@ -102,6 +102,14 @@ class Project < ApplicationRecord
 
   def free_plan_suspended? = free_plan? && status_suspended?
 
+  def subscription_cancellation_time
+    subscription.cancel_at if subscription&.cancel_at.present?
+  end
+
+  def subscription_running?
+    subscription&.running? == true
+  end
+
   # @return [Array<ProjectPath>]
   def smart_paths
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }

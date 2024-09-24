@@ -8,10 +8,6 @@ class ProjectDecorator < Draper::Decorator
     [subscription.summarize_limit - subscription.summarize_usage, 0].max
   end
 
-  def subscription_expiration_time
-    model.subscription.cancel_at if model.subscription&.cancel_at.present?
-  end
-
   delegate :total_product_views, to: :total_statistics
   delegate :current_month_new_clicks_count, to: :total_statistics
   delegate :total_clicks_count, to: :total_statistics
