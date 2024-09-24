@@ -56,6 +56,7 @@ RSpec.configure do |config|
 
   config.include SpecTestHelper, type: :controller
   config.include SpecTestHelper, type: :feature
+  config.include SpecTestHelper, type: :view
 
   config.include ViewComponent::TestHelpers, type: :component
   config.include ViewComponent::SystemTestHelpers, type: :component
