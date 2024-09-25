@@ -30,7 +30,7 @@ class WebScrapperService
   end
 
   def content
-    @content ||= Boilerpipe::Extractors::ArticleExtractor.text(@response.body)
+    @content ||= Boilerpipe::Extractors::DefaultExtractor.text(@response.body)
   end
 
   private
