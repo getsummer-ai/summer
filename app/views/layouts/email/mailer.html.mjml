@@ -1,53 +1,47 @@
 <mjml>
   <mj-head>
-    <mj-font href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700" name="Inter"></mj-font>
+    <mj-font
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700"
+      name="Inter"
+    ></mj-font>
     <mj-attributes>
       <mj-all
         font-family="Inter,BlinkMacSystemFont,-apple-system,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica,Arial,sans-serif"
-        font-size="16px"
-        line-height="175%"
+        font-size="14px"
+        line-height="22px"
         color="#333333"
       ></mj-all>
+      <mj-text
+        padding="10px 0px"
+        font-size="14px"
+        line-height="22px"
+        color="#333333"
+        font-family="Inter,BlinkMacSystemFont,-apple-system,Roboto,Oxygen,Ubuntu,Cantarell,Helvetica,Arial,sans-serif"
+      ></mj-text>
       <mj-button
-        background-color="#0593dd"
+        background-color="#000"
+        padding="15px 0px"
         border-radius="6px"
+        font-weight="bold"
         color="#ffffff"
-        font-size="16px"
-        line-height="175%"
+        font-size="15px"
+        line-height="15px"
       ></mj-button>
       <mj-table cellpadding="5px"></mj-table>
       <mj-divider
         border-color="lightgrey"
         border-style="dashed"
         border-width="1px"
-        padding-bottom="20px"
-        padding-top="20px"
+        padding="20px 0px"
       ></mj-divider>
     </mj-attributes>
     <mj-style inline="inline">
-      .text-link {
-        color: #0593dd;
-      }
-      .sans-serif {
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      }
-      .logo {
-        font-size: 34px;
-        line-height: 40px;
-        letter-spacing: -0.05em;
-        font-weight: 800;
-      }
-      .under-logo {
-        font-size: 10px;
-        line-height: 10px;
-        letter-spacing: -0.01em;
-        font-weight: 300;
-      }
-      .link-footer {
-        text-decoration: none!important;
-        color: #777777;
-        border-bottom: 1px solid #777777;
-      }
+      .text-link { color: #0593dd; } .sans-serif { font-family: ui-sans-serif, system-ui,
+      -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+      .logo { font-size: 34px; line-height: 40px; letter-spacing: -0.05em; font-weight: 800; }
+      .under-logo { font-size: 10px; line-height: 10px; letter-spacing: -0.01em; font-weight: 300; }
+      .link-footer { text-decoration: none!important; color: #777777; border-bottom: 1px solid
+      #777777; }
     </mj-style>
   </mj-head>
   <mj-body background-color="#f5f5f5">
@@ -55,13 +49,11 @@
       <mj-section
         background-color="#ffffff"
         css-class="header-section"
-        padding-left="15px"
-        padding-right="15px"
+        padding-left="30px"
+        padding-right="30px"
       >
         <%= render 'layouts/email/logo' %>
-        <mj-column width="100%">
-          <%= yield %>
-        </mj-column>
+        <mj-column width="100%"> <%= yield %> </mj-column>
       </mj-section>
       <mj-section padding-left="15px" padding-right="15px">
         <mj-column width="100%">

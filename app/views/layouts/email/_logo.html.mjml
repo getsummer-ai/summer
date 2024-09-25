@@ -6,6 +6,7 @@
     <mj-image
       src="<%= absolute_url(vite_asset_url('assets/images/logo.png')) %>"
       align="left"
+      padding="10px 0px"
       width="120px"
     ></mj-image>
     <mj-spacer height="20px"></mj-spacer>

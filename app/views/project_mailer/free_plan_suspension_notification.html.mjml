@@ -1,35 +1,69 @@
+
+<mj-text color="#212b35" font-weight="bold" font-size="18px" line-height="24px">
+  Hey! Your summer button has run out of free clicks.
+</mj-text>
 <mj-text>
-  Hey! Your Summer button is currently inactive 😟 since you are out of free clicks. <br>
   Take a look what you’ve achieved with your free trial:
   <ul>
     <li>
       Button Shown:
-      <%=@project.total_views_count %>
+      <b><%=number_with_delimiter(@project.total_views_count) %></b>
     </li>
     <li>
       Button Clicked:
-      <%=@project.total_clicks_count %>
-      (<%=(@project.total_clicks_count * 100 / @project.total_views_count).round(1) %>%)
+      <b><%=@project.total_clicks_count %></b>
+      (≈<%=(@project.total_clicks_count.to_f * 100 / @project.total_views_count.to_f).round(1) %>%)
+    </li>
+    <% if @project.total_product_views > 0 %>
+      <li>
+        Products Shown:
+        <%=@project.total_product_views %>
+      </li>
+    <% end %>
+    <% user_emails_count = @project.user_emails.count %>
+    <% if user_emails_count > 0 %>
+      <li>
+        Readers Subscribed:
+        <b><%=user_emails_count %></b>
+      </li>
+    <% end %>
+  </ul>
+  If you'd like to view more statistics, they're readily available
+  <%= link_to 'here', project_pages_url(project_id: @project.encrypted_id), target: "_blank" %>.
+</mj-text>
+<mj-text>
+  If you want to continue using the service,
+  <%= link_to 'subscribe', project_settings_url(project_id: @project.encrypted_id), target: "_blank" %>
+  and the button will become active again.
+</mj-text>
+<mj-button padding="15px 0px" align="left" href="<%= project_settings_url(project_id: @project.encrypted_id) %>">
+  See plans and pricing
+</mj-button>
+<mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
+<mj-text>
+  By the way, in the coming months we are adding new features 🎉:
+  <ul>
+    <li>
+      Advanced analytics for every blog page
     </li>
     <li>
-      Products Shown:
-      <%=@project.total_product_views %>
+      Read percentage <br>
+      <span style="opacity: 50%">
+        Each page will have a percentage of how much it was read.
+      </span>
     </li>
     <li>
-      Readers Subscribed:
-      <%=@project.user_emails.count %>
+      Recommendation service <br>
+      <span style="opacity: 50%">
+        The person opening a summary will see the most relevant articles
+        from your blog to increase engagement and prevent potential clients from leaving.
+      </span>
     </li>
   </ul>
+
+  Stay with us, and we will try to surprise you.
 </mj-text>
-<mj-text>
-  If you'd like to view more statistics, they're readily available
-  <%= link_to 'here', project_pages_url(project_id: @project.encrypted_id) %>.
-</mj-text>
-<mj-text>
-  Impressive, hah? If yes and you want to keep the momentum going - simply
-  <%= link_to 'upgrade to a Light plan', project_settings_url(project_id: @project.encrypted_id) %>.
-  It will cost you only 9$ monthly and will immediately reactivate the button.
-</mj-text>
+<mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
 <mj-text>
   Need help? Reply to this email — we’re here for you.
 </mj-text>
