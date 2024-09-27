@@ -17,7 +17,30 @@
 <% unless @project.enterprise_plan? %>
   <% if !stripe_customer_id_exists || @project.free_plan? || !subscription_running %>
     <div class="flex mt-2 flex-col md:flex-row">
+
       <div>
+        <h3 class="text-lg font-semibold">Basic Plan</h3>
+        <div class="opacity-50">500 button clicks every month</div>
+        <div class="flex mt-2">
+          <%= form_with scope: :subscription,
+                        url: project_payments_path(@project),
+                        html: { 'data-controller': "auto-disable-form", 'data-turbo': "false" } do |form| %>
+            <%= form.hidden_field :period, value: 'month' %>
+            <%= form.hidden_field :plan, value: 'basic' %>
+            <%= form.submit 'Monthly - 4$', class: 'btn btn-summer btn-red px-3' %>
+          <% end %>
+
+          <%= form_with scope: :subscription,
+                        url: project_payments_path(@project),
+                        html: { 'data-controller': 'auto-disable-form', 'data-turbo': "false", class: 'ml-2' } do |form| %>
+            <%= form.hidden_field :period, value: 'year' %>
+            <%= form.hidden_field :plan, value: 'basic' %>
+            <%= form.submit 'Yearly - 48$', class: 'btn btn-summer btn-black px-3' %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="mt-4 md:mt-0 md:ml-5">
         <h3 class="text-lg font-semibold">Light Plan</h3>
         <div class="opacity-50">5 000 button clicks every month</div>
         <div class="flex mt-2">
@@ -26,7 +49,7 @@
                         html: { 'data-controller': "auto-disable-form", 'data-turbo': "false" } do |form| %>
             <%= form.hidden_field :period, value: 'month' %>
             <%= form.hidden_field :plan, value: 'light' %>
-            <%= form.submit 'Monthly - 9$', class: 'btn btn-summer btn-red' %>
+            <%= form.submit 'Monthly - 9$', class: 'btn btn-summer btn-red btn-sm px-3' %>
           <% end %>
 
           <%= form_with scope: :subscription,
@@ -34,12 +57,12 @@
                         html: { 'data-controller': 'auto-disable-form', 'data-turbo': "false", class: 'ml-2' } do |form| %>
             <%= form.hidden_field :period, value: 'year' %>
             <%= form.hidden_field :plan, value: 'light' %>
-            <%= form.submit 'Yearly - 90$', class: 'btn btn-summer btn-black' %>
+            <%= form.submit 'Yearly - 90$', class: 'btn btn-summer btn-black px-3' %>
           <% end %>
         </div>
       </div>
 
-      <div class="mt-4 md:mt-0 md:ml-8">
+      <div class="mt-4 md:mt-0 md:ml-5">
         <h3 class="text-lg font-semibold">Pro Plan</h3>
         <div class="opacity-50">25 000 button clicks every month</div>
         <div class="flex mt-2">
@@ -48,7 +71,7 @@
                         html: {'data-controller': 'auto-disable-form', 'data-turbo': "false" } do |form| %>
             <%= form.hidden_field :period, value: 'month' %>
             <%= form.hidden_field :plan, value: 'pro' %>
-            <%= form.submit 'Monthly - 29$', class: 'btn btn-summer btn-red' %>
+            <%= form.submit 'Monthly - 29$', class: 'btn btn-summer btn-red px-3' %>
           <% end %>
 
           <%= form_with scope: :subscription,
@@ -56,7 +79,7 @@
                         html: {'data-controller': 'auto-disable-form', 'data-turbo': "false", class: 'ml-2' } do |form| %>
             <%= form.hidden_field :period, value: 'year' %>
             <%= form.hidden_field :plan, value: 'pro' %>
-            <%= form.submit 'Yearly - 290$', class: 'btn btn-summer btn-black' %>
+            <%= form.submit 'Yearly - 290$', class: 'btn btn-summer btn-black px-3' %>
           <% end %>
         </div>
       </div>

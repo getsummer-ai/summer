@@ -19,6 +19,10 @@ class ProjectStripeService
     #
     PLAN_IDS = {
       test: {
+        basic: {
+          year: 'price_1Q3m7HDm8NzUNvXDwGvqnXrM',
+          month: 'price_1Q3m4NDm8NzUNvXDejrCTDoX',
+        },
         light: {
           year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
           month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
@@ -29,6 +33,10 @@ class ProjectStripeService
         },
       },
       live: {
+        basic: {
+          year: 'price_1Q3m7wDm8NzUNvXDhs6I1foI',
+          month: 'price_1Q3m7qDm8NzUNvXDpYutCHpA',
+        },
         light: {
           year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
           month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
@@ -41,6 +49,10 @@ class ProjectStripeService
     }.freeze
 
     PLAN_LIMITS = {
+      basic: {
+        month: 500,
+        year: 6000,
+      },
       light: {
         month: 5_000,
         year: 60_000,
@@ -73,13 +85,13 @@ class ProjectStripeService
       PLAN_LIMITS[name][interval] || 0
     end
 
-
     # @param [Stripe::Plan] plan
     # @return [ProjectStripeService::Plan, nil]
     def self.find_by_stripe_plan(plan)
       env_plans = PLAN_IDS[plan.livemode == true ? :live : :test]
       interval = plan.interval.to_sym
       plan_name = nil
+      plan_name = :basic if env_plans.dig(:basic, interval) == plan.id
       plan_name = :light if env_plans.dig(:light, interval) == plan.id
       plan_name = :pro if env_plans.dig(:pro, interval) == plan.id
       return new(plan.id, plan_name, interval) if plan_name.present?

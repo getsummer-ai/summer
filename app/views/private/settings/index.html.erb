@@ -56,10 +56,10 @@
   </p>
 </div>
 
-<div class="mt-8 md:mt-5">
+<div class="mt-8 md:mt-8">
   <%= render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-black') %>
   <%if current_project.free_plan_suspended? %>
-    <h4 class="mt-8 md:mt-2 opacity-50">
+    <h4 class="mt-8 md:mt-2 opacity-30">
       Get a subscription to continue using the Summary button on your website.
     </h4>
   <% end %>

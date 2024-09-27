@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_08_130000) do
+ActiveRecord::Schema[7.2].define(version: 2024_09_27_190900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,7 +22,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_08_130000) do
   create_enum "user_project_llm", ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
   create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
-  create_enum "user_project_type", ["free", "light", "pro", "enterprise"]
+  create_enum "user_project_type", ["free", "basic", "light", "pro", "enterprise"]
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
   end

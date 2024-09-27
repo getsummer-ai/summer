@@ -25,6 +25,9 @@ RSpec.describe "private/settings/index", type: :view do
     render
 
     expect(rendered).to have_content("Settings")
+
+    expect(rendered).to have_content("Basic Plan")
+    expect(rendered).to have_content("500 button clicks every month")
     expect(rendered).to have_content("Light Plan")
     expect(rendered).to have_content("5 000 button clicks every month")
     expect(rendered).to have_content("Pro Plan")
