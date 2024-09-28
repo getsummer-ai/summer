@@ -3,6 +3,8 @@ class ErrorsController < ApplicationController
   skip_before_action :authenticate_user!, :update_user_locale!
   layout :custom_layout
 
+  protect_from_forgery except: :not_found
+
   # Overloading the default switch_locale
   def switch_locale(&)
     locale = session[:locale] || I18n.default_locale
@@ -14,6 +16,7 @@ class ErrorsController < ApplicationController
     respond_to do |format|
       format.html { render status: :not_found }
       format.json { render json: { error: "not_found" }, status: :not_found }
+      format.js { head :not_found }
     end
   end
 
