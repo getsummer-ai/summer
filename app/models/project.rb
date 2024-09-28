@@ -15,21 +15,26 @@ class Project < ApplicationRecord
 
   ALREADY_TAKEN_ERROR = 'is already taken'
 
-  enum :plan, { free: 'free', light: 'light', pro: 'pro', enterprise: 'enterprise' }, suffix: true
+  enum :plan,
+       { free: 'free', basic: 'basic', light: 'light', pro: 'pro', enterprise: 'enterprise' },
+       suffix: true
   enum :status, { active: 'active', suspended: 'suspended', deleted: 'deleted' }, prefix: true
-  enum :default_llm, {
-         gpt_35_turbo: 'gpt-3.5-turbo',
-         gpt_4o: 'gpt-4o',
-         gpt_4o_mini: 'gpt-4o-mini',
-       }, prefix: true
+  enum :default_llm,
+       { gpt_35_turbo: 'gpt-3.5-turbo', gpt_4o: 'gpt-4o', gpt_4o_mini: 'gpt-4o-mini' },
+       prefix: true
 
   attribute :settings, Project::ProjectSettings.to_type
   attribute :stripe, Project::ProjectStripeDetails.to_type
 
   # Fix for StoreModel gem
   # TODO: remove this check after new StoreModel version release
-  if (ActiveRecord::Base.connection_pool.with_connection(&:active?) rescue false) &&
-    ActiveRecord::Base.connection.table_exists?('projects')
+  if (
+       begin
+         ActiveRecord::Base.connection_pool.with_connection(&:active?)
+       rescue StandardError
+         false
+       end
+     ) && ActiveRecord::Base.connection.table_exists?('projects')
     accepts_nested_attributes_for :settings
     accepts_nested_attributes_for :stripe
   end
