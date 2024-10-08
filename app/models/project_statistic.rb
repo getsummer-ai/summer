@@ -24,6 +24,7 @@ end
 #  id             :bigint           not null, primary key
 #  clicks         :bigint           default(0), not null
 #  date           :date             not null
+#  date_hour      :datetime         not null
 #  hour           :integer          not null
 #  trackable_type :string
 #  views          :bigint           default(0), not null
@@ -35,8 +36,10 @@ end
 # Indexes
 #
 #  idx_on_project_id_trackable_type_trackable_id_date__92da09a367  (project_id,trackable_type,trackable_id,date,hour) UNIQUE
+#  idx_on_project_id_trackable_type_trackable_id_date__9b38d2b2a3  (project_id,trackable_type,trackable_id,date_hour) UNIQUE
 #  index_project_statistics_on_project_id                          (project_id)
 #  index_project_statistics_on_project_id_and_date                 (project_id,date)
+#  index_project_statistics_on_project_id_and_date_hour            (project_id,date_hour)
 #  index_project_statistics_on_trackable                           (trackable_type,trackable_id)
 #
 # Foreign Keys

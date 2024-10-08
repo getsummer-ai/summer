@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class StatisticService
-
   # @param [Project] project
   # @param [ProjectPage, ProjectProduct] trackable
   def initialize(project:, trackable:)
@@ -24,12 +23,14 @@ class StatisticService
   private
 
   def model
-    @model ||= ProjectStatistic.find_or_create_by(
-      project: @project,
-      trackable: @trackable,
-      date: @time.to_date,
-      hour: @time.hour
-    )
+    @model ||=
+      ProjectStatistic.find_or_create_by(
+        project: @project,
+        trackable: @trackable,
+        date: @time.to_date,
+        hour: @time.hour,
+        date_hour: @time.beginning_of_hour,
+      )
   end
 
   def update_subscription_summarize_usage_info

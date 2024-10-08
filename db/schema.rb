@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_27_190900) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_10_201100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -222,8 +222,11 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_27_190900) do
     t.integer "hour", limit: 2, null: false
     t.bigint "views", default: 0, null: false
     t.bigint "clicks", default: 0, null: false
+    t.datetime "date_hour", precision: 0, null: false
     t.index ["project_id", "date"], name: "index_project_statistics_on_project_id_and_date"
+    t.index ["project_id", "date_hour"], name: "index_project_statistics_on_project_id_and_date_hour"
     t.index ["project_id", "trackable_type", "trackable_id", "date", "hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__92da09a367", unique: true
+    t.index ["project_id", "trackable_type", "trackable_id", "date_hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__9b38d2b2a3", unique: true
     t.index ["project_id"], name: "index_project_statistics_on_project_id"
     t.index ["trackable_type", "trackable_id"], name: "index_project_statistics_on_trackable"
   end

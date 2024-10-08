@@ -15,8 +15,8 @@ end
 # Table name: project_statistics_by_totals
 #
 #  clicks         :bigint
-#  trackable_type :string
+#  trackable_type :string           primary key
 #  views          :bigint
 #  project_id     :bigint
-#  trackable_id   :bigint
+#  trackable_id   :bigint           primary key
 #

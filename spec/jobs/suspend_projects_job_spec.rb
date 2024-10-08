@@ -66,6 +66,7 @@ describe SuspendProjectsJob do
         trackable: page,
         date: time.to_date,
         hour: time.hour,
+        date_hour: time.beginning_of_hour,
         views: 10,
         clicks: 10,
       )
