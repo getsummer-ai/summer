@@ -1,7 +1,15 @@
 # frozen_string_literal: true
 class ProjectArticleProduct < ApplicationRecord
+  include EncryptedKey
+
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: :project_article_id
   belongs_to :product, class_name: 'ProjectProduct', foreign_key: :project_product_id
+
+  validates :product,
+            presence: true,
+            uniqueness: { scope: :project_article_id, message: 'already added' },
+            if: -> { product_changed? }
+
 end
 
 # == Schema Information
@@ -9,6 +17,8 @@ end
 # Table name: project_article_products
 #
 #  id                 :bigint           not null, primary key
+#  is_accessible      :boolean          default(TRUE), not null
+#  position           :integer          default(10), not null
 #  created_at         :datetime         not null
 #  project_article_id :bigint           not null
 #  project_product_id :bigint           not null

@@ -32,11 +32,12 @@ Rails.application.routes.draw do
         end
       end
       resources :projects, only: [] do
-        resources :pages, only: %i[index update show] do
+        resources :pages, param: :page_id, only: %i[index update show] do
           member do
             get :summary
             post 'summary/refresh', action: :summary_refresh
             post('summary/admin-delete', action: :summary_admin_delete) if is_playground_mode
+            resources :products, module: 'pages', only: %i[new create update], as: 'page_product'
           end
         end
         resources :actions, only: %i[index update]

@@ -24,7 +24,7 @@ class BasicEncrypting
     def decode_array(value, required_length)
       return nil if value.blank?
       res = instance.sqids.decode(value)
-      nil if res.length != required_length
+      return nil if res.length != required_length
       res
     end
 

@@ -1,0 +1,21 @@
+<%= form_for @article_product,
+             url: project_page_product_index_path(@current_project, @project_page),
+             builder: DaisyBuilder do |f| %>
+  <div class="form-control">
+    <%= f.label :project_product_id, 'Product' %>
+    <%= f.collection_select :project_product_id, @current_project.products, :id, :name %>
+  </div>
+
+  <% if @article_product.errors.any? %>
+    <div id="<%=dom_id(@article_product, :errors) %>" class="text-xs mt-1">
+      <% @article_product.errors.full_messages.each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-control mt-8">
+    <%= f.submit @article_product.persisted? ? 'Save' : 'Add product', class: 'btn btn-summer btn-black btn-block' %>
+  </div>
+<% end %>
+

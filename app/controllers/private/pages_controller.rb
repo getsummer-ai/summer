@@ -2,8 +2,9 @@
 module Private
   class PagesController < PrivateController
     include Pagy::Backend
+    include ProjectPageFinderConcern
     before_action :find_project
-    before_action :set_url, only: %i[show update summary summary_refresh summary_admin_delete]
+    before_action :find_project_page, only: %i[show update summary summary_refresh summary_admin_delete]
     before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh summary_admin_delete]
 
     layout :private_or_turbo_layout
@@ -28,9 +29,10 @@ module Private
       @project_page_decorated = @project_page.decorate
 
       return if turbo_frame_request?
-      modal_anchor_to_open = Base64.encode64(project_page_path(@current_project, @project_page))
+      # modal_anchor_to_open = Base64.encode64(project_page_path(@current_project, @project_page))
       # @type [ProjectPageDecorator]
-      redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
+      # redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
+      render 'show_new'
     end
 
     def summary
@@ -77,19 +79,6 @@ module Private
 
     def query_pages_form_permitted_params
       params.fetch(:project_pages_query_form, {}).permit(:search, :order)
-    end
-
-    def set_url
-      pages_query = current_project.pages
-      condition =
-        (
-          if params[:id].to_s.length == 32
-            { url_hash: params[:id] }
-          else
-            { id: BasicEncrypting.decode(params[:id]) }
-          end
-        )
-      @project_page = pages_query.find_by!(condition)
     end
 
     def redirect_to_summary_modal_if_not_turbo
