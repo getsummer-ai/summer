@@ -37,7 +37,7 @@ Rails.application.routes.draw do
             get :summary
             post 'summary/refresh', action: :summary_refresh
             post('summary/admin-delete', action: :summary_admin_delete) if is_playground_mode
-            resources :products, module: 'pages', only: %i[new create update], as: 'page_product'
+            resources :products, module: 'pages', only: %i[new create edit update destroy], as: 'page_product'
           end
         end
         resources :actions, only: %i[index update]

@@ -1,5 +1,5 @@
 <%= form_for @article_product,
-             url: project_page_product_index_path(@current_project, @project_page),
+             url: @article_product.new_record? ? project_page_product_index_path : project_page_product_path,
              builder: DaisyBuilder do |f| %>
   <div class="form-control">
     <%= f.label :project_product_id, 'Product' %>
@@ -15,7 +15,20 @@
   <% end %>
 
   <div class="form-control mt-8">
-    <%= f.submit @article_product.persisted? ? 'Save' : 'Add product', class: 'btn btn-summer btn-black btn-block' %>
+
+    <% if @article_product.persisted? %>
+      <%=
+        link_to 'Detach Product',
+                project_page_product_path(@current_project, @project_page, @article_product),
+                class: 'btn btn-summer mb-2 btn-block btn-red',
+                data: {
+                  turbo_frame: '_top',
+                  turbo_method: :delete,
+                }
+      %>
+    <% end %>
+
+    <%= f.submit @article_product.persisted? ? 'Save' : 'Attach product', class: 'btn btn-summer btn-black btn-block' %>
   </div>
 <% end %>
 

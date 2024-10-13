@@ -58,22 +58,23 @@
         <th class="font-semibold w-24 text-right"></th>
       </tr>
       </thead>
-      <tbody>
-      <% article.project_article_products.includes(:product).each do |project_article_product|%>
-        <%= render ProjectPageProductComponents::RowComponent.new(project_article_product:) do |component| %>
-          <% component.with_form do %>
-            <%=
-              render ProjectPageProductComponents::SwitchButtonComponent.new(
-                form_url: project_page_product_path(
-                  current_project,
-                  @project_page_decorated,
-                  project_article_product
-                ),
-                project_article_product:,
-              )
-            %>
-          <% end %>
-        <% end %>
+      <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
+      <% article.project_article_products.includes(:product).each do |project_article_product| %>
+        <%=
+          render ProjectPageProductComponents::RowComponent.new(
+            project_article_product:,
+            edit_path: edit_project_page_product_path(
+              current_project,
+              @project_page_decorated,
+              project_article_product
+            ),
+            update_path: project_page_product_path(
+              current_project,
+              @project_page_decorated,
+              project_article_product
+            )
+          )
+        %>
       <% end %>
       </tbody>
     </table>
