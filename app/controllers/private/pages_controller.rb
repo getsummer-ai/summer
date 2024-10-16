@@ -10,17 +10,19 @@ module Private
     layout :private_or_turbo_layout
 
     def index
-      @form = ProjectPagesQueryForm.new(@current_project, query_pages_form_permitted_params)
+      @form = ProjectPagesQueryForm.new(current_project, query_pages_form_permitted_params)
+      @month_statistic_form = MonthStatisticQueryForm.new(current_project, params.permit(:month))
+
       @pagy, @pages =
         pagy_countless(@form.query, items: 15, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
 
       respond_to do |format|
         format.turbo_stream do
-          locals = { project: @current_project, pages: @pages, pagy: @pagy }
+          locals = { project: current_project, pages: @pages, pagy: @pagy }
           render turbo_stream: turbo_stream.replace('pages_table', partial: 'pages_table', locals:)
         end
         format.html do
-          @statistics = ProjectStatisticsViewModel.new(@current_project, %i[views actions])
+          @statistics = ProjectStatisticsViewModel.new(current_project, %i[views actions])
         end
       end
     end

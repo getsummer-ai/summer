@@ -1,6 +1,11 @@
 export {};
 declare global {
   interface Window {
+    Chartkick: {
+      charts: { [key: string]: never };
+      eachChart: (callback: (chart: any) => void) => void;
+      config: { autoDestroy: boolean };
+    };
     GetSummer: { id: string, settings: object };
     Turbo: {
       navigator: Navigator & {
