@@ -26,16 +26,16 @@ class MonthStatisticQueryForm
     return [] if invalid?
 
     result = calculate_for_timeframe(month_as_date).to_a
-    empty_series = month_as_date.all_month.to_a.index_with { 0 }
+    empty_series = month_as_date.all_month.to_a.index_with { 0.5 }
 
     [
       {
         name: 'Button shown',
-        data: result.to_h { |views, _clicks, date| [date, views] }.reverse_merge(empty_series),
+        data: result.to_h { |views, _, date| [date, views.zero? ? 0.5 : views] }.reverse_merge(empty_series),
       },
       {
         name: 'Button clicked',
-        data: result.to_h { |_views, clicks, date| [date, clicks] }.reverse_merge(empty_series),
+        data: result.to_h { |_, clicks, date| [date, clicks.zero? ? 0.5 : clicks] }.reverse_merge(empty_series),
       },
     ]
   end

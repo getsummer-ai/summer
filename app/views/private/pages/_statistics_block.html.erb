@@ -21,6 +21,14 @@
   </div>
   <div class="mt-12 rounded-xl shadow p-6 border">
     <% data = @month_statistic_form.result_for_chart %>
+    <%
+      chart_js_label_cb = <<~JS.squish
+          function(ctx) {
+            let label = ctx.dataset.label;
+            return label + ': ' + (ctx.parsed.y === 0.5 ? 0 : ctx.parsed.y.toLocaleString());
+          }
+      JS
+    %>
     <%=
       area_chart data,
            library: {
@@ -55,12 +63,16 @@
                    size: 14,
                  },
                  padding: 12,
+                 callbacks: {
+                   label: chartkick_js_inline(chart_js_label_cb)
+                }
                },
              },
              scales: {
                y: {
                  type: 'logarithmic',
                  max: data[0][:data].values.max * 2,
+                 min: 0.5,
                  border: {
                    display: false,
                  },
