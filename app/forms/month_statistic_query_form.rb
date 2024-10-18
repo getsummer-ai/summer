@@ -28,16 +28,10 @@ class MonthStatisticQueryForm
     result = calculate_for_timeframe(month_as_date).to_a
     empty_series = month_as_date.all_month.to_a.index_with { 0.5 }
 
-    [
-      {
-        name: 'Button shown',
-        data: result.to_h { |views, _, date| [date, views.zero? ? 0.5 : views] }.reverse_merge(empty_series),
-      },
-      {
-        name: 'Button clicked',
-        data: result.to_h { |_, clicks, date| [date, clicks.zero? ? 0.5 : clicks] }.reverse_merge(empty_series),
-      },
-    ]
+    {
+      shown: result.to_h { |views, _, date| [date, views.zero? ? 0.5 : views] }.reverse_merge(empty_series),
+      clicked: result.to_h { |_, clicks, date| [date, clicks.zero? ? 0.5 : clicks] }.reverse_merge(empty_series),
+    }
   end
 
   def statistic_months
@@ -52,7 +46,7 @@ class MonthStatisticQueryForm
 
   def calculate_for_timeframe(date)
     statistic_basic_query
-      .where(date_hour: date.all_month)
+      .where(date_hour: date.to_time.utc.all_month)
       .group(GROUP_COLUMN)
       .order(Arel.sql("#{GROUP_COLUMN} asc"))
       .pluck(Arel.sql("SUM(views)::int, SUM(clicks)::int, #{GROUP_COLUMN}"))

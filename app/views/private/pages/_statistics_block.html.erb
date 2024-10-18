@@ -20,17 +20,49 @@
     </div>
   </div>
   <div class="mt-12 rounded-xl shadow p-6 border">
-    <% data = @month_statistic_form.result_for_chart %>
     <%
+      data = @month_statistic_form.result_for_chart
+
+      chart_js_color_cb = ->(color, stop_1, stop_2) {
+        <<~JS.squish
+          function(context) {
+            const chartArea = context.chart.chartArea;
+            if (!chartArea) return;
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+            gradient.addColorStop(#{stop_1}, "#{color}");
+            gradient.addColorStop(#{stop_2}, "transparent");
+            return gradient;
+          }
+        JS
+      }
+
       chart_js_label_cb = <<~JS.squish
           function(ctx) {
             let label = ctx.dataset.label;
             return label + ': ' + (ctx.parsed.y === 0.5 ? 0 : ctx.parsed.y.toLocaleString());
           }
       JS
-    %>
-    <%=
-      area_chart data,
+
+      concat area_chart \
+            [
+              {
+                name: 'Button shown',
+                dataset: {
+                  strokeColor: 'rgba(68, 126, 250, 1)',
+                  backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(68, 126, 250, 0.1)", 0.8, 0.3))
+                },
+                data: data[:shown],
+              },
+              {
+                name: 'Button clicked',
+                dataset: {
+                  strokeColor: 'rgba(239, 139, 33, 1)',
+                  backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(239, 139, 33, 0.1)", 0.2, 0))
+                },
+                data: data[:clicked],
+              },
+           ],
            library: {
              scaleShowLabels: false,
              interaction: {
@@ -71,7 +103,7 @@
              scales: {
                y: {
                  type: 'logarithmic',
-                 max: data[0][:data].values.max * 2,
+                 max: data[:shown].values.max * 2,
                  min: 0.5,
                  border: {
                    display: false,
