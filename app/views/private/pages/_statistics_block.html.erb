@@ -13,13 +13,13 @@
               @month_statistic_form.month,
             ),
             {},
-            { class: 'select select-bordered rounded-lg w-full', onchange: 'this.form.requestSubmit()' },
+            { class: 'select select-bordered select-sm rounded-lg w-full', onchange: 'this.form.requestSubmit()' },
           )
         %>
       <% end %>
     </div>
   </div>
-  <div class="mt-12 rounded-xl shadow p-6 border">
+  <div class="mt-6 rounded-xl shadow p-6 border">
     <%
       data = @month_statistic_form.result_for_chart
 
