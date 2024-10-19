@@ -17,6 +17,10 @@ class ProjectPage < ApplicationRecord
           class_name: "ProjectStatisticsByTotal",
           as: :trackable
 
+  has_many :statistics_by_months,
+          class_name: "ProjectStatisticsByMonth",
+          as: :trackable
+
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
   }
