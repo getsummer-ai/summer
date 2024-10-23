@@ -350,7 +350,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
      FROM project_statistics ps
     GROUP BY ps.project_id, ps.trackable_type, ps.trackable_id;
   SQL
-  create_view "project_statistics_by_months", sql_definition: <<-SQL
+  create_view "project_statistics_by_months", materialized: true, sql_definition: <<-SQL
       SELECT project_statistics.project_id,
       project_statistics.trackable_type,
       project_statistics.trackable_id,
@@ -360,4 +360,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
      FROM project_statistics
     GROUP BY project_statistics.project_id, project_statistics.trackable_type, project_statistics.trackable_id, ((date_trunc('month'::text, project_statistics.date_hour))::date);
   SQL
+  add_index "project_statistics_by_months", ["project_id", "trackable_type", "trackable_id", "month"], name: "idx_on_project_id_trackable_type_trackable_id_month_87660b5378"
+  add_index "project_statistics_by_months", ["trackable_type", "trackable_id", "month"], name: "idx_on_trackable_type_trackable_id_month_ac97d1a671", unique: true
+
 end

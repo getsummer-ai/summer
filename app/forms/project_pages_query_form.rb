@@ -12,16 +12,24 @@ class ProjectPagesQueryForm
 
   # @param [Project] current_project
   # @param [Hash, ActionController::Parameters] params
-  def initialize(current_project, params)
+  # @param [Date] month
+  def initialize(current_project, params, month)
     @current_project = current_project
     @search = params[:search]
     @order = params[:order] || 'views_desc'
+    @month = month.beginning_of_month
   end
 
   def query
     return @current_project.pages.none if invalid?
 
-    pages = @current_project.pages.preload(:article_only_title).eager_load(:statistics_by_total)
+    pages = @current_project.pages
+            .strict_loading
+            .preload(:article_only_title)
+            # .eager_load(:statistics_by_total)
+            .eager_load(:statistics_by_months)
+            # project_id condition is used because of the need to use an index
+            .where(statistics_by_months: { month: [@month.to_s, nil] })
 
     pages = apply_search(pages) if search.present?
     apply_order(pages)
@@ -42,14 +50,14 @@ class ProjectPagesQueryForm
 
   def apply_order(pages)
     case order
-    when 'views_asc'
-      pages.order(ProjectStatisticsByTotal.arel_table[:views].asc.nulls_last)
-    when 'clicks_desc'
-      pages.order(ProjectStatisticsByTotal.arel_table[:clicks].desc.nulls_last)
     when 'clicks_asc'
-      pages.order(ProjectStatisticsByTotal.arel_table[:clicks].asc.nulls_last)
+      pages.order("statistics_by_months.clicks ASC NULLS LAST")
+    when 'clicks_desc'
+      pages.order("statistics_by_months.clicks DESC NULLS LAST")
+    when 'views_asc'
+      pages.order("statistics_by_months.views ASC NULLS LAST")
     else
-      pages.order(ProjectStatisticsByTotal.arel_table[:views].desc.nulls_last)
+      pages.order("statistics_by_months.views DESC NULLS LAST")
     end
   end
 end

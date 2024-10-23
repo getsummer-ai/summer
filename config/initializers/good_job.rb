@@ -6,6 +6,10 @@ Rails.application.configure do
     close_replicate_requests: {
       cron: '0,30 * * * *',
       class: 'SuspendProjectsJob'
+    },
+    refresh_project_statistics_by_month: {
+      cron: '*/10 * * * *',
+      class: 'RefreshProjectStatisticsByMonthJob'
     }
   }
 end

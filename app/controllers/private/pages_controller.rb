@@ -4,17 +4,17 @@ module Private
     include Pagy::Backend
     include ProjectPageFinderConcern
     before_action :find_project
+    before_action :set_month, only: %i[index]
     before_action :find_project_page, only: %i[show update summary summary_refresh summary_admin_delete]
     before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh summary_admin_delete]
 
     layout :private_or_turbo_layout
 
     def index
-      @form = ProjectPagesQueryForm.new(current_project, query_pages_form_permitted_params)
-      @month_statistic_form = MonthStatisticQueryForm.new(current_project, params.permit(:month))
+      @form = ProjectPagesQueryForm.new(current_project, query_pages_form_permitted_params, @month)
 
       @pagy, @pages =
-        pagy_countless(@form.query, items: 15, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
+        pagy(@form.query, items: 12, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
 
       respond_to do |format|
         format.turbo_stream do
@@ -22,7 +22,7 @@ module Private
           render turbo_stream: turbo_stream.replace('pages_table', partial: 'pages_table', locals:)
         end
         format.html do
-          @statistics = ProjectStatisticsViewModel.new(current_project, %i[views actions])
+          @statistics = ProjectStatisticsViewModel.new(current_project, @month, %i[pages actions])
         end
       end
     end
@@ -78,6 +78,21 @@ module Private
     end
 
     private
+
+    def set_month
+      @month = Date.strptime(params[:month], '%Y-%m-%d') if params[:month].present?
+
+      return if @month.present?
+
+      @month = current_project.statistics
+         .where(trackable_type: 'ProjectPage')
+         .maximum(:date_hour)
+         &.to_date
+         &.beginning_of_month || Time.zone.now.beginning_of_month
+
+    rescue ArgumentError
+      raise ActionController::BadRequest, 'The month is incorrect'
+    end
 
     def query_pages_form_permitted_params
       params.fetch(:project_pages_query_form, {}).permit(:search, :order)

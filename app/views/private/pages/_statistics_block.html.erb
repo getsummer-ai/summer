@@ -1,137 +1,136 @@
-<%= turbo_frame_tag 'statistics', 'data-turbo-action': 'advance' do %>
-  <div class="flex justify-between mt-12">
-    <div>
-      <h2 class="font-semibold text-xl">Statistic</h2>
-    </div>
-    <div>
-      <%= form_with(url: project_pages_path(@current_project), method: :get) do |f| %>
-        <%=
-          f.select(
-            :month,
-            options_for_select(
-              @month_statistic_form.statistic_months.map { |date| [date.strftime('%B %Y'), date.to_s] },
-              @month_statistic_form.month,
-            ),
-            {},
-            { class: 'select select-bordered select-sm rounded-lg w-full', onchange: 'this.form.requestSubmit()' },
-          )
-        %>
-      <% end %>
-    </div>
+<div class="flex justify-between mt-12">
+  <div>
+    <h2 class="font-semibold text-xl">Statistic</h2>
   </div>
-  <div class="mt-6 rounded-xl shadow p-6 border">
-    <%
-      data = @month_statistic_form.result_for_chart
+  <div>
+    <%= form_with(url: project_pages_path(@current_project), method: :get) do |f| %>
+      <%=
+        f.select(
+          :month,
+          options_for_select(
+            @statistics.statistic_months.map { |date| [date.strftime('%B %Y'), date.to_s] },
+            @statistics.month,
+          ),
+          {},
+          { class: 'select select-bordered select-sm rounded-lg w-full', onchange: 'this.form.requestSubmit()' },
+        )
+      %>
+    <% end %>
+  </div>
+</div>
+<div class="mt-6 rounded-xl shadow p-6 border">
+  <%
+    data = @statistics.views_clicks_by_days_for_chart
 
-      chart_js_color_cb = ->(color, stop_1, stop_2) {
-        <<~JS.squish
-          function(context) {
-            const chartArea = context.chart.chartArea;
-            if (!chartArea) return;
-            const ctx = context.chart.ctx;
-            const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-            gradient.addColorStop(#{stop_1}, "#{color}");
-            gradient.addColorStop(#{stop_2}, "transparent");
-            return gradient;
-          }
-        JS
-      }
-
-      chart_js_label_cb = <<~JS.squish
-          function(ctx) {
-            let label = ctx.dataset.label;
-            return label + ': ' + (ctx.parsed.y === 0.5 ? 0 : ctx.parsed.y.toLocaleString());
-          }
+    chart_js_color_cb = ->(color, stop_1, stop_2) {
+      <<~JS.squish
+        function(context) {
+          const chartArea = context.chart.chartArea;
+          if (!chartArea) return;
+          const ctx = context.chart.ctx;
+          const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+          gradient.addColorStop(#{stop_1}, "#{color}");
+          gradient.addColorStop(#{stop_2}, "transparent");
+          return gradient;
+        }
       JS
+    }
 
-      concat area_chart \
-            [
-              {
-                name: 'Button shown',
-                dataset: {
-                  strokeColor: 'rgba(68, 126, 250, 1)',
-                  backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(68, 126, 250, 0.1)", 0.8, 0.3))
-                },
-                data: data[:shown],
+    chart_js_label_cb = <<~JS.squish
+        function(ctx) {
+          let label = ctx.dataset.label;
+          return label + ': ' + (ctx.parsed.y === 0.5 ? 0 : ctx.parsed.y.toLocaleString());
+        }
+    JS
+
+    concat area_chart \
+          [
+            {
+              name: 'Button shown',
+              dataset: {
+                strokeColor: 'rgba(68, 126, 250, 1)',
+                backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(68, 126, 250, 0.1)", 0.8, 0.3))
               },
-              {
-                name: 'Button clicked',
-                dataset: {
-                  strokeColor: 'rgba(239, 139, 33, 1)',
-                  backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(239, 139, 33, 0.1)", 0.2, 0))
-                },
-                data: data[:clicked],
+              data: data[:shown],
+            },
+            {
+              name: 'Button clicked',
+              dataset: {
+                strokeColor: 'rgba(239, 139, 33, 1)',
+                backgroundColor: chartkick_js_inline(chart_js_color_cb.call("rgba(239, 139, 33, 0.1)", 0.2, 0))
               },
-           ],
-           library: {
-             scaleShowLabels: false,
-             interaction: {
-               mode: 'nearest',
-               axis: 'x',
-               intersect: false,
-             },
-             plugins: {
-               legend: {
-                 align: 'end',
-                 labels: {
-                   boxWidth: 8,
-                   boxHeight: 8,
-                   font: {
-                     size: 14,
-                   },
-                 },
-               },
-               tooltip: {
-                 backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                 titleColor: 'rgba(0, 0, 0, 0.5)',
-                 bodyColor: '#000',
-                 borderWidth: 1,
-                 borderColor: 'rgba(0, 0, 0, 0.1)',
-                 titleFont: {
-                   size: 10,
-                   weight: 'normal',
-                 },
-                 bodyFont: {
+              data: data[:clicked],
+            },
+         ],
+         library: {
+           scaleShowLabels: false,
+           interaction: {
+             mode: 'nearest',
+             axis: 'x',
+             intersect: false,
+           },
+           plugins: {
+             legend: {
+               align: 'end',
+               labels: {
+                 boxWidth: 8,
+                 boxHeight: 8,
+                 font: {
                    size: 14,
                  },
-                 padding: 12,
-                 callbacks: {
-                   label: chartkick_js_inline(chart_js_label_cb)
-                }
                },
              },
-             scales: {
-               y: {
-                 type: 'logarithmic',
-                 max: data[:shown].values.max * 2,
-                 min: 0.5,
-                 border: {
-                   display: false,
-                 },
-                 grid: {
-                   display: false,
-                   drawOnChartArea: false,
-                   drawTicks: false,
-                 },
-                 ticks: {
-                   display: false,
-                 },
+             tooltip: {
+               backgroundColor: 'rgba(255, 255, 255, 0.8)',
+               titleColor: 'rgba(0, 0, 0, 0.5)',
+               bodyColor: '#000',
+               borderWidth: 1,
+               borderColor: 'rgba(0, 0, 0, 0.1)',
+               titleFont: {
+                 size: 10,
+                 weight: 'normal',
                },
-               x: {
-                 type: 'time',
-                 time: {
-                   unit: 'day',
-                   displayFormats: {
-                     day: 'd',
-                   },
+               bodyFont: {
+                 size: 14,
+               },
+               padding: 12,
+               callbacks: {
+                 label: chartkick_js_inline(chart_js_label_cb)
+              }
+             },
+           },
+           scales: {
+             y: {
+               type: 'logarithmic',
+               max: data[:shown].values.max * 2,
+               min: 0.5,
+               border: {
+                 display: false,
+               },
+               grid: {
+                 display: false,
+                 drawOnChartArea: false,
+                 drawTicks: false,
+               },
+               ticks: {
+                 display: false,
+               },
+             },
+             x: {
+               type: 'time',
+               time: {
+                 unit: 'day',
+                 displayFormats: {
+                   day: 'd',
                  },
                },
              },
            },
-           dataset: {
-             borderWidth: 1,
-             radius: 0,
-           }
-    %>
-  </div>
-<% end %>
+         },
+         dataset: {
+           borderWidth: 1,
+           radius: 0,
+         }
+  %>
+</div>
+
