@@ -39,7 +39,7 @@
     <%=
       render 'pages_form',
              form: @form,
-             show_search: @pages.length >= 15 || @form.enabled_filters?,
+             show_search: @pagy.count >= 10 || @form.enabled_filters?,
              show_order: @pages.length > 0 || @form.enabled_filters?,
              current_project: @current_project
     %>

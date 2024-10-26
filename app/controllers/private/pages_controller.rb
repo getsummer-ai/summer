@@ -11,20 +11,9 @@ module Private
     layout :private_or_turbo_layout
 
     def index
-      @form = ProjectPagesQueryForm.new(current_project, query_pages_form_permitted_params, @month)
-
-      @pagy, @pages =
-        pagy(@form.query, items: 12, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
-
-      respond_to do |format|
-        format.turbo_stream do
-          locals = { project: current_project, pages: @pages, pagy: @pagy }
-          render turbo_stream: turbo_stream.replace('pages_table', partial: 'pages_table', locals:)
-        end
-        format.html do
-          @statistics = ProjectStatisticsViewModel.new(current_project, @month, %i[pages actions])
-        end
-      end
+      @form = ProjectPagesQueryForm.new(current_project, query_pages_form_params, @month)
+      @pagy, @pages = pagy(@form.query, items: 12)
+      @statistics = ProjectStatisticsViewModel.new(current_project, @month, %i[pages actions])
     end
 
     def show
@@ -89,8 +78,8 @@ module Private
       raise ActionController::BadRequest, 'The month is incorrect'
     end
 
-    def query_pages_form_permitted_params
-      params.fetch(:project_pages_query_form, {}).permit(:search, :order)
+    def query_pages_form_params
+      { search: params['search'], order: params['order'] }
     end
 
     def redirect_to_summary_modal_if_not_turbo
