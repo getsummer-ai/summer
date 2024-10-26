@@ -81,15 +81,10 @@ module Private
 
     def set_month
       @month = Date.strptime(params[:month], '%Y-%m-%d') if params[:month].present?
-
       return if @month.present?
 
-      @month = current_project.statistics
-         .where(trackable_type: 'ProjectPage')
-         .maximum(:date_hour)
-         &.to_date
-         &.beginning_of_month || Time.zone.now.beginning_of_month
-
+      @month = current_project.statistics_by_month.maximum(:month)&.beginning_of_month
+      @month = Time.zone.today.beginning_of_month if @month.nil?
     rescue ArgumentError
       raise ActionController::BadRequest, 'The month is incorrect'
     end

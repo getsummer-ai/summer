@@ -17,7 +17,7 @@ class ProjectStatisticsViewModel
     # @type [Array<Symbol>, Hash]
     @preloads = preloads
     # @type [Date]
-    @month = month.beginning_of_month
+    @month = month&.beginning_of_month || Time.zone.today.beginning_of_month
     start_preload_queries if @preloads.any?
   end
 

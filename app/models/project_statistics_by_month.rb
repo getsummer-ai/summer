@@ -32,4 +32,5 @@ end
 #
 #  idx_on_project_id_trackable_type_trackable_id_month_87660b5378  (project_id,trackable_type,trackable_id,month)
 #  idx_on_trackable_type_trackable_id_month_ac97d1a671             (trackable_type,trackable_id,month) UNIQUE
+#  index_project_statistics_by_months_on_project_id_and_month      (project_id,month)
 #
