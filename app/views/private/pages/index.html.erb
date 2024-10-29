@@ -15,7 +15,7 @@
          icon_src: vite_asset_path('assets/icons/pages.svg'),
          number: @statistics.total_pages_count,
          comment:
-           "+#{number_with_delimiter(@statistics.this_month_new_pages_count)} pages in #{@month.strftime('%B')}"
+           "+#{number_with_delimiter(@statistics.current_month_new_pages_count)} pages in #{@month.strftime('%B')}"
     %>
     <%=
       render 'private/pages/metric_card',

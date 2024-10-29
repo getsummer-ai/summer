@@ -13,7 +13,7 @@ module Private
     def index
       @form = ProjectPagesQueryForm.new(current_project, query_pages_form_params, @month)
       @pagy, @pages = pagy(@form.query, items: 12)
-      @statistics = ProjectStatisticsViewModel.new(current_project, @month, %i[pages actions])
+      @statistics = ProjectStatistic::TotalsViewModel.new(current_project, @month, %i[pages actions])
     end
 
     def show
