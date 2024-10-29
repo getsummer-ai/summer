@@ -82,8 +82,9 @@ class ProjectStatisticsViewModel
   end
 
   def statistic_months
-    @statistic_months ||=
-      @project.statistics_by_month.by_pages.distinct.order(month: :desc).pluck(:month)
+    return @statistic_months if defined?(@statistic_months)
+    res = @project.statistics_by_month.by_pages.distinct.order(month: :desc).pluck(:month)
+    @statistic_months = res.empty? ? [@month] : res
   end
 
   private
