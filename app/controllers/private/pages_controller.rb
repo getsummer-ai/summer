@@ -4,25 +4,34 @@ module Private
     include Pagy::Backend
     include ProjectPageFinderConcern
     before_action :find_project
-    before_action :set_month, only: %i[index]
-    before_action :find_project_page, only: %i[show update summary summary_refresh summary_admin_delete]
-    before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh summary_admin_delete]
+    before_action :set_month, only: %i[index show]
+    before_action :find_project_page,
+                  only: %i[show update summary summary_refresh summary_admin_delete]
+    before_action :redirect_to_summary_modal_if_not_turbo,
+                  only: %i[summary summary_refresh summary_admin_delete]
 
     layout :private_or_turbo_layout
 
     def index
       @form = ProjectPagesQueryForm.new(current_project, query_pages_form_params, @month)
       @pagy, @pages = pagy(@form.query, items: 12)
-      @statistics = ProjectStatistic::TotalsViewModel.new(current_project, @month, %i[pages actions])
+      @statistics =
+        ProjectStatistic::TotalsViewModel.new(current_project, @month, %i[pages actions])
     end
 
     def show
       @project_page_decorated = @project_page.decorate
 
-      return if turbo_frame_request?
+      # return if turbo_frame_request?
       # modal_anchor_to_open = Base64.encode64(project_page_path(@current_project, @project_page))
       # @type [ProjectPageDecorator]
       # redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
+      @statistics =
+        ProjectStatistic::ByPageViewModel
+          .new(current_project, @month, page_id: @project_page.id)
+          .preload_view_click_totals
+          .preload_current_month_view_click_totals
+
       render 'show_new'
     end
 
@@ -34,10 +43,12 @@ module Private
     def summary_refresh
       @article = ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
       @error_message = 'Can\'t update the summary. Try again later.'
-      @error_message = 'Please wait for the summary completion.' if @article.summary_status_processing?
+      @error_message =
+        'Please wait for the summary completion.' if @article.summary_status_processing?
       return unless @article.summary_status_completed?
 
-      last_summary_date = @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
+      last_summary_date =
+        @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
       if last_summary_date > 1.day.ago
         wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
         @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
@@ -58,7 +69,9 @@ module Private
     def update
       if @project_page.update(url_params)
         respond_to do |format|
-          format.html { redirect_back_or_to project_pages_path, notice: 'URL was successfully updated' }
+          format.html do
+            redirect_back_or_to project_pages_path, notice: 'URL was successfully updated'
+          end
           format.turbo_stream { flash.now[:notice] = 'URL was successfully updated' }
         end
       else
@@ -84,7 +97,8 @@ module Private
 
     def redirect_to_summary_modal_if_not_turbo
       return if turbo_frame_request?
-      modal_anchor_to_open = Base64.encode64(summary_project_page_path(@current_project, @project_page))
+      modal_anchor_to_open =
+        Base64.encode64(summary_project_page_path(@current_project, @project_page))
       redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
     end
 

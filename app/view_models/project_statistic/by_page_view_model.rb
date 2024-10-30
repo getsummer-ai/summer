@@ -6,11 +6,14 @@ class ProjectStatistic
 
     # @param [Project] project
     # @param [Date] month
-    def initialize(project, month = nil)
+    # @param [Integer] page_id
+    def initialize(project, month, page_id: nil)
       # @type [Project]
       @project = project
       # @type [Date]
-      @month = month&.beginning_of_month || Time.zone.today.beginning_of_month
+      @month = month.beginning_of_month
+      # @type [Integer]
+      @page_id = page_id
     end
 
     # @return [Integer]
@@ -35,16 +38,15 @@ class ProjectStatistic
 
     def views_clicks_by_days_for_chart
       group_column = "DATE_TRUNC('day', \"project_statistics\".\"date_hour\")::date"
+      query = @project
+        .statistics
+        .by_pages
+        .where(date_hour: @month.to_time.utc.all_month)
+        .group(group_column)
+        .order(Arel.sql("#{group_column} asc"))
 
-      result =
-        @project
-          .statistics
-          .by_pages
-          .where(date_hour: @month.to_time.utc.all_month)
-          .group(group_column)
-          .order(Arel.sql("#{group_column} asc"))
-          .pluck(Arel.sql("SUM(views)::int, SUM(clicks)::int, #{group_column}"))
-          .to_a
+      query = query.where(trackable_id: @page_id) if @page_id.present?
+      result = query.pluck(Arel.sql("SUM(views)::int, SUM(clicks)::int, #{group_column}")).to_a
 
       empty_series = @month.all_month.to_a.index_with { 0.5 }
 
@@ -66,21 +68,15 @@ class ProjectStatistic
       @statistic_months = res.empty? ? [@month] : res
     end
 
-    def preload_view_totals = total_pages_statistics
-    def preload_previous_month_view_totals = previous_month_total_pages_statistics
-    def preload_click_totals = total_action_statistics
-    def preload_current_month_click_totals = current_month_action_statistics
+    def preload_page_totals = (total_pages_statistics and self)
+
+    def preload_previous_month_page_totals = (previous_month_total_pages_statistics and self)
+
+    def preload_view_click_totals = (total_action_statistics and self)
+
+    def preload_current_month_view_click_totals = (current_month_action_statistics and self)
 
     private
-
-    def start_preload_queries
-      PRELOAD_QUERIES_SCHEMA.each do |preload, queries|
-        next unless @preloads.include?(preload)
-
-        queries = @preloads[preload] if @preloads.is_a?(Hash)
-        queries.each { |query| send(query) }
-      end
-    end
 
     # @return [ActiveRecord::Promise]
     def total_pages_statistics
@@ -88,6 +84,7 @@ class ProjectStatistic
         @project
           .statistics_by_month
           .by_pages
+          .for_id_if_exists(@page_id)
           .where('month <= :month', month:)
           .distinct
           .async_count(:trackable_id)
@@ -99,6 +96,7 @@ class ProjectStatistic
         @project
           .statistics_by_month
           .by_pages
+          .for_id_if_exists(@page_id)
           .where('month < :month', month:)
           .distinct
           .async_count(:trackable_id)
@@ -110,6 +108,7 @@ class ProjectStatistic
         @project
           .statistics_by_month
           .by_pages
+          .for_id_if_exists(@page_id)
           .where('month <= :month', month:)
           .group(:project_id)
           .async_pluck(Arel.sql('SUM(views)::BIGINT, SUM(clicks)::BIGINT'))
@@ -121,6 +120,7 @@ class ProjectStatistic
         @project
           .statistics_by_month
           .by_pages
+          .for_id_if_exists(@page_id)
           .where(month:)
           .group(:project_id)
           .async_pluck(Arel.sql('SUM(views)::BIGINT, SUM(clicks)::BIGINT'))

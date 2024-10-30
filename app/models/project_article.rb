@@ -98,6 +98,8 @@ class ProjectArticle < ApplicationRecord
     @encrypted_id ||= BasicEncrypting.encode(id)
   end
 
+  def button_active? = summary_status_wait? || products_status_completed? || products_status_processing?
+
   def redis_summary_name
     "pa-#{article_hash}-summary"
   end

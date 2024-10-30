@@ -3,18 +3,18 @@
 class ProjectStatistic
   class TotalsViewModel
     PRELOAD_QUERIES_SCHEMA = {
-      pages: %i[preload_view_totals preload_previous_month_view_totals],
-      actions: %i[preload_click_totals preload_current_month_click_totals],
+      pages: %i[preload_page_totals preload_previous_month_page_totals],
+      actions: %i[preload_view_click_totals preload_current_month_view_click_totals],
     }.freeze
 
     attr_reader :month
 
     delegate :total_product_views, to: :product_statistics
 
-    delegate :preload_view_totals,
-             :preload_click_totals,
-             :preload_current_month_click_totals,
-             :preload_previous_month_view_totals,
+    delegate :preload_page_totals,
+             :preload_previous_month_page_totals,
+             :preload_view_click_totals,
+             :preload_current_month_view_click_totals,
              to: :page_statistics
 
     delegate :total_pages_count,

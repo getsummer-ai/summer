@@ -1,7 +1,7 @@
 <tr id="<%= dom_id(@page) %>">
   <td class="font-semibold pl-0">
     <%=
-      link_to project_page_path(@project, @page), data: {'turbo-frame': "modal"} do
+      link_to project_page_path(@project, @page), data: { turbo_frame: "_top" } do
         @page.article_only_title.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
       end
     %>

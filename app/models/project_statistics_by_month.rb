@@ -8,6 +8,8 @@ class ProjectStatisticsByMonth < ApplicationRecord
   scope :by_pages, -> { where(trackable_type: ProjectPage.to_s) }
   scope :by_products, -> { where(trackable_type: ProjectProduct.to_s) }
 
+  scope :for_id_if_exists, ->(id) { id.present? ? where(trackable_id: id) : all }
+
   def readonly?
     true
   end

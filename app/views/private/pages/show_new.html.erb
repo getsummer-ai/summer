@@ -1,90 +1,125 @@
 <% article = @project_page_decorated.article %>
 
 <div>
-  <%=link_to 'Back to pages', project_pages_path %>
+  <%=link_to project_pages_path, class: 'flex flex-row items-center font-medium' do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
+      <path d="M6.5 10.6885L1.5 5.68848L6.5 0.688476" stroke="black" stroke-width="1.2" />
+    </svg>
+    <span class="ml-2">Back to pages</span>
+  <% end %>
 </div>
 
 <h2 class="font-semibold text-xl mt-4">
-  <%=article.title %>
+  <%= article.title %>
 </h2>
 
-<div class="mt-2">
-  <%=link_to @project_page_decorated.url, @project_page_decorated.url, target: "_blank", class: "underline" %>
-</div>
-
-<h2 class="font-semibold text-xl mt-12">Summary</h2>
-
-
-<div class="p-6 mt-6 shadow-sm border border-gray-200 rounded-2xl" id="<%= dom_id(@project_page_decorated, :summary) %>">
-  <%= sanitize @project_page_decorated.summary_html %>
-</div>
-
-<div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-6">
+<div class="mt-2 opacity-50 tracking-tight">
   <%=
-    render 'private/pages/metric_card',
-           title: 'Pages',
-           icon_src: vite_asset_path('assets/icons/pages.svg'),
-           number: 1,
-           comment:
-             "pages this month"
-  %>
-  <%=
-    render 'private/pages/metric_card',
-           title: 'Button Showed',
-           icon_src: vite_asset_path('assets/icons/eye.svg'),
-           number: 2,
-           comment:
-             "new views this month"
-  %>
-  <%=
-    render 'private/pages/metric_card',
-           title: 'Button Clicked',
-           icon_src: vite_asset_path('assets/icons/click.svg'),
-           number: 3,
-           comment:
-             "new clicks this month"
+    link_to @project_page_decorated.url,
+        @project_page_decorated.url,
+        target: '_blank',
+        class: 'underline underline-offset-1'
   %>
 </div>
 
+<%= turbo_frame_tag 'page-page', 'data-turbo-action': 'advance' do %>
+  <div class="flex justify-between mt-12">
+    <h2 class="font-semibold text-xl">Statistic</h2>
+    <div>
+      <%=
+        render 'select_statistic_month_form',
+               submit_url: project_page_path(@current_project, @project_page),
+               statistic_months: @statistics.statistic_months,
+               month: @statistics.month
+      %>
+    </div>
+  </div>
+  <div class="mt-6 rounded-xl shadow p-6 border">
+    <%= render 'chart_by_days', data: @statistics.views_clicks_by_days_for_chart %>
+  </div>
 
-<h2 class="font-semibold text-xl mt-12">Relevant products</h2>
-
-<div>
-  <div class="overflow-x-auto mt-6">
-    <table class="table tracking-tight table-summer">
-      <thead>
-      <tr>
-        <th class="font-semibold pl-0">Product</th>
-        <th class="font-semibold w-24 text-right"></th>
-      </tr>
-      </thead>
-      <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
-      <% article.project_article_products.includes(:product).each do |project_article_product| %>
-        <%=
-          render ProjectPageProductComponents::RowComponent.new(
-            project_article_product:,
-            edit_path: edit_project_page_product_path(
-              current_project,
-              @project_page_decorated,
-              project_article_product
-            ),
-            update_path: project_page_product_path(
-              current_project,
-              @project_page_decorated,
-              project_article_product
-            )
-          )
-        %>
-      <% end %>
-      </tbody>
-    </table>
-
+  <div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-6">
     <%=
-      link_to(
-        '+ Add relevant product', new_project_page_product_path,
-        class: 'btn btn-summer btn-black mt-4',
-        data: {'turbo-frame': "modal"}
-      )
+      render 'private/pages/metric_card',
+       title: 'Button',
+       icon_src: vite_asset_path('assets/icons/info.svg'),
+       number: @project_page.article.summary_status_skipped? ? 'Disabled' : 'Active',
+       comment: @project_page.article.tokens_count <= 500 ? 'The article is too short' : ''
+
+      # "Article contains #{number_with_delimiter(@project_page.article.tokens_count)} tokens"
+    %>
+    <%=
+      render 'private/pages/metric_card',
+       title: 'Button Showed',
+       icon_src: vite_asset_path('assets/icons/eye.svg'),
+       number: @statistics.total_views_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_views_count)} views in #{@month.strftime('%B')}"
+    %>
+    <%=
+      render 'private/pages/metric_card',
+       title: 'Button Clicked',
+       icon_src: vite_asset_path('assets/icons/click.svg'),
+       number: @statistics.total_clicks_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_clicks_count)} clicks in #{@month.strftime('%B')}"
     %>
   </div>
-</div>
+<% end %>
+
+<% if @project_page.article.button_active? %>
+  <h2 class="font-semibold text-xl mt-20">Summary</h2>
+  <div
+    class="p-6 mt-6 shadow-sm border border-gray-200 rounded-2xl"
+    id="<%= dom_id(@project_page_decorated, :summary) %>"
+  >
+    <%= sanitize @project_page_decorated.summary_html %>
+  </div>
+
+  <h2 class="font-semibold text-xl mt-12">Relevant products</h2>
+
+  <div>
+    <div class="overflow-x-auto mt-6">
+      <table class="table tracking-tight table-summer">
+        <thead>
+          <tr>
+            <th class="font-semibold pl-0">Product</th>
+            <th class="font-semibold w-24 text-right"></th>
+          </tr>
+        </thead>
+        <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
+          <% article.project_article_products.includes(:product).each do |project_article_product| %>
+            <%=
+              render ProjectPageProductComponents::RowComponent.new(
+                       project_article_product:,
+                       edit_path:
+                         edit_project_page_product_path(
+               current_project,
+               @project_page_decorated,
+               project_article_product,
+                         ),
+                       update_path:
+                         project_page_product_path(
+               current_project,
+               @project_page_decorated,
+               project_article_product,
+                         ),
+                     )
+            %>
+          <% end %>
+        </tbody>
+      </table>
+
+      <%=
+        link_to(
+          '+ Add relevant product',
+          new_project_page_product_path,
+          class: 'btn btn-summer btn-black mt-4',
+          data: {
+            'turbo-frame': 'modal',
+          },
+        )
+      %>
+    </div>
+  </div>
+<% end %>
