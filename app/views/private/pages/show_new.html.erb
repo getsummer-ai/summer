@@ -1,5 +1,3 @@
-<% article = @project_page_decorated.article %>
-
 <div>
   <%=link_to project_pages_path, class: 'flex flex-row items-center font-medium' do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
@@ -9,9 +7,7 @@
   <% end %>
 </div>
 
-<h2 class="font-semibold text-xl mt-4">
-  <%= article.title %>
-</h2>
+<h2 class="font-semibold text-xl mt-4"><%= @article.title %></h2>
 
 <div class="mt-2 opacity-50 tracking-tight">
   <%=
@@ -40,16 +36,16 @@
 
   <div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-6">
     <%=
-      render 'private/pages/metric_card',
+      render 'metric_card',
        title: 'Button',
        icon_src: vite_asset_path('assets/icons/info.svg'),
-       number: @project_page.article.summary_status_skipped? ? 'Disabled' : 'Active',
-       comment: @project_page.article.tokens_count <= 500 ? 'The article is too short' : ''
+       number: @article.summary_status_skipped? ? 'Inactive' : 'Active',
+       comment: @article.tokens_count <= 500 ? 'The article is too short' : ''
 
       # "Article contains #{number_with_delimiter(@project_page.article.tokens_count)} tokens"
     %>
     <%=
-      render 'private/pages/metric_card',
+      render 'metric_card',
        title: 'Button Showed',
        icon_src: vite_asset_path('assets/icons/eye.svg'),
        number: @statistics.total_views_count,
@@ -57,7 +53,7 @@
          "+#{number_with_delimiter(@statistics.current_month_new_views_count)} views in #{@month.strftime('%B')}"
     %>
     <%=
-      render 'private/pages/metric_card',
+      render 'metric_card',
        title: 'Button Clicked',
        icon_src: vite_asset_path('assets/icons/click.svg'),
        number: @statistics.total_clicks_count,
@@ -67,59 +63,108 @@
   </div>
 <% end %>
 
-<% if @project_page.article.button_active? %>
-  <h2 class="font-semibold text-xl mt-20">Summary</h2>
-  <div
-    class="p-6 mt-6 shadow-sm border border-gray-200 rounded-2xl"
-    id="<%= dom_id(@project_page_decorated, :summary) %>"
-  >
-    <%= sanitize @project_page_decorated.summary_html %>
-  </div>
+<%= turbo_frame_tag 'page-summary' do %>
+  <% if @article.button_active? %>
+    <h2 class="font-semibold text-xl mt-20">Summary</h2>
 
-  <h2 class="font-semibold text-xl mt-12">Relevant products</h2>
+    <% if @article.summary_status_wait? %>
+      <div class="mb-4">
+        <p class="opacity-50 mt-2">
+          There is no summary as the page's button hasn't been clicked yet. <br />
+          Build a page's summary manually, or wait until somebody clicks the "Summer" button on the
+          site page.
+        </p>
+        <%=
+          button_to 'Build summary',
+            summary_refresh_project_page_path(@current_project, @project_page),
+            method: :post,
+            class: 'btn btn-summer btn-black mt-2',
+            form: {
+              data: {
+                controller: 'auto-disable-form',
+                'auto-disable-form-with-value': 'Building summary...',
+              },
+            }
+        %>
+      </div>
+    <% end %>
 
-  <div>
-    <div class="overflow-x-auto mt-6">
-      <table class="table tracking-tight table-summer">
-        <thead>
-          <tr>
-            <th class="font-semibold pl-0">Product</th>
-            <th class="font-semibold w-24 text-right"></th>
-          </tr>
-        </thead>
-        <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
-          <% article.project_article_products.includes(:product).each do |project_article_product| %>
-            <%=
-              render ProjectPageProductComponents::RowComponent.new(
-                       project_article_product:,
-                       edit_path:
-                         edit_project_page_product_path(
-               current_project,
-               @project_page_decorated,
-               project_article_product,
-                         ),
-                       update_path:
-                         project_page_product_path(
-               current_project,
-               @project_page_decorated,
-               project_article_product,
-                         ),
-                     )
-            %>
-          <% end %>
-        </tbody>
-      </table>
+    <% if @article.summary_status_completed? %>
+      <div class="p-6 mt-6 mb-4 shadow-sm border border-gray-200 rounded-2xl">
+        <p class="opacity-50 mb-6">
+          Generated <%=@project_page_decorated.summary_created_at&.strftime('%d %B %Y') %>
+        </p>
+        <%= sanitize @project_page_decorated.summary_html %>
 
-      <%=
-        link_to(
-          '+ Add relevant product',
-          new_project_page_product_path,
-          class: 'btn btn-summer btn-black mt-4',
-          data: {
-            'turbo-frame': 'modal',
-          },
-        )
-      %>
-    </div>
-  </div>
+        <div class="mt-6">
+          <%=
+            button_to 'Rewrite',
+                      summary_refresh_project_page_path(@current_project, @project_page),
+                      method: :post,
+                      class: 'btn btn-sm rounded-lg',
+                      form: {
+                        data: {
+                          controller: 'auto-disable-form',
+                          'auto-disable-form-with-value': 'Rewriting summary...',
+                        },
+                      }
+          %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render 'shared/turbo_frame_flash_alerts', turbo_frame_tag_id: 'page-summary', is_persistent: true %>
+
+    <%= render 'playground_buttons' %>
+
+
+    <%if @article.summary_status_completed? %>
+      <h2 class="font-semibold text-xl mt-12">Relevant products</h2>
+
+      <div>
+        <div class="overflow-x-auto mt-6">
+          <table class="table tracking-tight table-summer">
+            <thead>
+            <tr>
+              <th class="font-semibold pl-0">Product</th>
+              <th class="font-semibold w-24 text-right"></th>
+            </tr>
+            </thead>
+            <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
+            <% @article.project_article_products.includes(:product).each do |project_article_product| %>
+              <%=
+                render ProjectPageProductComponents::RowComponent.new(
+                  project_article_product:,
+                  edit_path:
+                    edit_project_page_product_path(
+                      @current_project,
+                      @project_page_decorated,
+                      project_article_product,
+                      ),
+                  update_path:
+                    project_page_product_path(
+                      @current_project,
+                      @project_page_decorated,
+                      project_article_product,
+                      ),
+                  )
+              %>
+            <% end %>
+            </tbody>
+          </table>
+
+          <%=
+            link_to(
+              '+ Add relevant product',
+              new_project_page_product_path,
+              class: 'btn btn-summer btn-black mt-4',
+              data: {
+                'turbo-frame': 'modal',
+              },
+              )
+          %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
 <% end %>

@@ -28,7 +28,7 @@
       <div class="w-96 pb-5">
         <%= yield %>
         <div class="mt-4">
-          <%= render 'layouts/shared/alerts', is_persistent: true %>
+          <%= render 'shared/flash_alerts', is_persistent: true %>
         </div>
         <% unless user_signed_in? %>
           <div class="mt-6 px-1">

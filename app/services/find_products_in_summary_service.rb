@@ -95,6 +95,7 @@ class FindProductsInSummaryService
         .products
         .map { |product| "id: #{product.id}, description: #{product.description}" }
         .join("\n")
+    products_list_str = '[]' if products_list_str.blank?
     @input = format(PREFIX, article: @model.summary_llm_call.output) + products_list_str + POSTFIX
   end
 
