@@ -6,4 +6,4 @@
   <%= render ProjectProductComponents::AddNewComponent.new(project: @project)  %>
 <% end %>
 
-<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>

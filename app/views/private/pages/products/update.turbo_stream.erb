@@ -1,6 +1,6 @@
 <turbo-stream action="close-modal"></turbo-stream>
 
-<%= turbo_stream.prepend "flash", partial: "layouts/shared/alerts" %>
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>
 
 <%= turbo_stream.replace dom_id(@article_product) do %>
   <%=

@@ -1,76 +1,124 @@
-<%= turbo_frame_tag "modal" do %>
-  <%= render TurboModal::Component.new(title: 'Page', redirect_following: false) do %>
+<div>
+  <%=link_to project_pages_path, class: 'flex flex-row items-center font-medium' do %>
+    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
+      <path d="M6.5 10.6885L1.5 5.68848L6.5 0.688476" stroke="black" stroke-width="1.2" />
+    </svg>
+    <span class="ml-2">Back to pages</span>
+  <% end %>
+</div>
+
+<h2 class="font-semibold text-xl mt-4"><%= @article.title %></h2>
+
+<div class="mt-2 opacity-50 tracking-tight">
+  <%=
+    link_to @project_page_decorated.url,
+        @project_page_decorated.url,
+        target: '_blank',
+        class: 'underline underline-offset-1'
+  %>
+</div>
+
+<%= turbo_frame_tag 'page-page', 'data-turbo-action': 'advance' do %>
+  <div class="flex justify-between mt-12">
+    <h2 class="font-semibold text-xl">Statistic</h2>
     <div>
-      <% article = @project_page_decorated.article %>
-      <% if article.title.present? %>
-        <label class="label label-summer">Name</label>
-        <input
-          class="input input-summer w-full cursor-default"
-          value="<%= article.title.truncate(60) || '' %>"
-        />
-        <div class="p-2 bordered rounded-lg border-gray-200"></div>
-      <% end %>
-      <label class="label label-summer">Link</label>
-      <input
-        class="input input-summer w-full cursor-default"
-        value="<%= @project_page_decorated.url %>"
-      />
-      <h4 class="text-sm font-semibold mt-6">Statistics</h4>
-      <div class="mt-2">
-        <table class="table table-page-statistics" id="table-page-statistics">
-          <% statistic = @project_page_decorated.statistics_by_total %>
-          <tbody>
-            <tr>
-              <td>Summer shown</td>
-              <td><%= number_with_delimiter(statistic&.views || 0) %></td>
-            </tr>
-            <tr>
-              <td>Summer clicked</td>
-              <td><%= number_with_delimiter(statistic&.clicks || 0) %></td>
-            </tr>
-            <tr>
-              <td>Symbols on the page</td>
-              <td><%= number_with_delimiter(@project_page_decorated.article_symbols) %></td>
-            </tr>
-            <% if @project_page_decorated.article.summary_status_completed? %>
-              <tr>
-                <td>Symbols in summary</td>
-                <td><%= number_with_delimiter(@project_page_decorated.summary_symbols) %></td>
-              </tr>
-              <tr>
-                <td>Summary</td>
-                <td>
-                  <%=
-                    link_to 'Show',
-                            summary_project_page_path(@project, @project_page_decorated),
-                            class: 'link',
-                            rel: 'nofollow',
-                            data: {
-                              'turbo-frame': 'modal',
-                            }
-                  %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <div class="mt-5 text-center font-bold underline">
       <%=
-        render ProjectPageComponents::SwitchButtonComponent.new(
-           project: @project,
-           page: @project_page_decorated,
-           is_checkbox: false,
-         )
+        render 'private/pages/shared/select_statistic_month_form',
+               submit_url: project_page_path(@current_project, @project_page),
+               statistic_months: @statistics.statistic_months,
+               month: @statistics.month
       %>
-      <button
-        data-action="turbo-modal#closeModal"
-        type="button"
-        class="btn btn-summer btn-block btn-black mt-2"
-      >
-        Dismiss
-      </button>
     </div>
+  </div>
+  <div class="mt-6 rounded-xl shadow p-6 border">
+    <%= render 'private/pages/shared/chart_by_days', data: @statistics.views_clicks_by_days_for_chart %>
+  </div>
+
+  <div class="grid gap-4 grid-flow-row md:grid-flow-col grid-cols-1 md:grid-cols-3 mt-6">
+    <%=
+      render 'private/pages/shared/metric_card',
+       title: 'Button',
+       icon_src: vite_asset_path('assets/icons/info.svg'),
+       number: @article.summary_status_skipped? ? 'Inactive' : 'Active',
+       comment: @article.tokens_count <= 500 ? 'The article is too short' : ''
+
+      # "Article contains #{number_with_delimiter(@project_page.article.tokens_count)} tokens"
+    %>
+    <%=
+      render 'private/pages/shared/metric_card',
+       title: 'Button Showed',
+       icon_src: vite_asset_path('assets/icons/eye.svg'),
+       number: @statistics.total_views_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_views_count)} views in #{@month.strftime('%B')}"
+    %>
+    <%=
+      render 'private/pages/shared/metric_card',
+       title: 'Button Clicked',
+       icon_src: vite_asset_path('assets/icons/click.svg'),
+       number: @statistics.total_clicks_count,
+       comment:
+         "+#{number_with_delimiter(@statistics.current_month_new_clicks_count)} clicks in #{@month.strftime('%B')}"
+    %>
+  </div>
+<% end %>
+
+<%= turbo_frame_tag 'page-summary' do %>
+  <% if @article.button_active? %>
+    <h2 class="font-semibold text-xl mt-20">Summary</h2>
+
+    <% if @article.summary_status_wait? %>
+      <div class="mb-4">
+        <p class="opacity-50 mt-2">
+          There is no summary as the page's button hasn't been clicked yet. <br />
+          Build a page's summary manually, or wait until somebody clicks the "Summer" button on the
+          site page.
+        </p>
+        <%=
+          button_to 'Build summary',
+            summary_refresh_project_page_path(@current_project, @project_page),
+            method: :post,
+            class: 'btn btn-summer btn-black mt-2',
+            form: {
+              data: {
+                controller: 'auto-disable-form',
+                'auto-disable-form-with-value': 'Building summary...',
+              },
+            }
+        %>
+      </div>
+    <% end %>
+
+    <% if @article.summary_status_completed? %>
+      <div class="p-6 mt-6 mb-4 shadow-sm border border-gray-200 rounded-2xl">
+        <p class="opacity-50 mb-6">
+          Generated <%=@project_page_decorated.summary_created_at&.strftime('%d %B %Y') %>
+        </p>
+        <%= sanitize @project_page_decorated.summary_html %>
+
+        <div class="mt-6">
+          <%=
+            button_to 'Rewrite',
+                      summary_refresh_project_page_path(@current_project, @project_page),
+                      method: :post,
+                      class: 'btn btn-sm rounded-lg',
+                      form: {
+                        data: {
+                          controller: 'auto-disable-form',
+                          'auto-disable-form-with-value': 'Rewriting summary...',
+                        },
+                      }
+          %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= render 'shared/turbo_frame_flash_alerts', turbo_frame_tag_id: 'page-summary', is_persistent: true %>
+
+    <%= render 'private/pages/show/playground_buttons' %>
+
+    <% if @article.summary_status_completed? %>
+      <%= render 'private/pages/show/related_products_block' %>
+    <% end %>
   <% end %>
 <% end %>

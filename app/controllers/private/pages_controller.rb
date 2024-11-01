@@ -30,8 +30,6 @@ module Private
           .new(current_project, @month, page_id: @project_page.id)
           .preload_view_click_totals
           .preload_current_month_view_click_totals
-
-      render 'show_new'
     end
 
     def summary_refresh
