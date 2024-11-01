@@ -127,57 +127,24 @@ describe 'the Navigation process' do
 
       it 'check the pages items on the pages page' do
         click_on 'Pages'
-        sleep(0.5)
+        # sleep(0.5)
 
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
-        expect(page).to have_content 'Dismiss'
+        expect(page).to have_current_path(project_page_path(project, project_page))
+        expect(page).to have_content(article.title)
+        expect(page).to have_content(project_page.url)
 
-        within('#modal') do
-          expect(page).to have_field(with: article.title)
-
-          within_table("table-page-statistics") do
-            expect(page).to have_no_content 'Summary'
-            expect(page).to have_no_content 'Show'
-          end
-        end
-
+        expect(page).to have_button 'Build summary'
 
         llm_call = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh
-        sleep(0.5)
 
-        expect(page).to have_content 'Dismiss'
-
-        within('#modal') do
-          expect(page).to have_field(with: article.title)
-
-          within_table("table-page-statistics") do
-            expect(page).to have_content 'Summary'
-            expect(page).to have_content 'Show'
-          end
-
-          click_on 'Show'
-
-          within("##{dom_id(project_page, :summary)}") do
-            expect(page).to have_content llm_call.output
-          end
-
-          expect(page).to have_content 'Back'
-          expect(page).to have_button 'Refresh summary'
-          click_on 'Back'
-
-          expect(page).to have_button 'Turn off this page'
-          click_on 'Turn off this page'
-        end
-
-        expect(page).to have_content 'URL was successfully updated'
-
-        click_on 'Dismiss'
-        expect(page).to have_no_content 'Symbols on the page'
+        expect(page).to have_content llm_call.output
+        expect(page).to have_button 'Rewrite'
       end
     end
   end

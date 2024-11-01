@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: "Add Relevant Product") do %>
+    <%= turbo_frame_tag "project-page-product-frame" do %>
+      <%= render "form" %>
+    <% end %>
+  <% end %>
+<% end %>

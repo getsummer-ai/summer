@@ -27,10 +27,11 @@ gem 'jbuilder'
 gem 'pundit'
 gem 'store_model', '~> 4.0'
 
+gem "chartkick"
+gem 'data_migrate'
 gem 'passive_columns'
 gem "pretender"
 gem 'stripe'
-gem 'data_migrate'
 
 # Use Redis adapter to run Action Cable in production
 gem 'redis', '~> 4.0'

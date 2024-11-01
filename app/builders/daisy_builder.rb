@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DaisyBuilder < ActionView::Helpers::FormBuilder
   include ActionView::Helpers::TagHelper
   # include ActionView::Context
@@ -16,6 +18,12 @@ class DaisyBuilder < ActionView::Helpers::FormBuilder
 
   def text_field(attribute, options = {})
     super(attribute, options.reverse_merge(class: 'input input-summer'))
+  end
+
+  def collection_select(*args, **options)
+    html_options = options.extract!(:class)
+    # options.fetch(, 'Select').prepend(' ') if options[:prompt]
+    super(*args, options, html_options.reverse_merge(class: 'select select-bordered'))
   end
 
   def password_field(attribute, options = {})

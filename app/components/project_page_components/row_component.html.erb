@@ -1,16 +1,16 @@
 <tr id="<%= dom_id(@page) %>">
   <td class="font-semibold pl-0">
     <%=
-      link_to project_page_path(@project, @page), data: {'turbo-frame': "modal"} do
+      link_to project_page_path(@project, @page), data: { turbo_frame: "_top" } do
         @page.article_only_title.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
       end
     %>
   </td>
   <td class="text-right">
-    <%=number_to_delimited(@page.statistics_by_total&.views || 0) %>
+    <%=number_to_delimited(@page.statistics_by_months[0]&.views || 0) %>
   </td>
   <td class="text-right">
-    <%=number_to_delimited(@page.statistics_by_total&.clicks || 0) %>
+    <%=number_to_delimited(@page.statistics_by_months[0]&.clicks || 0) %>
   </td>
   <td class="text-right">
     <%= render ProjectPageComponents::SwitchButtonComponent.new(project: @project, page: @page, is_checkbox: true) %>

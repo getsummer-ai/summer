@@ -1,0 +1,10 @@
+<%= form_with(url: submit_url, method: :get) do |f| %>
+  <%=
+    f.select(
+      :month,
+      options_for_select(statistic_months.map { |date| [date.strftime('%B %Y'), date.to_s] }, month),
+      {},
+      { class: 'select select-bordered select-sm rounded-lg w-full', onchange: 'this.form.requestSubmit()' },
+    )
+  %>
+<% end %>

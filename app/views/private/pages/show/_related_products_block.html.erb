@@ -1,0 +1,67 @@
+<% total_products_count = @current_project.products.count %>
+<h2 class="font-semibold text-xl mt-12">Relevant products</h2>
+
+<div>
+  <% if total_products_count > 0 %>
+    <div class="overflow-x-auto mt-6">
+      <table class="table tracking-tight table-summer">
+        <thead>
+        <tr>
+          <th class="font-semibold pl-0">Product</th>
+          <th class="font-semibold w-24 text-right"></th>
+        </tr>
+        </thead>
+        <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
+        <% products = @article.project_article_products.includes(:product) %>
+        <% products.each do |project_article_product| %>
+          <%=
+            render ProjectPageProductComponents::RowComponent.new(
+              project_article_product:,
+              edit_path:
+                edit_project_page_product_path(
+                  @current_project,
+                  @project_page,
+                  project_article_product,
+                ),
+              update_path:
+                project_page_product_path(
+                  @current_project,
+                  @project_page,
+                  project_article_product,
+                ),
+              )
+          %>
+        <% end %>
+        </tbody>
+      </table>
+
+      <% if products.size < @current_project.products.count %>
+        <%=
+          link_to(
+            '+ Add relevant product',
+            new_project_page_product_path,
+            class: 'btn btn-summer btn-black mt-4',
+            data: {
+              'turbo-frame': 'modal',
+            },
+          )
+        %>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="opacity-50">You don't have any products to link to the summary yet</p>
+    <%=
+      link_to(
+        'Go and add products',
+        knowledge_project_path,
+        class: 'btn btn-summer mt-5',
+        data: {
+          turbo_frame: '_top',
+        }
+      )
+    %>
+  <% end %>
+</div>
+
+
+

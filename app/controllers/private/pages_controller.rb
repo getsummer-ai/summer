@@ -2,70 +2,85 @@
 module Private
   class PagesController < PrivateController
     include Pagy::Backend
+    include ProjectPageFinderConcern
     before_action :find_project
-    before_action :set_url, only: %i[show update summary summary_refresh summary_admin_delete]
-    before_action :redirect_to_summary_modal_if_not_turbo, only: %i[summary summary_refresh summary_admin_delete]
+    before_action :set_month, only: %i[index show summary_refresh summary_admin_delete]
+    before_action :find_project_page, only: %i[show update summary_refresh summary_admin_delete]
+    before_action :find_page_article, only: %i[show summary_refresh summary_admin_delete]
 
     layout :private_or_turbo_layout
 
     def index
-      @form = ProjectPagesQueryForm.new(@current_project, query_pages_form_permitted_params)
-      @pagy, @pages =
-        pagy_countless(@form.query, items: 15, link_extra: 'data-turbo-action="advance" data-turbo-stream="true"')
-
-      respond_to do |format|
-        format.turbo_stream do
-          locals = { project: @current_project, pages: @pages, pagy: @pagy }
-          render turbo_stream: turbo_stream.replace('pages_table', partial: 'pages_table', locals:)
-        end
-        format.html do
-          @statistics = ProjectStatisticsViewModel.new(@current_project, %i[views actions])
-        end
-      end
+      @form =
+        ProjectPagesQueryForm.new(
+          current_project,
+          { search: params['search'], order: params['order'] },
+          @month,
+        )
+      @pagy, @pages = pagy(@form.query, items: 12)
+      @statistics =
+        ProjectStatistic::TotalsViewModel.new(current_project, @month, %i[pages actions])
     end
 
     def show
       @project_page_decorated = @project_page.decorate
 
-      return if turbo_frame_request?
-      modal_anchor_to_open = Base64.encode64(project_page_path(@current_project, @project_page))
-      # @type [ProjectPageDecorator]
-      redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
-    end
-
-    def summary
-      @go_back_path = project_page_path(@current_project, @project_page)
-      @project_page_decorated = @project_page.decorate
+      @statistics =
+        ProjectStatistic::ByPageViewModel
+          .new(current_project, @month, page_id: @project_page.id)
+          .preload_view_click_totals
+          .preload_current_month_view_click_totals
     end
 
     def summary_refresh
-      @article = ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
-      @error_message = 'Can\'t update the summary. Try again later.'
-      @error_message = 'Please wait for the summary completion.' if @article.summary_status_processing?
-      return unless @article.summary_status_completed?
+      @error_message = nil
+      @error_message = 'Can\'t generate a summary for the page.' if @article.summary_status_skipped?
+      @error_message =
+        'Can\'t update the summary. Try again later.' if @article.summary_status_error?
+      @error_message = 'Please wait for the completion.' if @article.summary_status_processing?
 
-      last_summary_date = @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
-      if last_summary_date > 1.day.ago
-        wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
-        @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
-        return
+      if @error_message.nil?
+        last_summary_date =
+          @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
+        if last_summary_date.present? && last_summary_date > 1.day.ago
+          wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
+          @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
+        end
       end
 
+      (flash[:alert] = @error_message) and return redirect_to(project_page_path) if @error_message.present?
+
       SummarizeArticleJob.perform_now(@article.id)
-      @error_message = nil
+      @article.reload
+
+      if @article.summary_status_completed? && @article.products_status_wait?
+        FindProductsInSummaryJob.perform_later(@article.id)
+      end
+
+      redirect_to(project_page_path)
     end
 
     def summary_admin_delete
       return head(:forbidden) unless IS_PLAYGROUND
 
-      @article = ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
       @article.update(summary_llm_call_id: nil, summary_status: 'wait')
+      flash.now[:alert] = (
+        if @article.errors.any?
+          @article.errors.full_messages.join(', ')
+        else
+          'The summary has been deleted'
+        end
+      )
+
+      show
     end
 
     def update
-      if @project_page.update(url_params)
+      if @project_page.update(params.fetch(:project_page, {}).permit(:is_accessible))
         respond_to do |format|
-          format.html { redirect_back_or_to project_pages_path, notice: 'URL was successfully updated' }
+          format.html do
+            redirect_back_or_to project_pages_path, notice: 'URL was successfully updated'
+          end
           format.turbo_stream { flash.now[:notice] = 'URL was successfully updated' }
         end
       else
@@ -75,32 +90,18 @@ module Private
 
     private
 
-    def query_pages_form_permitted_params
-      params.fetch(:project_pages_query_form, {}).permit(:search, :order)
+    def set_month
+      @month = Date.strptime(params[:month], '%Y-%m-%d') if params[:month].present?
+      return if @month.present?
+
+      @month = current_project.statistics_by_month.maximum(:month)&.beginning_of_month
+      @month = Time.zone.today.beginning_of_month if @month.nil?
+    rescue ArgumentError
+      raise ActionController::BadRequest, 'The month is incorrect'
     end
 
-    def set_url
-      pages_query = current_project.pages
-      condition =
-        (
-          if params[:id].to_s.length == 32
-            { url_hash: params[:id] }
-          else
-            { id: BasicEncrypting.decode(params[:id]) }
-          end
-        )
-      @project_page = pages_query.find_by!(condition)
-    end
-
-    def redirect_to_summary_modal_if_not_turbo
-      return if turbo_frame_request?
-      modal_anchor_to_open = Base64.encode64(summary_project_page_path(@current_project, @project_page))
-      redirect_to project_pages_path(anchor: "m=#{modal_anchor_to_open}")
-    end
-
-    # Only allow a list of trusted parameters through.
-    def url_params
-      params.fetch(:project_page, {}).permit(:is_accessible)
+    def find_page_article
+      @article = ProjectArticle.only_required_columns.find(@project_page.project_article_id)
     end
   end
 end

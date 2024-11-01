@@ -1,0 +1,6 @@
+<turbo-stream action="del-hash-from-history"></turbo-stream>
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.remove dom_id(@article_product) %>
+
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>

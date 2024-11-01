@@ -25,12 +25,20 @@ class ProjectPageDecorator < Draper::Decorator
 
   # @return [String]
   def summary_html
-    llm_output =
-      ProjectArticle
-        .joins(:summary_llm_call)
-        .where(id: project_article_id)
-        .pick(:output) || ''
+    llm_output = article_summary_info[0] || ''
 
     MarkdownLib.render(llm_output)
+  end
+
+  # @return [String]
+  def summary_created_at
+    article_summary_info[1]
+  end
+
+  def article_summary_info
+    @article_summary_info ||= ProjectArticle
+      .joins(:summary_llm_call)
+      .where(id: project_article_id)
+      .pick(:output, 'project_llm_calls.created_at') || ['', nil]
   end
 end

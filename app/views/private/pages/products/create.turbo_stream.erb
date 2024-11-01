@@ -1,0 +1,22 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.append dom_id(ProjectArticleProduct, :table) do %>
+  <%=
+    render ProjectPageProductComponents::RowComponent.new(
+      project_article_product: @article_product,
+      edit_path: edit_project_page_product_path(
+        current_project,
+        @project_page,
+        @article_product
+      ),
+      update_path: project_page_product_path(
+        current_project,
+        @project_page,
+        @article_product
+      )
+    )
+  %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>
+

@@ -1,0 +1,111 @@
+<%
+  chart_js_color_cb = ->(color, stop_1, stop_2) { <<~JS.squish }
+    function(context) {
+      const chartArea = context.chart.chartArea;
+      if (!chartArea) return;
+      const ctx = context.chart.ctx;
+      const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
+      gradient.addColorStop(#{stop_1}, "#{color}");
+      gradient.addColorStop(#{stop_2}, "transparent");
+      return gradient;
+    }
+  JS
+
+  chart_js_label_cb = <<~JS.squish
+    function(ctx) {
+      let label = ctx.dataset.label;
+      return label + ': ' + (ctx.parsed.y === 0.5 ? 0 : ctx.parsed.y.toLocaleString());
+    }
+  JS
+%>
+<%=
+  area_chart [
+    {
+      name: 'Button shown',
+      dataset: {
+        strokeColor: 'rgba(68, 126, 250, 1)',
+        backgroundColor:
+          chartkick_js_inline(chart_js_color_cb.call('rgba(68, 126, 250, 0.1)', 0.8, 0.3)),
+      },
+      data: data[:shown],
+    },
+    {
+      name: 'Button clicked',
+      dataset: {
+        strokeColor: 'rgba(239, 139, 33, 1)',
+        backgroundColor:
+          chartkick_js_inline(chart_js_color_cb.call('rgba(239, 139, 33, 0.1)', 0.2, 0)),
+      },
+      data: data[:clicked],
+    },
+  ],
+  library: {
+    scaleShowLabels: false,
+    interaction: {
+      mode: 'nearest',
+      axis: 'x',
+      intersect: false,
+    },
+    plugins: {
+      legend: {
+        align: 'end',
+        labels: {
+          boxWidth: 8,
+          boxHeight: 8,
+          font: {
+            size: 14,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+        titleColor: 'rgba(0, 0, 0, 0.5)',
+        bodyColor: '#000',
+        borderWidth: 1,
+        borderColor: 'rgba(0, 0, 0, 0.1)',
+        titleFont: {
+          size: 10,
+          weight: 'normal',
+        },
+        bodyFont: {
+          size: 14,
+        },
+        padding: 12,
+        callbacks: {
+          label: chartkick_js_inline(chart_js_label_cb),
+        },
+      },
+    },
+    scales: {
+      y: {
+        type: 'logarithmic',
+        max: data[:shown].values.max * 2,
+        min: 0.5,
+        border: {
+          display: false,
+        },
+        grid: {
+          display: false,
+          drawOnChartArea: false,
+          drawTicks: false,
+        },
+        ticks: {
+          display: false,
+        },
+      },
+      x: {
+        type: 'time',
+        time: {
+          unit: 'day',
+          displayFormats: {
+            day: 'd',
+          },
+        },
+      },
+    },
+  },
+  dataset: {
+    borderWidth: 1,
+    radius: 0,
+  }
+%>

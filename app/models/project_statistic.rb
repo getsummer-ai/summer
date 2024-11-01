@@ -8,6 +8,9 @@ class ProjectStatistic < ApplicationRecord
   scope :by_products, -> { where(trackable_type: ProjectProduct.to_s) }
   scope :current_month, -> { where(date: Time.now.utc.all_month) }
 
+  # scope :for_month, ->(month) { where(month: month.to_s) }
+  # scope :up_to_month, ->(month) { where('date_hour <= :month', month: month.to_s) }
+
   def increase_views_counter!
     self.class.update_counters(id, views: 1)
   end

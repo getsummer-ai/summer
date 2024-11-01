@@ -1,0 +1,17 @@
+<tr id="<%= dom_id(@project_article_product) %>">
+  <td class="font-semibold pl-0">
+    <%=
+      link_to @edit_path, data: {'turbo-frame': "modal"} do
+        @project_article_product.product.name.truncate(60)
+      end
+    %>
+  </td>
+  <td class="text-right">
+    <%=
+      render ProjectPageProductComponents::SwitchButtonComponent.new(
+        form_url: @update_path,
+        project_article_product: @project_article_product,
+      )
+    %>
+  </td>
+</tr>

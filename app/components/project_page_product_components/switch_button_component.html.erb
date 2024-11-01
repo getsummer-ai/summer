@@ -1,0 +1,8 @@
+<%=
+  form_with model: @project_article_product,
+          url: @form_url,
+          method: :patch,
+          id: dom_id(@project_article_product, :switch) do |form|
+    concat form.check_box :is_accessible, class: 'toggle toggle-summer', onchange: 'this.form.requestSubmit()'
+  end
+%>

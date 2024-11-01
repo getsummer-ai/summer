@@ -63,6 +63,7 @@ class Project < ApplicationRecord
   has_many :articles, dependent: :destroy, class_name: 'ProjectArticle'
   has_many :products, dependent: :destroy, class_name: 'ProjectProduct'
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
+  has_many :statistics_by_month, class_name: 'ProjectStatisticsByMonth', dependent: :destroy
   has_many :all_events, class_name: 'Event'
   has_many :user_emails, class_name: 'ProjectUserEmail', dependent: :destroy
 

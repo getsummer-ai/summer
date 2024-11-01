@@ -14,6 +14,6 @@ class ProjectDecorator < Draper::Decorator
   delegate :total_views_count, to: :total_statistics
 
   def total_statistics
-    @total_statistics ||= ProjectStatisticsViewModel.new(model)
+    @total_statistics ||= ProjectStatistic::TotalsViewModel.new(model)
   end
 end

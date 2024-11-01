@@ -1,9 +1,11 @@
 <%=
   form_with(
-    model: form,
     url: project_pages_path(current_project),
     method: :get,
-    data: { controller: "auto-submit-input-form", turbo_stream: true }
+    data: {
+      controller: "auto-submit-input-form",
+      turbo_frame: 'pages_table'
+    }
   ) do |f|
 %>
   <div class="flex justify-between">
@@ -11,6 +13,7 @@
       <% if show_search %>
         <%=
           f.text_field :search,
+                 value: form.search,
                  class: 'input input-sm input-search-summer pl-0 w-full',
                  placeholder: 'Search by title or URL',
                  data: {
@@ -25,12 +28,15 @@
         <%=
           f.select(
             :order,
-            [
-              ['↓ By Shown', 'views_desc'],
-              ['↑ By Shown', 'views_asc'],
-              ['↓ By Clicked', 'clicks_desc'],
-              ['↑ By Clicked', 'clicks_asc'],
-            ],
+            options_for_select(
+              [
+                ['↓ By Shown', 'views_desc'],
+                ['↑ By Shown', 'views_asc'],
+                ['↓ By Clicked', 'clicks_desc'],
+                ['↑ By Clicked', 'clicks_asc'],
+              ],
+              form.order,
+            ),
             {},
             {
               class: 'select select-bordered rounded-lg select-xs w-full',

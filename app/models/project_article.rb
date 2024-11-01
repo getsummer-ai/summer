@@ -80,6 +80,7 @@ class ProjectArticle < ApplicationRecord
               project_id
               title
               info
+              tokens_count
               summary_status
               products_status
               summary_llm_call_id
@@ -97,6 +98,8 @@ class ProjectArticle < ApplicationRecord
     return nil if id.nil?
     @encrypted_id ||= BasicEncrypting.encode(id)
   end
+
+  def button_active? = summary_status_wait? || summary_status_completed? || summary_status_processing?
 
   def redis_summary_name
     "pa-#{article_hash}-summary"
