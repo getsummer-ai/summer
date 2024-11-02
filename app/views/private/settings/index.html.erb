@@ -56,7 +56,7 @@
   </p>
 </div>
 
-<div class="mt-8 md:mt-8">
+<div class="<%=current_project.free_plan? ? 'mt-8' : 'mt-3' %>">
   <%= render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-black') %>
   <%if current_project.free_plan_suspended? %>
     <h4 class="mt-8 md:mt-2 opacity-30">

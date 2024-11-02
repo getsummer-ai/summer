@@ -28,8 +28,9 @@ class ProjectPagesQueryForm
             .preload(:article_only_title)
             # .eager_load(:statistics_by_total)
             .eager_load(:statistics_by_months)
-            # project_id condition is used because of the need to use an index
-            .where(statistics_by_months: { month: [@month.to_s, nil] })
+            .joins(
+              Project.sanitize_sql_array(["AND statistics_by_months.month = ?", @month])
+            )
 
     pages = apply_search(pages) if search.present?
     apply_order(pages)

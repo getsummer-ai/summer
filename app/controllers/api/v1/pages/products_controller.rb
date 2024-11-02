@@ -10,14 +10,16 @@ module Api
 
         def show
           # @type [ProjectArticle]
-          article = ProjectArticle.only_required_columns.find_by(id: project_page.project_article_id)
-          if !current_project.products.exists? || article.products_status_error?
-            return (@products = [])
-          end
+          article =
+            ProjectArticle.only_required_columns.find_by(id: project_page.project_article_id)
 
           if article.products_status_completed?
             @products = find_products_for project_page
             mark_as_viewed(@products) and return
+          end
+
+          if article.products_status_error? || !current_project.products.exists?
+            return(@products = [])
           end
 
           FindProductsInSummaryJob.perform_later(article.id) if article.products_status_wait?
@@ -55,13 +57,12 @@ module Api
         #  @param [ProjectPage] project_page
         #  @return [Array<ProjectProducts>]
         def find_products_for(project_page)
-          project_article_id = project_page.project_article_id
-          @current_project
-            .products
-            .where(id: ProjectArticleProduct.select('project_product_id').where(project_article_id:))
-            .only_main_columns
-            .icon_as_base64
-            .to_a
+          ids_query =
+            ProjectArticleProduct.select('project_product_id').where(
+              project_article_id: project_page.project_article_id,
+              is_accessible: true,
+            )
+          @current_project.products.where(id: ids_query).only_main_columns.icon_as_base64.to_a
         end
 
         def mark_as_viewed(services)
