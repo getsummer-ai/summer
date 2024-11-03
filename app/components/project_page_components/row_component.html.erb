@@ -2,7 +2,7 @@
   <td class="font-semibold pl-0">
     <%=
       link_to project_page_path(@project, @page), data: { turbo_frame: "_top" } do
-        @page.article_only_title.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
+        @page.article_minimal_info.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
       end
     %>
   </td>

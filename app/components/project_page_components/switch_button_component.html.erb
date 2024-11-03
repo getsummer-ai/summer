@@ -4,7 +4,11 @@
           method: :patch,
           id: custom_dom_id do |form|
   if @is_checkbox
-    concat form.check_box :is_accessible, class: 'toggle toggle-summer', onchange: 'this.form.requestSubmit()'
+    if @page.article_minimal_info.button_skipped?
+      concat form.check_box :is_accessible, checked: false, class: 'toggle toggle-summer', disabled: true
+    else
+      concat form.check_box :is_accessible, class: 'toggle toggle-summer', onchange: 'this.form.requestSubmit()'
+    end
   else
     concat form.hidden_field :is_accessible, value: !@page.is_accessible
     concat form.submit (@page.is_accessible? ? 'Turn off' : 'Turn on') + ' this page',

@@ -7,8 +7,8 @@ class ProjectPage < ApplicationRecord
   belongs_to :project
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
 
-  belongs_to :article_only_title,
-             -> { select("project_articles.id, project_articles.title") },
+  belongs_to :article_minimal_info,
+             -> { select(%w[id title summary_status products_status]) },
              class_name: "ProjectArticle",
              foreign_key: "project_article_id",
              inverse_of: :pages

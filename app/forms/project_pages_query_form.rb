@@ -25,8 +25,7 @@ class ProjectPagesQueryForm
 
     pages = @current_project.pages
             .strict_loading
-            .preload(:article_only_title)
-            # .eager_load(:statistics_by_total)
+            .preload(:article_minimal_info)
             .eager_load(:statistics_by_months)
             .joins(
               Project.sanitize_sql_array(["AND statistics_by_months.month = ?", @month])
@@ -43,7 +42,7 @@ class ProjectPagesQueryForm
   private
 
   def apply_search(pages)
-    pages.joins(:article_only_title).where(
+    pages.joins(:article_minimal_info).where(
       'project_articles.title ILIKE :search OR project_pages.url ILIKE :search',
       search: "%#{search}%",
     )

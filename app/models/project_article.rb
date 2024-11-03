@@ -101,6 +101,8 @@ class ProjectArticle < ApplicationRecord
 
   def button_active? = summary_status_wait? || summary_status_completed? || summary_status_processing?
 
+  def button_skipped? = summary_status_error? || summary_status_skipped?
+
   def redis_summary_name
     "pa-#{article_hash}-summary"
   end
