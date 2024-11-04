@@ -18,7 +18,7 @@ module Private
       end
 
       def edit
-        return render(:new) if turbo_frame_request?
+        return if turbo_frame_request?
 
         redirect_to project_page_path(anchor: "m=#{Base64.encode64(edit_project_page_product_path)}")
       end
@@ -40,11 +40,12 @@ module Private
       end
 
       def update
-        product = if article_product_params[:project_product_id]
-                    current_project.products.find_by(id: article_product_params[:project_product_id])
-                  else
-                    @article_product.product
-                  end
+        product = 
+          if article_product_params[:project_product_id]
+            current_project.products.find_by(id: article_product_params[:project_product_id])
+          else
+            @article_product.product
+          end
 
         unless @article_product.update(article_product_params.merge(project_product_id: product&.id))
           return render(:new, status: :unprocessable_entity)

@@ -1,0 +1,7 @@
+<%= turbo_stream.update dom_id(@project_page, :add_relevant_product_block) do %>
+  <% if @current_project.products.count > @project_page.article.related_products.count %>
+    <%= link_to('+ Add relevant product', new_project_page_product_path,
+                class: 'btn btn-summer btn-black mt-4', data: { 'turbo-frame': 'modal' })
+    %>
+  <% end %>
+<% end %>

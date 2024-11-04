@@ -7,6 +7,7 @@ module Private
     before_action :set_month, only: %i[index show summary_refresh summary_admin_delete]
     before_action :find_project_page, only: %i[show update summary_refresh summary_admin_delete]
     before_action :find_page_article, only: %i[show summary_refresh summary_admin_delete]
+    before_action :check_article_data, only: %i[summary_refresh]
 
     layout :private_or_turbo_layout
 
@@ -33,28 +34,13 @@ module Private
     end
 
     def summary_refresh
-      @error_message = nil
-      @error_message = 'Can\'t generate a summary for the page.' if @article.summary_status_skipped?
-      @error_message =
-        'Can\'t update the summary. Try again later.' if @article.summary_status_error?
-      @error_message = 'Please wait for the completion.' if @article.summary_status_processing?
-
-      if @error_message.nil?
-        last_summary_date =
-          @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
-        if last_summary_date.present? && last_summary_date > 1.day.ago
-          wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
-          @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
-        end
-      end
-
-      (flash[:alert] = @error_message) and return redirect_to(project_page_path) if @error_message.present?
-
       SummarizeArticleJob.perform_now(@article.id)
       @article.reload
 
-      if @article.summary_status_completed? && @article.products_status_wait?
-        FindProductsInSummaryJob.perform_later(@article.id)
+      if @article.summary_status_completed? &&
+        current_project.products.exists? &&
+        (@article.products_status_wait? || @articls.related_products.empty?)
+        FindProductsInSummaryJob.perform_now(@article.id)
       end
 
       redirect_to(project_page_path)
@@ -102,6 +88,27 @@ module Private
 
     def find_page_article
       @article = ProjectArticle.only_required_columns.find(@project_page.project_article_id)
+    end
+    
+    def check_article_data
+      @error_message = nil
+      @error_message = 'Can\'t generate a summary for the page.' if @article.summary_status_skipped?
+      @error_message = 'Can\'t update the summary. Try again later.' if @article.summary_status_error?
+      @error_message = 'Please wait for the completion.' if @article.summary_status_processing?
+
+      if @error_message.nil?
+        last_summary_date =
+        @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
+        if last_summary_date.present? && last_summary_date > 1.day.ago
+          wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
+          @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
+        end
+      end
+
+      return if @error_message.blank?
+      
+      flash[:alert] = @error_message
+      redirect_to(project_page_path)
     end
   end
 end
