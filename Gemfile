@@ -108,6 +108,7 @@ group :test do
   gem 'capybara', '~> 3.40'
   gem 'database_cleaner-active_record'
   gem "fakeredis", require: "fakeredis/rspec"
+  gem 'rails-controller-testing'
   gem 'selenium-webdriver', '~> 4.19'
   gem "webmock"
 end

@@ -14,13 +14,13 @@ module Private
         @article_product = ProjectArticleProduct.new
         return if turbo_frame_request?
 
-        redirect_to project_page_path(anchor: "m=#{Base64.encode64(new_project_page_product_path)}")
+        redirect_to project_page_path(anchor: generate_modal_anchor(new_project_page_product_path))
       end
 
       def edit
         return if turbo_frame_request?
 
-        redirect_to project_page_path(anchor: "m=#{Base64.encode64(edit_project_page_product_path)}")
+        redirect_to project_page_path(anchor: generate_modal_anchor(edit_project_page_product_path))
       end
 
       def create
