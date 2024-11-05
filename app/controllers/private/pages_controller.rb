@@ -39,7 +39,7 @@ module Private
 
       if @article.summary_status_completed? &&
         current_project.products.exists? &&
-        (@article.products_status_wait? || @articls.related_products.empty?)
+        (@article.products_status_wait? || @article.related_products.empty?)
         FindProductsInSummaryJob.perform_now(@article.id)
       end
 
