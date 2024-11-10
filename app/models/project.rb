@@ -27,6 +27,7 @@ class Project < ApplicationRecord
   attribute :stripe, Project::ProjectStripeDetails.to_type
 
   # Fix for StoreModel gem
+  # bin/rails db:setup did not work without this check
   # TODO: remove this check after new StoreModel version release
   if (
        begin
