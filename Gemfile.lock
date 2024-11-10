@@ -313,7 +313,7 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
-    passive_columns (0.3.1)
+    passive_columns (0.3.2)
       activerecord (>= 6.1)
       activesupport (>= 6.1)
     pg (1.5.9)

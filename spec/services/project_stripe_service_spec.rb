@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'ostruct'
 
 describe ProjectStripeService do
   include SpecTestHelper
