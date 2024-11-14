@@ -94,7 +94,9 @@
         <p class="opacity-50 mb-6">
           Generated <%=@project_page_decorated.summary_created_at&.strftime('%d %B %Y') %>
         </p>
-        <%= sanitize @project_page_decorated.summary_html %>
+        <div class="summary-html">
+          <%= sanitize @project_page_decorated.summary_html %>
+        </div>
 
         <div class="mt-6">
           <%=

@@ -232,6 +232,13 @@ pre[class*="language-"] {
     margin: 0 0 8px 0;
     padding: 0;
   }
+
+  p {
+    margin-bottom: 15px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 .bg-close {
