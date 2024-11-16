@@ -10,6 +10,7 @@ class PrivateController < ApplicationController
     'private'
   end
 
+  # @return [Project]
   def find_project
     # @type [Project]
     @project = current_user.projects.available.find(BasicEncrypting.decode(params[:project_id].to_s))

@@ -25,9 +25,11 @@ class ProjectPageDecorator < Draper::Decorator
 
   # @return [String]
   def summary_html
-    llm_output = article_summary_info[0] || ''
+    MarkdownLib.render(summary_md)
+  end
 
-    MarkdownLib.render(llm_output)
+  def summary_md
+    article_summary_info[0] || ''
   end
 
   # @return [String]

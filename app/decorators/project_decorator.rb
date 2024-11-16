@@ -16,4 +16,16 @@ class ProjectDecorator < Draper::Decorator
   def total_statistics
     @total_statistics ||= ProjectStatistic::TotalsViewModel.new(model)
   end
+
+  def summary_settings
+    {
+      lang: model.settings.lang,
+      appearance: model.settings.appearance,
+      paths: model.paths,
+      features: {
+        suggestion: model.settings.feature_suggestion.enabled,
+        subscription: model.settings.feature_subscription.enabled
+      }
+    }
+  end
 end

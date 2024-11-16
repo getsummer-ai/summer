@@ -1,5 +1,6 @@
 import App from '@/svelte/apps/App.svelte';
-import Summer from '@/svelte/apps/summer/Summer.svelte';
+import Summer from '@/svelte/apps/Summer.svelte';
+import SummerArticlePreview from '@/svelte/apps/SummerArticlePreview.svelte';
 import type { ComponentType, SvelteComponent } from 'svelte';
 
 interface AppSourceMap {
@@ -9,6 +10,7 @@ interface AppSourceMap {
 const appSourceMap: AppSourceMap = {
   app: App,
   summer: Summer,
+  'preview-summary-with-article': SummerArticlePreview,
 };
 const initializedApps: { [key: string]: SvelteComponent } = {};
 

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import { initApi } from './api';
-  import type { ArticleInitInfo, SettingsInfo, ProjectProductType } from './api';
-  import ModalWrapper from '@/svelte/apps/summer/ModalWrapper.svelte';
-  import CloseIcon from './components/CloseIcon.svelte';
-  import LoadingIcon from './components/LoadingIcon.svelte';
-  import { useI18n } from '../helpers/use-i18n.js';
+  import { initApi } from './summer/api';
+  import type { ArticleInitInfo, SettingsInfo, ProjectProductType } from './summer/types';
+  import ModalWrapper from './summer/ModalWrapper.svelte';
+  import CloseIcon from './summer/components/CloseIcon.svelte';
+  import LoadingIcon from './summer/components/LoadingIcon.svelte';
+  import { useI18n } from './helpers/use-i18n.js';
 
   let showModal = false;
   export let projectId: string;

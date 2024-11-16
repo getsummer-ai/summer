@@ -98,12 +98,24 @@
           <%= sanitize @project_page_decorated.summary_html %>
         </div>
 
-        <div class="mt-6">
+        <div class="mt-6 flex">
+          <%
+            props = {
+              settings: current_project.decorate.summary_settings,
+              article: {
+                title:  @article.title,
+                page_id: '0'
+              },
+              summary: @project_page_decorated.summary_md,
+              services: []
+            }
+          %>
+          <div id="preview-summary-with-article" data-props="<%=props.to_json %>"></div>
           <%=
             button_to 'Rewrite',
                       summary_refresh_project_page_path(@current_project, @project_page),
                       method: :post,
-                      class: 'btn btn-sm rounded-lg',
+                      class: 'btn btn-sm rounded-lg ml-2',
                       form: {
                         data: {
                           controller: 'auto-disable-form',

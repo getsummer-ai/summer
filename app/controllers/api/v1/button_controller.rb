@@ -18,6 +18,7 @@ module Api
 
       def settings
         @app_path = FULL_PATH_TO_BUTTON_APP
+        @settings = current_project.decorate.summary_settings
       end
 
       def init

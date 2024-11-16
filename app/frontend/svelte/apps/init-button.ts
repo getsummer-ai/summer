@@ -1,4 +1,4 @@
-import Summer from '@/svelte/apps/summer/Summer.svelte';
+import Summer from '@/svelte/apps/Summer.svelte';
 import type { SvelteComponent } from 'svelte';
 import { initButton, SettingsInfo } from '@/svelte/apps/summer/api';
 

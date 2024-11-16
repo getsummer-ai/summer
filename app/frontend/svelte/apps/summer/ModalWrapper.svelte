@@ -2,11 +2,11 @@
   import markdown from './markdown.js';
   import Modal from './Modal.svelte';
   import LoadingIcon from './components/LoadingIcon.svelte';
-  import ProjectProduct from './ProjectProduct.svelte';
-  import SubscriptionBlock from './SubscriptionBlock.svelte';
+  import ProjectProduct from './components/ProjectProduct.svelte';
+  import SubscriptionBlock from './components/SubscriptionBlock.svelte';
   import ErrorBlock from './components/ErrorBlock.svelte';
   import { createEventDispatcher } from 'svelte';
-  import type { ArticleInitInfo, ProjectProductType, SettingsInfo } from '@/svelte/apps/summer/api';
+  import type { ArticleInitInfo, ProjectProductType, SettingsInfo } from '@/svelte/apps/summer/types';
   import { useI18n } from '@/svelte/apps/helpers/use-i18n';
   /* eslint svelte/no-at-html-tags: 0 */
 
@@ -40,7 +40,7 @@
 <Modal
   bind:showModal
   poweredByText={t('powered_by')}
-  on:close={dispatch('close')}
+  on:close={() => dispatch('close')}
   title={article.title}
   theme={settings.appearance.frame_theme}
   style={`z-index: ${settings.appearance.z_index}`}

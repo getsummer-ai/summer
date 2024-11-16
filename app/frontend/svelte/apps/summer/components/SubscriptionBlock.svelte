@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { ArticleInitInfo, SettingsInfo } from './api';
-  import { initApi } from './api';
+  import type { ArticleInitInfo, SettingsInfo } from '../types';
+  import { initApi } from '../api';
   import { defineMessages, useI18n } from '@/svelte/apps/helpers/use-i18n';
 
   export let article: ArticleInitInfo;
