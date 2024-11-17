@@ -1,12 +1,10 @@
 <script lang="ts">
   import type { ProjectProductType } from '../types';
-  import { initApi } from '../api';
+  import { createEventDispatcher } from 'svelte';
+  const dispatch = createEventDispatcher();
 
   export let service: ProjectProductType;
-  export let pageId: string;
   export let theme: string = 'white';
-
-  const onLinkClick = () => initApi().clickService(pageId, service.uuid);
 
   const default_image =
     'UklGRu4BAABXRUJQVlA4IOIBAABQDACdASo+AC0APoU4l0elI6IhMrbeYKAQiWoAnTKvOre08kyAEAntg' +
@@ -20,7 +18,7 @@
     'tzmTtDwo4v78EfmOAAAA==';
 </script>
 
-<a target="_blank" class="theme-{theme}" href={service.link} on:click={onLinkClick}>
+<a target="_blank" class="theme-{theme}" href={service.link} on:click={() => dispatch('click')}>
   <div class="body">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="title">

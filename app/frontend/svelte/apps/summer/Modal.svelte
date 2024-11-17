@@ -125,7 +125,7 @@
           <div class="content">
             <slot />
           </div>
-          <div class="footer">
+          <div class="f-footer">
             <slot name="footer" />
             <div class="powered-by">
               <a href="https://getsummer.ai" target="_blank">
@@ -197,7 +197,7 @@
       .dialog-body {
         font-size: 20px;
         line-height: 30px;
-        font-weight: 500;
+        font-weight: 400;
         padding: 0 32px;
         height: 100%;
         -ms-overflow-style: none;
@@ -322,7 +322,7 @@
       }
     }
 
-    .footer {
+    .f-footer {
       @apply relative z-10 min-h-12;
       .powered-by {
         text-align: center;
@@ -334,6 +334,7 @@
           text-decoration: none;
 
           svg {
+            display: inline;
             vertical-align: text-bottom;
           }
         }

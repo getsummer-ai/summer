@@ -111,6 +111,9 @@
     loading = false;
     showModal = false;
   };
+
+  const productClick = (e: { detail: { service: ProjectProductType } }) =>
+    api.clickService(article.page_id, e.detail.service.uuid);
 </script>
 
 <svelte:head>
@@ -142,7 +145,15 @@
 </button>
 
 {#if showButton}
-  <ModalWrapper bind:showModal on:close={closeModal} {settings} {article} {summary} {services} />
+  <ModalWrapper
+    bind:showModal
+    on:close={closeModal}
+    on:product-click={productClick}
+    {settings}
+    {article}
+    {summary}
+    {services}
+  />
 {/if}
 
 <style lang="scss">

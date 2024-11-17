@@ -12,6 +12,8 @@
 
   const dispatch = createEventDispatcher();
 
+  export let testMode: boolean = false;
+
   export let showModal = false;
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
@@ -66,6 +68,7 @@
     {#if settings.features.suggestion && services.length > 0}
       {#each services as service}
         <ProjectProduct
+          on:click={() => dispatch('product-click', { service })}
           {service}
           pageId={article.page_id}
           theme={settings.appearance.frame_theme}
@@ -76,7 +79,7 @@
 
   <svelte:fragment slot="footer">
     {#if summary.length && settings.features.subscription === true}
-      <SubscriptionBlock bind:article {settings} />
+      <SubscriptionBlock bind:article {settings} {testMode} />
     {/if}
   </svelte:fragment>
 </Modal>

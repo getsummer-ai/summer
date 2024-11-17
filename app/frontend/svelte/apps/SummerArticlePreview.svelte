@@ -28,14 +28,17 @@
   />
 </svelte:head>
 
-<button
-  class="btn btn-sm rounded-lg"
-  on:click={onButtonClick}
->
-  Preview
-</button>
+<button class="btn btn-sm rounded-lg" on:click={onButtonClick}> Preview </button>
 
-<ModalWrapper bind:showModal on:close={closeModal} {settings} {article} {summary} {services} />
+<ModalWrapper
+  bind:showModal
+  on:close={closeModal}
+  testMode={true}
+  {settings}
+  {article}
+  {summary}
+  {services}
+/>
 
 <style lang="scss">
   :global(*) {

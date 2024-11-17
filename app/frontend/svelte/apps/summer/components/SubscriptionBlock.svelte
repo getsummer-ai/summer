@@ -3,6 +3,8 @@
   import { initApi } from '../api';
   import { defineMessages, useI18n } from '@/svelte/apps/helpers/use-i18n';
 
+  export let testMode: boolean = false;
+
   export let article: ArticleInitInfo;
   export let settings: SettingsInfo;
   let email = '';
@@ -30,7 +32,10 @@
     if (!email || loading) return;
     loading = true;
     try {
-      const res = await initApi().subscribe(article.page_id, email);
+      const res = testMode ?
+        // mock response in test mode
+        { status: 204 } :
+        await initApi().subscribe(article.page_id, email);
       if (res.status == 204) {
         email = '';
         subscribeState = true;
