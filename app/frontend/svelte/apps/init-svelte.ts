@@ -14,11 +14,12 @@ const appSourceMap: AppSourceMap = {
 };
 const initializedApps: { [key: string]: SvelteComponent } = {};
 
-export const initSvelteApps = () => {
+export const initSvelteApps = (reload = true) => {
   Object.keys(appSourceMap).forEach((id) => {
     const appElement = document.getElementById(id);
     if (!appElement) return;
     if (appElement.innerHTML !== '') {
+      if (!reload) return;
       initializedApps[id].$destroy();
       appElement.innerHTML = '';
       delete initializedApps[id];
@@ -29,3 +30,8 @@ export const initSvelteApps = () => {
     initializedApps[id] = new Component({ target: appElement, props: rootProps });
   });
 };
+
+export const initializeUncreatedApps = () => {
+
+
+}

@@ -4,12 +4,20 @@ class ProjectArticleProduct < ApplicationRecord
 
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: :project_article_id
   belongs_to :product, class_name: 'ProjectProduct', foreign_key: :project_product_id
+  belongs_to :product_minimal_info,
+             -> { only_main_columns.icon_as_base64 },
+             class_name: 'ProjectProduct',
+             foreign_key: :project_product_id
+
+  scope :active, -> { where(is_accessible: true) }
 
   validates :product,
             presence: true,
-            uniqueness: { scope: :project_article_id, message: 'already added' },
+            uniqueness: {
+              scope: :project_article_id,
+              message: 'already added',
+            },
             if: -> { product_changed? }
-
 end
 
 # == Schema Information

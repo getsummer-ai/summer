@@ -2,7 +2,7 @@
   <td class="font-semibold pl-0">
     <%=
       link_to @edit_path, data: {'turbo-frame': "modal"} do
-        @project_article_product.product.name.truncate(60)
+        @project_article_product.product_minimal_info.name.truncate(60)
       end
     %>
   </td>

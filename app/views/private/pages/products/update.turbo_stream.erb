@@ -19,3 +19,17 @@
     )
   %>
 <% end %>
+
+<%=turbo_stream.replace 'preview-summary-with-article' do%>
+  <% article = @project_page.article_minimal_info %>
+  <%=
+    render ProjectPageComponents::PreviewSummaryButtonComponent.new(
+      current_project:,
+      article:,
+      project_page: @project_page,
+      services: article.project_article_products.active.includes(:product_minimal_info).map do |article_product|
+        article_product.product_minimal_info.decorate.data_for_summary_app
+      end
+    )
+  %>
+<% end %>

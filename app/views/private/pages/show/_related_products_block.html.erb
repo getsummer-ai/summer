@@ -1,10 +1,9 @@
-<% total_products_count = @current_project.products.count %>
 <h2 class="font-semibold text-xl mt-12">Relevant products</h2>
 
 <div>
+  <% total_products_count = @current_project.products.count %>
   <% if total_products_count > 0 %>
     <div class="overflow-x-auto mt-6">
-      <% products = @article.project_article_products.includes(:product).load %>
       <table class="table tracking-tight table-summer">
         <thead>
           <tr>
@@ -13,22 +12,22 @@
           </tr>
         </thead>
         <tbody id="<%= dom_id(ProjectArticleProduct, :table) %>">
-          <% products.each do |project_article_product| %>
+          <% @project_article_products.each do |project_article_product| %>
             <%=
               render ProjectPageProductComponents::RowComponent.new(
-                       project_article_product:,
-                       edit_path:
-                         edit_project_page_product_path(@current_project, @project_page, project_article_product),
-                       update_path:
-                         project_page_product_path(@current_project, @project_page, project_article_product),
-                     )
+                project_article_product:,
+                edit_path:
+                  edit_project_page_product_path(@current_project, @project_page, project_article_product),
+                update_path:
+                  project_page_product_path(@current_project, @project_page, project_article_product),
+                )
             %>
           <% end %>
         </tbody>
       </table>
 
       <div id="<%= dom_id(@project_page, :add_relevant_product_block) %>">
-        <% if total_products_count > products.size %>
+        <% if total_products_count > @project_article_products.size %>
           <%=
             link_to(
               '+ Add relevant product',

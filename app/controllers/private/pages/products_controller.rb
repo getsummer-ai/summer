@@ -28,7 +28,7 @@ module Private
         @article_product =
           ProjectArticleProduct.new(
             product: current_project.products.find_by(id: p[:project_product_id]),
-            article: @project_page.article,
+            article: @project_page.article_minimal_info,
           )
         return render(:new, status: :unprocessable_entity) unless @article_product.save
 
@@ -40,7 +40,7 @@ module Private
       end
 
       def update
-        product = 
+        product =
           if article_product_params[:project_product_id]
             current_project.products.find_by(id: article_product_params[:project_product_id])
           else
@@ -75,7 +75,7 @@ module Private
       def find_article_product
         # @type [ProjectArticleProduct]
         @article_product =
-          @project_page.article.project_article_products.find(BasicEncrypting.decode(params[:id]))
+          @project_page.article_minimal_info.project_article_products.find(BasicEncrypting.decode(params[:id]))
       end
 
       def article_product_params

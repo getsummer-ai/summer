@@ -99,18 +99,17 @@
         </div>
 
         <div class="mt-6 flex">
-          <%
-            props = {
-              settings: current_project.decorate.summary_settings,
-              article: {
-                title:  @article.title,
-                page_id: '0'
-              },
-              summary: @project_page_decorated.summary_md,
-              services: []
-            }
+          <%=
+            render ProjectPageComponents::PreviewSummaryButtonComponent.new(
+              current_project:,
+              article: @article,
+              project_page: @project_page_decorated,
+              services: @project_article_products.select(&:is_accessible).map do |article_product|
+                article_product.product_minimal_info.decorate.data_for_summary_app
+              end
+            )
           %>
-          <div id="preview-summary-with-article" data-props="<%=props.to_json %>"></div>
+
           <%=
             button_to 'Rewrite',
                       summary_refresh_project_page_path(@current_project, @project_page),

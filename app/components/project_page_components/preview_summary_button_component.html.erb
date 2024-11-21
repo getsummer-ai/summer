@@ -1,0 +1,12 @@
+<%
+  props = {
+    settings: @current_project.decorate.summary_settings,
+    article: {
+      title:  @article.title,
+      page_id: '0'
+    },
+    summary: @project_page_decorated.summary_md,
+    services: @services
+  }
+%>
+<div id="preview-summary-with-article" style="min-width: 75px;" data-props="<%=props.to_json %>"></div>

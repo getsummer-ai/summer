@@ -20,6 +20,10 @@ class ProjectProduct < ApplicationRecord
   scope :skip_retrieving, ->(*v) { select(column_names.map(&:to_sym) - Array.wrap(v)) }
 
   store :info, accessors: %i[meta], coder: JsonbSerializer
+
+  def decorate
+    ProjectProductDecorator.new(self)
+  end
 end
 
 # == Schema Information

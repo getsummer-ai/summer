@@ -5,7 +5,7 @@ module ProjectPageProductComponents
     include ViewComponent::UseHelpers
     include ActiveSupport::NumberHelper
 
-    renders_one :form
+    # renders_one :form
 
     def initialize(project_article_product:, edit_path:, update_path:)
       super

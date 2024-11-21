@@ -45,13 +45,7 @@ RSpec.describe Private::Pages::ProductsController do
     let(:product) { project.products.create!(name: 'A', link: 'http://a.com', description: 'Op') }
     let(:article_product) { article.project_article_products.create!(product:) }
 
-    it 'streams when request is a turbo request' do
-      delete :destroy, params: { project_id: project.to_param, page_id: page.to_param, id: article_product.to_param }, as: :turbo_stream
-      expect(response).to have_http_status(:ok).and render_template(:destroy)
-      expect(flash.now[:notice]).to match(/.* was detached/)
-    end
-
-    it 'redirects when request is not a turbo request' do
+    it 'redirects after detaching' do
       delete :destroy, params: { project_id: project.to_param, page_id: page.to_param, id: article_product.to_param }
       expect(response).to redirect_to(project_page_path)
       expect(flash[:notice]).to match(/.* was detached/)
@@ -68,14 +62,8 @@ RSpec.describe Private::Pages::ProductsController do
       }
     end
 
-    it 'streams when request is a turbo request' do
-      expect { post :create, params:, as: :turbo_stream }.to change(ProjectArticleProduct, :count).by(1)
-      expect(response).to have_http_status(:ok).and render_template(:create)
-      expect(flash.now[:notice]).to eq('The product was successfully attached')
-    end
-
-    it 'redirects when request is not a turbo request' do
-      post(:create, params:)
+    it 'redirects after attaching' do
+      expect { post(:create, params:) }.to change(ProjectArticleProduct, :count).by(1)
       expect(response).to redirect_to(project_page_path)
       expect(flash[:notice]).to eq('The product was successfully attached')
     end
@@ -119,16 +107,10 @@ RSpec.describe Private::Pages::ProductsController do
       }
     end
 
-    it 'streams when request is a turbo request' do
-      expect { patch :update, params:, as: :turbo_stream }.to \
+    it 'redirects after disabling' do
+      expect { patch :update, params: }.to \
         change { article_product.reload.product }.from(product).to(product_2).and \
         change { article_product.reload.position }.from(1).to(10)
-      expect(response).to have_http_status(:ok).and render_template(:update)
-      expect(flash.now[:notice]).to eq("\"N\" product is disabled")
-    end
-
-    it 'redirects when request is not a turbo request' do
-      patch(:update, params:)
       expect(response).to redirect_to(project_page_path)
       expect(flash[:notice]).to eq("\"N\" product is disabled")
     end

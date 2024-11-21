@@ -57,11 +57,9 @@ module Api
         #  @param [ProjectPage] project_page
         #  @return [Array<ProjectProducts>]
         def find_products_for(project_page)
+          project_article_id = project_page.project_article_id
           ids_query =
-            ProjectArticleProduct.select('project_product_id').where(
-              project_article_id: project_page.project_article_id,
-              is_accessible: true,
-            )
+            ProjectArticleProduct.select('project_product_id').active.where(project_article_id:)
           @current_project.products.where(id: ids_query).only_main_columns.icon_as_base64.to_a
         end
 

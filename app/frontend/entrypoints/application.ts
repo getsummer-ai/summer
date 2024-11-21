@@ -16,17 +16,24 @@ window.addEventListener('DOMContentLoaded', function () {
 
 window.addEventListener('turbo:load', () => {
   initApps();
+  console.log('turbo:load');
   initSvelteApps();
 });
 
 window.Chartkick.config.autoDestroy = false
 window.addEventListener('turbo:before-render', () => {
+  console.log('turbo:before-render');
   window.Chartkick.eachChart(chart => {
     if (!chart.element.isConnected) {
       chart.destroy()
       delete window.Chartkick.charts[chart.element.id]
     }
   })
+})
+
+window.addEventListener('turbo:frame-render', () => {
+  console.log('turbo:frame-render');
+  initSvelteApps(false);
 })
 
 

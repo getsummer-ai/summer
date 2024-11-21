@@ -8,7 +8,7 @@ class ProjectPage < ApplicationRecord
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
 
   belongs_to :article_minimal_info,
-             -> { select(%w[id title summary_status products_status]) },
+             -> { only_required_columns },
              class_name: "ProjectArticle",
              foreign_key: "project_article_id",
              inverse_of: :pages
@@ -24,10 +24,6 @@ class ProjectPage < ApplicationRecord
   validates :url_hash, presence: true, uniqueness: {
     scope: [:project_id]
   }
-
-  # def to_param
-  #   url_hash
-  # end
 end
 
 # == Schema Information

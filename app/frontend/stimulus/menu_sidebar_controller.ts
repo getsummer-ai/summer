@@ -7,12 +7,15 @@ export default class MenuSidebarController extends Controller {
   declare readonly checkboxTarget: HTMLInputElement;
   declare menu: HTMLDivElement;
   declare hidden: boolean;
+  declare ableToClick: boolean;
 
   connect() {
-    useClickOutside(this);
+    // console.log(this)
     const menu = document.getElementById('sidebar-menu')
     if (menu) this.menu = menu as HTMLDivElement;
     this.hidden = this.menu?.classList.contains('hidden') || true;
+    this.ableToClick = true;
+    useClickOutside(this, { element: this.menu, events: ['touchend', 'click'] });
   }
 
   toggleMenu(e?: PointerEvent) {
@@ -22,18 +25,28 @@ export default class MenuSidebarController extends Controller {
   }
 
   closeOpen() {
+    if (!this.ableToClick) return;
+    this.ableToClick = false;
+
     this.checkboxTarget.checked = !this.checkboxTarget.checked;
-    this.menu.classList.toggle('hidden');
-    this.menu.classList.toggle('flex');
+    // this.menu.classList.toggle('hidden');
+    // this.menu.classList.toggle('flex');
+    // console.log(this.checkboxTarget.checked)
+
     if (this.checkboxTarget.checked) {
       this.menu.classList.remove('hidden');
       this.menu.classList.add('flex');
+      this.menu.classList.add('shadow-2xl');
       lock(this.menu);
     } else {
       this.menu.classList.add('hidden');
       this.menu.classList.remove('flex');
-      unlock(this.menu);
+      this.menu.classList.remove('shadow-2xl');
+      unlock();
     }
+    setTimeout(() => {
+      this.ableToClick = true;
+    }, 200)
   }
 
   clickOutside(e: PointerEvent) {
@@ -45,7 +58,7 @@ export default class MenuSidebarController extends Controller {
     const isLink = target?.tagName == 'A' || target?.parentElement?.tagName == 'A';
 
     if (!contains || isLink) {
-      // console.log('clickOutside', this.closeOpen);
+      // console.log('clickOutside');
       this.closeOpen();
       if (isLink && target) {
         e.preventDefault();

@@ -25,6 +25,7 @@ module Private
 
     def show
       @project_page_decorated = @project_page.decorate
+      @project_article_products = @article.project_article_products.includes(:product_minimal_info)
 
       @statistics =
         ProjectStatistic::ByPageViewModel
