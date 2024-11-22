@@ -3,7 +3,6 @@ import { initApps } from '@/vue/apps/init-vue';
 import '@/stimulus/init-stimulus';
 import { initSvelteApps } from "@/svelte/apps/init-svelte";
 import { StreamActions } from "@hotwired/turbo"
-import { log } from '@/utils/common';
 import "chartkick/chart.js"
 
 window.addEventListener('DOMContentLoaded', function () {
@@ -12,17 +11,13 @@ window.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Set up default turbo event listeners
-
 window.addEventListener('turbo:load', () => {
   initApps();
-  console.log('turbo:load');
   initSvelteApps();
 });
 
 window.Chartkick.config.autoDestroy = false
 window.addEventListener('turbo:before-render', () => {
-  console.log('turbo:before-render');
   window.Chartkick.eachChart(chart => {
     if (!chart.element.isConnected) {
       chart.destroy()
@@ -32,13 +27,15 @@ window.addEventListener('turbo:before-render', () => {
 })
 
 window.addEventListener('turbo:frame-render', () => {
-  console.log('turbo:frame-render');
   initSvelteApps(false);
 })
 
-
 StreamActions.redirect = function () {
-  const to = this.getAttribute("to")
-  log(to)
-  return window.location.href = to;
+  return window.location.href = this.getAttribute("to");
 }
+
+// The action below is used within TurboModalController
+StreamActions['close-modal'] = () => {}
+
+// This action is used to reload svelte apps
+StreamActions['reload-apps'] = () => { initSvelteApps(false) }
