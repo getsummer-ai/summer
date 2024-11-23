@@ -6,7 +6,11 @@
   import SubscriptionBlock from './components/SubscriptionBlock.svelte';
   import ErrorBlock from './components/ErrorBlock.svelte';
   import { createEventDispatcher } from 'svelte';
-  import type { ArticleInitInfo, ProjectProductType, SettingsInfo } from '@/svelte/apps/summer/types';
+  import type {
+    ArticleInitInfo,
+    ProjectProductType,
+    SettingsInfo,
+  } from '@/svelte/apps/summer/types';
   import { useI18n } from '@/svelte/apps/helpers/use-i18n';
   /* eslint svelte/no-at-html-tags: 0 */
 
@@ -70,7 +74,6 @@
         <ProjectProduct
           on:click={() => dispatch('product-click', { service })}
           {service}
-          pageId={article.page_id}
           theme={settings.appearance.frame_theme}
         />
       {/each}
