@@ -127,7 +127,6 @@ describe 'the Navigation process' do
 
       it 'check the pages items on the pages page' do
         click_on 'Pages'
-        # sleep(0.5)
 
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
@@ -136,15 +135,86 @@ describe 'the Navigation process' do
         expect(page).to have_content(article.title)
         expect(page).to have_content(project_page.url)
 
-        expect(page).to have_button 'Build summary'
+        # Check the turbo frame section
+        within("#page-page") do
+          expect(page).to have_content 'Statistic'
+        end
+
+        # Check the turbo frame section
+        within("#page-summary") do
+          expect(page).to have_content 'Summary'
+          expect(page).not_to have_content 'Relevant products'
+          expect(page).not_to have_button 'Preview'
+          expect(page).to have_button 'Build summary'
+        end
 
         llm_call = article.summary_llm_calls.create!(llm: 'gpt-4o-mini', project:, input: 'A.', output: 'B.')
         article.update!(summary_status: 'completed', summary_llm_call: llm_call)
 
         refresh
 
-        expect(page).to have_content llm_call.output
-        expect(page).to have_button 'Rewrite'
+        # Check the turbo frame section
+        within("#page-summary") do
+          expect(page).to have_content llm_call.output
+          expect(page).to have_button 'Rewrite'
+          expect(page).to have_button 'Preview'
+
+          expect(page).to have_content 'Relevant products'
+          expect(page).to have_content "You don't have any products to link to the summary yet"
+          expect(page).to have_link 'Go and add products'
+
+          click_on 'Preview'
+        end
+
+        # Check the Summer modal preview
+        within("div.dialog-modal") do
+          expect(page).to have_content article.title
+          expect(page).to have_content llm_call.output
+          expect(page).to have_content 'Subscribe on weekly summaries:'
+          expect(page).to have_content 'Powered by'
+        end
+
+        send_keys :escape
+
+        #
+        # Create a product and link it to the article to check the products section
+        #
+        product = project.products.create!(name: 'Test product', link: 'http://a.com/a', description: 'Op 12345678')
+        article.related_products << product
+
+        refresh
+
+        within("#page-summary") do
+          expect(page).to have_content 'Relevant products'
+          expect(page).to have_content "Test product"
+
+          click_on 'Preview'
+        end
+
+        # Check the Summer modal preview
+        within("div.dialog-modal") do
+          expect(page).to have_content article.title
+          expect(page).to have_content llm_call.output
+          expect(page).to have_content 'Test product'
+        end
+
+        send_keys :escape
+
+        within('#table_project_article_product') do
+          find("input[type='checkbox']").set(false)
+        end
+
+        expect(page).to have_content '"Test product" product is disabled'
+
+        within("#page-summary") do
+          click_on 'Preview'
+
+          within("div.dialog-modal") do
+            expect(page).to have_content article.title
+            expect(page).to have_content llm_call.output
+            expect(page).not_to have_content 'Test product'
+          end
+        end
       end
     end
   end
