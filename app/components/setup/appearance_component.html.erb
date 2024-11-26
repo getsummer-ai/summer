@@ -1,28 +1,53 @@
 <%
   # @type [Project::ProjectAppearanceSettings]
   settings = @project_appearance_settings
-  frame_color_class = case settings.frame_theme
-                      when 'white' then 'bg-white'
-                      when 'black' then 'bg-black'
-                      else ''
-                      end
-  button_color_class = case settings.button_theme
-                       when 'white' then 'bg-white text-black'
-                       when 'black' then 'bg-black text-white'
-                       else ''
-                       end
-  button_text = case @lang
-                       when 'en' then 'Summarize'
-                       when 'es' then 'Resumir'
-                       else ''
-                       end
-
+  frame_color_class =
+  case settings.frame_theme
+  when 'white'
+    'bg-white text-black'
+  when 'black'
+    'bg-[#242424] text-white'
+  else
+    ''
+  end
+  button_color_class =
+  case settings.button_theme
+  when 'white'
+    'bg-white text-black'
+  when 'black'
+    'bg-[#000000d9] text-white'
+  else
+    ''
+  end
+  button_text =
+  case @lang
+  when 'en'
+    'Summarize'
+  when 'es'
+    'Resumir'
+  else
+    ''
+  end
 %>
-<div id="setup-appearance-component" class="p-6 md:p-10 w-52 bg-default flex-1 flex justify-center items-center flex-col">
-  <div class="w-40 h-40 md:w-[188px] md:h-[180px] rounded-lg border <%=frame_color_class %>"></div>
+<div
+  id="setup-appearance-component"
+  class="p-6 md:p-10 w-52 bg-default flex-1 flex justify-center items-center flex-col"
+>
   <div
-    class="py-1 px-3 cursor-default text-opacity-85 border text-center text-xs text-[11px]
-          <%=button_color_class %> rounded-3xl mt-6"
+    class="w-40 h-40 md:w-[195px] md:h-[190px] p-3 rounded-lg border overflow-hidden <%= frame_color_class %>"
+  >
+    <div class="opacity-40 text-[6px] leading-[10px]">Summer AI</div>
+    <div class="mt-1.5 opacity-80 text-[8px] leading-[13px]">
+      AI is reshaping web technology by revolutionizing customer interaction, operational
+      efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
+      challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
+      for AI to bridge the gap between AI’s potential and practical implementation. AI-focused UI
+      toolkits can simplify AI integration by providing customizable components...
+    </div>
+  </div>
+  <div
+    class="py-1 px-2 border text-[10px] leading-3
+    shadow-md cursor-pointer <%= button_color_class %> rounded-3xl mt-6"
   >
     <%= button_text %>
   </div>
