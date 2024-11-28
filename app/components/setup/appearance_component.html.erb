@@ -1,6 +1,6 @@
 <%
-  # @type [Project::ProjectAppearanceSettings]
-  settings = @project_appearance_settings
+  lang = @project.settings.lang
+  settings = @project.settings.appearance
   frame_color_class =
   case settings.frame_theme
   when 'white'
@@ -20,7 +20,7 @@
     ''
   end
   button_text =
-  case @lang
+  case lang
   when 'en'
     'Summarize'
   when 'es'
@@ -45,10 +45,18 @@
       toolkits can simplify AI integration by providing customizable components...
     </div>
   </div>
-  <div
-    class="py-1 px-2 border text-[10px] leading-3
-    shadow-md cursor-pointer <%= button_color_class %> rounded-3xl mt-6"
-  >
-    <%= button_text %>
-  </div>
+  <%
+    props = {
+      settings: @project.decorate.summary_settings,
+      article: {
+        title:  'Hey',
+        page_id: '0'
+      },
+      summary: 'Hey!!',
+      services: [],
+      buttonClass: "py-1 px-2 text-[10px] leading-3 shadow-md cursor-pointer #{button_color_class} rounded-3xl mt-6",
+      buttonText: button_text
+    }
+  %>
+  <div id="preview-summary-with-article" style="min-height: 68px;" data-props="<%=props.to_json %>"></div>
 </div>

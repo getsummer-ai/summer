@@ -1,6 +1,4 @@
 <%= turbo_stream.replace "setup-appearance-component" do %>
-  <%= render Setup::AppearanceComponent.new(
-    lang: current_project.settings.lang,
-    project_appearance_settings: current_project.settings.appearance
-  ) %>
+  <%= render Setup::AppearanceComponent.new(project: current_project) %>
 <% end %>
+<turbo-stream action="reload-apps"></turbo-stream>

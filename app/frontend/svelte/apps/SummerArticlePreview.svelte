@@ -6,6 +6,8 @@
   export let settings: SettingsInfo;
   export let article: ArticleInitInfo;
   export let summary: string = '';
+  export let buttonClass: string = 'btn btn-sm rounded-lg';
+  export let buttonText: string = 'Preview';
   export let services: ProjectProductType[] = [];
   let loading = false;
 
@@ -21,14 +23,7 @@
   };
 </script>
 
-<svelte:head>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
-    rel="stylesheet"
-  />
-</svelte:head>
-
-<button class="btn btn-sm rounded-lg" on:click={onButtonClick}> Preview </button>
+<button class={buttonClass} on:click={onButtonClick}> {buttonText} </button>
 
 <ModalWrapper
   bind:showModal

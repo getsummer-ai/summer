@@ -3,7 +3,6 @@
   Here, you can find setup instructions. Change the button's appearance even after installing the code.
 </p>
 
-
 <div class="p-6 mt-6 shadow-md border border-gray-200 rounded-2xl">
   <h3 class="font-semibold text-lg">Setup checklist</h3>
   <ul class="mt-4 list-decimal list-inside">
@@ -66,13 +65,9 @@
       <% end %>
     <% end %>
   </div>
-  <%=render Setup::AppearanceComponent.new(
-    lang: current_project.settings.lang,
-    project_appearance_settings: current_project.settings.appearance
-  ) %>
+  <%=render Setup::AppearanceComponent.new(project: current_project) %>
 </div>
 <hr class="my-12">
-
 
 <h2 id="code_snippet" class="font-semibold text-xl mt-10">Code Snippet</h2>
 <p class="opacity-60 mt-1">
@@ -84,15 +79,12 @@
   or some information that is possible to summarize.
 </p>
 
-
 <!-- Prism.js theme CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-twilight.min.css">
 <!-- Prism.js JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
 
-
 <div class="bg-[#141414] mt-8 rounded-lg">
-
   <div class="p-4">
     <div class="flex items-center justify-between">
       <span class="text-gray-500">HTML</span>
