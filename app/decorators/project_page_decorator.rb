@@ -12,10 +12,7 @@ class ProjectPageDecorator < Draper::Decorator
   #   end
 
   def summary_symbols
-    ProjectArticle
-      .joins(:summary_llm_call)
-      .where(id: project_article_id)
-      .pick(Arel.sql('CHAR_LENGTH(output)')) || 0
+    article_summary_info[1]
   end
 
   def article_symbols
@@ -24,23 +21,20 @@ class ProjectPageDecorator < Draper::Decorator
   end
 
   # @return [String]
-  def summary_html
-    MarkdownLib.render(summary_md)
-  end
+  def summary_html = MarkdownLib.render(summary_md)
 
-  def summary_md
-    article_summary_info[0] || ''
-  end
+  def summary_md = article_summary_info[0]
 
-  # @return [String]
-  def summary_created_at
-    article_summary_info[1]
-  end
+  def summary_created_at = article_summary_info[2]
 
   def article_summary_info
     @article_summary_info ||= ProjectArticle
       .joins(:summary_llm_call)
       .where(id: project_article_id)
-      .pick(:output, 'project_llm_calls.created_at') || ['', nil]
+      .pick(
+        :output,
+        Arel.sql('CHAR_LENGTH(output)'),
+        'project_llm_calls.created_at'
+      ) || ['', 0, nil]
   end
 end

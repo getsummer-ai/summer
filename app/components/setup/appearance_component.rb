@@ -7,6 +7,13 @@ module Setup
     def initialize(project:)
       super
       @project = project
+      @article =
+        ProjectArticle
+          .only_required_columns
+          .where(
+            project_id: @project.id,
+            summary_status: ProjectArticle.summary_statuses[:completed]
+          ).last
     end
   end
 end

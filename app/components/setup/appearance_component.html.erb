@@ -1,34 +1,45 @@
 <%
-  lang = @project.settings.lang
-  settings = @project.settings.appearance
+  settings = @project.settings
   frame_color_class =
-  case settings.frame_theme
-  when 'white'
-    'bg-white text-black'
-  when 'black'
-    'bg-[#242424] text-white'
-  else
-    ''
-  end
+    case settings.appearance.frame_theme
+    when 'white'
+      'bg-white text-black'
+    when 'black'
+      'bg-[#242424] text-white'
+    else
+      ''
+    end
+
   button_color_class =
-  case settings.button_theme
-  when 'white'
-    'bg-white text-black'
-  when 'black'
-    'bg-[#000000d9] text-white'
-  else
-    ''
-  end
+    case settings.appearance.button_theme
+    when 'white'
+      'bg-white text-black'
+    when 'black'
+      'bg-[#000000d9] text-white'
+    else
+      ''
+    end
+
   button_text =
-  case lang
-  when 'en'
-    'Summarize'
-  when 'es'
-    'Resumir'
-  else
-    ''
-  end
+    case settings.lang
+    when 'en'
+      'Summarize'
+    when 'es'
+      'Resumir'
+    else
+      ''
+    end
+
+  title = @article&.title || 'Summer AI'
+  summary = @article&.summary_llm_call&.output || <<~SUMMARY
+          AI is reshaping web technology by revolutionizing customer interaction, operational
+          efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
+          challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
+          for AI to bridge the gap between AI’s potential and practical implementation. AI-focused UI
+          toolkits can simplify AI integration by providing customizable components...
+        SUMMARY
 %>
+
 <div
   id="setup-appearance-component"
   class="p-6 md:p-10 w-52 bg-default flex-1 flex justify-center items-center flex-col"
@@ -36,23 +47,19 @@
   <div
     class="w-40 h-40 md:w-[195px] md:h-[190px] p-3 rounded-lg border overflow-hidden <%= frame_color_class %>"
   >
-    <div class="opacity-40 text-[6px] leading-[10px]">Summer AI</div>
+    <div class="opacity-40 text-[5px] leading-[10px]"><%=title %></div>
     <div class="mt-1.5 opacity-80 text-[8px] leading-[13px]">
-      AI is reshaping web technology by revolutionizing customer interaction, operational
-      efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
-      challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
-      for AI to bridge the gap between AI’s potential and practical implementation. AI-focused UI
-      toolkits can simplify AI integration by providing customizable components...
+      <%=summary %>
     </div>
   </div>
   <%
     props = {
       settings: @project.decorate.summary_settings,
       article: {
-        title:  'Hey',
+        title:  title,
         page_id: '0'
       },
-      summary: 'Hey!!',
+      summary: summary,
       services: [],
       buttonClass: "py-1 px-2 text-[10px] leading-3 shadow-md cursor-pointer #{button_color_class} rounded-3xl mt-6",
       buttonText: button_text
