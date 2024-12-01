@@ -1,7 +1,8 @@
 <%
   settings = @project.settings
+  appearance = settings.appearance
   frame_color_class =
-    case settings.appearance.frame_theme
+    case appearance.frame_theme
     when 'white'
       'bg-white text-black'
     when 'black'
@@ -9,9 +10,18 @@
     else
       ''
     end
+  gradient_styles =
+    case appearance.frame_theme
+    when 'white'
+      'background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, #fff 100%);'
+    when 'black'
+      'background: linear-gradient(180deg, rgba(36, 36, 36, 0) 0%, #242424 100%);'
+    else
+      ''
+    end
 
   button_color_class =
-    case settings.appearance.button_theme
+    case appearance.button_theme
     when 'white'
       'bg-white text-black'
     when 'black'
@@ -31,13 +41,21 @@
     end
 
   title = @article&.title || 'Summer AI'
-  summary = @article&.summary_llm_call&.output || <<~SUMMARY
-          AI is reshaping web technology by revolutionizing customer interaction, operational
-          efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
-          challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
-          for AI to bridge the gap between AI’s potential and practical implementation. AI-focused UI
-          toolkits can simplify AI integration by providing customizable components...
-        SUMMARY
+  output_exists = @article&.summary_llm_call&.output&.present?
+  summary_md = output_exists ? @article.summary_llm_call.output : <<~SUMMARY
+    AI is reshaping web technology by revolutionizing customer interaction, operational
+    efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
+    challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
+    for AI to bridge the gap between AI’s potential and practical implementation. AI-focused UI
+    toolkits can simplify AI integration by providing customizable components...
+  SUMMARY
+  summary_html = output_exists ? @article.summary_llm_call.markdown_output_as_html : <<~SUMMARY
+    <p>AI is reshaping web technology by revolutionizing customer interaction, operational
+    efficiency, and user experiences. Despite its potential, integrating AI into web platforms is
+    challenging due to its complexity and cost. This calls for user interface (UI) layers tailored
+    for AI to bridge the gap between AI’s potential and practical implementation.</p> <p>AI-focused UI
+    toolkits can simplify AI integration by providing customizable components...</p>
+  SUMMARY
 %>
 
 <div
@@ -45,12 +63,16 @@
   class="p-6 md:p-10 w-52 bg-default flex-1 flex justify-center items-center flex-col"
 >
   <div
-    class="w-40 h-40 md:w-[195px] md:h-[190px] p-3 rounded-lg border overflow-hidden <%= frame_color_class %>"
+    class="w-40 h-40 md:w-[194px] md:h-[200px] p-3 rounded-lg border overflow-hidden relative <%= frame_color_class %>"
   >
     <div class="opacity-40 text-[5px] leading-[10px]"><%=title %></div>
-    <div class="mt-1.5 opacity-80 text-[8px] leading-[13px]">
-      <%=summary %>
+    <div class="mt-1.5 opacity-80 text-[8px] leading-[12.5px] [&>p]:mt-1">
+      <%==summary_html %>
     </div>
+    <div
+      class="absolute bottom-0 h-8 left-0 pointer-events-none w-full"
+      style="background-size: 100% 80px; <%=gradient_styles %>"
+    ></div>
   </div>
   <%
     props = {
@@ -59,7 +81,7 @@
         title:  title,
         page_id: '0'
       },
-      summary: summary,
+      summary: summary_md,
       services: [],
       buttonClass: "py-1 px-2 text-[10px] leading-3 shadow-md cursor-pointer #{button_color_class} rounded-3xl mt-6",
       buttonText: button_text

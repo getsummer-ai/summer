@@ -25,6 +25,13 @@ class ProjectLlmCall < ApplicationRecord
       **attributes,
     )
   end
+
+  # Returns the output of the call as HTML
+  # @return [String]
+  def markdown_output_as_html
+    return '' if feature != 'summary'
+    MarkdownLib.render(output)
+  end
 end
 
 # == Schema Information

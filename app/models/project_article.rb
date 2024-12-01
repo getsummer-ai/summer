@@ -61,11 +61,11 @@ class ProjectArticle < ApplicationRecord
            source: :product
 
   belongs_to :summary_llm_call,
-             -> { select(:output) },
+             -> { select(:id, :feature, :output) },
              class_name: 'ProjectLlmCall',
              optional: true
   belongs_to :products_llm_call,
-             -> { select(:output) },
+             -> { select(:id, :feature, :output) },
              class_name: 'ProjectLlmCall',
              optional: true
 
