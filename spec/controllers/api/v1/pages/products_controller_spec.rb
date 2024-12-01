@@ -80,6 +80,7 @@ RSpec.describe Api::V1::Pages::ProductsController do
 
       article.related_products = [p2, p1]
       article.products_status_completed!
+      project_page.reload
 
       page_id = BasicEncrypting.encode_array([project_page.id, Time.now.utc.to_i + 1000])
       get :show, params: { page_id:, format: :json }

@@ -88,7 +88,7 @@ module Private
     end
 
     def find_page_article
-      @article = ProjectArticle.only_required_columns.find(@project_page.project_article_id)
+      @article = @project_page.article
     end
     
     def check_article_data

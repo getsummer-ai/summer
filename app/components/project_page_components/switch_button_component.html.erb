@@ -4,7 +4,7 @@
           method: :patch,
           id: custom_dom_id do |form|
   if @is_checkbox
-    if @page.article_minimal_info.button_skipped?
+    if @page.article.button_skipped?
       concat form.check_box :is_accessible, checked: false, class: 'toggle toggle-summer', disabled: true
     else
       concat form.check_box :is_accessible, class: 'toggle toggle-summer', onchange: 'this.form.requestSubmit()'

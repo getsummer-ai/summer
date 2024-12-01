@@ -21,7 +21,7 @@
 <% end %>
 
 <%=turbo_stream.replace 'preview-summary-with-article' do%>
-  <% article = @project_page.article_minimal_info %>
+  <% article = @project_page.article %>
   <%=
     render ProjectPageComponents::PreviewSummaryButtonComponent.new(
       current_project:,

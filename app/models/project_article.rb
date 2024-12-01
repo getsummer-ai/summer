@@ -5,6 +5,7 @@
 class ProjectArticle < ApplicationRecord
   include StoreModel::NestedAttributes
   include Trackable
+  include PassiveColumns
 
   non_trackable_params(%i[article])
 
@@ -72,23 +73,25 @@ class ProjectArticle < ApplicationRecord
   validates :article_hash, presence: true, uniqueness: { scope: [:project_id] }
   validates :info, store_model: { merge_errors: true }
 
-  scope :only_required_columns,
-        -> do
-          select(
-            %w[
-              id
-              project_id
-              title
-              info
-              tokens_count
-              summary_status
-              products_status
-              summary_llm_call_id
-              products_llm_call_id
-              article_hash
-            ],
-          )
-        end
+  # scope :only_required_columns,
+  #       -> do
+  #         select(
+  #           %w[
+  #             id
+  #             project_id
+  #             title
+  #             info
+  #             tokens_count
+  #             summary_status
+  #             products_status
+  #             summary_llm_call_id
+  #             products_llm_call_id
+  #             article_hash
+  #           ],
+  #         )
+  #       end
+
+  passive_columns :article
 
   def to_param
     encrypted_id

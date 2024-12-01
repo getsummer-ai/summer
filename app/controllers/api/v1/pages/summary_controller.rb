@@ -11,7 +11,7 @@ module Api
 
         def stream
           sse = SSE.new(response.stream)
-          article = ProjectArticle.only_required_columns.find(project_page.project_article_id)
+          article = ProjectArticle.find(project_page.project_article_id)
           SummarizeArticleJob.perform_later(article.id) if article.summary_status_wait?
           send_article(sse, article)
           StatisticService.new(project: @current_project, trackable: project_page).click!

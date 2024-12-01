@@ -7,12 +7,6 @@ class ProjectPage < ApplicationRecord
   belongs_to :project
   belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
 
-  belongs_to :article_minimal_info,
-             -> { only_required_columns },
-             class_name: "ProjectArticle",
-             foreign_key: "project_article_id",
-             inverse_of: :pages
-
   has_one :statistics_by_total,
           class_name: "ProjectStatisticsByTotal",
           as: :trackable

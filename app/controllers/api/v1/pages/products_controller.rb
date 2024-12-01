@@ -10,8 +10,7 @@ module Api
 
         def show
           # @type [ProjectArticle]
-          article =
-            ProjectArticle.only_required_columns.find_by(id: project_page.project_article_id)
+          article = project_page.article
 
           if article.products_status_completed?
             @products = find_products_for project_page

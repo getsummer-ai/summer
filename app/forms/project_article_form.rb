@@ -25,7 +25,7 @@ class ProjectArticleForm
     return nil if invalid?
     @project_page = @project.pages.find_by(url_hash:)
     if @project_page.present?
-      return ProjectArticle.only_required_columns.find_by(id: @project_page.project_article_id)
+      return @project_page.article
     end
     create_article_and_url
   rescue StandardError => e
