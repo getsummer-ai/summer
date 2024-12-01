@@ -100,7 +100,9 @@ describe 'the Navigation process' do
 
       click_on 'Add Domain'
 
-      expect(page).to have_content 'Value is not a valid URL'
+      using_wait_time 3 do
+        expect(page).to have_content 'Value is not a valid URL'
+      end
 
       within("#new_project_path_form") do
         fill_in 'Address', with: 'http://localhost.com/blog'
