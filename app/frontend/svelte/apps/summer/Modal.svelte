@@ -198,6 +198,8 @@
         font-size: 20px;
         line-height: 30px;
         font-weight: 400;
+        -webkit-font-smoothing: subpixel-antialiased;
+        -moz-osx-font-smoothing: grayscale;
         padding: 0 32px;
         height: 100%;
         -ms-overflow-style: none;
@@ -290,7 +292,7 @@
       padding: 32px 0 16px;
       margin: 0;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       line-height: 16px;
 
       @media (max-width: 640px) {

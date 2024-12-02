@@ -31,7 +31,7 @@
   a {
     font-size: 15px;
     line-height: 22px;
-    font-weight: 500;
+    font-weight: 400;
     border-radius: 16px;
     padding: 20px;
     display: flex;

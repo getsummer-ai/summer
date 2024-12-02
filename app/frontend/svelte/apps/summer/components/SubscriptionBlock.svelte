@@ -68,7 +68,7 @@
 <style lang="scss">
   .subscription {
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 400;
     line-height: 22px;
     margin-top: 48px;
     animation: opacity-appear 0.2s ease-in-out;
@@ -85,7 +85,7 @@
       min-width: 30px;
       padding: 8px 16px 8px 0;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 400;
       line-height: 22px;
       background: none;
       border: none;
@@ -96,7 +96,7 @@
       border-radius: 100px;
       padding: 8px 16px;
       font-size: 15px;
-      font-weight: 500;
+      font-weight: 400;
       line-height: 22px;
       border: none;
       outline: none;
