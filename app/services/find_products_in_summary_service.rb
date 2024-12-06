@@ -63,12 +63,17 @@ class FindProductsInSummaryService
           info:,
         )
       @model.update!(
-        info_attributes: {
-          products: info,
-        },
-        related_product_ids: parse_result_get_ids(output),
+        info_attributes: { products: info },
         products_status: :completed,
         products_llm_call_id: call.id,
+      )
+      related_product_ids = parse_result_get_ids(output)
+      next if related_product_ids.empty?
+
+      ProjectArticleProduct.create(
+        related_product_ids.each_with_index.map do |project_product_id, idx|
+          { project_article_id: @model.id, project_product_id:, is_accessible: idx < 2 }
+        end
       )
     end
   end
