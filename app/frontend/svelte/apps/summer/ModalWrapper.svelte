@@ -1,5 +1,5 @@
 <script lang="ts">
-  import markdown from './markdown.js';
+  import { markdown, splitMarkdown } from './markdown.js';
   import Modal from './Modal.svelte';
   import LoadingIcon from './components/LoadingIcon.svelte';
   import ProjectProduct from './components/ProjectProduct.svelte';
@@ -67,11 +67,22 @@
       </div>
     {/if}
 
-    {@html markdown(summary)}
-
-    {#if settings.features.suggestion && services.length > 0}
-      {#each services as service}
+    {#each splitMarkdown(summary) as s, index}
+      {@html markdown(s)}
+      {#if settings.features.suggestion && services.length > 0 && index === 0}
         <ProjectProduct
+          class="pr-separator"
+          on:click={() => dispatch('product-click', { service: services[0] })}
+          service={services[0]}
+          theme={settings.appearance.frame_theme}
+        />
+      {/if}
+    {/each}
+
+    {#if settings.features.suggestion && services.length > 1}
+      {#each services.slice(1) as service, index}
+        <ProjectProduct
+          class={index === 0 ? '' : 'pr-extra'}
           on:click={() => dispatch('product-click', { service })}
           {service}
           theme={settings.appearance.frame_theme}

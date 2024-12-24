@@ -18,7 +18,7 @@
     'tzmTtDwo4v78EfmOAAAA==';
 </script>
 
-<a target="_blank" class="theme-{theme}" href={service.link} on:click={() => dispatch('click')}>
+<a target="_blank" class={`${$$props.class || ''} theme-${theme}`} href={service.link} on:click={() => dispatch('click')}>
   <div class="body">
     <img alt="preview" src="data:image/webp;base64,{service.icon ? service.icon : default_image}" />
     <span class="title">
@@ -42,6 +42,14 @@
     letter-spacing: normal;
     animation: zoom 1s cubic-bezier(0.34, 1.56, 0.64, 1);
 
+    &.pr-separator {
+      @apply mb-8 mt-8;
+    }
+
+    &.pr-extra {
+      margin-top: 10px;
+    }
+
     .body {
       @apply flex justify-between items-center;
       max-height: 44px;
@@ -56,10 +64,6 @@
       .title {
         @apply ml-4;
       }
-    }
-
-    &:not(:first-of-type) {
-      margin-top: 10px;
     }
 
     &.theme-white {

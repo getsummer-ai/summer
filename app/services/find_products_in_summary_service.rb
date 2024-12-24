@@ -8,7 +8,7 @@ class FindProductsInSummaryService
     "I need to understand if the following text " \
     "relates to the products I offer.\n%{article}\n" \
     "Please take a look at the product list: \n"
-  POSTFIX = "\nPlease respond as a JSON array without text or comments in the following format:" \
+  POSTFIX = "\nPlease reply as a JSON array ordered by best fit, without text or comments in the following format:" \
     " [{\"id\": number, \"related\": bool}]\n"
 
   # @param [ProjectArticle] model
