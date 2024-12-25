@@ -24,20 +24,17 @@ class User < ApplicationRecord
   def self.from_omniauth(auth, locale = nil)
     user =
       where(email: auth.info.email).first_or_create do |u|
-        u.provider = auth.provider
-        u.uid = auth.uid
-        u.avatar_url = auth.info.image
-        u.name = auth.info.name
         u.password = Devise.friendly_token
         u.locale = locale if User.locales.value?(locale.to_s)
       end
-
-    user.update(
-      provider: auth.provider,
-      uid: auth.uid,
-      name: auth.info.name,
-      avatar_url: auth.info.image
-    ) if user.provider.blank?
+    user.track!(source: 'User Omniauth') do
+      user.update(
+        provider: auth.provider,
+        uid: auth.uid,
+        name: auth.info.name,
+        avatar_url: auth.info.image,
+      )
+    end
     user
   end
 
