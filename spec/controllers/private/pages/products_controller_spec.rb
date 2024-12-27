@@ -63,7 +63,8 @@ RSpec.describe Private::Pages::ProductsController do
     end
 
     it 'redirects after attaching' do
-      expect { post(:create, params:) }.to change(ProjectArticleProduct, :count).by(1)
+      expect { post(:create, params:) }.to change(ProjectArticleProduct, :count).by(1).and \
+        change { article.reload.products_status }.from('wait').to('completed')
       expect(response).to redirect_to(project_page_path)
       expect(flash[:notice]).to eq('The product was successfully attached')
     end

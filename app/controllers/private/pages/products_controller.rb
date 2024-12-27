@@ -32,6 +32,8 @@ module Private
           )
         return render(:new, status: :unprocessable_entity) unless @article_product.save
 
+        @project_page.article.products_status_completed!
+
         notice = 'The product was successfully attached'
         respond_to do |format|
           format.html { redirect_to project_page_path, notice: }
