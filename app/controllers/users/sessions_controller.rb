@@ -8,7 +8,7 @@ module Users
     # end
     def after_sign_in_path_for(resource_or_scope)
       # return user_app_path(locale: resource.locale) if resource.is_a?(User)
-      stored_location_for(resource_or_scope) || user_app_path(locale: resource.locale)
+      stored_location_for(resource_or_scope) || user_app_path(locale: resource_or_scope.locale)
     end
 
     private
