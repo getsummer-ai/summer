@@ -41,27 +41,18 @@
 </mj-button>
 <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
 <mj-text>
-  By the way, in the coming months we are adding new features 🎉:
+  In the coming months we are adding this feature 🎉:
   <ul>
-    <li>
-      Advanced analytics for every blog page
-    </li>
-    <li>
-      Read percentage <br>
-      <span style="opacity: 50%">
-        Each page will have a percentage of how much it was read.
-      </span>
-    </li>
     <li>
       Recommendation service <br>
       <span style="opacity: 50%">
-        The person opening a summary will see the most relevant articles
+        A person opening a summary will see the most relevant articles
         from your blog to increase engagement and prevent potential clients from leaving.
       </span>
     </li>
   </ul>
 
-  Stay with us, and we will try to surprise you.
+  Stay with us, and we'll try our best to provide you with features that grab the attention of your readers.
 </mj-text>
 <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
 <mj-text>

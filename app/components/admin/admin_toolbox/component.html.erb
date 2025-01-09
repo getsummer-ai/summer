@@ -2,6 +2,7 @@
   <span>
     You're an admin and logged in as <b><%= @true_user.email %></b>
     <%= link_to 'See all users', admin_users_path, class: 'btn btn-summer ml-2', data: { turbo: false } %>
+    <%= link_to 'See all emails', admin_emails_path, class: 'btn btn-summer ml-2', data: { turbo: false } %>
   </span>
   <% if @current_user != @true_user %>
     <div class="mt-5 border-l-2 pl-5 pb-4">

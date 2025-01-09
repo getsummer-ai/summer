@@ -1,0 +1,5 @@
+<h2 class="font-semibold text-xl md:text-2xl">Email</h2>
+<%= link_to 'Back to the emails', admin_emails_path, class: 'btn btn-summer mt-4', data: { turbo: false } %>
+
+<iframe class="w-full mt-4" style="height: 700px;" src="<%=preview_admin_email_path(@email) %>">
+</iframe>

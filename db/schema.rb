@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_07_200000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,33 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
   create_enum "user_project_type", ["free", "basic", "light", "pro", "enterprise"]
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "message_id"
+    t.string "to"
+    t.string "from"
+    t.string "subject"
+    t.text "mail"
+    t.string "delivery_method"
+    t.string "mailer_name"
+    t.string "action_name"
+    t.datetime "sent_at"
+    t.integer "retries", limit: 2, default: 0
+    t.index ["created_at"], name: "index_emails_on_created_at"
+    t.index ["message_id"], name: "index_emails_on_message_id"
+  end
+
+  create_table "emails_emailables", force: :cascade do |t|
+    t.uuid "email_id", null: false
+    t.string "emailable_type"
+    t.string "emailable_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_id"], name: "index_emails_emailables_on_email_id"
+    t.index ["emailable_type", "emailable_id"], name: "index_emails_emailables_on_emailable"
   end
 
   create_table "events", force: :cascade do |t|
@@ -227,7 +254,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
     t.datetime "date_hour", precision: 0, null: false
     t.index ["project_id", "date"], name: "index_project_statistics_on_project_id_and_date"
     t.index ["project_id", "date_hour"], name: "index_project_statistics_on_project_id_and_date_hour"
-    t.index ["project_id", "trackable_type", "date_hour"], name: "project_statistics_test-dima_index"
     t.index ["project_id", "trackable_type", "trackable_id", "date", "hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__92da09a367", unique: true
     t.index ["project_id", "trackable_type", "trackable_id", "date_hour"], name: "idx_on_project_id_trackable_type_trackable_id_date__9b38d2b2a3", unique: true
     t.index ["project_id"], name: "index_project_statistics_on_project_id"
@@ -323,6 +349,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+  add_foreign_key "emails_emailables", "emails", on_update: :cascade, on_delete: :cascade
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_products", on_update: :cascade, on_delete: :cascade
@@ -341,15 +368,6 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
   add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 
-  create_view "project_statistics_by_totals", sql_definition: <<-SQL
-      SELECT ps.project_id,
-      ps.trackable_type,
-      ps.trackable_id,
-      (sum(ps.clicks))::bigint AS clicks,
-      (sum(ps.views))::bigint AS views
-     FROM project_statistics ps
-    GROUP BY ps.project_id, ps.trackable_type, ps.trackable_id;
-  SQL
   create_view "project_statistics_by_months", materialized: true, sql_definition: <<-SQL
       SELECT project_statistics.project_id,
       project_statistics.trackable_type,
@@ -364,4 +382,13 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_19_104800) do
   add_index "project_statistics_by_months", ["project_id", "trackable_type", "trackable_id", "month"], name: "idx_on_project_id_trackable_type_trackable_id_month_87660b5378"
   add_index "project_statistics_by_months", ["trackable_type", "trackable_id", "month"], name: "idx_on_trackable_type_trackable_id_month_ac97d1a671", unique: true
 
+  create_view "project_statistics_by_totals", sql_definition: <<-SQL
+      SELECT ps.project_id,
+      ps.trackable_type,
+      ps.trackable_id,
+      (sum(ps.clicks))::bigint AS clicks,
+      (sum(ps.views))::bigint AS views
+     FROM project_statistics ps
+    GROUP BY ps.project_id, ps.trackable_type, ps.trackable_id;
+  SQL
 end

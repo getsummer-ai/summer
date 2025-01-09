@@ -103,6 +103,9 @@ Rails.application.routes.draw do
     mount Avo::Engine, at: Avo.configuration.root_path
 
     namespace :admin do
+      resources :emails, only: [:index, :show] do
+        get :preview, on: :member
+      end
       resources :users, only: [:index] do
         post :impersonate, on: :member
         post :stop_impersonating, on: :collection
