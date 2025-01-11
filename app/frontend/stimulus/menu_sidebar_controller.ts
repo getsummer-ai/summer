@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus'
 import { useClickOutside } from 'stimulus-use'
-import { lock, unlock } from '@/utils/body-scroll-lock';
+// import { lock, unlock } from '@/utils/body-scroll-lock';
 
 export default class MenuSidebarController extends Controller {
   static targets = ['checkbox'];
@@ -37,12 +37,14 @@ export default class MenuSidebarController extends Controller {
       this.menu.classList.remove('hidden');
       this.menu.classList.add('flex');
       this.menu.classList.add('shadow-2xl');
-      lock(this.menu);
+      // I'm removing the lock because it's causing a bug on mobile
+      // since I have no way to unlock it when links are clicked
+      // lock(this.menu);
     } else {
       this.menu.classList.add('hidden');
       this.menu.classList.remove('flex');
       this.menu.classList.remove('shadow-2xl');
-      unlock();
+      // unlock();
     }
     setTimeout(() => {
       this.ableToClick = true;
