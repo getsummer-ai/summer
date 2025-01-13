@@ -21,7 +21,7 @@ module Emails
         @email = Email.find(id).tap { |e| e.update attrs }
       else
         Rails.logger.debug retrieve_header('X-SM-Emailables').to_sentence
-        attrs[:emails_emailables_attributes] = retrieve_header('X-SM-Emailables').presence || []
+        attrs[:email_related_models_attributes] = retrieve_header('X-SM-Emailables').presence || []
         @email = Email.create(attrs)
       end
 

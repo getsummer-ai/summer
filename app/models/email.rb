@@ -5,11 +5,8 @@ class Email < ApplicationRecord
   # include PassiveColumns
   # passive_columns :mail
 
-  has_many :emails_emailables, dependent: :destroy
-
-  accepts_nested_attributes_for :emails_emailables
-
-  scope :recent, -> { where(emails: { created_at: 1.month.ago.. }) }
+  has_many :email_related_models, dependent: :destroy
+  accepts_nested_attributes_for :email_related_models
 
   validates :from, presence: true
 
@@ -17,7 +14,7 @@ class Email < ApplicationRecord
   # @param [ActiveRecord::Base] model any ActiveRecord model
   # @return [Email::ActiveRecord_Relation] all emails for a model
   def self.emails_for(model)
-    Email.joins(:emails_emailables).where(emails_emailables: { emailable: model })
+    Email.joins(:email_related_models).where(email_related_models: { model: })
   end
 
   # If email reached mail server. Status should present and not be an error.

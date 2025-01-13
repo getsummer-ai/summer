@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_07_200000) do
+ActiveRecord::Schema[7.2].define(version: 202501121445000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,6 +25,16 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_07_200000) do
   create_enum "user_project_type", ["free", "basic", "light", "pro", "enterprise"]
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "email_related_models", force: :cascade do |t|
+    t.uuid "email_id", null: false
+    t.string "model_type"
+    t.string "model_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email_id"], name: "index_email_related_models_on_email_id"
+    t.index ["model_type", "model_id"], name: "index_emails_emailables_on_emailable"
   end
 
   create_table "emails", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -42,16 +52,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_07_200000) do
     t.integer "retries", limit: 2, default: 0
     t.index ["created_at"], name: "index_emails_on_created_at"
     t.index ["message_id"], name: "index_emails_on_message_id"
-  end
-
-  create_table "emails_emailables", force: :cascade do |t|
-    t.uuid "email_id", null: false
-    t.string "emailable_type"
-    t.string "emailable_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email_id"], name: "index_emails_emailables_on_email_id"
-    t.index ["emailable_type", "emailable_id"], name: "index_emails_emailables_on_emailable"
   end
 
   create_table "events", force: :cascade do |t|
@@ -349,7 +349,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_07_200000) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_foreign_key "emails_emailables", "emails", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "email_related_models", "emails", on_update: :cascade, on_delete: :cascade
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_products", on_update: :cascade, on_delete: :cascade

@@ -14,7 +14,7 @@ module EmailablesCollectorConcern
     # This is needed for the Emails::Updater to attach them to the email.
     emailables = Emails::EmailablesCollector.new(self).perform
     emailables_array = emailables.map do |model|
-      { emailable_id: model.id, emailable_type: model.class.name }
+      { model_id: model.id, model_type: model.class.name }
     end
     # Store models in the message headers
     @_message['X-SM-Emailables'] ||= emailables_array

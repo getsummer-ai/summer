@@ -16,7 +16,7 @@ describe Emails::EmailablesCollector do
 
   describe '#perform' do
     def to_emailable(arr)
-      Array.wrap(arr).map { |v| {emailable_id: v.id, emailable_type: v.class.name} }
+      Array.wrap(arr).map { |v| { model_id: v.id, model_type: v.class.name } }
     end
 
     it 'collects models of mixed types' do
