@@ -79,7 +79,6 @@ class ProjectForm
         name:,
         protocol: parsed_urls[0].scheme,
         domain: first_host,
-        free_clicks_threshold: 0,
         default_llm: 'gpt-4o',
         paths: parsed_urls.filter_map(&:path),
       )

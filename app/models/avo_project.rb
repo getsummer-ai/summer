@@ -31,24 +31,23 @@ end
 #
 # Table name: projects
 #
-#  id                    :bigint           not null, primary key
-#  default_llm           :enum             default("gpt_4o_mini"), not null
-#  deleted_at            :datetime
-#  domain                :string           not null
-#  free_clicks_threshold :integer          default(500), not null
-#  guidelines            :text             default("")
-#  name                  :string           default(""), not null
-#  paths                 :jsonb            not null
-#  plan                  :enum             default("free"), not null
-#  protocol              :string           not null
-#  settings              :jsonb            not null
-#  status                :enum             default("active"), not null
-#  stripe                :jsonb            not null
-#  uuid                  :uuid             not null
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  subscription_id       :bigint
-#  user_id               :bigint           not null
+#  id              :bigint           not null, primary key
+#  default_llm     :enum             default("gpt_4o_mini"), not null
+#  deleted_at      :datetime
+#  domain          :string           not null
+#  guidelines      :text             default("")
+#  name            :string           default(""), not null
+#  paths           :jsonb            not null
+#  plan            :enum             default("free"), not null
+#  protocol        :string           not null
+#  settings        :jsonb            not null
+#  status          :enum             default("active"), not null
+#  stripe          :jsonb            not null
+#  uuid            :uuid             not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  subscription_id :bigint
+#  user_id         :bigint           not null
 #
 # Indexes
 #
