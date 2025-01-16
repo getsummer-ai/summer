@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 202501161835000) do
+ActiveRecord::Schema[7.2].define(version: 202501161905000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -305,9 +305,11 @@ ActiveRecord::Schema[7.2].define(version: 202501161835000) do
     t.text "guidelines", default: ""
     t.jsonb "stripe", default: {}, null: false
     t.bigint "subscription_id"
+    t.string "domain_alias"
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["subscription_id"], name: "index_projects_on_subscription_id"
     t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
+    t.index ["user_id", "domain_alias"], name: "index_projects_on_user_id_and_domain_alias", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"
     t.index ["user_id"], name: "index_projects_on_user_id"
     t.index ["uuid"], name: "index_projects_on_uuid", unique: true

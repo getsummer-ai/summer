@@ -10,9 +10,6 @@ class Project < ApplicationRecord
   include EncryptedKey
   include PassiveColumns
 
-  LIGHT_PLAN_THRESHOLD = 5_000
-  PRO_PLAN_THRESHOLD = 25_000
-
   ALREADY_TAKEN_ERROR = 'is already taken'
 
   enum :plan,
@@ -85,19 +82,30 @@ class Project < ApplicationRecord
   validates :domain,
             domain_url: true,
             presence: true,
+            length: { maximum: 500 },
             uniqueness: {
               scope: :user_id,
-              # case_sensitive: false,
               conditions: -> { available },
               message: ALREADY_TAKEN_ERROR,
             },
             if: -> { domain_changed? }
 
+  validates :domain_alias,
+            domain_url: true,
+            presence: false,
+            length: { maximum: 500 },
+            uniqueness: {
+              scope: :user_id,
+              conditions: -> { available },
+              message: ALREADY_TAKEN_ERROR,
+            },
+            if: -> { domain_alias_changed? }
+
   validate :validate_paths, if: -> { paths_changed? }
   validates :guidelines, length: { maximum: 500 }
 
   normalizes :name, with: ->(name) { name.strip }
-  normalizes :domain, with: ->(domain) { domain.downcase }
+  normalizes :domain, :domain_alias, with: ->(domain) { domain.downcase }
 
   before_save if: -> { domain_changed? } do |project|
     project.domain = Project.parse_url(domain)&.host
@@ -149,6 +157,7 @@ end
 #  default_llm     :enum             default("gpt_4o_mini"), not null
 #  deleted_at      :datetime
 #  domain          :string           not null
+#  domain_alias    :string
 #  guidelines      :text             default("")
 #  name            :string           default(""), not null
 #  paths           :jsonb            not null
@@ -165,12 +174,13 @@ end
 #
 # Indexes
 #
-#  index_projects_on_created_at          (created_at)
-#  index_projects_on_subscription_id     (subscription_id)
-#  index_projects_on_user_id             (user_id)
-#  index_projects_on_user_id_and_domain  (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_user_id_and_name    (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_uuid                (uuid) UNIQUE
+#  index_projects_on_created_at                (created_at)
+#  index_projects_on_subscription_id           (subscription_id)
+#  index_projects_on_user_id                   (user_id)
+#  index_projects_on_user_id_and_domain        (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
+#  index_projects_on_user_id_and_domain_alias  (user_id,domain_alias) UNIQUE WHERE (status <> 'deleted'::user_project_status)
+#  index_projects_on_user_id_and_name          (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
+#  index_projects_on_uuid                      (uuid) UNIQUE
 #
 # Foreign Keys
 #

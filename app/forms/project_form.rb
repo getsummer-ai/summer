@@ -2,8 +2,6 @@
 class ProjectForm
   include ActiveModel::Model
 
-  # serialize :urls, Array
-
   attr_accessor :urls, :name
 
   validates :name, presence: true, length: 3..50

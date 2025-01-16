@@ -45,6 +45,20 @@ RSpec.describe ProjectForm do
       expect(form.errors.full_messages).to include 'Name is already taken'
     end
 
+    it 'returns an error if the URL contains very long domain or name' do
+      form = described_class.new(
+        user, { name: 'Test Project' * 1000, urls: ["https://www.#{'local' * 1000}.com"] }
+      )
+      expect(form.create).to be_nil
+      expect(form.errors.full_messages).to include 'Name is too long (maximum is 50 characters)'
+
+      form = described_class.new(
+        user, { name: 'Test Project', urls: ["https://www.#{'local' * 1000}.com"] }
+      )
+      expect(form.create).to be_nil
+      expect(form.errors.full_messages).to include 'Domain is too long (maximum is 500 characters)'
+    end
+
     it 'returns an error as there is a project with the same domain already' do
       described_class.new(user, { name: 'Test Project', urls: ['http://localhost.com'] }).create
       form = described_class.new(user, { name: 'Test Project 2', urls: ['https://localhost.com'] })
