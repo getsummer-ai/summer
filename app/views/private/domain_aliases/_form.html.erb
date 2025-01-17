@@ -1,0 +1,47 @@
+<%= form_with model: form,
+             url: project_domain_alias_path,
+             method: :put,
+             builder: DaisyBuilder,
+             html: { id: dom_id(form, :edit) } do |f| %>
+  <div class="form-control">
+    <%= f.label :url, 'Address' %>
+    <%= f.text_field :url %>
+  </div>
+
+  <% if form.errors.any? %>
+    <div id="<%= dom_id(form, :errors) %>" class="text-xs mt-1">
+      <% form.errors.full_messages.each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render Notice::Component.new(container_class: 'mt-6') do %>
+    <div class="text-sm leading-4">
+      <b>Important:</b>
+      Framer and Webflow allow you to use an internal domain for a project before publishing changes
+      to the production domain.
+      <p class="mt-2"><b>https://frank-task-218761.framer.app</b></p>
+      <p class="my-2"><b>https://yoursite.webflow.io</b></p>
+
+      So go ahead and put a domain link if you use one.
+    </div>
+  <% end %>
+
+  <div class="form-control mt-8">
+    <% if form.domain_alias_set_previously? %>
+      <%=
+        link_to 'Remove Staging Domain',
+        project_domain_alias_path(form.project),
+        class: 'btn btn-summer mb-2 btn-block btn-red',
+        data: {
+          'turbo-frame': '_top',
+          'turbo-method': :delete,
+          turbo_confirm: 'Are you sure?',
+        }
+      %>
+    <% end %>
+
+    <%= f.submit 'Update', class: 'btn btn-summer btn-black btn-block' %>
+  </div>
+<% end %>

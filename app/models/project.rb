@@ -92,7 +92,7 @@ class Project < ApplicationRecord
 
   validates :domain_alias,
             domain_url: true,
-            presence: false,
+            allow_nil: true,
             length: { maximum: 500 },
             uniqueness: {
               scope: :user_id,

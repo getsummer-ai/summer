@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: "Staging Domain Address") do %>
+    <%= turbo_conditional_tag "domain-alias-frame", turbo_frame_request_id.present? do %>
+      <%= render "form", form: @domain_alias_form %>
+    <% end %>
+  <% end %>
+<% end %>

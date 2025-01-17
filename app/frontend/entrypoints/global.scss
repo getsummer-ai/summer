@@ -110,23 +110,27 @@ html, body {
   height: 34px;
   min-height: 34px;
   @apply text-base rounded-lg border-0;
+
   &.btn-red {
     @apply bg-red-100 text-red-500 hover:bg-red-200;
+  }
 
-    &[disabled] {
-      @apply opacity-50;
-    }
+  &.btn-white {
+    @apply bg-white hover:opacity-80 border;
   }
 
   &.btn-black {
     @apply bg-black text-white hover:opacity-80;
-    &[disabled] {
-      @apply opacity-50;
-    }
   }
 
-  &:hover {
-    @apply border-0;
+  &[disabled] {
+    @apply opacity-50;
+  }
+
+  &.btn-xs {
+    height: 24px;
+    min-height: 24px;
+    @apply text-xs rounded-md;
   }
 }
 

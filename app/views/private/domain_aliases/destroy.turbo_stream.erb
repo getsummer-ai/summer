@@ -1,0 +1,8 @@
+<turbo-stream action="del-hash-from-history"></turbo-stream>
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.replace "domain_alias" do %>
+  <%= render ProjectDomainAliasComponents::AddNewComponent.new(project: @current_project, dom_id: 'domain_alias') %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>

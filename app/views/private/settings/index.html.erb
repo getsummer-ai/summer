@@ -97,10 +97,15 @@
 
 <hr class="my-12" />
 
-<h3 class="font-semibold text-lg mt-10">Domain Addresses</h3>
+<h3 class="font-semibold text-lg mt-10">
+  <span>Domain Addresses</span>
+  <span class="text-xs rounded-md border border-black bg-black text-white py-1 px-2 align-middle"><%=@current_project.domain %></span>
+  <%= render ProjectDomainAliasComponents::AddNewComponent.new(project: @current_project, dom_id: 'domain_alias') %>
+</h3>
+
 <p class="opacity-50 mt-1">
   Summer will appear on the pages under this domain(s). If you experience issues with the domain or
-  want to change the root address contact support via support@getsummer.ai
+  want to change the root address contact support via <b>support@getsummer.ai</b>
 </p>
 
 <%= render Notice::Component.new(container_class: 'mt-6') do %>
@@ -141,7 +146,7 @@
   <div class="collapse-content">
     <h3 class="font-semibold text-lg">Delete Project</h3>
     <p class="opacity-50 mt-1">
-      You won’t be able to restore the data in case you delete this project.
+      You will not be able to recover data after deleting this project.
     </p>
     <%=
       link_to 'Delete Project',
