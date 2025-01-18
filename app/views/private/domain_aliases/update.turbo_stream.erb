@@ -1,13 +1,11 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
 <%= turbo_stream.replace "domain_alias" do %>
-  <%= render ProjectDomainAliasComponents::AddNewComponent.new(project: @current_project, dom_id: 'domain_alias') %>
-<% end %>
-
-<%= turbo_stream.replace dom_id(@domain_alias_form, :edit) do %>
-  <%= render "form", form: @domain_alias_form %>
-<% end %>
-
-<%= turbo_stream.replace dom_id(@domain_alias_form, :errors) do %>
-  <%='' %>
+  <%= render ProjectDomainAliasComponents::AddNewComponent.new(
+    project: @current_project,
+    dom_id: 'domain_alias',
+    class_name: 'btn-flash-awhile'
+  ) %>
 <% end %>
 
 <%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>

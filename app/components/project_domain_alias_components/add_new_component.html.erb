@@ -2,7 +2,7 @@
      @project.domain_alias.presence || '+ Add a staging domain',
      edit_project_domain_alias_path(@project),
      id: @dom_id,
-     class: 'btn btn-xs btn-summer btn-white align-middle',
+     class: "btn btn-xs btn-summer btn-white align-middle #{@class_name}",
      data: {'turbo-frame': "modal"}
    )
 %>

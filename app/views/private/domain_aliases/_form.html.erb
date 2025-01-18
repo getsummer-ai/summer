@@ -1,15 +1,14 @@
 <%= form_with model: form,
              url: project_domain_alias_path,
              method: :put,
-             builder: DaisyBuilder,
-             html: { id: dom_id(form, :edit) } do |f| %>
+             builder: DaisyBuilder do |f| %>
   <div class="form-control">
     <%= f.label :url, 'Address' %>
     <%= f.text_field :url %>
   </div>
 
   <% if form.errors.any? %>
-    <div id="<%= dom_id(form, :errors) %>" class="text-xs mt-1">
+    <div class="text-xs mt-1">
       <% form.errors.full_messages.each do |message| %>
         <div><%= message %></div>
       <% end %>

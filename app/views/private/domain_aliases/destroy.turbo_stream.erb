@@ -2,7 +2,11 @@
 <turbo-stream action="close-modal"></turbo-stream>
 
 <%= turbo_stream.replace "domain_alias" do %>
-  <%= render ProjectDomainAliasComponents::AddNewComponent.new(project: @current_project, dom_id: 'domain_alias') %>
+  <%= render ProjectDomainAliasComponents::AddNewComponent.new(
+    project: @current_project,
+    dom_id: 'domain_alias',
+    class_name: 'btn-flash-awhile'
+  ) %>
 <% end %>
 
 <%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>
