@@ -8,8 +8,8 @@ class CheckProjectRequestForm
   validates :referer, url: true, if: ->{ origin.blank? }
 
   # @param [Project] project
-  # @param [String] origin
-  # @param [String] referer
+  # @param [String, nil] origin
+  # @param [String, nil] referer
   def initialize(project, origin, referer)
     # @type [Project]
     @project = project
@@ -17,8 +17,8 @@ class CheckProjectRequestForm
     @referer = referer
   end
 
-  def valid?(*args)
-    super(*args)
+  def valid?(*)
+    super
     return false if errors.any?
     request_from_url = @origin.presence || @referer.presence
 

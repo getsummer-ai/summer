@@ -82,7 +82,9 @@ class Project < ApplicationRecord
   validates :domain,
             domain_url: true,
             presence: true,
-            length: { maximum: 500 },
+            length: {
+              maximum: 500,
+            },
             uniqueness: {
               scope: :user_id,
               conditions: -> { available },
@@ -93,7 +95,9 @@ class Project < ApplicationRecord
   validates :domain_alias,
             domain_url: true,
             allow_nil: true,
-            length: { maximum: 500 },
+            length: {
+              maximum: 500,
+            },
             uniqueness: {
               scope: :user_id,
               conditions: -> { available },
@@ -134,8 +138,11 @@ class Project < ApplicationRecord
     ProjectDecorator.new(self)
   end
 
+  # @param [String, nil] host
   def valid_host?(host)
-    host.to_s.delete_prefix('www.') == domain.to_s.delete_prefix('www.')
+    [domain.to_s.delete_prefix('www.'), domain_alias.to_s.delete_prefix('www.')].include?(
+      host.to_s.delete_prefix('www.'),
+    )
   end
 
   private
