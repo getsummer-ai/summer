@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_16_190500) do
+ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -219,6 +219,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_16_190500) do
     t.string "url", null: false
     t.boolean "is_accessible", default: true, null: false
     t.bigint "project_article_id", null: false
+    t.boolean "is_primary_domain", default: true, null: false
     t.index ["project_article_id"], name: "index_project_pages_on_project_article_id"
     t.index ["project_id", "url"], name: "index_project_pages_on_project_id_and_url", unique: true
     t.index ["project_id", "url_hash"], name: "index_project_pages_on_project_id_and_url_hash", unique: true

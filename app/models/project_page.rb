@@ -26,6 +26,7 @@ end
 #
 #  id                 :bigint           not null, primary key
 #  is_accessible      :boolean          default(TRUE), not null
+#  is_primary_domain  :boolean          default(TRUE), not null
 #  url                :string           not null
 #  url_hash           :string           not null
 #  created_at         :datetime         not null
