@@ -61,7 +61,12 @@ class ProjectArticleForm
     article = nil
     ActiveRecord::Base.transaction do
       article = find_or_create_article(scraped_article)
-      @project_page = @project.pages.create!(url:, url_hash:, article:)
+      @project_page = @project.pages.create!(
+        url:,
+        url_hash:,
+        article:,
+        is_primary_domain: @project.host_primary_domain?(parsed_url.host)
+      )
     end
     article
   end

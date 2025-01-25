@@ -145,6 +145,10 @@ class Project < ApplicationRecord
     )
   end
 
+  def host_primary_domain?(host)
+    domain.to_s.delete_prefix('www.') == host.to_s.delete_prefix('www.')
+  end
+
   private
 
   def validate_paths
