@@ -48,9 +48,8 @@ module Api
         return head(:bad_request) if article_url.blank?
         parsed_url = Project.parse_url(article_url)
 
-        if parsed_url.nil? || parsed_url.host != current_project.domain
-          return send_incorrect_domain_response!
-        end
+        return send_incorrect_domain_response! if parsed_url.nil?
+        return send_incorrect_domain_response! unless current_project.valid_host?(parsed_url.host)
 
         paths = @current_project.paths
         return if paths.empty? || !paths.find { |path| parsed_url.path.start_with?(path) }.nil?

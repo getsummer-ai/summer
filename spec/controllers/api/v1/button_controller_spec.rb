@@ -40,6 +40,14 @@ RSpec.describe Api::V1::ButtonController do
       expect(response).to have_http_status(:ok)
     end
 
+    it 'returns ok when a project\'s domain_alias includes the www subdomain' do
+      project.update!(domain: 'random.com')
+      project.update!(domain_alias: 'www.localhost.com')
+      request.headers['origin'] = 'http://localhost.com'
+      get(:settings)
+      expect(response).to have_http_status(:ok)
+    end
+
     it 'returns ok when there is only a referer header' do
       request.headers['referer'] = 'https://www.localhost.com/'
       get(:settings)
@@ -48,9 +56,7 @@ RSpec.describe Api::V1::ButtonController do
 
     context 'when the domain check passes' do
       render_views
-      before do
-        request.headers['origin'] = 'http://localhost.com'
-      end
+      before { request.headers['origin'] = 'http://localhost.com' }
 
       it 'returns response successfully' do
         get(:settings)
@@ -138,31 +144,36 @@ RSpec.describe Api::V1::ButtonController do
         )
       end
 
-      it 'saves parsed data in database' do
-        post_request
-        expect(response).to have_http_status(:ok)
-        expect([ProjectArticle.count, ProjectPage.count, ProjectArticle.first.pages.count]).to eq [
-             1,
-             1,
-             1,
-           ]
+      def check_response_for_successful_request
+        arr = [ProjectArticle.count, ProjectPage.count, ProjectArticle.first.pages.count]
+        expect(arr).to eq [1, 1, 1]
         article = project.articles.first
         expect(article.tokens_count).to be_a(Integer)
         expect(article.title).to eq 'New Year celebrations'
         expect(article.summary_status).to eq 'wait'
         expect(article.products_status).to eq 'wait'
 
-        page = project.pages.first
+        page = article.pages.first
         expect(page.url).to eq 'http://localhost:3000/new-year-celebrations'
         expect(page.is_accessible).to be true
+
+        body = response.parsed_body
+        expect(body['article']['page_id']).to be_a(String)
+        expect(body['article']['title']).to eq 'New Year celebrations'
       end
 
       it 'returns response successfully' do
         post_request
         expect(response).to have_http_status(:ok)
-        body = response.parsed_body
-        expect(body['article']['page_id']).to be_a(String)
-        expect(body['article']['title']).to eq 'New Year celebrations'
+        check_response_for_successful_request
+      end
+
+      it 'returns response successfully when the only domain_alias matches the domain of the url' do
+        project.update_attribute! :domain, 'random.com'
+        project.update_attribute! :domain_alias, 'localhost'
+        post_request
+        expect(response).to have_http_status(:ok)
+        check_response_for_successful_request
       end
 
       it 'returns 400 when URL is not in a body' do
