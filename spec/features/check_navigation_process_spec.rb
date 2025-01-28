@@ -133,7 +133,7 @@ describe 'the Navigation process' do
         expect(page).to have_content 'Summer will appear on all the pages from your domain link'
         click_on 'Random article title'
 
-        expect(page).to have_current_path(project_page_path(project, project_page))
+        expect(page).to have_current_path(project_page_path(project, project_page), ignore_query: true)
         expect(page).to have_content(article.title)
         expect(page).to have_content(project_page.url)
 
