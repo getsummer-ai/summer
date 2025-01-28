@@ -15,10 +15,14 @@ module Private
       @form =
         ProjectPagesQueryForm.new(
           current_project,
-          { search: params['search'], order: params['order'] },
+          {
+            search: params['search'],
+            order: params['order'],
+            show_staging_pages: params['show_staging_pages'],
+          },
           @month,
         )
-      @pagy, @pages = pagy(@form.query, items: 12)
+      @pagy, @pages = pagy(@form.query, items: 10)
       @statistics =
         ProjectStatistic::TotalsViewModel.new(current_project, @month, %i[pages actions])
     end
@@ -38,9 +42,8 @@ module Private
       SummarizeArticleJob.perform_now(@article.id)
       @article.reload
 
-      if @article.summary_status_completed? &&
-        current_project.products.exists? &&
-        (@article.products_status_wait? || @article.related_products.empty?)
+      if @article.summary_status_completed? && current_project.products.exists? &&
+           (@article.products_status_wait? || @article.related_products.empty?)
         FindProductsInSummaryJob.perform_now(@article.id)
       end
 
@@ -90,16 +93,17 @@ module Private
     def find_page_article
       @article = @project_page.article
     end
-    
+
     def check_article_data
       @error_message = nil
       @error_message = 'Can\'t generate a summary for the page.' if @article.summary_status_skipped?
-      @error_message = 'Can\'t update the summary. Try again later.' if @article.summary_status_error?
+      @error_message =
+        'Can\'t update the summary. Try again later.' if @article.summary_status_error?
       @error_message = 'Please wait for the completion.' if @article.summary_status_processing?
 
       if @error_message.nil?
         last_summary_date =
-        @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
+          @article.summary_llm_calls.where(id: @article.summary_llm_call_id).pick(:created_at)
         if last_summary_date.present? && last_summary_date > 1.day.ago
           wait_for = (last_summary_date + 1.day - Time.zone.now) / 1.hour
           @error_message = "Will be available for refresh in #{wait_for.ceil} hour(s)"
@@ -107,7 +111,7 @@ module Private
       end
 
       return if @error_message.blank?
-      
+
       flash[:alert] = @error_message
       redirect_to(project_page_path)
     end

@@ -5,19 +5,18 @@ class ProjectPage < ApplicationRecord
   include EncryptedKey
 
   belongs_to :project
-  belongs_to :article, class_name: 'ProjectArticle', foreign_key: 'project_article_id', inverse_of: :pages
+  belongs_to :article,
+             class_name: 'ProjectArticle',
+             foreign_key: 'project_article_id',
+             inverse_of: :pages
 
-  has_one :statistics_by_total,
-          class_name: "ProjectStatisticsByTotal",
-          as: :trackable
+  has_one :statistics_by_total, class_name: 'ProjectStatisticsByTotal', as: :trackable
 
-  has_many :statistics_by_months,
-          class_name: "ProjectStatisticsByMonth",
-          as: :trackable
+  has_many :statistics_by_months, class_name: 'ProjectStatisticsByMonth', as: :trackable
 
-  validates :url_hash, presence: true, uniqueness: {
-    scope: [:project_id]
-  }
+  scope :staging, -> { where(is_primary_domain: false) }
+
+  validates :url_hash, presence: true, uniqueness: { scope: [:project_id] }
 end
 
 # == Schema Information

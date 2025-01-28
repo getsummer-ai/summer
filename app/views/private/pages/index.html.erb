@@ -53,8 +53,10 @@
     <%=
       render 'private/pages/index/pages_form',
        form: @form,
-       show_search: @pagy.count >= 10 || @form.enabled_filters?,
+       show_search: @pagy.count >= 3 || @form.enabled_filters?,
        show_order: @pages.length > 0 || @form.enabled_filters?,
+       show_staging_pages_checkbox:
+         @current_project.domain_alias.present? || @current_project.pages.staging.exists?,
        current_project: @current_project
     %>
     <%= render 'private/pages/index/pages_table', project: @current_project, pages: @pages, pagy: @pagy %>

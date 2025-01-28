@@ -1,5 +1,5 @@
 <div>
-  <%=link_to project_pages_path, class: 'flex flex-row items-center font-medium' do %>
+  <%=link_to params[:from] || project_pages_path, class: 'flex flex-row items-center font-medium' do %>
     <svg xmlns="http://www.w3.org/2000/svg" width="7" height="12" viewBox="0 0 7 12" fill="none">
       <path d="M6.5 10.6885L1.5 5.68848L6.5 0.688476" stroke="black" stroke-width="1.2" />
     </svg>
@@ -9,12 +9,12 @@
 
 <h2 class="font-semibold text-xl mt-4"><%= @article.title %></h2>
 
-<div class="mt-2 opacity-50 tracking-tight">
+<div class="mt-2 text-xs opacity-50">
   <%=
     link_to @project_page_decorated.url,
         @project_page_decorated.url,
         target: '_blank',
-        class: 'underline underline-offset-1'
+        class: 'underline underline-offset-1 decoration-1'
   %>
 </div>
 

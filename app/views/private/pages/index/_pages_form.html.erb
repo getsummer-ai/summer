@@ -8,43 +8,63 @@
     }
   ) do |f|
 %>
-  <div class="flex justify-between">
+  <div class="flex justify-between mb-4">
     <div>
       <% if show_search %>
         <%=
           f.text_field :search,
-                 value: form.search,
-                 class: 'input input-sm input-search-summer pl-0 w-full',
-                 placeholder: 'Search by title or URL',
-                 data: {
-                   auto_submit_input_form_target: 'input',
-                   action: 'input->auto-submit-input-form#debouncedSubmit',
-                 }
+             value: form.search,
+             class: 'input input-sm input-search-summer pl-0 w-full',
+             placeholder: 'Search by title or URL',
+             data: {
+               auto_submit_input_form_target: 'input',
+               action: 'input->auto-submit-input-form#debouncedSubmit',
+             }
         %>
       <% end %>
     </div>
-    <div>
-      <% if show_order %>
-        <%=
-          f.select(
-            :order,
-            options_for_select(
-              [
-                ['↓ By Shown', 'views_desc'],
-                ['↑ By Shown', 'views_asc'],
-                ['↓ By Clicked', 'clicks_desc'],
-                ['↑ By Clicked', 'clicks_asc'],
-              ],
-              form.order,
-            ),
-            {},
-            {
-              class: 'select select-bordered rounded-lg select-xs w-full',
-              onchange: 'this.form.requestSubmit()',
-            },
-          )
-        %>
+    <div class="flex items-center space-x-4">
+      <% if show_staging_pages_checkbox %>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs opacity-50 font-semibold"> Show staging pages </label>
+
+          <%=
+            f.check_box(
+              :show_staging_pages,
+              {
+                checked: form.show_staging_pages,
+                class: 'toggle toggle-summer toggle-xs',
+                onchange: 'this.form.requestSubmit()',
+              },
+              true,
+              false,
+            )
+          %>
+        </div>
       <% end %>
+      <div>
+        <% if show_order %>
+          <%=
+            f.select(
+              :order,
+              options_for_select(
+                [
+                  ['↓ By Shown', 'views_desc'],
+                  ['↑ By Shown', 'views_asc'],
+                  ['↓ By Clicked', 'clicks_desc'],
+                  ['↑ By Clicked', 'clicks_asc'],
+                ],
+                form.order,
+              ),
+              {},
+              {
+                class: 'select select-bordered rounded-lg select-xs w-full',
+                onchange: 'this.form.requestSubmit()',
+              },
+            )
+          %>
+        <% end %>
+      </div>
     </div>
   </div>
 <% end %>

@@ -1,10 +1,13 @@
 <tr id="<%= dom_id(@page) %>">
-  <td class="font-semibold pl-0">
-    <%=
-      link_to project_page_path(@project, @page), data: { turbo_frame: "_top" } do
-        @page.article.title&.truncate(60) || @page.url.truncate(60) + " (without title)"
-      end
-    %>
+  <td class="pl-0">
+    <a href="<%= @link %>" data-turbo-frame="_top">
+      <span class="font-semibold block leading-none">
+        <%=@page.article.title&.truncate(60) || @page.url.truncate(60) + " (without title)" %>
+      </span>
+      <span class="text-xs opacity-40 block mt-1.5 tracking-tighter">
+        <%=@page.url.truncate(80) %>
+      </span>
+    </a>
   </td>
   <td class="text-right">
     <%=number_to_delimited(@page.statistics_by_months[0]&.views || 0) %>
