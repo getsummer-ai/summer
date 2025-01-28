@@ -9,7 +9,11 @@ class ProjectDomainAliasForm
 
   attr_accessor :project, :url
   validates :url, url: true, length: { maximum: 1000 }
-  validate :host_not_blank, if: -> { url.present? && errors.empty? }
+
+  with_options if: -> { url.present? } do
+    validate :host_not_blank, if: -> { errors.empty? }
+    validate :domain_and_alias_are_different, if: -> { errors.empty? }
+  end
 
   # @param [Project] project
   # @param [Hash, ActionController::Parameters] params
@@ -20,10 +24,15 @@ class ProjectDomainAliasForm
   end
 
   def host_not_blank
-    return if URI.parse(url).host.present?
+    return if parsed_host_from_url.present?
     errors.add(:url, :blank)
   rescue URI::InvalidURIError
     errors.add(:url, :invalid)
+  end
+
+  def domain_and_alias_are_different
+    return if project.domain != parsed_host_from_url&.downcase
+    errors.add(:base, :same_as_domain_name, domain: project.domain)
   end
 
   def domain_alias_set_previously?
@@ -34,8 +43,7 @@ class ProjectDomainAliasForm
   def update
     return false if invalid?
 
-    parsed_url = URI.parse(url)
-    project.update(domain_alias: parsed_url.host&.downcase)
+    project.update(domain_alias: parsed_host_from_url&.downcase)
 
     if project.errors.any?
       project.errors[:domain_alias].each { |msg| errors.add(:url, msg) } and return false
@@ -46,4 +54,11 @@ class ProjectDomainAliasForm
     Rails.logger.error e.message
     raise
   end
+
+  private
+
+    # @return [String, nil]
+    def parsed_host_from_url
+      @parsed_host_from_url ||= URI.parse(url).host
+    end
 end

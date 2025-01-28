@@ -1,0 +1,8 @@
+en:
+  activemodel:
+    errors:
+      models:
+        project_domain_alias_form:
+            attributes:
+              base:
+                same_as_domain_name: The staging domain must differ from </br><b>%{domain}</b>

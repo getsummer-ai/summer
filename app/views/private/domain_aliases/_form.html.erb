@@ -10,7 +10,7 @@
   <% if form.errors.any? %>
     <div class="text-xs mt-1">
       <% form.errors.full_messages.each do |message| %>
-        <div><%= message %></div>
+        <div><%= raw message %></div>
       <% end %>
     </div>
   <% end %>

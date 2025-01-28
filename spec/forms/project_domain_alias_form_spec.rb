@@ -37,6 +37,13 @@ RSpec.describe ProjectDomainAliasForm do
       expect( model.update).to be false
       expect( model.errors.full_messages).to include "Url is too long (maximum is 1000 characters)"
     end
+
+    it 'returns an error as the provided domain equals the primary domain name' do
+      model = described_class.new(project, { url: "https://test.com/test" })
+      expect( model.update).to be false
+      expect( model.errors.full_messages).to \
+        include "The staging domain must differ from </br><b>#{project.domain}</b>"
+    end
   end
 
   context 'when the form is valid' do
