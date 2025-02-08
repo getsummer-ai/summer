@@ -6,3 +6,7 @@
 <% if flash[:alert] %>
   <%= render 'shared/alert', message: flash[:alert], type: 'warning', is_persistent: is_persistent %>
 <% end %>
+
+<% if flash[:script] %>
+  <script><%=flash[:script].html_safe %></script>
+<% end %>

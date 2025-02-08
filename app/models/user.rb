@@ -21,21 +21,15 @@ class User < ApplicationRecord
   has_many :projects, dependent: :restrict_with_exception
   belongs_to :default_project, -> { available }, class_name: 'Project', optional: true, inverse_of: :user
 
-  def self.from_omniauth(auth, locale = nil)
-    user =
-      where(email: auth.info.email).first_or_create do |u|
-        u.password = Devise.friendly_token
-        u.locale = locale if User.locales.value?(locale.to_s)
-      end
-    user.track!(source: 'User Omniauth') do
-      user.update(
+  def update_google_oauth2_data(auth)
+    track!(source: 'User Omniauth') do
+      update(
         provider: auth.provider,
         uid: auth.uid,
         name: auth.info.name,
         avatar_url: auth.info.image,
       )
     end
-    user
   end
 
   def send_reset_password_instructions

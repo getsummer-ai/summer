@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Users
   class RegistrationsController < Devise::RegistrationsController
+    include AuthFlashScriptConcern
     before_action :configure_sign_up_params, only: [:create]
 
     def create
@@ -12,6 +13,7 @@ module Users
         if resource.active_for_authentication?
           # set_flash_message! :notice, :signed_up
           sign_up(resource_name, resource)
+          set_flash_js_code_after_registration
           respond_with resource, location: after_sign_up_path_for(resource)
         else
           set_flash_message! :notice, :"signed_up_but_#{resource.inactive_message}"
