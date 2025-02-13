@@ -17,7 +17,7 @@
 <% end %>
 
 <% content_for :content do %>
-  <% current_project = current_project || current_user.default_project %>
+  <% current_project = current_project || current_user.default_project.decorate %>
   <div
     id="sidebar-menu"
     class="hidden fixed z-20 md:flex flex-col justify-between top-0 bottom-0 l-0 p-5 w-[250px] min-w-[250px] bg-default overflow-y-auto"

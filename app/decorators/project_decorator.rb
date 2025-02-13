@@ -17,6 +17,10 @@ class ProjectDecorator < Draper::Decorator
     @total_statistics ||= ProjectStatistic::TotalsViewModel.new(model)
   end
 
+  def set_up?
+    @set_up ||= model.pages.exists?
+  end
+
   def summary_settings
     {
       lang: model.settings.lang,

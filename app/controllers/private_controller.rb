@@ -3,6 +3,7 @@
 #  @return [Project]
 class PrivateController < ApplicationController
   layout 'private'
+  attr_reader :current_project
   helper_method :current_project
 
   def private_or_turbo_layout
@@ -13,17 +14,12 @@ class PrivateController < ApplicationController
   # @return [Project]
   def find_project
     # @type [Project]
-    @project = current_user.projects.available.find(BasicEncrypting.decode(params[:project_id].to_s))
-    # @type [Project]
-    @current_project = @project
-    return @project if current_user.default_project_id == @project.id
-    current_user.update_attribute(:default_project_id, @project.id)
-    @project
-  end
+    @project = current_user.projects.available.by_encrypted_id(params[:project_id])
+    if current_user.default_project_id != @project.id
+      current_user.update_attribute(:default_project_id, @project.id)
+    end
 
-  # @return [Project]
-  def current_project
-    @current_project ||= find_project
+    @current_project = @project
   end
 
   # @param [String] path

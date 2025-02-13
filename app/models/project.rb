@@ -66,7 +66,7 @@ class Project < ApplicationRecord
   has_many :user_emails, class_name: 'ProjectUserEmail', dependent: :destroy
 
   scope :available, -> { where.not(status: :deleted) }
-  scope :by_encrypted_id, ->(encrypted_id) { find(decrypt_id(encrypted_id)) }
+  scope :by_encrypted_id, ->(encrypted_id) { find(decrypt_id(encrypted_id.to_s)) }
 
   validates :settings, store_model: { merge_errors: true }
   validates :stripe, store_model: { merge_errors: true }
@@ -132,6 +132,10 @@ class Project < ApplicationRecord
   # @return [Array<ProjectPath>]
   def smart_paths
     (self[:paths] || []).map { |path| ProjectPath.new(self, path) }
+  end
+
+  def decorated
+    @decorated ||= decorate
   end
 
   def decorate

@@ -3,22 +3,26 @@
   Here, you can find setup instructions. Change the button's appearance even after installing the code.
 </p>
 
-<div class="p-6 mt-6 shadow-md border border-gray-200 rounded-2xl">
-  <h3 class="font-semibold text-lg">Setup checklist</h3>
-  <ul class="mt-4 list-decimal list-inside">
-    <li class="mt-2">Setup <a href="#appearance" class="link underline-offset-4">the appearance</a>. Change it any time later. <span class="opacity-40">30 sec</span></li>
-    <li class="mt-2"><a href="#code_snippet" class="link underline-offset-4">Embed code</a> on your website. <span class="opacity-40">5 min</span></li>
-    <li class="mt-2">
-      Check the status in the <%= link_to 'Pages section', project_pages_path, class: 'link underline-offset-4' %>
-      after the first button loads. <span class="opacity-40">30 sec</span>
-    </li>
-    <li class="mt-2">Add custom instructions and your products to
-      <%= link_to 'Knowledge', knowledge_project_path, class: 'link underline-offset-4' %>.
-      <span class="opacity-40">Optional</span></li>
-  </ul>
-</div>
+<% if @current_project.decorated.set_up? %>
+  <details
+    tabindex="0"
+    class="collapse collapse-arrow bg-[#EEF9EB] rounded-2xl mt-6 shadow-md p-2 border border-gray-200"
+  >
+    <summary class="collapse-title text-lg font-semibold">Setup checklist 👌</summary>
+    <div class="collapse-content">
+      <%= render 'setup_actions_list' %>
+    </div>
+  </details>
+<% else %>
+  <div class="p-6 mt-6 shadow-md border border-gray-200 rounded-2xl ">
+    <h3 class="font-semibold text-lg">Setup checklist</h3>
+    <div class="mt-2">
+      <%= render 'setup_actions_list' %>
+    </div>
+  </div>
+<% end %>
 
-<hr class="my-12">
+<hr class="my-12" />
 
 <h2 id="appearance" class="font-semibold text-xl">Appearance</h2>
 <p class="opacity-50 mt-1">
@@ -65,9 +69,9 @@
       <% end %>
     <% end %>
   </div>
-  <%=render Setup::AppearanceComponent.new(project: current_project) %>
+  <%= render Setup::AppearanceComponent.new(project: current_project) %>
 </div>
-<hr class="my-12">
+<hr class="my-12" />
 
 <h2 id="code_snippet" class="font-semibold text-xl mt-10">Code Snippet</h2>
 <p class="opacity-60 mt-1">
