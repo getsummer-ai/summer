@@ -1,13 +1,23 @@
+<%= render Notice::Component.new(container_class: 'mt-0') do %>
+  <div class="text-sm leading-4">
+    <b>Important:</b>
+    You'll need access to a site where you want Summer to work.
+  </div>
+<% end %>
+
+
 <% is_turbo = turbo_frame_request_id.present? %>
 <%= turbo_conditional_tag "project-form", is_turbo do %>
   <%= form_for @project,
                url: projects_path,
                builder: DaisyBuilder,
                html: { 'data-controller': "project-form" } do |f| %>
+
     <div class="form-control">
       <%= f.label :name, 'Project Name' %>
       <%= f.text_field :name %>
     </div>
+
     <div class="form-control mt-2">
       <%= f.label :urls, 'Domain Address', for: 'project_form_urls_0' %>
       <%
@@ -17,7 +27,7 @@
             data_attributes = { 'data-project-form-target': "field" } if index == 0
             concat f.text_field :urls,
                               multiple: true,
-                              placeholder: 'https://example.com/blog',
+                              placeholder: 'https://example.com',
                               value: item,
                               id: "project_form_urls_#{index}",
                               **data_attributes
@@ -39,10 +49,9 @@
 
     <%= render Notice::Component.new(container_class: 'mt-6') do %>
       <div class="text-sm leading-4">
-        <b>Important:</b>
-        Summer will appear on every page under this domain.
-        Make sure to use specific directory address, such as “domain.com/blog”,
-        and not the main domain address only.
+        To avoid displaying the Summer button on every page of this domain,
+        specify a domain with a URL path, such as
+        <span class="px-1 rounded border bg-white text-black font-semibold">https://example.com/blog</span>
       </div>
     <% end %>
 
