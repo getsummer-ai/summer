@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Private
   class PaymentsController < PrivateController
+    before_action :find_project
     before_action :check_existence, only: :create
 
     def create(stripe_session = nil)
