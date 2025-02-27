@@ -99,6 +99,14 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :plugins do
+    resources :framer, only: [] do
+      collection do
+        post 'login'
+      end
+    end
+  end
+
   authenticate :user, ->(user) { user&.is_admin? } do
     mount GoodJob::Engine => 'good_jobs'
     mount Avo::Engine, at: Avo.configuration.root_path
