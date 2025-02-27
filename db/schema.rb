@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
+ActiveRecord::Schema[7.2].define(version: 2025_02_26_193500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "project_api_key_type", ["default", "framer"]
   create_enum "project_article_feature_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "project_llm_call_service_name", ["summary", "products", "default"]
   create_enum "user_locale", ["en", "es"]
@@ -158,6 +159,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
     t.index ["priority", "scheduled_at"], name: "index_good_jobs_on_priority_scheduled_at_unfinished_unlocked", where: "((finished_at IS NULL) AND (locked_by_id IS NULL))"
     t.index ["queue_name", "scheduled_at"], name: "index_good_jobs_on_queue_name_and_scheduled_at", where: "(finished_at IS NULL)"
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
+  end
+
+  create_table "project_api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "activated_at"
+    t.datetime "expired_at"
+    t.enum "key_type", default: "default", null: false, enum_type: "project_api_key_type"
+    t.jsonb "details", default: {}, null: false
+    t.bigint "project_id"
+    t.bigint "owner_id"
+    t.integer "usage_count", default: 0, null: false
+    t.datetime "last_used_at"
+    t.index ["owner_id"], name: "index_project_api_keys_on_owner_id"
+    t.index ["project_id"], name: "index_project_api_keys_on_project_id"
   end
 
   create_table "project_article_products", force: :cascade do |t|
@@ -353,6 +368,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
 
   add_foreign_key "email_related_models", "emails", on_update: :cascade, on_delete: :cascade
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_api_keys", "projects"
+  add_foreign_key "project_api_keys", "users", column: "owner_id"
   add_foreign_key "project_article_products", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_products", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_articles", "project_llm_calls", column: "products_llm_call_id"

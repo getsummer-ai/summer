@@ -82,6 +82,14 @@ Rails.application.routes.draw do
         end
       end
     end
+
+    namespace :plugins do
+      resources :framer, only: [] do
+        collection do
+          post 'login'
+        end
+      end
+    end
   end
 
   get 'health-check', to: ->(_env) { [200, {}, ['OK']] }
@@ -95,14 +103,6 @@ Rails.application.routes.draw do
         post ':page_id/subscribe', to: 'users#subscribe'
         get ':page_id/products', to: 'products#show'
         post ':page_id/products/:uuid/click', to: 'products#click'
-      end
-    end
-  end
-
-  namespace :plugins do
-    resources :framer, only: [] do
-      collection do
-        post 'login'
       end
     end
   end
