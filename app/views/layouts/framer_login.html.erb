@@ -1,0 +1,44 @@
+<% unless content_for?(:meta) %>
+  <% content_for :meta do %>
+    <title>Summer AI | Framer Plugin Auth</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content="Transform your blog with AI summary button.">
+    <meta property="og:title" content="Summer AI | Framer Plugin Auth">
+  <% end %>
+<% end %>
+
+<% content_for :js do %>
+  <%= vite_typescript_tag 'login' %>
+<% end %>
+<% content_for :html_class do %>
+  bg-black
+<% end %>
+
+<% content_for :content do %>
+  <div class="flex flex-col md:flex-row min-h-screen">
+    <div class="md:w-1/2 bg-black flex flex-column justify-center items-center md:min-h-screen flex-grow">
+      <div class="w-96 my-2 pb-5 pt-10 bg-white rounded-xl">
+        <div class="flex flex-row justify-between pb-5 px-8">
+          <div>
+            <%= vite_image_tag('assets/images/framer-logo.png', class: "h-6") %>
+          </div>
+          <div class="flex-1 text-center font-bold">+</div>
+          <div>
+            <%=render LogoComponent.new(color: 'black') %>
+          </div>
+        </div>
+        <%= yield %>
+        <div class="mt-4">
+          <%= render 'shared/flash_alerts', is_persistent: true %>
+        </div>
+        <% unless user_signed_in? %>
+          <div class="mt-6 px-1">
+            <%= render 'devise/shared/links' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render template: 'layouts/application' %>

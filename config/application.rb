@@ -49,10 +49,6 @@ module Summer
 
     config.to_prepare do
       Rails.application.reload_routes!
-      Devise::SessionsController.layout 'login'
-      Devise::RegistrationsController.layout proc { |_controller|
-                                               user_signed_in? ? 'private' : 'login'
-                                             }
       Devise::ConfirmationsController.layout 'login'
       Devise::UnlocksController.layout 'login'
       Devise::PasswordsController.layout 'login'

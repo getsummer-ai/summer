@@ -18,7 +18,10 @@
   <div class="divider my-6 text-sm text-gray-500"> <%= t('.or') %> </div>
 
 
-  <%= form_for resource, as: resource_name, url: registration_path(resource_name), builder: DaisyBuilder do |f| %>
+  <%= form_for resource,
+               as: resource_name,
+               url: registration_path(resource_name, request.query_parameters),
+               builder: DaisyBuilder do |f| %>
     <% unless is_turbo %>
       <%= render 'devise/shared/error_messages', resource: resource %>
     <% end %>

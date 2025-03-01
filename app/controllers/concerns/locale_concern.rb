@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Extends +ActionMailer+ with methods for Email management.
 module LocaleConcern
   extend ActiveSupport::Concern

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
 class ProjectApiKey < ApplicationRecord
-  belongs_to :project
-  belongs_to :owner, class_name: 'User'
+  belongs_to :project, optional: true
+  belongs_to :owner, class_name: 'User', optional: true
+
   enum :key_type, { default: 'default', framer: 'framer' }
 end
 
