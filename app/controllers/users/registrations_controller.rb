@@ -3,14 +3,15 @@ module Users
   class RegistrationsController < Devise::RegistrationsController
     include AuthFlashScriptConcern
     include FramerAuthSessionConcern
-    before_action :sanitize_framer_session_id_param, only: %i[create]
+
+    before_action :clear_framer_auth_session_if_no_framer_auth_request, only: %i[new create]
+    before_action :simplify_form_csrf_token_for_framer_auth_request, only: %i[new create]
     before_action :sanitize_sign_up_params, only: %i[create]
-    before_action :clear_framer_auth_session_if_no_param, only: %i[new create]
 
     layout proc { |_|
       next 'private' if user_signed_in?
 
-      if params[:framer_session_id].present? && framer_auth_session_id.present?
+      if framer_auth_session_id_query_param.present? && framer_auth_session_id_session_value.present?
         next 'framer_login'
       end
 
@@ -69,10 +70,6 @@ module Users
 
     def account_update_params
       devise_parameter_sanitizer.sanitize(:account_update).slice(:password, :password_confirmation, :current_password)
-    end
-
-    def sanitize_framer_session_id_param
-      devise_parameter_sanitizer.permit(:sign_up, keys: [:framer_session_id])
     end
   end
 end

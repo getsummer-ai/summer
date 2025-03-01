@@ -84,9 +84,10 @@ Rails.application.routes.draw do
     end
 
     namespace :plugins do
-      resources :framer, only: [] do
-        collection do
-          get 'login/:session_id', action: :login
+      resources :framer, param: :session_id, only: [] do
+        member do
+          get 'login'
+          get 'success'
         end
       end
     end

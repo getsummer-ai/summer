@@ -3,11 +3,12 @@
 module Users
   class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     include AuthFlashScriptConcern
+    include FramerAuthSessionConcern
 
     before_action :initiate_user, only: %i[google_oauth2]
 
     def google_oauth2
-      sign_out_all_scopes
+      sign_out :user
       flash[:success] = t 'devise.omniauth_callbacks.success', kind: 'Google'
       if @user.previously_new_record?
         set_flash_js_code_after_registration
@@ -29,11 +30,11 @@ module Users
     protected
 
     def after_omniauth_failure_path_for(_scope)
-      new_user_session_path
+      new_user_session_path(default_url_options)
     end
 
     def after_sign_in_path_for(resource_or_scope)
-      stored_location_for(resource_or_scope) || user_app_path
+      stored_location_for(resource_or_scope) || user_app_path(default_url_options)
     end
 
     private
@@ -47,7 +48,7 @@ module Users
       flash[:alert] = t 'devise.omniauth_callbacks.failure',
         kind: 'Google',
         reason: "#{auth.info.email} is not authorized."
-      redirect_to new_user_session_path
+      redirect_to new_user_session_path(default_url_options)
     end
 
     def find_or_create_user(email, locale)
