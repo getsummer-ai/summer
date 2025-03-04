@@ -88,6 +88,8 @@ Rails.application.routes.draw do
         member do
           get 'login'
           get 'success'
+          post 'create_project'
+          put 'select_project'
         end
       end
     end
