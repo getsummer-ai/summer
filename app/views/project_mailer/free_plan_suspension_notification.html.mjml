@@ -1,7 +1,11 @@
 
-<mj-text color="#212b35" font-weight="bold" font-size="18px" line-height="24px">
-  Hey! Your summer button has run out of free clicks.
+<mj-text color="#212b35" font-weight="bold" font-size="18px" padding="0" line-height="24px">
+  Your summary button has run out of free clicks
 </mj-text>
+<mj-text font-style="italic" color="#bbb" padding="0">
+  <b>-></b>  <%= @project.smart_paths.first&.url %>
+</mj-text>
+<mj-spacer height="5px" />
 <mj-text>
   Take a look what you’ve achieved with your free trial:
   <ul>
@@ -12,19 +16,12 @@
     <li>
       Button Clicked:
       <b><%=@project.total_clicks_count %></b>
-      (≈<%=(@project.total_clicks_count.to_f * 100 / @project.total_views_count.to_f).round(1) %>%)
+      (≈<%=(@project.total_clicks_count.to_f * 100 / @project.total_views_count.to_f).round(1) %>% of total views)
     </li>
     <% if @project.total_product_views > 0 %>
       <li>
         Products Shown:
         <%=@project.total_product_views %>
-      </li>
-    <% end %>
-    <% user_emails_count = @project.user_emails.count %>
-    <% if user_emails_count > 0 %>
-      <li>
-        Readers Subscribed:
-        <b><%=user_emails_count %></b>
       </li>
     <% end %>
   </ul>
@@ -39,21 +36,6 @@
 <mj-button padding="15px 0px" align="left" href="<%= project_settings_url(project_id: @project.encrypted_id) %>">
   See plans and pricing
 </mj-button>
-<mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
-<mj-text>
-  In the coming months we are adding this feature 🎉:
-  <ul>
-    <li>
-      Recommendation service <br>
-      <span style="opacity: 50%">
-        A person opening a summary will see the most relevant articles
-        from your blog to increase engagement and prevent potential clients from leaving.
-      </span>
-    </li>
-  </ul>
-
-  Stay with us, and we'll try our best to provide you with features that grab the attention of your readers.
-</mj-text>
 <mj-divider border-width="1px" border-style="dashed" border-color="lightgrey" />
 <mj-text>
   Need help? Reply to this email — we’re here for you.
