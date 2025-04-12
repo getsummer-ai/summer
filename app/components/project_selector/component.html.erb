@@ -12,7 +12,7 @@
       <li>
         <%=
           link_to user_app_path(project), 'data-turbo': "false", class: 'p-1.5 pl-3 hover:bg-gray-100 rounded-xl flex justify-between' do %>
-          <span class="align-middle"><%= project.name.truncate(19) %></span>
+          <span class="align-middle"><%= project.name.truncate(17) %></span>
           <% if @current_project.try(:id) == project.id %>
             <img
               src="<%= vite_asset_path('assets/icons/check.svg') %>"
