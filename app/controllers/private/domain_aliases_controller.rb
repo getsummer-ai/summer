@@ -11,11 +11,11 @@ module Private
       unless turbo_frame_request?
         redirect_to project_settings_path(anchor: generate_modal_anchor(project_domain_alias_path))
       end
-      @domain_alias_form = ProjectDomainAliasForm.new(current_project)
+      @domain_alias_form = ProjectDomainAliasForm.new(current_project, current_user)
     end
 
     def update
-      @domain_alias_form = ProjectDomainAliasForm.new(current_project, project_domain_alias_params)
+      @domain_alias_form = ProjectDomainAliasForm.new(current_project, current_user, project_domain_alias_params)
       return render(:edit, status: :unprocessable_entity) unless @domain_alias_form.update
 
       flash.now[:notice] = 'Successfully updated'

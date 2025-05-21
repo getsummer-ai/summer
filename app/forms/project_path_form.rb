@@ -42,12 +42,14 @@ class ProjectPathForm
 
   # @param [Project::ProjectPath] project_path
   # @param [String, nil] value
-  def initialize(project_path, value: nil)
+  # @param [User, nil] user
+  def initialize(project_path, value: nil, user: nil)
     # @type [Project::ProjectPath]
     @project_path = project_path
     # @type [Project]
     @project = project_path.project
     @path = project_path.path
+    @user = user
     @value = value
     return if @path.nil?
 
@@ -57,7 +59,7 @@ class ProjectPathForm
   def create
     return nil if invalid?(:create)
 
-    @project.track!(source: 'Add Project Path', author: @project.user) do
+    @project.track!(source: 'Add Project Path', author: @user) do
       @project.paths << parsed_value&.path
       @project.save
     end
@@ -72,7 +74,7 @@ class ProjectPathForm
   def update
     return nil if invalid?(:update)
 
-    @project.track!(source: 'Update Project Path', author: @project.user) do
+    @project.track!(source: 'Update Project Path', author: @user) do
       @project.paths[@project.paths.find_index(path)] = parsed_value&.path
       @project.save
     end
@@ -88,7 +90,7 @@ class ProjectPathForm
   def destroy
     return nil if invalid?(:destroy)
 
-    @project.track!(source: 'Delete Path', author: @project.user) do
+    @project.track!(source: 'Delete Path', author: @user) do
       @project.paths.delete_at(@project.paths.find_index(@path))
       @project.save
     end

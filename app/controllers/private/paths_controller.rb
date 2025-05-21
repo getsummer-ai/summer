@@ -24,7 +24,7 @@ module Private
 
     def create
       project_path = generate_empty_project_path
-      @path_form = ProjectPathForm.new(project_path, value: project_path_params[:value])
+      @path_form = ProjectPathForm.new(project_path, user: current_user, value: project_path_params[:value])
       return render(:new, status: :unprocessable_entity) unless @path_form.create
 
       flash[:notice] = 'Successfully created'
@@ -35,7 +35,7 @@ module Private
     end
 
     def update
-      @path_form = ProjectPathForm.new(@project_path, value: project_path_params[:value])
+      @path_form = ProjectPathForm.new(@project_path, user: current_user, value: project_path_params[:value])
       new_project_path = @path_form.update
       return render(:edit, status: :unprocessable_entity) unless new_project_path
 
@@ -53,7 +53,7 @@ module Private
     end
 
     def destroy
-      @path_form = ProjectPathForm.new(@project_path)
+      @path_form = ProjectPathForm.new(@project_path, user: current_user)
 
       unless @path_form.destroy
         Rails.logger.error("Error: deleting (#{@project_path.path}) from project #{@project.id} - " \

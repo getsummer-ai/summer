@@ -18,8 +18,9 @@ class User < ApplicationRecord
   enum :locale, { en: 'en' }, default: :en, validate: true
 
   has_many :all_events, class_name: 'Event', as: :author, dependent: :restrict_with_exception
-  has_many :projects, dependent: :restrict_with_exception
-  belongs_to :default_project, -> { available }, class_name: 'Project', optional: true, inverse_of: :user
+  has_many :project_users, dependent: :destroy
+  has_many :projects, through: :project_users, class_name: 'Project'
+  belongs_to :default_project, -> { available }, class_name: 'Project', optional: true
 
   def update_google_oauth2_data(auth)
     track!(source: 'User Omniauth') do

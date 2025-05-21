@@ -2,12 +2,15 @@
 class ProjectForm
   include ActiveModel::Model
 
+  ALREADY_TAKEN_ERROR = 'is already taken'
+
   attr_accessor :urls, :name
 
   validates :name, presence: true, length: 3..50
   validates :urls, url: { accept_array: true }
   validate :validate_urls, if: -> { errors.empty? }
   validate :validate_first_host, if: -> { errors.empty? }
+  validate :validate_name_uniqueness, if: -> { errors.empty? }
 
   MUST_MATCH_ERROR = 'must have the same domain name'
 
@@ -26,9 +29,13 @@ class ProjectForm
       @user.projects.available.where(
         domain: [the_host.delete_prefix('www.'), host_with_prefix].uniq,
       )
-    return unless uniqueness_query.exists?
+    errors.add(:domain, ALREADY_TAKEN_ERROR) if uniqueness_query.exists?
+  end
 
-    errors.add(:domain, Project::ALREADY_TAKEN_ERROR)
+  def validate_name_uniqueness
+    return unless @user.projects.available.exists?(['name ILIKE ?', name])
+
+    errors.add(:name, ALREADY_TAKEN_ERROR)
   end
 
   # @param [User] user
@@ -53,6 +60,7 @@ class ProjectForm
     end
     Project.transaction do
       model.save!(validate: false)
+      ProjectUser.create!(user: @user, project: model, role: :admin)
       subscription = create_free_subscription_for_project! model
       # set the free subscription to the project as the default subscription
       model.update!(subscription:)
@@ -73,7 +81,6 @@ class ProjectForm
   def generate_new_project
     model =
       Project.new(
-        user_id: @user.id,
         name:,
         protocol: parsed_urls[0].scheme,
         domain: first_host,

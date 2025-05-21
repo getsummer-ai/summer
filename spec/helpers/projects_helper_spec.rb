@@ -15,7 +15,11 @@ RSpec.describe ProjectsHelper, type: :helper do
       user.projects.create!(protocol: 'http', domain: 'localhost.com', name: 'Test Project 1')
       user.projects.create!(protocol: 'https', domain: 'localhostyy.com', name: 'Test Project 2')
       expect(helper.project_list.size).to eq 2
-      expect(helper.project_list).to eq Project.select('id', 'name').where(user_id: user.id).order(:id).all
+      expect(helper.project_list).to eq \
+        Project.select('id', 'name')
+          .where(
+            id: ProjectUser.where(user_id: user.id).pluck(:project_id)
+          ).order(:id).all
     end
   end
 end

@@ -10,16 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_22_121000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   # Custom types defined in this database.
   # Note that some types may not work with other database engines. Be careful if changing database.
+  create_enum "project_api_key_type", ["default", "framer"]
   create_enum "project_article_feature_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "project_llm_call_service_name", ["summary", "products", "default"]
+  create_enum "project_user_role", ["admin", "viewer"]
   create_enum "user_locale", ["en", "es"]
-  create_enum "user_project_llm", ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini"]
+  create_enum "user_project_llm", ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano"]
   create_enum "user_project_protocol", ["http", "https"]
   create_enum "user_project_status", ["active", "suspended", "deleted"]
   create_enum "user_project_type", ["free", "basic", "light", "pro", "enterprise"]
@@ -160,6 +162,20 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
     t.index ["scheduled_at"], name: "index_good_jobs_on_scheduled_at", where: "(finished_at IS NULL)"
   end
 
+  create_table "project_api_keys", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "activated_at"
+    t.datetime "expired_at"
+    t.enum "key_type", default: "default", null: false, enum_type: "project_api_key_type"
+    t.jsonb "details", default: {}, null: false
+    t.bigint "project_id"
+    t.bigint "owner_id"
+    t.integer "usage_count", default: 0, null: false
+    t.datetime "last_used_at"
+    t.index ["owner_id"], name: "index_project_api_keys_on_owner_id"
+    t.index ["project_id"], name: "index_project_api_keys_on_project_id"
+  end
+
   create_table "project_article_products", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.bigint "project_article_id", null: false
@@ -289,11 +305,23 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
     t.index ["uuid"], name: "index_project_user_emails_on_uuid", unique: true
   end
 
+  create_table "project_users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "project_id", null: false
+    t.bigint "user_id"
+    t.enum "role", default: "admin", null: false, enum_type: "project_user_role"
+    t.string "invited_email_address"
+    t.datetime "invitation_sent_at"
+    t.index ["project_id"], name: "index_project_users_on_project_id"
+    t.index ["user_id", "project_id"], name: "index_project_users_on_user_id_and_project_id", unique: true
+    t.index ["user_id"], name: "index_project_users_on_user_id"
+  end
+
   create_table "projects", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
-    t.bigint "user_id", null: false
     t.string "name", default: "", null: false
     t.string "protocol", null: false
     t.string "domain", null: false
@@ -309,10 +337,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
     t.string "domain_alias"
     t.index ["created_at"], name: "index_projects_on_created_at"
     t.index ["subscription_id"], name: "index_projects_on_subscription_id"
-    t.index ["user_id", "domain"], name: "index_projects_on_user_id_and_domain", unique: true, where: "(status <> 'deleted'::user_project_status)"
-    t.index ["user_id", "domain_alias"], name: "index_projects_on_user_id_and_domain_alias", unique: true, where: "(status <> 'deleted'::user_project_status)"
-    t.index ["user_id", "name"], name: "index_projects_on_user_id_and_name", unique: true, where: "(status <> 'deleted'::user_project_status)"
-    t.index ["user_id"], name: "index_projects_on_user_id"
     t.index ["uuid"], name: "index_projects_on_uuid", unique: true
   end
 
@@ -353,6 +377,8 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
 
   add_foreign_key "email_related_models", "emails", on_update: :cascade, on_delete: :cascade
   add_foreign_key "events", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_api_keys", "projects"
+  add_foreign_key "project_api_keys", "users", column: "owner_id"
   add_foreign_key "project_article_products", "project_articles", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_article_products", "project_products", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_articles", "project_llm_calls", column: "products_llm_call_id"
@@ -366,8 +392,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_01_25_121500) do
   add_foreign_key "project_subscriptions", "projects", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_user_emails", "project_pages", on_update: :cascade, on_delete: :cascade
   add_foreign_key "project_user_emails", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_users", "projects", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "project_users", "users", on_update: :cascade, on_delete: :cascade
   add_foreign_key "projects", "project_subscriptions", column: "subscription_id", on_update: :cascade, on_delete: :restrict
-  add_foreign_key "projects", "users", on_update: :cascade
   add_foreign_key "users", "projects", column: "default_project_id", on_update: :cascade, on_delete: :nullify
 
   create_view "project_statistics_by_months", materialized: true, sql_definition: <<-SQL

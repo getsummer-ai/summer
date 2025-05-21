@@ -10,14 +10,19 @@ class Project < ApplicationRecord
   include EncryptedKey
   include PassiveColumns
 
-  ALREADY_TAKEN_ERROR = 'is already taken'
-
   enum :plan,
        { free: 'free', basic: 'basic', light: 'light', pro: 'pro', enterprise: 'enterprise' },
        suffix: true
   enum :status, { active: 'active', suspended: 'suspended', deleted: 'deleted' }, prefix: true
   enum :default_llm,
-       { gpt_35_turbo: 'gpt-3.5-turbo', gpt_4o: 'gpt-4o', gpt_4o_mini: 'gpt-4o-mini' },
+       {
+        gpt_35_turbo: 'gpt-3.5-turbo',
+        gpt_4o: 'gpt-4o',
+        gpt_4o_mini: 'gpt-4o-mini',
+        gpt_41: 'gpt-4.1',
+        gpt_41_mini: 'gpt-4.1-mini',
+        gpt_41_nano: 'gpt-4.1-nano',
+       },
        prefix: true
 
   attribute :settings, Project::ProjectSettings.to_type
@@ -54,7 +59,6 @@ class Project < ApplicationRecord
 
   alias project_id id
 
-  belongs_to :user
   belongs_to :subscription, class_name: 'ProjectSubscription', optional: true
   has_many :subscriptions, dependent: :destroy, class_name: 'ProjectSubscription'
   has_many :pages, dependent: :destroy, class_name: 'ProjectPage'
@@ -63,6 +67,8 @@ class Project < ApplicationRecord
   has_many :statistics, class_name: 'ProjectStatistic', dependent: :destroy
   has_many :statistics_by_month, class_name: 'ProjectStatisticsByMonth', dependent: :destroy
   has_many :all_events, class_name: 'Event'
+  has_many :project_users, dependent: :destroy
+  has_many :users, through: :project_users, class_name: 'User', dependent: :destroy
   has_many :user_emails, class_name: 'ProjectUserEmail', dependent: :destroy
 
   scope :available, -> { where.not(status: :deleted) }
@@ -71,42 +77,14 @@ class Project < ApplicationRecord
   validates :settings, store_model: { merge_errors: true }
   validates :stripe, store_model: { merge_errors: true }
 
-  validates :name,
-            presence: true,
-            uniqueness: {
-              scope: :user_id,
-              case_sensitive: false,
-              conditions: -> { available },
-              message: ALREADY_TAKEN_ERROR,
-            }
-  validates :domain,
-            domain_url: true,
-            presence: true,
-            length: {
-              maximum: 500,
-            },
-            uniqueness: {
-              scope: :user_id,
-              conditions: -> { available },
-              message: ALREADY_TAKEN_ERROR,
-            },
-            if: -> { domain_changed? }
-
-  validates :domain_alias,
-            domain_url: true,
-            allow_nil: true,
-            length: {
-              maximum: 500,
-            },
-            uniqueness: {
-              scope: :user_id,
-              conditions: -> { available },
-              message: ALREADY_TAKEN_ERROR,
-            },
-            if: -> { domain_alias_changed? }
+  validates :name, presence: true, length: { maximum: 500 }
+  validates :domain, domain_url: true, presence: true,
+            length: { maximum: 500 }, if: -> { domain_changed? }
+  validates :domain_alias, domain_url: true, allow_nil: true,
+            length: { maximum: 500 }, if: -> { domain_alias_changed? }
+  validates :guidelines, length: { maximum: 500 }
 
   validate :validate_paths, if: -> { paths_changed? }
-  validates :guidelines, length: { maximum: 500 }
 
   normalizes :name, with: ->(name) { name.strip }
   normalizes :domain, :domain_alias, with: ->(domain) { domain.downcase }
@@ -185,20 +163,14 @@ end
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #  subscription_id :bigint
-#  user_id         :bigint           not null
 #
 # Indexes
 #
-#  index_projects_on_created_at                (created_at)
-#  index_projects_on_subscription_id           (subscription_id)
-#  index_projects_on_user_id                   (user_id)
-#  index_projects_on_user_id_and_domain        (user_id,domain) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_user_id_and_domain_alias  (user_id,domain_alias) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_user_id_and_name          (user_id,name) UNIQUE WHERE (status <> 'deleted'::user_project_status)
-#  index_projects_on_uuid                      (uuid) UNIQUE
+#  index_projects_on_created_at       (created_at)
+#  index_projects_on_subscription_id  (subscription_id)
+#  index_projects_on_uuid             (uuid) UNIQUE
 #
 # Foreign Keys
 #
 #  fk_rails_...  (subscription_id => project_subscriptions.id) ON DELETE => restrict ON UPDATE => cascade
-#  fk_rails_...  (user_id => users.id) ON UPDATE => cascade
 #
