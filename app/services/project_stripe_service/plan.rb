@@ -20,30 +20,30 @@ class ProjectStripeService
     PLAN_IDS = {
       test: {
         basic: {
-          year: 'price_1Q3m7HDm8NzUNvXDwGvqnXrM',
-          month: 'price_1Q3m4NDm8NzUNvXDejrCTDoX',
+          year: 'price_1RSjHxGMKV8IJw2t699BZfiY',
+          month: 'price_1RSjIvGMKV8IJw2tgl9Wy1T6',
         },
         light: {
-          year: 'price_1PBXGeDm8NzUNvXDPM4V1dha',
-          month: 'price_1PBXHIDm8NzUNvXDFmCw828n',
+          year: 'price_1RSjMsGMKV8IJw2tHZOKgiQQ',
+          month: 'price_1RSjLMGMKV8IJw2t8XmHvblg',
         },
         pro: {
-          year: 'price_1PBXI6Dm8NzUNvXDk0FfLVtH',
-          month: 'price_1PBXORDm8NzUNvXDoV7gv6Zi',
+          year: 'price_1RSjKdGMKV8IJw2t6nQIFBRe',
+          month: 'price_1RSjJkGMKV8IJw2t6EoxLtp6',
         },
       },
       live: {
         basic: {
-          year: 'price_1Q3m7wDm8NzUNvXDhs6I1foI',
-          month: 'price_1Q3m7qDm8NzUNvXDpYutCHpA',
+          year: 'price_1RSiy2GMKV8IJw2thG5Kflyx',
+          month: 'price_1RSj0JGMKV8IJw2t2FZGQ93k',
         },
         light: {
-          year: 'price_1PFK07Dm8NzUNvXDBJER9D7s',
-          month: 'price_1PFJzGDm8NzUNvXDrUfab0EI',
+          year: 'price_1RSj4mGMKV8IJw2tovaY06Ml',
+          month: 'price_1RSj6HGMKV8IJw2t7kqpLVj1',
         },
         pro: {
-          year: 'price_1PFK16Dm8NzUNvXDZcLnQSWa',
-          month: 'price_1PFK0dDm8NzUNvXDsMXEPJ9s',
+          year: 'price_1RSj2PGMKV8IJw2t5McRVMC2',
+          month: 'price_1RSj3jGMKV8IJw2t7wRyL1BK',
         },
       },
     }.freeze
