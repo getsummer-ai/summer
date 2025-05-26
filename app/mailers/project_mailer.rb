@@ -10,7 +10,7 @@ class ProjectMailer < MjmlMailer
 
     plan = @project.subscription.plan || @project.plan
     mail to: @project.users.pluck(:email),
-         subject: 'Your free plan has run out of clicks',
+         subject: 'Your plan has run out of clicks',
          template_name: "#{plan}_plan_suspension_notification"
   end
 end
