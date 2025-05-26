@@ -3,7 +3,10 @@ class ProjectUser < ApplicationRecord
   include Trackable
   include PassiveColumns
 
-  enum :role, { admin: 'admin', viewer: 'viewer' }
+  enum :role, { owner: 'owner', admin: 'admin', viewer: 'viewer' }, validate: true
+
+  # one owner is only possible per project
+  validates :role, uniqueness: { scope: :project_id, conditions: -> { where(role: :owner) } }
 
   belongs_to :user, optional: true
   belongs_to :project

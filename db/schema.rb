@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_22_121000) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_26_170700) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_22_121000) do
   create_enum "project_api_key_type", ["default", "framer"]
   create_enum "project_article_feature_status", ["error", "skipped", "wait", "processing", "completed", "static"]
   create_enum "project_llm_call_service_name", ["summary", "products", "default"]
-  create_enum "project_user_role", ["admin", "viewer"]
+  create_enum "project_user_role", ["owner", "admin", "viewer"]
   create_enum "user_locale", ["en", "es"]
   create_enum "user_project_llm", ["gpt-3.5-turbo", "gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano"]
   create_enum "user_project_protocol", ["http", "https"]

@@ -117,6 +117,9 @@ RSpec.describe ProjectForm do
       form.create
       expect(Project.count).to eq 1
       project = Project.first
+      expect(project.project_users.count).to eq 1
+      expect(project.project_users.take.role).to eq 'owner'
+
       expect(project.subscriptions.count).to eq 1
       expect(project.subscription.start_at).to eq project.created_at.change(usec: 0)
       expect(project.subscription.end_at).to eq '2038-01-01 00:00:00'

@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module SpecTestHelper
-  def create_default_user
-    User.create(
+  def create_default_user(attributes = {})
+    User.create({
       email: 'admin@test.com',
       password: '12345678',
       password_confirmation: '12345678',
       confirmed_at: Time.zone.now
-    )
+    }.merge!(attributes))
   end
 
   def login_user(user = nil)

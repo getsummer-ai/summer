@@ -60,7 +60,7 @@ class ProjectForm
     end
     Project.transaction do
       model.save!(validate: false)
-      ProjectUser.create!(user: @user, project: model, role: :admin)
+      ProjectUser.create!(user: @user, project: model, role: :owner)
       subscription = create_free_subscription_for_project! model
       # set the free subscription to the project as the default subscription
       model.update!(subscription:)
