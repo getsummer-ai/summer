@@ -1,0 +1,82 @@
+<div class="mt-4">
+  <div class="text-lg">
+    <b><%= @current_project.plan.humanize %> plan</b>
+    <% cancel_at = @current_project.subscription_cancellation_time %>
+
+    <% if @current_project.status_active? %>
+      <% if cancel_at.present?  %>
+        <%= cancel_at > Time.now ? 'expires' : 'was expired' %> on
+        <%= cancel_at.strftime('%d %B %Y') %>.
+      <% else %>
+        is active.
+      <% end %>
+    <% else %>
+      <% if cancel_at.present?  %>
+        <%= cancel_at > Time.now ? 'ends' : 'was suspended' %> on
+        <%= cancel_at.strftime('%d %B %Y') %>.
+      <% else %>
+        has been suspended.
+      <% end %>
+    <% end %>
+  </div>
+  <p class="mt-0.5 opacity-50">
+    <%
+      included_clicks_text =
+        if @current_project.subscription_id.nil?
+          'unlimited'
+        else
+          number_with_delimiter(@current_project.subscription.summarize_limit)
+        end
+    %>
+    The <%= included_clicks_text %> button clicks
+
+    <% plan_interval = @current_project.stripe.subscription.plan_interval %>
+    <%= @current_project.free_plan? || plan_interval == 'year' ? 'in total' : 'per month' %>
+
+    <%
+      clicks_left = @current_project.decorated.plan_left_clicks
+      clicks_left_text = clicks_left == Float::INFINITY ? 'unlimited' : number_with_delimiter(clicks_left)
+    %>
+
+    are included — <b><%= clicks_left_text %></b> clicks left.
+  </p>
+</div>
+
+<div class="<%= @current_project.free_plan? ? 'mt-8' : 'mt-3' %>">
+  <%= render SubscriptionButton::Component.new(project: @current_project, button_classes: 'btn-black') %>
+  <%if @current_project.free_plan_suspended? %>
+    <h4 class="mt-8 md:mt-2 opacity-30">
+      Get a subscription to continue using the Summary button on your website.
+    </h4>
+  <% end %>
+</div>
+
+<% if Rails.configuration.summer[:IS_PLAYGROUND] %>
+  <div class="bg-black text-white p-5 mt-14 rounded-xl opacity-15">
+    These buttons are only visible in playground mode.
+
+    <% if @current_project.stripe.subscription.id  %>
+      <%=
+        button_to 'DELETE SUBSCRIPTION',
+          admin_delete_subscription_project_payments_path(@current_project),
+          method: :post,
+          class: 'btn btn-summer btn-red mt-4',
+          form: {
+            'data-turbo': false,
+          }
+      %>
+    <% end %>
+
+    <% if !@current_project.stripe.subscription.id && @current_project.status_active? %>
+      <%=
+        button_to 'SUSPEND PROJECT',
+          admin_suspend_project_project_payments_path(@current_project),
+          method: :post,
+          class: 'btn btn-summer mt-4',
+          form: {
+            'data-turbo': false,
+          }
+      %>
+    <% end %>
+  </div>
+<% end %>
