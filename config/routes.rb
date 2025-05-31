@@ -42,7 +42,11 @@ Rails.application.routes.draw do
         resources :actions, only: %i[index update]
         resources :products, only: %i[new create edit update destroy]
         resources :paths, only: %i[new create edit update destroy]
-        resources :project_users, only: %i[new create edit update destroy]
+        resources :project_users, only: %i[new create edit update destroy] do
+          member do
+            post :send_notification_email
+          end
+        end
         resource :domain_alias, except: %i[create new show]
         resources :payments, only: %i[create] do
           collection do

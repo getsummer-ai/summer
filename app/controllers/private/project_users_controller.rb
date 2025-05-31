@@ -2,7 +2,7 @@
 module Private
   class ProjectUsersController < PrivateController
     before_action :find_project
-    before_action :find_project_user, only: %i[edit update destroy]
+    before_action :find_project_user, only: %i[edit update destroy send_notification_email]
 
     layout :private_or_turbo_layout
     delegate :h, to: 'ERB::Util'
@@ -33,7 +33,7 @@ module Private
         )
       return render(:new, status: :unprocessable_entity) unless @user_form.save
 
-      notice = "<b>#{h(@user_form.email)}</b> attached to the project"
+      notice = "<b>#{h(@user_form.email)}</b> was attached to the project".html_safe
       respond_to do |format|
         format.html { redirect_to project_settings_path, notice: }
         format.turbo_stream { flash.now[:notice] = notice }
@@ -53,18 +53,36 @@ module Private
     end
 
     def destroy
-      unless @project_user.destroy
+      if @project_user.destroy
+        notice = "<b>#{h(@project_user.email)}</b> was detached from the project".html_safe
+      else
+        errors = @project_user.errors.full_messages.to_s
         Rails.logger.error(
-          "Error: deleting (#{@project_user.id}) from project #{@project.id} - " +
-            @project_user.errors.full_messages.to_s,
+          "Error: deleting (#{@project_user.id}) from project #{@project.id} - #{errors}",
         )
-        return redirect_to(project_settings_path, alert: 'Error happened while deleting the path')
+        notice = 'Error happened while deleting the path'
       end
 
-      notice = "<b>#{h(@project_user.email)}</b> was detached from the project".html_safe
       respond_to do |format|
         format.html { redirect_to project_settings_path, notice: }
         format.turbo_stream { flash.now[:notice] = notice }
+      end
+    end
+
+    # Checks if invitation email wasn't sent recently
+    # and sends it if needed.
+    # @return [void]
+    def send_notification_email
+      if @project_user.invitation_sent_at && @project_user.invitation_sent_at > 1.hour.ago
+        alert = 'Invitation email was sent recently. Please try again later.'
+      else
+        @project_user.send_invitation
+        alert = 'Invitation email was sent'
+      end
+
+      respond_to do |format|
+        format.html { redirect_to project_settings_path, alert: }
+        format.turbo_stream { flash.now[:alert] = alert }
       end
     end
 

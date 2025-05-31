@@ -1,0 +1,14 @@
+<mj-text color="#212b35" font-weight="bold" font-size="18px" padding="0" line-height="24px">
+  Your were added to <b><%= @project.name %></b>
+</mj-text>
+<mj-text>
+  Login into your account to see the project
+</mj-text>
+
+<mj-spacer height="20px"></mj-spacer>
+<mj-text>
+  Best regards, <br>
+
+  The Summer Team
+</mj-text>
+<mj-spacer height="20px"></mj-spacer>

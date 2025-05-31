@@ -23,6 +23,13 @@ class ProjectUser < ApplicationRecord
   def email
     invited_email_address.presence || user&.email
   end
+
+  def send_invitation
+    return if invited_email_address.blank? || user_id.present?
+
+    ProjectMailer.added_user_invitation_email(id).deliver_now
+    update_attribute! :invitation_sent_at, Time.now.utc
+  end
 end
 
 # == Schema Information

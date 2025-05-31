@@ -1,6 +1,12 @@
 <tr id="<%= dom_id(@project_user) %>">
   <td class="font-semibold pl-0">
     <%= (@project_user.email.presence || '').truncate(100) %>
+    <% if @project_user.invitation_sent_at.present? %>
+      <span class="font-extralight text-xs opacity-50">
+        Invited on
+        <%= @project_user.invitation_sent_at.strftime('%d %B %Y') %>
+      </span>
+    <% end %>
   </td>
   <td>
     <%= @project_user.role.humanize %>
@@ -17,6 +23,16 @@
           },
         )
       %>
+      <% if @project_user.user_id.nil? %>
+        <%=
+          button_to 'Notify',
+          send_notification_email_project_project_user_path(@project_user.project, @project_user),
+          class: 'btn btn-summer btn-black btn-xs',
+          form: {
+            class: 'inline',
+          }
+        %>
+      <% end %>
     <% end %>
   </td>
 </tr>
