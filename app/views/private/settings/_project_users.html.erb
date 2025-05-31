@@ -18,7 +18,7 @@
         </tr>
       </thead>
       <tbody id="<%= dom_id(ProjectUser, :table) %>">
-        <% @project.project_users.order(id: :asc).each do |project_user|%>
+        <% @current_project.project_users.order(id: :asc).each do |project_user|%>
           <%= render ProjectUserComponents::RowComponent.new(project_user:) %>
         <% end %>
       </tbody>
