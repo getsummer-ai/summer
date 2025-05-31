@@ -1,0 +1,7 @@
+<turbo-stream action="close-modal"></turbo-stream>
+
+<%= turbo_stream.replace dom_id(@project_user) do %>
+  <%= render ProjectUserComponents::RowComponent.new(project_user: @project_user) %>
+<% end %>
+
+<%= turbo_stream.prepend "flash", partial: "shared/flash_alerts" %>

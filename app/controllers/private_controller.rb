@@ -32,4 +32,8 @@ class PrivateController < ApplicationController
     modal_anchor_to_open = Base64.encode64(path)
     "m=#{modal_anchor_to_open}"
   end
+
+  def decrypted_or_numeric_param_id
+    params[:id].is_a?(String) ? BasicEncrypting.decode(params[:id]) : params[:id]
+  end
 end

@@ -1,0 +1,49 @@
+<%= form_for @user_form,
+             url: @user_form.new_record? ?
+                    project_project_users_path :
+                    project_project_user_path(@current_project, @user_form),
+             builder: DaisyBuilder do |f| %>
+  <% if @user_form.new_record? %>
+    <div class="form-control">
+      <%= f.label :email, 'Email' %>
+      <%= f.text_field :email, placeholder: 'Member email' %>
+    </div>
+  <% else %>
+    <h3 class="font-extralight"><%= @user_form.email %></h3>
+  <% end %>
+
+  <div class="form-control mt-4">
+    <%= f.label :role, 'Role' %>
+    <%=
+      f.select :role,
+         ProjectUser.roles.except(:owner).keys.map { |role| [role.humanize, role] },
+         {},
+         class: 'select select-bordered rounded-lg w-full'
+    %>
+  </div>
+
+  <% if @user_form.errors.any? %>
+    <div id="<%= dom_id(@user_form, :errors) %>" class="text-xs mt-1">
+      <% @user_form.errors.full_messages.each do |message| %>
+        <div><%= message %></div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="form-control mt-8">
+    <% if @user_form.persisted? %>
+      <%=
+        link_to 'Remove Member',
+        project_project_user_path(@current_project, @user_form),
+        class: 'btn btn-summer mb-2 btn-block btn-red',
+        data: {
+          turbo_frame: '_top',
+          turbo_method: :delete,
+          turbo_confirm: 'Are you sure?',
+        }
+      %>
+    <% end %>
+
+    <%= f.submit @user_form.persisted? ? 'Save' : 'Add member', class: 'btn btn-summer btn-black btn-block' %>
+  </div>
+<% end %>

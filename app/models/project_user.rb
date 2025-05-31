@@ -1,15 +1,28 @@
 # frozen_string_literal: true
 class ProjectUser < ApplicationRecord
   include Trackable
+  include EncryptedKey
   include PassiveColumns
 
   enum :role, { owner: 'owner', admin: 'admin', viewer: 'viewer' }, validate: true
 
   # one owner is only possible per project
-  validates :role, uniqueness: { scope: :project_id, conditions: -> { where(role: :owner) } }
+  validates :role,
+            uniqueness: {
+              scope: :project_id,
+              conditions: -> { where(role: :owner) }
+            }, if: -> { role == 'owner' }
+
+  validates :invited_email_address, uniqueness: { scope: [:project_id] }, if: -> { errors.empty? }
 
   belongs_to :user, optional: true
   belongs_to :project
+
+  scope :admins_and_viewers, -> { where(role: [:admin, :viewer]) }
+
+  def email
+    invited_email_address.presence || user&.email
+  end
 end
 
 # == Schema Information

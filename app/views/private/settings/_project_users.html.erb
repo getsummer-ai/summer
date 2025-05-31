@@ -1,0 +1,39 @@
+<h3 class="font-semibold text-lg mt-10">
+  <span>Project users</span>
+</h3>
+
+<p class="opacity-50 mt-1">
+  Here is the list of users who have access to the project. You can add new members with specific
+  roles.
+</p>
+
+<div>
+  <div class="overflow-x-auto mt-6 -mx-4 px-4">
+    <table class="table table-summer min-w-[500px]">
+      <thead>
+        <tr>
+          <th class="font-semibold text-left">User</th>
+          <th class="font-semibold">Role</th>
+          <th class="font-semibold"></th>
+        </tr>
+      </thead>
+      <tbody id="<%= dom_id(ProjectUser, :table) %>">
+        <% @project.project_users.order(id: :asc).each do |project_user|%>
+          <%= render ProjectUserComponents::RowComponent.new(project_user:) %>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="my-3">
+      <%=
+        link_to(
+          '+ Add new member',
+          new_project_project_user_path,
+          class: 'btn btn-summer',
+          data: {
+            'turbo-frame': 'modal',
+          },
+        )
+      %>
+    </div>
+  </div>
+</div>

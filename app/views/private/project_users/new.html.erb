@@ -1,0 +1,7 @@
+<%= turbo_frame_tag "modal" do %>
+  <%= render TurboModal::Component.new(title: "Add Member") do %>
+    <%= turbo_frame_tag "project-user-frame" do %>
+      <%= render "form" %>
+    <% end %>
+  <% end %>
+<% end %>

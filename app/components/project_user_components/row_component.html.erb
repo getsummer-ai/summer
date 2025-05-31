@@ -1,0 +1,22 @@
+<tr id="<%= dom_id(@project_user) %>">
+  <td class="font-semibold pl-0">
+    <%= (@project_user.email.presence || '').truncate(100) %>
+  </td>
+  <td>
+    <%= @project_user.role.humanize %>
+  </td>
+  <td class="text-right">
+    <% if @project_user.role != 'owner' %>
+      <%=
+        link_to(
+          'Edit',
+          edit_project_project_user_path(@project_user.project, @project_user),
+          class: 'btn btn-summer btn-white btn-xs',
+          data: {
+            'turbo-frame': 'modal',
+          },
+        )
+      %>
+    <% end %>
+  </td>
+</tr>
