@@ -22,12 +22,15 @@ class ProjectUserForm
   def save
     return false if invalid?
 
-    @project_user.update(invited_email_address: email, role:)
-    if @project_user.errors.any?
-      @project_user.errors.full_messages.each { |msg| errors.add(:base, msg) }
-      return false
+    @project_user.role = role
+    @project_user.invited_email_address = email.strip.downcase
+    if @project_user.new_record? || @project_user.invited_email_address_changed?
+      @project_user.user = User.find_by(email: email)
     end
 
-    true
+    return true if @project_user.save
+
+    @project_user.errors.full_messages.each { |msg| errors.add(:base, msg) }
+    false
   end
 end

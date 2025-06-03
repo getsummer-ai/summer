@@ -31,7 +31,7 @@ module Private
           @current_project.project_users.build,
           params.fetch(:project_user_form, {}).permit(:email, :role),
         )
-      return render(:new, status: :unprocessable_entity) unless @user_form.save
+      return render(:new, formats: :html, status: :unprocessable_entity) unless @user_form.save
 
       notice = "<b>#{h(@user_form.email)}</b> was attached to the project".html_safe
       respond_to do |format|
@@ -43,7 +43,7 @@ module Private
     def update
       @user_form =
         ProjectUserForm.new(@project_user, params.fetch(:project_user_form, {}).permit(:role))
-      return render(:edit, status: :unprocessable_entity) unless @user_form.save
+      return render(:edit, formats: :html, status: :unprocessable_entity) unless @user_form.save
 
       notice = "<b>#{h(@user_form.email)}</b> is <b>#{h(@user_form.role)}</b> now".html_safe
       respond_to do |format|

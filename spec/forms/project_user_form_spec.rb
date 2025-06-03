@@ -29,11 +29,21 @@ RSpec.describe ProjectUserForm do
 
   describe '#save' do
     context 'when valid' do
-      it 'updates project_user and returns true' do
-        allow(project_user).to receive(:update).and_return(true)
+      it 'updates project_user attaching existing user and returns true' do
         form = described_class.new(project_user, email: 'test@example.com', role: 'admin')
         expect(form.save).to be true
-        expect(project_user).to have_received(:update).with(invited_email_address: 'test@example.com', role: 'admin')
+        expect(project_user.invited_email_address).to eq 'test@example.com'
+        expect(project_user.role).to eq 'admin'
+        expect(project_user.user).to eq user
+      end
+
+      it 'updates project_user without attaching a user and returns true' do
+        project_user.user = nil
+        form = described_class.new(project_user, email: 'test2@example.com', role: 'admin')
+        expect(form.save).to be true
+        expect(project_user.invited_email_address).to eq 'test2@example.com'
+        expect(project_user.role).to eq 'admin'
+        expect(project_user.user).to be_nil
       end
     end
 
@@ -44,13 +54,9 @@ RSpec.describe ProjectUserForm do
       end
 
       it 'adds project_user errors to form errors and returns false' do
-        allow(project_user).to receive(:update)
-        allow(project_user.errors).to receive(:any?).and_return(true)
-        allow(project_user.errors).to receive(:full_messages).and_return(['Some error'])
-        form = described_class.new(project_user, email: 'test@example.com', role: 'admin')
-        allow(form).to receive(:invalid?).and_return(false)
+        form = described_class.new(project_user, email: 'example.com', role: 'admin')
         expect(form.save).to be false
-        expect(form.errors[:base]).to include('Some error')
+        expect(form.errors.full_messages).to include('Email is invalid')
       end
     end
   end
