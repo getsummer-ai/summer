@@ -90,15 +90,13 @@ describe 'the Navigation process' do
       expect(page).to have_content 'The 500 button clicks in total are included — 500 clicks left.'
       click_on '+ Add new address'
 
-      using_wait_time 3 do
-        expect(page).to have_content 'Domain Address'
-      end
+      expect(page).to have_content 'Domain Address', wait: 3
+      expect(page).to have_selector('#new_project_path_form', visible: true)
 
       within("#new_project_path_form") do
-        fill_in 'Address', with: 'd'
+        find_field('project_path_form_value').set('ddd')
+        click_on 'Add Domain'
       end
-
-      click_on 'Add Domain'
 
       using_wait_time 3 do
         expect(page).to have_content 'Value is not a valid URL'
