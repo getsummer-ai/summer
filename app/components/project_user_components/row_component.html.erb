@@ -1,7 +1,13 @@
 <tr id="<%= dom_id(@project_user) %>">
   <td class="font-semibold pl-0">
     <%= (@project_user.email.presence || '').truncate(100) %>
-    <% if @project_user.invitation_sent_at.present? %>
+    <% if @project_user.user_id.present? %>
+      <img
+        src="<%= vite_asset_path('assets/icons/check.svg') %>"
+        class="summer-icon"
+        alt="Check Icon"
+        />
+    <% elsif @project_user.invitation_sent_at.present? %>
       <span class="font-extralight text-xs opacity-50">
         Invited on
         <%= @project_user.invitation_sent_at.strftime('%d %B %Y') %>

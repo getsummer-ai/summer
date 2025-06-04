@@ -11,4 +11,8 @@ class ProjectMailerPreview < ActionMailer::Preview
   def suspension_notification_pro_plan
     ProjectMailer.out_of_clicks_suspension_notification(Project.where(plan: 'pro').first.id)
   end
+
+  def added_user_invitation_email
+    ProjectMailer.added_user_invitation_email(ProjectUser.take.id)
+  end
 end

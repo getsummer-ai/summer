@@ -1,8 +1,10 @@
 <mj-text color="#212b35" font-weight="bold" font-size="18px" padding="0" line-height="24px">
-  Your were added to <b><%= @project.name %></b>
+  Your were added to the <b><%= @project.name %></b>
 </mj-text>
 <mj-text>
-  Login into your account to see the project
+  Login or register using <b><%=@project_user.email%></b> email to see the project
+  <%= link_to 'to see the project', project_pages_url(project_id: @project.encrypted_id), target: "_blank" %> </br>
+  After logging in, you'll see the project attached.
 </mj-text>
 
 <mj-spacer height="20px"></mj-spacer>

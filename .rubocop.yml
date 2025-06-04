@@ -71,4 +71,7 @@ Style/ParallelAssignment:
 Naming/VariableNumber:
   Enabled: false
 
+Rails/SkipsModelValidations:
+  Enabled: false
+
 

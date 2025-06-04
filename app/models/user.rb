@@ -22,31 +22,8 @@ class User < ApplicationRecord
   has_many :projects, through: :project_users, class_name: 'Project'
   belongs_to :default_project, -> { available }, class_name: 'Project', optional: true
 
-  def update_google_oauth2_data(auth)
-    track!(source: 'User Omniauth') do
-      update(
-        provider: auth.provider,
-        uid: auth.uid,
-        name: auth.info.name,
-        avatar_url: auth.info.image,
-      )
-    end
-  end
+  after_create :attach_to_projects_if_there_are_invitations
 
-  def send_reset_password_instructions
-    return errors.add(:base, I18n.t('errors.messages.you_use_google_oauth2')) if provider == 'google_oauth2'
-    if reset_password_sent_at.present? && reset_password_sent_at > 30.minutes.ago
-      wait_for = (reset_password_sent_at + 30.minutes - Time.zone.now) / 1.minute
-      return errors.add(:base, I18n.t('errors.messages.reset_pass_delay', minutes: wait_for.round))
-    end
-    super
-  end
-
-  def send_devise_notification(notification, *args)
-    devise_mailer.send(notification, self, *args).deliver_later
-  end
-
-  # instead of deleting, indicate the user requested a delete & timestamp it
   def soft_delete
     update_attribute(:deleted_at, Time.current)
   end
@@ -67,6 +44,38 @@ class User < ApplicationRecord
 
   def decorate
     UserDecorator.new(self)
+  end
+
+  def update_google_oauth2_data(auth)
+    track!(source: 'User Omniauth') do
+      update(
+      provider: auth.provider,
+      uid: auth.uid,
+      name: auth.info.name,
+      avatar_url: auth.info.image,
+      )
+    end
+  end
+
+  def send_reset_password_instructions
+    return errors.add(:base, I18n.t('errors.messages.you_use_google_oauth2')) if provider == 'google_oauth2'
+    if reset_password_sent_at.present? && reset_password_sent_at > 30.minutes.ago
+      wait_for = (reset_password_sent_at + 30.minutes - Time.zone.now) / 1.minute
+      return errors.add(:base, I18n.t('errors.messages.reset_pass_delay', minutes: wait_for.round))
+    end
+    super
+  end
+
+  def send_devise_notification(notification, *args)
+    devise_mailer.send(notification, self, *args).deliver_later
+  end
+
+  private
+
+  def attach_to_projects_if_there_are_invitations
+    ProjectUser
+      .where(invited_email_address: email, user_id: nil)
+      .update_all(user_id: id, updated_at: Time.now.utc)
   end
 end
 
