@@ -20,6 +20,8 @@ class ProjectUser < ApplicationRecord
 
   scope :admins_and_viewers, -> { where(role: [:admin, :viewer]) }
 
+  after_destroy :remove_default_project_selection_for_user, if: -> { user_id.present? }
+
   def email
     invited_email_address.presence || user&.email
   end
@@ -29,6 +31,14 @@ class ProjectUser < ApplicationRecord
 
     ProjectMailer.added_user_invitation_email(id).deliver_now
     update_attribute! :invitation_sent_at, Time.now.utc
+  end
+
+  private
+
+  def remove_default_project_selection_for_user
+    return if user.nil? || user.default_project_id != project_id
+
+    user.update(default_project_id: nil)
   end
 end
 
